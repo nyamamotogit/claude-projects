@@ -1,0 +1,192 @@
+<!--
+  Forms - SLDS フォーム入力コントロール集
+  ===========================================
+  使用箇所: モーダル内編集フォーム、Quick Action、検索フィルタ
+
+  SLDS フォーム要素の標準構造:
+    <div class="slds-form-element">
+      <label class="slds-form-element__label">...</label>
+      <div class="slds-form-element__control">
+        <input class="slds-input">
+      </div>
+    </div>
+
+  バリエーション:
+    slds-form-element_stacked  … ラベル上 / 入力下（縦）
+    slds-form-element_horizontal … ラベル左 / 入力右
+-->
+
+<!-- ============ テキスト入力（必須） ============ -->
+<div class="slds-form-element slds-form-element_stacked slds-is-required">
+  <label class="slds-form-element__label" for="text-1">
+    <abbr class="slds-required" title="必須">*</abbr>取引先名
+  </label>
+  <div class="slds-form-element__control">
+    <input type="text" id="text-1" placeholder="入力してください" class="slds-input">
+  </div>
+</div>
+
+<!-- ============ エラー状態 ============ -->
+<div class="slds-form-element slds-form-element_stacked slds-has-error">
+  <label class="slds-form-element__label" for="text-2">
+    <abbr class="slds-required" title="必須">*</abbr>電話
+  </label>
+  <div class="slds-form-element__control">
+    <input type="text" id="text-2" class="slds-input" aria-describedby="error-2">
+  </div>
+  <div class="slds-form-element__help" id="error-2">入力必須項目です</div>
+</div>
+
+<!-- ============ テキストエリア ============ -->
+<div class="slds-form-element slds-form-element_stacked">
+  <label class="slds-form-element__label" for="textarea-1">説明</label>
+  <div class="slds-form-element__control">
+    <textarea id="textarea-1" rows="4" class="slds-textarea"></textarea>
+  </div>
+</div>
+
+<!-- ============ Picklist (Select) ============ -->
+<div class="slds-form-element slds-form-element_stacked">
+  <label class="slds-form-element__label" for="select-1">業種</label>
+  <div class="slds-form-element__control">
+    <div class="slds-select_container">
+      <select class="slds-select" id="select-1">
+        <option>--なし--</option>
+        <option>製造</option>
+        <option>金融</option>
+        <option>小売</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Combobox (検索可能 Picklist) ============ -->
+<div class="slds-form-element slds-form-element_stacked">
+  <label class="slds-form-element__label" id="combobox-label-1">取引先所有者</label>
+  <div class="slds-form-element__control">
+    <div class="slds-combobox_container">
+      <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+          <input type="text" class="slds-input slds-combobox__input" placeholder="検索..." aria-controls="listbox-1" autocomplete="off">
+          <span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" />
+          </span>
+        </div>
+        <div id="listbox-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+          <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+            <li role="presentation" class="slds-listbox__item">
+              <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                <span class="slds-media__figure slds-listbox__option-icon">
+                  <span class="slds-avatar slds-avatar_circle slds-avatar_x-small">
+                    <img src="https://ui-avatars.com/api/?name=Aoshima+Tetsuya&background=1B96FF&color=fff" alt="">
+                  </span>
+                </span>
+                <span class="slds-media__body">
+                  <span class="slds-listbox__option-text">Aoshima Tetsuya</span>
+                  <span class="slds-listbox__option-meta">User · 営業部</span>
+                </span>
+              </div>
+            </li>
+            <li role="presentation" class="slds-listbox__item">
+              <div class="slds-media slds-listbox__option slds-listbox__option_entity" role="option">
+                <span class="slds-media__figure slds-listbox__option-icon">
+                  <span class="slds-avatar slds-avatar_circle slds-avatar_x-small">
+                    <img src="https://ui-avatars.com/api/?name=Yamada+Hanako&background=a094ed&color=fff" alt="">
+                  </span>
+                </span>
+                <span class="slds-media__body">
+                  <span class="slds-listbox__option-text">Yamada Hanako</span>
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Lookup (参照項目) - 選択済みピル ============ -->
+<div class="slds-form-element slds-form-element_stacked">
+  <label class="slds-form-element__label">親取引先</label>
+  <div class="slds-form-element__control">
+    <div class="slds-pill_container">
+      <span class="slds-pill">
+        <span class="slds-icon_container slds-icon-standard-account slds-pill__icon_container">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_x-small" />
+        </span>
+        <a href="#" class="slds-pill__action">
+          <span class="slds-pill__label" title="株式会社 親会社">株式会社 親会社</span>
+        </a>
+        <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="削除">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" class="slds-button__icon" />
+        </button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Checkbox ============ -->
+<div class="slds-form-element">
+  <div class="slds-form-element__control">
+    <div class="slds-checkbox">
+      <input type="checkbox" id="cb-1" />
+      <label class="slds-checkbox__label" for="cb-1">
+        <span class="slds-checkbox_faux"></span>
+        <span class="slds-form-element__label">メール配信を許可する</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Radio Group ============ -->
+<fieldset class="slds-form-element">
+  <legend class="slds-form-element__legend slds-form-element__label">優先度</legend>
+  <div class="slds-form-element__control">
+    <span class="slds-radio">
+      <input type="radio" id="radio-1" value="high" name="priority" />
+      <label class="slds-radio__label" for="radio-1">
+        <span class="slds-radio_faux"></span>
+        <span class="slds-form-element__label">高</span>
+      </label>
+    </span>
+    <span class="slds-radio">
+      <input type="radio" id="radio-2" value="mid" name="priority" checked />
+      <label class="slds-radio__label" for="radio-2">
+        <span class="slds-radio_faux"></span>
+        <span class="slds-form-element__label">中</span>
+      </label>
+    </span>
+    <span class="slds-radio">
+      <input type="radio" id="radio-3" value="low" name="priority" />
+      <label class="slds-radio__label" for="radio-3">
+        <span class="slds-radio_faux"></span>
+        <span class="slds-form-element__label">低</span>
+      </label>
+    </span>
+  </div>
+</fieldset>
+
+<!-- ============ Toggle Switch ============ -->
+<div class="slds-form-element">
+  <label class="slds-checkbox_toggle slds-grid">
+    <span class="slds-form-element__label slds-m-bottom_none">有効化</span>
+    <input type="checkbox" name="checkbox-toggle-1" value="checkbox-toggle-1" checked />
+    <span class="slds-checkbox_faux_container">
+      <span class="slds-checkbox_faux"></span>
+      <span class="slds-checkbox_on">有効</span>
+      <span class="slds-checkbox_off">無効</span>
+    </span>
+  </label>
+</div>
+
+<!-- ============ Date Picker ============ -->
+<div class="slds-form-element slds-form-element_stacked">
+  <label class="slds-form-element__label" for="date-1">完了予定日</label>
+  <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+    <input type="date" id="date-1" class="slds-input">
+    <span class="slds-icon_container slds-input__icon slds-input__icon_right">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/event.svg" alt="" class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" />
+    </span>
+  </div>
+</div>

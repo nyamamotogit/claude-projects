@@ -1,0 +1,98 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - searchbox "検索..." [ref=e9]
+      - list [ref=e10]:
+        - listitem [ref=e11]:
+          - button "Agentforce" [ref=e12] [cursor=pointer]:
+            - generic [ref=e13]: Agentforce
+        - listitem [ref=e14]:
+          - button "お気に入り" [ref=e15] [cursor=pointer]:
+            - generic [ref=e16]: お気に入り
+        - listitem [ref=e17]:
+          - button "新規作成" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]: 新規作成
+        - listitem [ref=e20]:
+          - button "ヘルプ" [ref=e21] [cursor=pointer]:
+            - generic [ref=e22]: ヘルプ
+        - listitem [ref=e23]:
+          - button "設定" [ref=e24] [cursor=pointer]:
+            - generic [ref=e25]: 設定
+        - listitem [ref=e26]:
+          - button "3 通知" [ref=e27] [cursor=pointer]:
+            - generic: "3"
+            - generic [ref=e28]: 通知
+        - listitem [ref=e29]:
+          - img "User" [ref=e31]
+  - generic [ref=e32]:
+    - generic [ref=e33]:
+      - generic "アプリケーションランチャー" [ref=e34] [cursor=pointer]
+      - generic [ref=e46]: Sales
+    - navigation [ref=e47]:
+      - list [ref=e48]:
+        - listitem [ref=e49] [cursor=pointer]:
+          - link "ホーム" [ref=e50]:
+            - /url: "#"
+        - listitem [ref=e51]:
+          - link "取引先" [ref=e52] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e53]:
+          - link "商談" [ref=e54] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e55]:
+          - link "レポート" [ref=e56] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e57]:
+    - generic [ref=e58]:
+      - generic [ref=e59]:
+        - paragraph [ref=e60]: "{今日の日付} · おはようございます"
+        - 'heading "{ユーザー名} さん" [level=1] [ref=e61]'
+      - generic [ref=e62]: "Quarter Performance: ¥34,500,000 達成 (87%)"
+    - generic [ref=e63]:
+      - article [ref=e65]:
+        - paragraph [ref=e66]: 本日の活動
+        - paragraph [ref=e67]: "12"
+        - paragraph [ref=e68]: +20% 先週比
+      - article [ref=e70]:
+        - paragraph [ref=e71]: 期日のあるToDo
+        - paragraph [ref=e72]: "5"
+        - paragraph [ref=e73]: 2 件 期限切れ
+      - article [ref=e75]:
+        - paragraph [ref=e76]: アクティブな商談
+        - paragraph [ref=e77]: "8"
+        - paragraph [ref=e78]: ¥45,000,000
+      - article [ref=e80]:
+        - paragraph [ref=e81]: 未読メッセージ
+        - paragraph [ref=e82]: "3"
+    - generic [ref=e83]:
+      - article [ref=e85]:
+        - generic [ref=e87]:
+          - heading "今日のToDo" [level=2] [ref=e91]
+          - button "新規ToDo" [ref=e93] [cursor=pointer]
+        - list [ref=e95]:
+          - listitem [ref=e96]:
+            - generic [ref=e97]:
+              - checkbox [ref=e98]
+              - generic [ref=e99]:
+                - generic [ref=e100]: 提案書を顧客にレビュー依頼
+                - generic [ref=e101]: "関連: 取引先A · 期日 今日 17:00"
+            - generic [ref=e102]: 高
+          - listitem [ref=e103]:
+            - generic [ref=e104]:
+              - checkbox [ref=e105]
+              - generic [ref=e106]:
+                - generic [ref=e107]: フォローアップコール
+                - generic [ref=e108]: "関連: 担当者A · 期日 今日 14:30"
+            - generic [ref=e109]: 中
+      - article [ref=e111]:
+        - heading "今後のイベント" [level=2] [ref=e113]
+        - list [ref=e115]:
+          - listitem [ref=e116]:
+            - generic [ref=e117]:
+              - generic [ref=e118]: JUN
+              - generic [ref=e119]: "12"
+            - generic [ref=e120]:
+              - link "提案レビュー会議" [ref=e121] [cursor=pointer]:
+                - /url: "#"
+              - generic [ref=e122]: 10:00 - 11:00

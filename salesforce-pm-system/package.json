@@ -1,0 +1,20 @@
+{
+  "name": "salesforce-pm-system",
+  "version": "1.0.0",
+  "description": "Salesforce プロジェクト管理システム with D3.js Gantt Chart",
+  "scripts": {
+    "deploy": "sf project deploy start -d force-app",
+    "deploy:check": "sf project deploy validate -d force-app",
+    "insert:data": "node scripts/insertDemoData.js",
+    "apex:test": "sf apex run test --test-level RunLocalTests --result-format human",
+    "open": "sf org open -o myDevOrg"
+  },
+  "dependencies": {
+    "jsforce": "^2.0.0",
+    "dotenv": "^16.0.3",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@salesforce/cli": "^2.0.0"
+  }
+}

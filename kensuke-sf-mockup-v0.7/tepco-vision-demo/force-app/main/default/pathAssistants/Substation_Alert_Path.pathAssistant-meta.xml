@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PathAssistant xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <entityName>Substation_Alert__c</entityName>
+    <fieldName>Status__c</fieldName>
+    <masterLabel>Substation_Alert_Path</masterLabel>
+    <recordTypeName>__MASTER__</recordTypeName>
+    <pathAssistantSteps>
+        <picklistValueName>IoT検知</picklistValueName>
+        <info>AWS IoT センサーが油中ガス異常を検出。Agentforce 起動を待機。</info>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <picklistValueName>AI診断</picklistValueName>
+        <info>過去類似事例と一致度89%。SAP・AWS・M365・Teams を横断照合中。</info>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <picklistValueName>承認待ち</picklistValueName>
+        <info>5システム連携プランが整いました。承認1回で同時実行されます。</info>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <picklistValueName>承認済</picklistValueName>
+        <info>SAP 稟議承認済 ・ Slack 対策室に通知配信 ・ 中給待機モード起動。</info>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <picklistValueName>対応中</picklistValueName>
+        <info>保全第2班が現場対応中。</info>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <picklistValueName>復旧済</picklistValueName>
+        <info>復旧確認・系統復元済。</info>
+    </pathAssistantSteps>
+</PathAssistant>

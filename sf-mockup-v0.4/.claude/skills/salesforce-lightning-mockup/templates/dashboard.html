@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ダッシュボード | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1024px; margin: 0; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .sf-col-1-3 { flex: 0 0 calc(33.333% - 0.5rem); }
+  .sf-col-2-3 { flex: 0 0 calc(66.666% - 0.375rem); }
+  .sf-col-1-1 { flex: 0 0 100%; }
+  .sf-header { background: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid #c9c9c9; position: sticky; top: 0; z-index: 50; }
+  .sf-header-search { width: 50%; max-width: 36rem; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn img { width: 18px; height: 18px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-favorite-btn { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 2rem; background: #1b96ff; border-radius: 0.25rem; border: none; cursor: pointer; }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-context-bar { background: white; border-bottom: 1px solid #dddbda; padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-context-bar nav ul { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .sf-context-bar nav ul li { padding: 0 0.25rem; font-size: 0.875rem; }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid #1589ee; }
+  .sf-context-bar nav ul li.is-active a { color: #0070d2; font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-app-launcher { width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-app-name { font-size: 1.125rem; font-weight: 700; color: #181818; padding: 0.5rem 0; margin-right: 0.75rem; }
+  .sf-bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.8125rem; }
+  .sf-bar-label { width: 6rem; color: #444; }
+  .sf-bar-track { flex: 1; height: 1.5rem; background: #f3f3f3; border-radius: 0.25rem; position: relative; }
+  .sf-bar-fill { height: 1.5rem; background: #0176d3; border-radius: 0.25rem; }
+  .sf-bar-fill-won { background: #04844b; }
+  .sf-bar-amount { position: absolute; right: 0.5rem; top: 0.125rem; color: #181818; }
+</style>
+</head>
+<body class="slds-scope">
+
+<header class="sf-header">
+  <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+  <div class="sf-header-search"><div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" /><input type="search" placeholder="検索..." class="slds-input"></div></div></div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></button>
+    <button class="sf-favorite-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" /><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></button>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small"><img src="https://ui-avatars.com/api/?name=User&background=1B96FF&color=fff" alt="User"></span>
+  </div>
+</header>
+
+<div class="sf-context-bar">
+  <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  <span class="sf-app-name">Sales</span>
+  <nav><ul>
+    <li><a href="#">ホーム</a></li>
+    <li class="is-active"><a href="#">ダッシュボード ▾</a></li>
+    <li><a href="#">レポート ▾</a></li>
+  </ul></nav>
+</div>
+
+<main class="sf-main">
+
+  <div class="slds-page-header slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-dashboard">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/dashboard.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title">ダッシュボード</p>
+            <h1 class="slds-page-header__title">{ダッシュボードタイトル}</h1>
+            <p class="slds-text-body_small slds-text-color_weak">最終更新: {更新日時}</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <ul class="slds-button-group-list">
+          <li><button class="slds-button slds-button_neutral">更新</button></li>
+          <li><button class="slds-button slds-button_neutral">共有</button></li>
+          <li><button class="slds-button slds-button_brand">サブスクライブ</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <div class="sf-col-1-3"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-text-color_weak">パイプライン総額</p><p class="slds-text-heading_large slds-m-top_x-small">¥58,500,000</p><p class="slds-text-body_small slds-text-color_success">↑ 前期比 +18%</p></article></div>
+    <div class="sf-col-1-3"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-text-color_weak">受注率</p><p class="slds-text-heading_large slds-m-top_x-small">42%</p><p class="slds-text-body_small slds-text-color_destructive">↓ 前期比 -3%</p></article></div>
+    <div class="sf-col-1-3"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-text-color_weak">平均商談規模</p><p class="slds-text-heading_large slds-m-top_x-small">¥4,875,000</p><p class="slds-text-body_small slds-text-color_weak">12 商談</p></article></div>
+  </div>
+
+  <div class="sf-row slds-m-top_small">
+    <div class="sf-col-2-3">
+      <article class="slds-card slds-p-around_medium">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">ステージ別 パイプライン</h3>
+        <div class="sf-bar-row"><div class="sf-bar-label">資格確認</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:20%"></div><span class="sf-bar-amount">¥8,500,000</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">ニーズ分析</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:15%"></div><span class="sf-bar-amount">¥6,200,000</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">提案/見積</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:35%"></div><span class="sf-bar-amount">¥12,000,000</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">交渉/レビュー</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:50%"></div><span class="sf-bar-amount">¥18,000,000</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">受注</div><div class="sf-bar-track"><div class="sf-bar-fill sf-bar-fill-won" style="width:40%"></div><span class="sf-bar-amount">¥13,800,000</span></div></div>
+      </article>
+    </div>
+    <div class="sf-col-1-3">
+      <article class="slds-card slds-p-around_medium">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">業種別比率</h3>
+        <div style="display:flex; align-items:center; justify-content:center; height:10rem;">
+          <div style="position:relative; width:8rem; height:8rem;">
+            <div style="position:absolute; inset:0; border-radius:50%; background: conic-gradient(#0176d3 0% 45%, #2e844a 45% 70%, #fe9339 70% 88%, #ba0517 88% 100%);"></div>
+            <div style="position:absolute; inset:0.75rem; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+              <div style="text-align:center;"><div class="slds-text-heading_medium">12</div><div class="slds-text-body_small slds-text-color_weak">商談</div></div>
+            </div>
+          </div>
+        </div>
+        <ul class="slds-text-body_small" style="list-style:none; padding:0; margin-top:0.5rem;">
+          <li style="display:flex; align-items:center; gap:0.5rem;"><span style="width:12px; height:12px; background:#0176d3; display:inline-block;"></span>製造 (45%)</li>
+          <li style="display:flex; align-items:center; gap:0.5rem;"><span style="width:12px; height:12px; background:#2e844a; display:inline-block;"></span>金融 (25%)</li>
+          <li style="display:flex; align-items:center; gap:0.5rem;"><span style="width:12px; height:12px; background:#fe9339; display:inline-block;"></span>小売 (18%)</li>
+          <li style="display:flex; align-items:center; gap:0.5rem;"><span style="width:12px; height:12px; background:#ba0517; display:inline-block;"></span>その他 (12%)</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+
+  <div class="sf-row slds-m-top_small">
+    <div class="sf-col-1-1">
+      <article class="slds-card">
+        <div class="slds-card__header"><h3 class="slds-card__header-title">トップ5商談</h3></div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead><tr><th>商談名</th><th>取引先</th><th>ステージ</th><th class="slds-text-align_right">金額</th><th>所有者</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><a href="#">大型案件</a></th><td>取引先C</td><td>提案/見積</td><td class="slds-text-align_right"><strong>¥12,000,000</strong></td><td>担当者A</td></tr>
+            <tr><th scope="row"><a href="#">新規案件A</a></th><td>取引先A</td><td>資格確認</td><td class="slds-text-align_right"><strong>¥3,500,000</strong></td><td>担当者A</td></tr>
+            <tr><th scope="row"><a href="#">新規案件B</a></th><td>取引先B</td><td>ニーズ分析</td><td class="slds-text-align_right"><strong>¥6,200,000</strong></td><td>担当者B</td></tr>
+            <tr><th scope="row"><a href="#">追加サポート契約</a></th><td>取引先D</td><td>受注</td><td class="slds-text-align_right slds-text-color_success"><strong>¥4,800,000</strong></td><td>担当者C</td></tr>
+          </tbody>
+        </table>
+      </article>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

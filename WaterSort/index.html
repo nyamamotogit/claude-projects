@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Water Sort</title>
+<style>
+:root {
+  --bg1: #1a1147;
+  --bg2: #2d1b69;
+  --btn: #5f3dc4;
+  --btn-h: #7c52d4;
+  --accent: #feca57;
+  --glass: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.25);
+  --vh: 1vh;
+  --c0:#ff2244;--c1:#ff8800;--c2:#ffff88;--c3:#77ff00;
+  --c4:#008833;--c5:#00ffcc;--c6:#0077ff;--c7:#0000dd;
+  --c8:#cc44ff;--c9:#ff00aa;--c10:#ffffff;--c11:#886600;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+html,body{width:100%;height:100%;overflow:hidden;touch-action:manipulation;}
+body{
+  background: linear-gradient(170deg, var(--bg1) 0%, var(--bg2) 100%);
+  font-family: 'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ ProN','Arial Rounded MT Bold',sans-serif;
+  color:#fff;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='600'%3E%3Cpath d='M-20 150 Q100 80 200 160 Q300 240 420 170' stroke='rgba(255,255,255,0.04)' fill='none' stroke-width='2'/%3E%3Cpath d='M-20 280 Q120 200 220 290 Q320 380 440 300' stroke='rgba(255,255,255,0.04)' fill='none' stroke-width='2'/%3E%3Cpath d='M-20 420 Q150 340 250 420 Q350 500 450 440' stroke='rgba(255,255,255,0.04)' fill='none' stroke-width='2'/%3E%3C/svg%3E") center/cover;
+}
+
+#app{position:relative;width:100%;height:calc(var(--vh)*100);overflow:hidden;z-index:1;}
+
+/* ===== HOME SCREEN ===== */
+#home-screen{
+  width:100%;height:100%;display:flex;flex-direction:column;align-items:center;
+  padding: 0 12px env(safe-area-inset-bottom,12px);
+}
+.home-header{
+  width:100%;padding:12px 0 8px;text-align:center;flex-shrink:0;
+}
+.home-title{
+  font-size:clamp(28px,7vw,42px);font-weight:900;letter-spacing:2px;
+  background:linear-gradient(135deg,#feca57,#ff6b9d,#a55eea);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 2px 8px rgba(255,107,157,0.5));
+  animation: titlePulse 3s ease-in-out infinite;
+}
+@keyframes titlePulse{0%,100%{filter:drop-shadow(0 2px 8px rgba(255,107,157,0.5));}50%{filter:drop-shadow(0 2px 16px rgba(165,94,234,0.8));}}
+.home-subtitle{font-size:13px;opacity:0.7;margin-top:2px;}
+
+.stage-grid-wrap{
+  flex:1;width:100%;overflow-y:auto;padding:4px 0 8px;
+  -webkit-overflow-scrolling:touch;
+}
+.difficulty-section{margin-bottom:12px;}
+.difficulty-label{
+  font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  opacity:0.7;padding:0 4px 4px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:8px;
+}
+.stage-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
+}
+.stage-tile{
+  aspect-ratio:1;border-radius:14px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;cursor:pointer;
+  border:2px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.07);
+  transition:transform 0.15s,box-shadow 0.15s;
+  position:relative;overflow:hidden;
+}
+.stage-tile:active{transform:scale(0.93);}
+.stage-tile.cleared{border-color:rgba(100,255,150,0.5);}
+.stage-tile.cleared::after{
+  content:'✓';position:absolute;top:3px;right:5px;font-size:10px;color:#7bed9f;font-weight:900;
+}
+.stage-tile-num{font-size:clamp(14px,3.5vw,18px);font-weight:900;}
+.stage-tile-icon{font-size:clamp(16px,4vw,22px);margin-bottom:2px;}
+.diff-easy .stage-tile{background:rgba(0,180,80,0.15);border-color:rgba(0,200,100,0.3);}
+.diff-normal .stage-tile{background:rgba(200,150,0,0.15);border-color:rgba(255,200,50,0.3);}
+.diff-hard .stage-tile{background:rgba(200,40,40,0.15);border-color:rgba(255,80,80,0.3);}
+.diff-ex .stage-tile{background:rgba(150,0,200,0.15);border-color:rgba(200,80,255,0.3);}
+
+/* ===== GAME SCREEN ===== */
+#game-screen{
+  width:100%;height:100%;display:none;flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+#game-screen.active{display:flex;}
+
+.game-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;flex-shrink:0;
+}
+.hdr-btn{
+  width:44px;height:44px;border-radius:50%;background:var(--btn);border:none;
+  color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);transition:transform 0.1s,background 0.1s;
+}
+.hdr-btn:active{transform:scale(0.9);background:var(--btn-h);}
+.level-display{font-size:18px;font-weight:800;letter-spacing:1px;}
+
+.game-area{
+  flex:1;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;
+}
+
+/* game layout */
+.game-layout{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:6px;padding:6px 8px;overflow:hidden;
+}
+.bottles-row{
+  display:flex;flex-wrap:wrap;gap:6px;
+  justify-content:center;align-items:flex-end;
+}
+.middle-row{
+  display:flex;gap:10px;align-items:center;justify-content:center;
+}
+.side-bottles{
+  display:flex;flex-direction:column;gap:6px;align-items:center;
+}
+.center-bottle{
+  animation:float 4s ease-in-out infinite;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.45));
+}
+.center-bottle.selected{
+  animation:none;
+  filter:drop-shadow(0 0 16px rgba(255,220,50,0.9));
+}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* completed bottle shimmer */
+.bottle-done{
+  animation:bottleDone 1.8s ease-in-out infinite;
+  cursor:default;
+}
+@keyframes bottleDone{
+  0%,100%{filter:drop-shadow(0 0 4px rgba(255,255,255,0.3));}
+  50%{filter:drop-shadow(0 0 12px rgba(255,255,255,0.9)) brightness(1.15);}
+}
+
+/* bottle */
+.bottle-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  cursor:pointer;transition:transform 0.2s;
+  position:relative;
+}
+.bottle-wrap.selected{
+  transform:translateY(-14px) scale(1.07);
+  filter:drop-shadow(0 0 12px var(--accent));
+}
+.bottle-wrap.shake{animation:shake 0.35s;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-5px);}40%{transform:translateX(5px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+.bottle-wrap.pour-anim{
+  animation:pourUp 0.25s ease-in forwards;
+}
+@keyframes pourUp{0%{transform:translateY(0);}100%{transform:translateY(-20px);}}
+
+.bottle-svg{overflow:visible;}
+
+/* pour stream */
+.pour-stream{
+  position:fixed;pointer-events:none;z-index:999;
+  width:12px;border-radius:6px;
+  transform-origin:top center;
+  animation:streamFall 0.35s ease-in forwards;
+}
+@keyframes streamFall{
+  0%{height:0;opacity:1;}
+  100%{height:60px;opacity:0.8;}
+}
+
+/* game footer */
+.game-footer{
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  padding:10px 16px;flex-shrink:0;
+}
+.foot-btn{
+  width:56px;height:56px;border-radius:50%;background:var(--btn);
+  border:none;color:#fff;font-size:22px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,0.35);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.1s,background 0.1s;position:relative;
+}
+.foot-btn:active{transform:scale(0.9);}
+.foot-btn .badge{
+  position:absolute;top:-4px;right:-4px;background:var(--accent);
+  color:#333;font-size:10px;font-weight:900;border-radius:10px;
+  padding:1px 5px;min-width:18px;text-align:center;
+}
+
+/* ===== MODALS ===== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);
+  z-index:100;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.hidden{display:none;}
+.modal-box{
+  background:linear-gradient(135deg,#2d1b69,#1a1147);
+  border:2px solid rgba(255,255,255,0.2);border-radius:24px;
+  padding:28px 24px;width:min(320px,88vw);
+  text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.modal-title{font-size:26px;font-weight:900;margin-bottom:16px;}
+.modal-btn{
+  width:100%;padding:14px;border-radius:16px;border:none;
+  background:var(--btn);color:#fff;font-size:16px;font-weight:700;
+  cursor:pointer;margin-top:10px;transition:background 0.15s,transform 0.1s;
+}
+.modal-btn:active{transform:scale(0.97);}
+.modal-btn.secondary{background:rgba(255,255,255,0.1);}
+.modal-btn.primary{background:linear-gradient(135deg,#feca57,#ff6b9d);}
+
+/* settings row */
+.setting-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.setting-row:last-child{border-bottom:none;}
+.toggle{
+  width:48px;height:26px;border-radius:13px;background:#444;
+  position:relative;cursor:pointer;transition:background 0.2s;
+}
+.toggle.on{background:#7bed9f;}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:20px;height:20px;border-radius:50%;background:#fff;
+  transition:transform 0.2s;box-shadow:0 2px 4px rgba(0,0,0,0.3);
+}
+.toggle.on::after{transform:translateX(22px);}
+
+/* clear confetti */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:200;}
+
+/* clear modal special */
+.clear-stars{font-size:40px;margin:8px 0;animation:starSpin 1s ease-out;}
+@keyframes starSpin{0%{transform:scale(0) rotate(-180deg);}100%{transform:scale(1) rotate(0);}}
+
+/* ripple */
+.ripple{
+  position:fixed;border-radius:50%;background:rgba(255,255,255,0.3);
+  pointer-events:none;z-index:500;animation:rippleAnim 0.5s ease-out forwards;
+  transform:translate(-50%,-50%);
+}
+@keyframes rippleAnim{0%{width:0;height:0;opacity:0.8;}100%{width:80px;height:80px;opacity:0;}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HOME SCREEN -->
+<section id="home-screen">
+  <div class="home-header">
+    <div class="home-title">💧 Water Sort</div>
+    <div class="home-subtitle">ボトルを並び替えよう！</div>
+  </div>
+  <div class="stage-grid-wrap" id="stage-grid-wrap">
+    <!-- generated by JS -->
+  </div>
+  <div style="padding:12px 0 8px;text-align:center;flex-shrink:0;">
+    <button id="btn-reset-progress" style="background:rgba(255,60,60,0.18);border:1px solid rgba(255,80,80,0.4);color:rgba(255,180,180,0.9);border-radius:12px;padding:8px 20px;font-size:13px;cursor:pointer;">🗑️ クリアデータをリセット</button>
+  </div>
+</section>
+
+<!-- GAME SCREEN -->
+<section id="game-screen">
+  <div class="game-header">
+    <button class="hdr-btn" id="btn-home" title="ホーム">🏠</button>
+    <div class="level-display" id="level-display">レベル 1</div>
+    <button class="hdr-btn" id="btn-settings" title="設定">⚙️</button>
+  </div>
+  <div class="game-area" id="game-area">
+    <!-- filled dynamically by renderBottles() -->
+  </div>
+  <div class="game-footer">
+    <button class="foot-btn" id="btn-reset" title="リセット">🔄</button>
+    <button class="foot-btn" id="btn-undo" title="もどす">↩️<span class="badge" id="undo-badge">∞</span></button>
+    <button class="foot-btn" id="btn-add" title="ボトル追加">➕<span class="badge" id="add-badge">1</span></button>
+  </div>
+</section>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay hidden" id="settings-modal">
+  <div class="modal-box">
+    <div class="modal-title">⚙️ 設定</div>
+    <div class="setting-row">
+      <span>効果音</span>
+      <div class="toggle on" id="toggle-se"></div>
+    </div>
+    <div class="setting-row">
+      <span>テーマ</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button class="modal-btn theme-btn" data-theme="A" style="width:auto;padding:6px 12px;margin:0;outline:2px solid var(--accent);" onclick="setTheme('A')">標準</button>
+        <button class="modal-btn theme-btn" data-theme="B" style="width:auto;padding:6px 12px;margin:0;" onclick="setTheme('B')">パステル</button>
+        <button class="modal-btn theme-btn" data-theme="C" style="width:auto;padding:6px 12px;margin:0;" onclick="setTheme('C')">ネオン</button>
+        <button class="modal-btn theme-btn" data-theme="D" style="width:auto;padding:6px 12px;margin:0;background:linear-gradient(135deg,#ff3399,#ff9ecc);" onclick="setTheme('D')">🩷ガーリー</button>
+      </div>
+    </div>
+    <button class="modal-btn secondary" id="btn-settings-close">閉じる</button>
+  </div>
+</div>
+
+<!-- CLEAR MODAL -->
+<div class="modal-overlay hidden" id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">🎉 クリア！</div>
+    <div class="clear-stars">⭐⭐⭐</div>
+    <p id="clear-msg" style="opacity:0.8;margin-bottom:8px;font-size:14px;"></p>
+    <button class="modal-btn primary" id="btn-next-level">次のレベルへ ▶</button>
+    <button class="modal-btn secondary" id="btn-home-from-clear">ホームへ</button>
+  </div>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+</div>
+
+<script>
+// =====================
+// COLOR DEFINITIONS
+// =====================
+// 12 colors with alternating brightness — adjacent hues always distinct by L≥20%.
+// Verified: all pairs with dH<30° have dL≥20%.
+const COLORS = [
+  '#ff2244',  // 0  red        H=351 L=57
+  '#ff8800',  // 1  orange     H=32  L=50
+  '#ffff88',  // 2  yellow     H=60  L=76 (very light — dL=26 vs orange ✓)
+  '#77ff00',  // 3  lime       H=90  L=50
+  '#008833',  // 4  green      H=140 L=27 (dark — dL=23 vs lime ✓)
+  '#00ffcc',  // 5  teal       H=166 L=50
+  '#0077ff',  // 6  sky        H=208 L=50
+  '#0000dd',  // 7  blue       H=240 L=43 (dark — dL=27 vs sky, visible on dark bg)
+  '#cc44ff',  // 8  purple     H=285 L=63
+  '#ff00aa',  // 9  pink       H=318 L=50
+  '#ffffff',  // 10 white      always distinct
+  '#886600',  // 11 brown      H=43  L=27 (dark — dL=23 vs orange ✓)
+];
+// Fix orange/yellow: bump yellow lightness to 60% so dL=10 but they're clearly diff hue
+// Actually let's verify in code
+const COLOR_NAMES=['赤','橙','黄','ライム','緑','ティール','空','青','紫','ピンク','白','茶'];
+
+// =====================
+// STAGE DATA (30 stages)
+// =====================
+// Format: array of bottles, each bottle is array of color indices (bottom to top)
+// Empty slots = -1, bottles go [bottom...top]
+const STAGES = (function(){
+  // Seeded shuffle
+  function mulberry32(a){
+    return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+  }
+  function shuffleArr(arr,rng){
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+    return arr;
+  }
+  // isSolved: all non-empty bottles are single-color and full
+  function isSolved(bottles, cap){
+    return bottles.every(b => b.length===0 || (b.length===cap && b.every(c=>c===b[0])));
+  }
+  // hasCompletedBottle: any bottle is already single-color full at start
+  function hasCompletedBottle(bottles, cap){
+    return bottles.some(b => b.length===cap && b.every(c=>c===b[0]));
+  }
+
+  // Generate a solvable stage by reverse-shuffle.
+  // nColors includes the center-bottle color (last one).
+  // Returns {bottles, centerColor} where centerColor is the color reserved for center.
+  function genStage(nColors, nEmpty, capacity, shuffleMoves, seed){
+    const rng = mulberry32(seed);
+    let best = null;
+    // Try multiple seeds until we get no pre-solved bottles
+    for(let attempt=0; attempt<20; attempt++){
+      const rng2 = mulberry32(seed + attempt * 9999);
+      let bottles = [];
+      for(let c=0;c<nColors;c++) bottles.push(new Array(capacity).fill(c));
+      for(let e=0;e<nEmpty;e++) bottles.push([]);
+
+      for(let m=0;m<shuffleMoves;m++){
+        const nonEmpty = bottles.map((_,i)=>i).filter(i=>bottles[i].length>0);
+        if(nonEmpty.length===0) break;
+        const fromIdx = nonEmpty[Math.floor(rng2()*nonEmpty.length)];
+        const candidates = bottles.map((_,i)=>i).filter(i=>i!==fromIdx && bottles[i].length<capacity);
+        if(candidates.length===0) continue;
+        const toIdx = candidates[Math.floor(rng2()*candidates.length)];
+        const color = bottles[fromIdx][bottles[fromIdx].length-1];
+        bottles[fromIdx].pop();
+        bottles[toIdx].push(color);
+      }
+      if(!hasCompletedBottle(bottles, capacity) && !isSolved(bottles, capacity)){
+        best = bottles; break;
+      }
+    }
+    // fallback: use first attempt even if imperfect
+    if(!best){
+      const rng3 = mulberry32(seed);
+      best = [];
+      for(let c=0;c<nColors;c++) best.push(new Array(capacity).fill(c));
+      for(let e=0;e<nEmpty;e++) best.push([]);
+      for(let m=0;m<shuffleMoves;m++){
+        const nonEmpty = best.map((_,i)=>i).filter(i=>best[i].length>0);
+        if(!nonEmpty.length) break;
+        const fi = nonEmpty[Math.floor(rng3()*nonEmpty.length)];
+        const cands = best.map((_,i)=>i).filter(i=>i!==fi && best[i].length<capacity);
+        if(!cands.length) continue;
+        const ti = cands[Math.floor(rng3()*cands.length)];
+        const col = best[fi][best[fi].length-1];
+        best[fi].pop(); best[ti].push(col);
+      }
+    }
+    return best;
+  }
+
+  // genStageWithCenter: levels 6+
+  // centerCap = total cells the center bottle must be filled with (all same centerColor).
+  // centerColor starts with 1 cell pre-filled in center; the remaining (centerCap-1) cells
+  // are explicitly added to the normal-bottle pool so they can be collected.
+  // Normal-bottle pool = nNormalColors×capacity + (centerCap-1) extra centerColor cells,
+  // all crammed into nNormalColors+nEmpty bottles of capacity 4.
+  // We may need extra empty bottles if (nNormalColors×4 + centerCap-1) > (nNormalColors+nEmpty)×4
+  // Bright color indices safe for center bottle (excludes dark green=4, brown=11)
+  const BRIGHT_COLOR_IDXS = [0,1,2,3,5,6,7,8,9,10];
+
+  function genStageWithCenter(nNormalColors, nEmpty, capacity, shuffleMoves, seed, centerCap){
+    // Center color must be bright AND distinct from all nNormal colors.
+    // Normal bottles use indices 0..nNormalColors-1.
+    // If nNormalColors >= 12 (all colors used), cap normals at 11 and use the 12th bright slot.
+    // Center needs a unique bright color not used by normal bottles.
+    // Strategy: use colors 0-8 for normal (cap at 9), then pick from remaining bright indices.
+    // This gives center a unique color for all difficulty levels.
+    const actualNormalColors = Math.min(nNormalColors, 9);
+    const usedByNormal = new Set(Array.from({length:actualNormalColors},(_,i)=>i));
+    // Pick center color rotating through remaining bright indices based on seed
+    const freeSlots = BRIGHT_COLOR_IDXS.filter(i => !usedByNormal.has(i));
+    // Use seed to vary center color across levels with same nNormal count
+    const centerColorIdx = freeSlots[seed % freeSlots.length] ?? 10;
+
+    // Use actualNormalColors (capped at 11) for pool generation
+    const normalPoolCells = actualNormalColors * capacity + (centerCap - 1);
+    const nNormalBottles = Math.ceil(normalPoolCells / capacity);
+    const actualEmpty = Math.max(nEmpty, nNormalBottles - actualNormalColors + 1);
+
+    // Build flat pool: actualNormalColors × capacity cells + (centerCap-1) center cells
+    const pool = [];
+    for(let c=0;c<actualNormalColors;c++) for(let k=0;k<capacity;k++) pool.push(c);
+    for(let k=0;k<centerCap-1;k++) pool.push(centerColorIdx);
+
+    // Shuffle pool with seed
+    function shufflePool(p, rng){
+      for(let i=p.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[p[i],p[j]]=[p[j],p[i]];}
+      return p;
+    }
+
+    let best = null;
+    for(let attempt=0; attempt<20; attempt++){
+      const rng2 = mulberry32(seed + attempt*9999);
+      const p = shufflePool([...pool], rng2);
+      // Fill nNormalBottles bottles, each up to capacity
+      const bottles = [];
+      let pi = 0;
+      for(let b=0;b<nNormalBottles;b++){
+        const bottle = [];
+        for(let k=0;k<capacity&&pi<p.length;k++,pi++) bottle.push(p[pi]);
+        bottles.push(bottle);
+      }
+      // Add empty bottles
+      for(let e=0;e<actualEmpty;e++) bottles.push([]);
+
+      // Shuffle via pour moves
+      for(let m=0;m<shuffleMoves;m++){
+        const nonEmpty = bottles.map((_,i)=>i).filter(i=>bottles[i].length>0);
+        if(!nonEmpty.length) break;
+        const fi = nonEmpty[Math.floor(rng2()*nonEmpty.length)];
+        const cands = bottles.map((_,i)=>i).filter(i=>i!==fi && bottles[i].length<capacity);
+        if(!cands.length) continue;
+        const ti = cands[Math.floor(rng2()*cands.length)];
+        const col = bottles[fi][bottles[fi].length-1];
+        bottles[fi].pop(); bottles[ti].push(col);
+      }
+
+      // Verify: count centerColor cells in bottles
+      let cCount = 0;
+      bottles.forEach(b => b.forEach(c => { if(c===centerColorIdx) cCount++; }));
+      // We need exactly (centerCap-1) cells of centerColor in normal bottles
+      if(cCount === centerCap-1 && !hasCompletedBottle(bottles,capacity)){
+        best = bottles; break;
+      }
+    }
+
+    // Fallback: direct pool distribution without pour-shuffle
+    if(!best){
+      const rng3 = mulberry32(seed);
+      const p = shufflePool([...pool], rng3);
+      best = [];
+      let pi=0;
+      for(let b=0;b<nNormalBottles;b++){
+        const bottle=[];
+        for(let k=0;k<capacity&&pi<p.length;k++,pi++) bottle.push(p[pi]);
+        best.push(bottle);
+      }
+      for(let e=0;e<actualEmpty;e++) best.push([]);
+    }
+
+    return { bottles: best, centerColorIdx, centerCap };
+  }
+
+  const stages=[];
+  // Lv 1-5: no center
+  const cfgNormal=[
+    [3,2,4,20,1001],[3,2,4,24,1002],[4,2,4,28,1003],
+    [4,2,4,32,1004],[4,2,4,36,1005],
+  ];
+  // Lv 6-30: with center [nNormalColors, nEmpty, cap, moves, seed, centerCap]
+  // centerCap = 4 for all levels (same as normal bottle size)
+  // center starts with 1 pre-filled cell → player must collect 3 more from normal bottles
+  const cfgCenter=[
+    [4,2,4,40,1006,4],[4,2,4,44,1007,4],[5,2,4,48,1008,4],
+    [5,2,4,52,1009,4],[5,2,4,56,1010,4],[6,2,4,60,1011,4],
+    [6,2,4,64,1012,4],[6,2,4,68,1013,4],[7,2,4,72,1014,4],
+    [7,2,4,76,1015,4],[7,2,4,80,1016,4],[7,2,4,84,1017,4],
+    [8,2,4,88,1018,4],[8,2,4,92,1019,4],[8,2,4,96,1020,4],
+    [8,3,4,100,1021,4],[9,3,4,104,1022,4],[9,3,4,108,1023,4],
+    [9,3,4,112,1024,4],[10,3,4,116,1025,4],[10,3,4,120,1026,4],
+    [10,3,4,124,1027,4],[11,3,4,128,1028,4],[11,3,4,132,1029,4],
+    [11,3,4,140,1030,4],
+    [11,3,4,144,1031,4],[11,3,4,148,1032,4],[12,3,4,152,1033,4],
+    [12,3,4,156,1034,4],[12,3,4,160,1035,4],[12,3,4,164,1036,4],
+    [12,3,4,168,1037,4],[12,3,4,172,1038,4],[12,3,4,176,1039,4],
+    [12,3,4,180,1040,4],[12,3,4,184,1041,4],[12,3,4,188,1042,4],
+    [12,3,4,192,1043,4],[12,3,4,196,1044,4],[12,3,4,200,1045,4],
+    [12,3,4,204,1046,4],[12,3,4,208,1047,4],[12,3,4,212,1048,4],
+    [12,3,4,216,1049,4],[12,3,4,224,1050,4],
+  ];
+  for(const c of cfgNormal) stages.push({bottles:genStage(c[0],c[1],c[2],c[3],c[4]), centerColorIdx:null, centerCap:0});
+  for(const c of cfgCenter) stages.push(genStageWithCenter(c[0],c[1],c[2],c[3],c[4],c[5]));
+  return stages;
+})();
+
+// =====================
+// DECORATION MOTIFS (SVG paths for center display)
+// =====================
+const DECOS = [
+  // 1: heart
+  `<path d="M100,145 C60,110 20,85 20,55 A30,30 0 0,1 100,45 A30,30 0 0,1 180,55 C180,85 140,110 100,145Z" fill="#ff6b9d" filter="url(#glow)"/>
+   <ellipse cx="72" cy="60" rx="10" ry="7" fill="rgba(255,255,255,0.3)" transform="rotate(-20,72,60)"/>`,
+  // 2: star
+  `<polygon points="100,25 112,75 165,75 122,105 138,155 100,125 62,155 78,105 35,75 88,75" fill="#feca57" filter="url(#glow)"/>
+   <polygon points="100,45 108,72 135,72 114,88 122,115 100,100 78,115 86,88 65,72 92,72" fill="rgba(255,255,255,0.2)"/>`,
+  // 3: flower
+  `<circle cx="100" cy="100" r="22" fill="#ff4757"/>
+   <ellipse cx="100" cy="62" rx="16" ry="24" fill="#ff6b9d"/>
+   <ellipse cx="100" cy="138" rx="16" ry="24" fill="#ff6b9d"/>
+   <ellipse cx="62" cy="100" rx="24" ry="16" fill="#ff6b9d"/>
+   <ellipse cx="138" cy="100" rx="24" ry="16" fill="#ff6b9d"/>
+   <ellipse cx="75" cy="75" rx="14" ry="20" fill="#ffa502" transform="rotate(45,75,75)"/>
+   <ellipse cx="125" cy="75" rx="14" ry="20" fill="#ffa502" transform="rotate(-45,125,75)"/>
+   <ellipse cx="75" cy="125" rx="14" ry="20" fill="#ffa502" transform="rotate(-45,75,125)"/>
+   <ellipse cx="125" cy="125" rx="14" ry="20" fill="#ffa502" transform="rotate(45,125,125)"/>
+   <circle cx="100" cy="100" r="18" fill="#feca57"/>`,
+  // 4: rainbow arc
+  `<path d="M20,130 A80,80 0 0,1 180,130" fill="none" stroke="#ff4757" stroke-width="14"/>
+   <path d="M30,130 A70,70 0 0,1 170,130" fill="none" stroke="#ff9f43" stroke-width="12"/>
+   <path d="M40,130 A60,60 0 0,1 160,130" fill="none" stroke="#feca57" stroke-width="12"/>
+   <path d="M50,130 A50,50 0 0,1 150,130" fill="none" stroke="#7bed9f" stroke-width="12"/>
+   <path d="M60,130 A40,40 0 0,1 140,130" fill="none" stroke="#54a0ff" stroke-width="12"/>
+   <path d="M70,130 A30,30 0 0,1 130,130" fill="none" stroke="#a55eea" stroke-width="12"/>
+   <circle cx="100" cy="155" r="20" fill="rgba(255,255,255,0.15)"/>`,
+  // 5: cloud
+  `<ellipse cx="100" cy="115" rx="65" ry="35" fill="rgba(255,255,255,0.85)"/>
+   <ellipse cx="70" cy="100" rx="35" ry="35" fill="rgba(255,255,255,0.85)"/>
+   <ellipse cx="130" cy="105" rx="30" ry="28" fill="rgba(255,255,255,0.85)"/>
+   <ellipse cx="100" cy="92" rx="38" ry="32" fill="#fff"/>`,
+  // 6: crescent moon
+  `<circle cx="100" cy="100" r="60" fill="#feca57" filter="url(#glow)"/>
+   <circle cx="125" cy="82" r="50" fill="#2d1b69"/>
+   <circle cx="70" cy="75" r="5" fill="rgba(255,255,255,0.5)"/>
+   <circle cx="140" cy="130" r="3" fill="rgba(255,255,255,0.4)"/>`,
+  // 7: sun
+  `<circle cx="100" cy="100" r="38" fill="#feca57" filter="url(#glow)"/>
+   ${[0,30,60,90,120,150,180,210,240,270,300,330].map(a=>`<rect x="96" y="52" width="8" height="20" rx="4" fill="#ffa502" transform="rotate(${a},100,100)"/>`).join('')}
+   <circle cx="100" cy="100" r="30" fill="#feca57"/>`,
+  // 8: grapes
+  `<circle cx="100" cy="62" r="20" fill="#a55eea" filter="url(#glow)"/>
+   <circle cx="76" cy="82" r="20" fill="#a55eea"/>
+   <circle cx="124" cy="82" r="20" fill="#9b4fd4"/>
+   <circle cx="60" cy="108" r="20" fill="#a55eea"/>
+   <circle cx="100" cy="108" r="20" fill="#b668f5"/>
+   <circle cx="140" cy="108" r="20" fill="#9b4fd4"/>
+   <circle cx="76" cy="134" r="20" fill="#a55eea"/>
+   <circle cx="124" cy="134" r="20" fill="#9b4fd4"/>
+   <circle cx="100" cy="158" r="20" fill="#b668f5"/>
+   ${[100,76,124,60,100,140,76,124,100].map((_,i)=>{const cx=[100,76,124,60,100,140,76,124,100][i];const cy=[62,82,82,108,108,108,134,134,158][i];return `<ellipse cx="${cx-6}" cy="${cy-6}" rx="5" ry="7" fill="rgba(255,255,255,0.3)" transform="rotate(-30,${cx-6},${cy-6})"/>`;}).join('')}
+   <rect x="96" y="30" width="8" height="18" rx="4" fill="#8b5a2b"/>`,
+  // 9: strawberry
+  `<path d="M100,155 C65,130 40,95 45,65 Q55,35 100,40 Q145,35 155,65 C160,95 135,130 100,155Z" fill="#ff4757"/>
+   <path d="M100,155 C70,135 55,115 52,95 Q60,120 100,140 Q140,120 148,95 C145,115 130,135 100,155Z" fill="#e03030" opacity="0.5"/>
+   <ellipse cx="78" cy="80" rx="5" ry="7" fill="#feca57" transform="rotate(-10,78,80)"/>
+   <ellipse cx="100" cy="72" rx="5" ry="7" fill="#feca57"/>
+   <ellipse cx="122" cy="80" rx="5" ry="7" fill="#feca57" transform="rotate(10,122,80)"/>
+   <ellipse cx="88" cy="100" rx="5" ry="7" fill="#feca57" transform="rotate(-5,88,100)"/>
+   <ellipse cx="112" cy="100" rx="5" ry="7" fill="#feca57" transform="rotate(5,112,100)"/>
+   <path d="M90,38 Q100,20 110,38" fill="none" stroke="#26de81" stroke-width="5" stroke-linecap="round"/>`,
+  // 10: apple
+  `<path d="M100,150 C60,140 35,110 38,75 Q42,42 75,40 Q88,38 100,45 Q112,38 125,40 Q158,42 162,75 C165,110 140,140 100,150Z" fill="#ff4757"/>
+   <path d="M100,150 C75,145 55,130 47,110 Q55,135 100,145 Q145,135 153,110 C145,130 125,145 100,150Z" fill="#cc2222" opacity="0.4"/>
+   <ellipse cx="75" cy="72" rx="12" ry="20" fill="rgba(255,255,255,0.25)" transform="rotate(-20,75,72)"/>
+   <path d="M95,40 Q100,25 105,15 Q115,8 120,15" fill="none" stroke="#8b5a2b" stroke-width="5" stroke-linecap="round"/>
+   <path d="M105,15 Q120,10 128,20" fill="none" stroke="#26de81" stroke-width="5" stroke-linecap="round"/>`,
+  // 11: orange
+  `<circle cx="100" cy="105" r="58" fill="#ff9f43" filter="url(#glow)"/>
+   <path d="M100,105 m-30,0 a30,30 0 1,0 60,0" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+   <path d="M100,75 l0,60" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+   <ellipse cx="80" cy="88" rx="14" ry="20" fill="rgba(255,255,255,0.2)" transform="rotate(-20,80,88)"/>
+   <rect x="96" y="40" width="8" height="14" rx="4" fill="#8b5a2b"/>`,
+  // 12: watermelon
+  `<path d="M30,105 A70,70 0 0,1 170,105Z" fill="#26de81"/>
+   <path d="M38,105 A62,62 0 0,1 162,105Z" fill="#7bed9f"/>
+   <path d="M48,105 A52,52 0 0,1 152,105Z" fill="#ff4757"/>
+   <circle cx="70" cy="96" r="4" fill="#1a1147"/>
+   <circle cx="95" cy="90" r="4" fill="#1a1147"/>
+   <circle cx="120" cy="96" r="4" fill="#1a1147"/>
+   <circle cx="82" cy="100" r="3" fill="#1a1147"/>
+   <circle cx="110" cy="100" r="3" fill="#1a1147"/>`,
+  // 13: mushroom
+  `<path d="M30,110 Q30,60 100,55 Q170,60 170,110Z" fill="#ff4757"/>
+   <circle cx="72" cy="82" r="12" fill="rgba(255,255,255,0.8)"/>
+   <circle cx="128" cy="82" r="10" fill="rgba(255,255,255,0.8)"/>
+   <circle cx="100" cy="70" r="8" fill="rgba(255,255,255,0.8)"/>
+   <path d="M100,110 L100,155" stroke="#feca57" stroke-width="20" stroke-linecap="round"/>
+   <path d="M75,135 Q100,125 125,135" stroke="rgba(255,255,255,0.4)" stroke-width="3" fill="none"/>`,
+  // 14: snowflake
+  `${[0,60,120,180,240,300].map(a=>`<line x1="100" y1="100" x2="100" y2="32" stroke="#54a0ff" stroke-width="6" stroke-linecap="round" transform="rotate(${a},100,100)"/>
+   <line x1="100" y1="50" x2="86" y2="64" stroke="#54a0ff" stroke-width="4" stroke-linecap="round" transform="rotate(${a},100,100)"/>
+   <line x1="100" y1="50" x2="114" y2="64" stroke="#54a0ff" stroke-width="4" stroke-linecap="round" transform="rotate(${a},100,100)"/>`).join('')}
+   <circle cx="100" cy="100" r="10" fill="#48dbfb"/>`,
+  // 15: butterfly
+  `<path d="M100,100 C70,60 20,50 25,90 C30,120 75,115 100,100Z" fill="#54a0ff"/>
+   <path d="M100,100 C130,60 180,50 175,90 C170,120 125,115 100,100Z" fill="#3742fa"/>
+   <path d="M100,100 C80,120 30,130 35,155 C40,175 80,165 100,140Z" fill="#54a0ff" opacity="0.8"/>
+   <path d="M100,100 C120,120 170,130 165,155 C160,175 120,165 100,140Z" fill="#3742fa" opacity="0.8"/>
+   <ellipse cx="100" cy="118" rx="5" ry="22" fill="#1a1147"/>
+   <circle cx="100" cy="96" r="5" fill="#1a1147"/>
+   <line x1="100" y1="92" x2="88" y2="76" stroke="#1a1147" stroke-width="2"/>
+   <line x1="100" y1="92" x2="112" y2="76" stroke="#1a1147" stroke-width="2"/>`,
+  // 16: fish
+  `<ellipse cx="95" cy="105" rx="55" ry="32" fill="#54a0ff"/>
+   <path d="M155,105 L185,78 L185,132Z" fill="#3742fa"/>
+   <circle cx="55" cy="100" r="8" fill="rgba(255,255,255,0.9)"/>
+   <circle cx="53" cy="100" r="4" fill="#1a1147"/>
+   <ellipse cx="90" cy="92" rx="18" ry="10" fill="rgba(255,255,255,0.2)" transform="rotate(-15,90,92)"/>
+   <path d="M95,105 L95,75" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+   <path d="M95,105 L95,135" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>`,
+  // 17: crab
+  `<ellipse cx="100" cy="110" rx="48" ry="32" fill="#ff4757"/>
+   <circle cx="78" cy="88" r="12" fill="#ff4757"/>
+   <circle cx="122" cy="88" r="12" fill="#ff4757"/>
+   <circle cx="72" cy="85" r="6" fill="white"/><circle cx="70" cy="85" r="3" fill="#1a1147"/>
+   <circle cx="128" cy="85" r="6" fill="white"/><circle cx="126" cy="85" r="3" fill="#1a1147"/>
+   <line x1="60" y1="110" x2="30" y2="90" stroke="#ff4757" stroke-width="8" stroke-linecap="round"/>
+   <line x1="60" y1="118" x2="28" y2="110" stroke="#ff4757" stroke-width="7" stroke-linecap="round"/>
+   <line x1="60" y1="125" x2="32" y2="128" stroke="#ff4757" stroke-width="6" stroke-linecap="round"/>
+   <line x1="140" y1="110" x2="170" y2="90" stroke="#ff4757" stroke-width="8" stroke-linecap="round"/>
+   <line x1="140" y1="118" x2="172" y2="110" stroke="#ff4757" stroke-width="7" stroke-linecap="round"/>
+   <line x1="140" y1="125" x2="168" y2="128" stroke="#ff4757" stroke-width="6" stroke-linecap="round"/>`,
+  // 18: penguin
+  `<ellipse cx="100" cy="108" rx="42" ry="55" fill="#2c3e50"/>
+   <ellipse cx="100" cy="115" rx="26" ry="38" fill="white"/>
+   <circle cx="100" cy="62" r="26" fill="#2c3e50"/>
+   <ellipse cx="100" cy="72" rx="14" ry="12" fill="white"/>
+   <circle cx="92" cy="68" r="5" fill="white"/><circle cx="91" cy="68" r="2.5" fill="#1a1147"/>
+   <circle cx="108" cy="68" r="5" fill="white"/><circle cx="107" cy="68" r="2.5" fill="#1a1147"/>
+   <path d="M92,78 Q100,83 108,78" stroke="#ff9f43" stroke-width="3" fill="none" stroke-linecap="round"/>
+   <ellipse cx="100" cy="80" rx="7" ry="4" fill="#ff9f43"/>
+   <path d="M60,100 L35,80 L40,110Z" fill="#2c3e50"/>
+   <path d="M140,100 L165,80 L160,110Z" fill="#2c3e50"/>
+   <ellipse cx="88" cy="155" rx="12" ry="6" fill="#ff9f43"/>
+   <ellipse cx="112" cy="155" rx="12" ry="6" fill="#ff9f43"/>`,
+  // 19: rabbit
+  `<ellipse cx="100" cy="125" rx="38" ry="42" fill="#f0f0f0"/>
+   <ellipse cx="78" cy="65" rx="14" ry="36" fill="#f0f0f0"/>
+   <ellipse cx="122" cy="65" rx="14" ry="36" fill="#f0f0f0"/>
+   <ellipse cx="78" cy="60" rx="7" ry="28" fill="#ffb8c6"/>
+   <ellipse cx="122" cy="60" rx="7" ry="28" fill="#ffb8c6"/>
+   <circle cx="100" cy="118" r="26" fill="#f5f5f5"/>
+   <circle cx="90" cy="113" r="6" fill="white"/><circle cx="89" cy="113" r="3" fill="#3742fa"/>
+   <circle cx="110" cy="113" r="6" fill="white"/><circle cx="109" cy="113" r="3" fill="#3742fa"/>
+   <ellipse cx="100" cy="122" rx="5" ry="3" fill="#ff6b9d"/>
+   <path d="M95,125 Q100,130 105,125" stroke="#666" stroke-width="2" fill="none"/>`,
+  // 20: bear
+  `<circle cx="100" cy="115" r="48" fill="#8b5a2b"/>
+   <circle cx="68" cy="72" r="22" fill="#8b5a2b"/>
+   <circle cx="132" cy="72" r="22" fill="#8b5a2b"/>
+   <circle cx="68" cy="72" r="14" fill="#c4895f"/>
+   <circle cx="132" cy="72" r="14" fill="#c4895f"/>
+   <circle cx="100" cy="108" r="28" fill="#c4895f"/>
+   <circle cx="88" cy="105" r="7" fill="white"/><circle cx="87" cy="105" r="3.5" fill="#1a1147"/>
+   <circle cx="112" cy="105" r="7" fill="white"/><circle cx="111" cy="105" r="3.5" fill="#1a1147"/>
+   <ellipse cx="100" cy="118" rx="7" ry="5" fill="#1a1147"/>
+   <path d="M92,124 Q100,130 108,124" stroke="#1a1147" stroke-width="2.5" fill="none"/>`,
+  // 21: cat
+  `<circle cx="100" cy="115" r="45" fill="#888"/>
+   <polygon points="62,78 50,44 85,70" fill="#888"/>
+   <polygon points="138,78 150,44 115,70" fill="#888"/>
+   <polygon points="65,76 56,52 82,70" fill="#ff6b9d"/>
+   <polygon points="135,76 144,52 118,70" fill="#ff6b9d"/>
+   <circle cx="100" cy="108" r="28" fill="#aaa"/>
+   <circle cx="88" cy="106" r="7" fill="white"/><ellipse cx="87" cy="106" rx="2.5" ry="4" fill="#1a1147"/>
+   <circle cx="112" cy="106" r="7" fill="white"/><ellipse cx="111" cy="106" rx="2.5" ry="4" fill="#1a1147"/>
+   <ellipse cx="100" cy="118" rx="5" ry="3.5" fill="#ff6b9d"/>
+   <line x1="100" y1="118" x2="75" y2="112" stroke="#444" stroke-width="2"/>
+   <line x1="100" y1="120" x2="72" y2="120" stroke="#444" stroke-width="2"/>
+   <line x1="100" y1="122" x2="75" y2="128" stroke="#444" stroke-width="2"/>
+   <line x1="100" y1="118" x2="125" y2="112" stroke="#444" stroke-width="2"/>
+   <line x1="100" y1="120" x2="128" y2="120" stroke="#444" stroke-width="2"/>
+   <line x1="100" y1="122" x2="125" y2="128" stroke="#444" stroke-width="2"/>`,
+  // 22: dog
+  `<circle cx="100" cy="112" r="46" fill="#c4895f"/>
+   <ellipse cx="70" cy="75" rx="20" ry="26" fill="#c4895f"/>
+   <ellipse cx="130" cy="75" rx="20" ry="26" fill="#c4895f"/>
+   <circle cx="100" cy="105" r="30" fill="#e8b07e"/>
+   <circle cx="88" cy="102" r="7" fill="white"/><circle cx="87" cy="102" r="3.5" fill="#1a1147"/>
+   <circle cx="112" cy="102" r="7" fill="white"/><circle cx="111" cy="102" r="3.5" fill="#1a1147"/>
+   <ellipse cx="100" cy="114" rx="9" ry="7" fill="#1a1147"/>
+   <ellipse cx="100" cy="118" rx="12" ry="6" fill="#888" opacity="0.5"/>`,
+  // 23: panda
+  `<circle cx="100" cy="112" r="46" fill="white"/>
+   <circle cx="72" cy="72" r="22" fill="white"/>
+   <circle cx="128" cy="72" r="22" fill="white"/>
+   <ellipse cx="82" cy="100" rx="18" ry="22" fill="#1a1147"/>
+   <ellipse cx="118" cy="100" rx="18" ry="22" fill="#1a1147"/>
+   <circle cx="72" cy="66" r="14" fill="#1a1147"/>
+   <circle cx="128" cy="66" r="14" fill="#1a1147"/>
+   <circle cx="88" cy="107" r="7" fill="white"/><circle cx="87" cy="107" r="3.5" fill="#1a1147"/>
+   <circle cx="112" cy="107" r="7" fill="white"/><circle cx="111" cy="107" r="3.5" fill="#1a1147"/>
+   <ellipse cx="100" cy="118" rx="8" ry="5" fill="#1a1147"/>`,
+  // 24: lion
+  `${[0,30,60,90,120,150,180,210,240,270,300,330].map(a=>`<ellipse cx="100" cy="42" rx="12" ry="22" fill="#ffa502" transform="rotate(${a},100,100)"/>`).join('')}
+   <circle cx="100" cy="105" r="48" fill="#feca57"/>
+   <circle cx="100" cy="105" r="34" fill="#ff9f43"/>
+   <circle cx="88" cy="100" r="7" fill="white"/><circle cx="87" cy="100" r="3.5" fill="#1a1147"/>
+   <circle cx="112" cy="100" r="7" fill="white"/><circle cx="111" cy="100" r="3.5" fill="#1a1147"/>
+   <ellipse cx="100" cy="112" rx="10" ry="7" fill="#1a1147"/>
+   <path d="M90,120 Q100,128 110,120" stroke="#1a1147" stroke-width="2.5" fill="none"/>`,
+  // 25: elephant
+  `<ellipse cx="100" cy="108" rx="56" ry="46" fill="#9e9e9e"/>
+   <circle cx="68" cy="70" r="22" fill="#9e9e9e"/>
+   <circle cx="132" cy="70" r="22" fill="#9e9e9e"/>
+   <path d="M88,130 Q72,145 65,170 Q72,172 80,168 Q85,152 92,140Z" fill="#888"/>
+   <circle cx="86" cy="100" r="7" fill="white"/><circle cx="85" cy="100" r="3.5" fill="#1a1147"/>
+   <circle cx="114" cy="100" r="7" fill="white"/><circle cx="113" cy="100" r="3.5" fill="#1a1147"/>
+   <ellipse cx="70" cy="60" rx="8" ry="14" fill="#aaa"/>
+   <ellipse cx="130" cy="60" rx="8" ry="14" fill="#aaa"/>`,
+  // 26: bird
+  `<ellipse cx="100" cy="110" rx="40" ry="50" fill="#54a0ff"/>
+   <circle cx="100" cy="72" r="26" fill="#3742fa"/>
+   <path d="M100,72 L140,55 L138,75 L160,72 L135,88Z" fill="#feca57"/>
+   <circle cx="91" cy="68" r="5" fill="white"/><circle cx="90" cy="68" r="2.5" fill="#1a1147"/>
+   <path d="M130,72 Q145,68 155,72" fill="none" stroke="#feca57" stroke-width="5" stroke-linecap="round"/>
+   <ellipse cx="72" cy="115" rx="12" ry="28" fill="#3742fa"/>
+   <ellipse cx="128" cy="115" rx="12" ry="28" fill="#3742fa"/>
+   <ellipse cx="87" cy="148" rx="10" ry="5" fill="#ff9f43"/>
+   <ellipse cx="113" cy="148" rx="10" ry="5" fill="#ff9f43"/>`,
+  // 27: cake
+  `<rect x="45" y="115" width="110" height="45" rx="8" fill="#ff6b9d"/>
+   <rect x="55" y="82" width="90" height="38" rx="6" fill="#ffd0e8"/>
+   <rect x="65" y="58" width="70" height="28" rx="5" fill="#ff6b9d"/>
+   <rect x="45" y="108" width="110" height="12" fill="#feca57"/>
+   <rect x="55" y="77" width="90" height="10" fill="#feca57"/>
+   <line x1="75" y1="58" x2="75" y2="40" stroke="#feca57" stroke-width="4" stroke-linecap="round"/>
+   <line x1="100" y1="58" x2="100" y2="36" stroke="#feca57" stroke-width="4" stroke-linecap="round"/>
+   <line x1="125" y1="58" x2="125" y2="40" stroke="#feca57" stroke-width="4" stroke-linecap="round"/>
+   <circle cx="75" cy="38" r="5" fill="#ff4757"/>
+   <circle cx="100" cy="34" r="5" fill="#ff9f43"/>
+   <circle cx="125" cy="38" r="5" fill="#ff4757"/>`,
+  // 28: ice cream
+  `<rect x="88" y="112" width="24" height="55" rx="6" fill="#ffd0a0"/>
+   <path d="M65,115 Q65,55 100,55 Q135,55 135,115Z" fill="#ffd0e8"/>
+   <path d="M72,115 Q72,65 100,65 Q128,65 128,115Z" fill="#ffe8f5"/>
+   <path d="M65,115 Q82,108 100,115 Q118,108 135,115" stroke="rgba(0,0,0,0.1)" stroke-width="1" fill="none"/>
+   <circle cx="82" cy="85" r="6" fill="#ff6b9d" opacity="0.6"/>
+   <circle cx="118" cy="90" r="5" fill="#ff6b9d" opacity="0.6"/>
+   <circle cx="100" cy="76" r="5" fill="#ff4757" opacity="0.6"/>`,
+  // 29: candy
+  `<rect x="88" y="80" width="24" height="70" rx="12" fill="#ff4757"/>
+   <rect x="88" y="80" width="24" height="10" rx="5" fill="white" opacity="0.5"/>
+   <rect x="88" y="100" width="24" height="10" fill="white" opacity="0.4"/>
+   <rect x="88" y="120" width="24" height="10" fill="white" opacity="0.4"/>
+   <path d="M100,80 Q80,70 65,75 Q50,80 55,95 Q60,108 100,80Z" fill="#ff4757"/>
+   <path d="M100,80 Q80,70 65,75 Q52,78 58,90 Q63,102 100,80Z" fill="#ffa502" opacity="0.7"/>`,
+  // 30: crown
+  `<path d="M30,145 L30,110 L55,130 L100,65 L145,130 L170,110 L170,145Z" fill="#feca57" filter="url(#glow)"/>
+   <path d="M30,145 L170,145 L165,155 L35,155Z" fill="#ffa502"/>
+   <circle cx="100" cy="65" r="10" fill="#ff4757"/>
+   <circle cx="30" cy="110" r="8" fill="#54a0ff"/>
+   <circle cx="170" cy="110" r="8" fill="#a55eea"/>
+   <circle cx="55" cy="130" r="7" fill="#7bed9f"/>
+   <circle cx="145" cy="130" r="7" fill="#ff6b9d"/>
+   ${[45,65,85,105,125,145].map(x=>`<rect x="${x}" y="138" width="8" height="8" rx="1" fill="#ff9f43"/>`).join('')}`,
+];
+
+const DECO_ICONS = ['♥','★','❀','🌈','☁','🌙','☀','🍇','🍓','🍎','🍊','🍉','🍄','❄','🦋','🐟','🦀','🐧','🐰','🐻','🐱','🐶','🐼','🦁','🐘','🐦','🎂','🍦','🍬','👑','🌟','🌈','🎀','🎊','🎁','💎','🔮','🌸','🦄','✨','🎠','🎡','🎪','🍭','🍬','🧁','🎂','🎈','🎵','🎶'];
+
+// =====================
+// STATE
+// =====================
+// Levels 1-5: no center bottle. Level 6+: center bottle appears.
+const CENTER_FROM_LEVEL = 6;
+// Center bottle capacity = nColors for that stage (all 4-cell units of one color)
+// Dynamically set per stage. Base = 5 for early levels, grows with difficulty.
+const CENTER_SHAPES = ['heart','round','diamond','star','heart','round','diamond','star','heart','round',
+  'diamond','star','heart','round','diamond','star','heart','round','diamond','star',
+  'diamond','star','heart','round','diamond','star','heart','round','diamond','star'];
+// Computed per level:
+let CENTER_CAPACITY = 5; // overwritten in startLevel
+
+const State = {
+  screen: 'home',
+  currentLevel: null,
+  bottles: [],
+  centerBottle: [],
+  centerColorIdx: null,  // the color index the center bottle must be filled with
+  hasCenterBottle: false,
+  selected: null,
+  history: [],
+  bottleAddUsed: false,
+  settings: { se: true },
+  isAnimating: false,
+  cleared: JSON.parse(localStorage.getItem('ws_cleared')||'[]'),
+};
+
+// =====================
+// AUDIO
+// =====================
+let audioCtx = null;
+let audioUnlocked = false;
+
+function getAudio(){
+  if(!audioCtx){
+    try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
+  }
+  if(audioCtx.state==='suspended'){ audioCtx.resume().catch(()=>{}); }
+  return audioCtx;
+}
+
+function unlockAudio(){
+  if(audioUnlocked) return;
+  try{
+    const ac = getAudio();
+    if(!ac) return;
+    // Play a silent buffer — required by iOS to unlock
+    const buf = ac.createBuffer(1, ac.sampleRate*0.1, ac.sampleRate);
+    const src = ac.createBufferSource();
+    src.buffer = buf;
+    src.connect(ac.destination);
+    src.start(0);
+    src.onended = ()=>{ audioUnlocked = true; };
+    if(ac.state==='suspended') ac.resume();
+  }catch(e){}
+}
+
+// Listen on every interaction — iOS requires it inside the gesture handler
+document.addEventListener('touchstart', unlockAudio, {passive:true});
+document.addEventListener('touchend',   unlockAudio, {passive:true});
+document.addEventListener('click',      unlockAudio, {passive:true});
+
+function playTone(freq, type, duration, vol=0.4, freqEnd=null){
+  if(!State.settings.se) return;
+  try{
+    const ac = getAudio();
+    if(!ac || ac.state==='suspended') return;
+    const compressor = ac.createDynamicsCompressor();
+    compressor.threshold.value = -6;
+    compressor.ratio.value = 3;
+    compressor.connect(ac.destination);
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.connect(g); g.connect(compressor);
+    o.type = type; o.frequency.setValueAtTime(freq, ac.currentTime);
+    if(freqEnd) o.frequency.linearRampToValueAtTime(freqEnd, ac.currentTime+duration);
+    g.gain.setValueAtTime(vol, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+duration);
+    o.start(); o.stop(ac.currentTime+duration);
+  }catch(e){}
+}
+const SE = {
+  select:   ()=> playTone(880,'sine',0.08,0.4),
+  pour:     ()=> playTone(440,'triangle',0.3,0.3,220),
+  land:     ()=> playTone(280,'triangle',0.12,0.35,140),
+  complete: ()=> playTone(880,'sine',0.15,0.4,1320),
+  error:    ()=> playTone(110,'sawtooth',0.12,0.2),
+  clear: ()=>{
+    setTimeout(()=>playTone(523,'sine',0.18,0.4),0);
+    setTimeout(()=>playTone(659,'sine',0.18,0.4),180);
+    setTimeout(()=>playTone(784,'sine',0.28,0.4),360);
+  },
+  btn: ()=> playTone(660,'square',0.04,0.25),
+};
+
+function startBGM(){} // BGM removed
+function stopBGM(){}
+
+// =====================
+// RIPPLE EFFECT
+// =====================
+function spawnRipple(x, y){
+  const r = document.createElement('div');
+  r.className='ripple';
+  r.style.left=x+'px'; r.style.top=y+'px';
+  document.body.appendChild(r);
+  setTimeout(()=>r.remove(), 500);
+}
+
+// =====================
+// BOTTLE SVG RENDERING
+// =====================
+function bottleColor(colorIdx){
+  return COLORS[colorIdx] || '#333';
+}
+let _bottleUID = 0;
+
+// Build merged liquid rects: adjacent same-color cells become one tall rect
+function buildLiquidRects(layers, capacity, BX, BY, BW, BH, clipId){
+  if(layers.length === 0) return '';
+  const cellH = BH / capacity;
+  // Group consecutive same-color runs (bottom=index 0 → top=index capacity-1)
+  // We only iterate filled slots
+  const filled = layers.slice(); // [bottom...top]
+  // Build run-length groups from bottom up
+  const groups = []; // {color, startIdx, count}
+  for(let i=0;i<filled.length;i++){
+    if(groups.length && groups[groups.length-1].color === filled[i]){
+      groups[groups.length-1].count++;
+    } else {
+      groups.push({color: filled[i], startIdx: i, count: 1});
+    }
+  }
+  let svg = '';
+  for(const g of groups){
+    const col = bottleColor(g.color);
+    // y position: bottom of this group's bottom cell
+    const bottomY = BY + BH - (g.startIdx + g.count) * cellH;
+    const h = cellH * g.count;
+    svg += `<rect x="${BX}" y="${bottomY}" width="${BW}" height="${h+0.5}" fill="${col}" clip-path="url(#${clipId})"/>`;
+    // Divider only between DIFFERENT color groups
+    if(g.startIdx > 0){
+      // line at bottom edge of this group = top of lower group
+      const divY = BY + BH - g.startIdx * cellH;
+      svg += `<line x1="${BX}" y1="${divY}" x2="${BX+BW}" y2="${divY}" stroke="rgba(0,0,0,0.25)" stroke-width="1" clip-path="url(#${clipId})"/>`;
+    }
+  }
+  return svg;
+}
+
+// normal bottle SVG (52×108 viewbox)
+function makeSVGBottle(layers, capacity, selected, done){
+  const uid = ++_bottleUID;
+  const BX=8, BY=22, BW=36, BH=80, H=108;
+  const clipId = 'bc'+uid;
+  const bodyPath = `M${BX},${BY} L${BX},${H-4} Q${BX},${H} ${BX+4},${H} L${52-BX-4},${H} Q${52-BX},${H} ${52-BX},${H-4} L${52-BX},${BY} Z`;
+
+  const liquidSVG = buildLiquidRects(layers, capacity, BX, BY, BW, BH, clipId);
+
+  let doneSVG = '';
+  if(done){
+    doneSVG = `
+      <rect x="${BX}" y="${BY}" width="${BW}" height="${BH}" fill="rgba(255,255,255,0.10)" clip-path="url(#${clipId})"/>
+      <text x="26" y="20" text-anchor="middle" font-size="10" fill="white" opacity="0.9">✨</text>
+      <text x="14" y="52" text-anchor="middle" font-size="9" fill="white" opacity="0.75">★</text>
+      <text x="38" y="52" text-anchor="middle" font-size="9" fill="white" opacity="0.75">★</text>`;
+  }
+
+  const strokeCol = done ? '#7bed9f' : selected ? 'rgba(255,255,255,0.85)' : 'rgba(200,220,255,0.3)';
+  const sw = 1;   // thin frame
+  const selGlow  = selected ? `<rect x="5" y="20" width="42" height="84" rx="5" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.7"/>` : '';
+  const doneGlow = done     ? `<rect x="4" y="19" width="44" height="86" rx="5" fill="none" stroke="#7bed9f" stroke-width="1.5" opacity="0.6"/>` : '';
+
+  return `<svg class="bottle-svg" viewBox="0 0 52 108" style="overflow:visible">
+  <defs><clipPath id="${clipId}"><path d="${bodyPath}"/></clipPath></defs>
+  ${liquidSVG}
+  ${doneSVG}
+  <path d="${bodyPath}" fill="rgba(255,255,255,0.05)" stroke="${strokeCol}" stroke-width="${sw}"/>
+  <path d="M17,${BY} L17,10 Q17,6 20,6 L32,6 Q35,6 35,10 L35,${BY} Z"
+    fill="rgba(255,255,255,0.05)" stroke="${strokeCol}" stroke-width="${sw}"/>
+  <rect x="16" y="3" width="20" height="9" rx="3" fill="#d4956a" stroke="#a0622a" stroke-width="1"/>
+  <rect x="18" y="4" width="16" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+  <line x1="13" y1="${BY+6}" x2="13" y2="${H-14}" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linecap="round"/>
+  ${selGlow}${doneGlow}
+  </svg>`;
+}
+
+// Rich center bottle — cute shaped flask with decorations
+function makeCenterBottleSVG(layers, capacity, shape, selected, done){
+  const uid = ++_bottleUID;
+
+  // Shape definitions: clip = liquid fill boundary, body = outer glass shape (slightly larger)
+  const SHAPES = {
+    heart:{
+      clip: `M100,158 C52,118 14,92 14,56 A38,38 0 0,1 100,46 A38,38 0 0,1 186,56 C186,92 148,118 100,158Z`,
+      body: `M100,162 C50,120 10,94 10,56 A42,42 0 0,1 100,42 A42,42 0 0,1 190,56 C190,94 150,120 100,162Z`,
+      cork:{x:83,y:20,w:34,h:14},neckY:42,
+      // fill covers the ENTIRE clip bounding box — clip-path handles the shape
+      fill:{x:10,y:44,w:180,h:118},
+      shine1:{x1:28,y1:58,x2:28,y2:148}, shine2:{x1:38,y1:52,x2:38,y2:90},
+      dots:[{cx:40,cy:68},{cx:160,cy:68},{cx:100,cy:155}],
+    },
+    round:{
+      clip: `M100,165 C48,165 18,132 18,92 A82,82 0 0,1 182,92 C182,132 152,165 100,165Z`,
+      body: `M100,169 C44,169 12,134 12,92 A88,88 0 0,1 188,92 C188,134 156,169 100,169Z`,
+      cork:{x:83,y:20,w:34,h:14},neckY:42,
+      fill:{x:12,y:42,w:176,h:127},
+      shine1:{x1:30,y1:58,x2:30,y2:152}, shine2:{x1:40,y1:52,x2:40,y2:88},
+      dots:[{cx:38,cy:95},{cx:162,cy:95},{cx:100,cy:162}],
+    },
+    diamond:{
+      clip: `M100,162 L22,100 L100,38 L178,100 Z`,
+      body: `M100,168 L16,100 L100,32 L184,100 Z`,
+      cork:{x:83,y:18,w:34,h:14},neckY:38,
+      fill:{x:16,y:38,w:168,h:130},
+      shine1:{x1:42,y1:62,x2:42,y2:140}, shine2:{x1:52,y1:56,x2:52,y2:88},
+      dots:[{cx:35,cy:100},{cx:165,cy:100},{cx:100,cy:160}],
+    },
+    star:{
+      clip: `M100,160 L70,136 L34,144 L50,110 L26,82 L62,80 L100,56 L138,80 L174,82 L150,110 L166,144 L130,136 Z`,
+      body: `M100,165 L67,140 L28,149 L46,112 L20,80 L60,78 L100,50 L140,78 L180,80 L154,112 L172,149 L133,140 Z`,
+      cork:{x:83,y:24,w:34,h:14},neckY:50,
+      fill:{x:20,y:50,w:160,h:114},
+      shine1:{x1:44,y1:70,x2:44,y2:148}, shine2:{x1:54,y1:64,x2:54,y2:92},
+      dots:[{cx:38,cy:110},{cx:162,cy:110},{cx:100,cy:158}],
+    },
+  };
+
+  const s = SHAPES[shape] || SHAPES.heart;
+  const clipId = 'cc'+uid;
+  const glowId = 'cg'+uid;
+  const shineId = 'cs'+uid;
+  const {x:fx,y:fy,w:fw,h:fh} = s.fill;
+  const cellH = fh / capacity;
+
+  // Build merged liquid rects for center bottle (same run-length logic)
+  let liquidSVG = '';
+  if(layers.length > 0){
+    const groups = [];
+    for(let i=0;i<layers.length;i++){
+      if(groups.length && groups[groups.length-1].color===layers[i]) groups[groups.length-1].count++;
+      else groups.push({color:layers[i], startIdx:i, count:1});
+    }
+    for(const g of groups){
+      const col = bottleColor(g.color);
+      const bottomY = fy + fh - (g.startIdx + g.count) * cellH;
+      const h = cellH * g.count;
+      liquidSVG += `<rect x="${fx}" y="${bottomY}" width="${fw}" height="${h+0.5}" fill="${col}" clip-path="url(#${clipId})"/>`;
+      if(g.startIdx > 0){
+        const divY = fy + fh - g.startIdx * cellH;
+        liquidSVG += `<line x1="${fx}" y1="${divY}" x2="${fx+fw}" y2="${divY}" stroke="rgba(0,0,0,0.25)" stroke-width="1.5" clip-path="url(#${clipId})"/>`;
+      }
+    }
+  }
+
+  const selFilter = (selected||done) ? `filter="url(#${glowId})"` : '';
+  const outerStroke = done ? '#7bed9f' : selected ? '#ffd700' : 'rgba(200,230,255,0.55)';
+  const outerStrokeW = (selected||done) ? 3.5 : 2;
+  // Inner glass tint stroke
+  const innerStroke = 'rgba(255,255,255,0.18)';
+
+  // Decorative sparkle dots on bottle outline
+  const dotsSVG = s.dots.map(d=>
+    `<circle cx="${d.cx}" cy="${d.cy}" r="3.5" fill="rgba(255,255,255,0.55)"/>` +
+    `<circle cx="${d.cx}" cy="${d.cy}" r="1.5" fill="white"/>`
+  ).join('');
+
+  // Neck connector (trapezoid between cork and body)
+  const neckSVG = `
+    <path d="M83,${s.neckY} L83,${s.neckY+10} Q100,${s.neckY+14} 117,${s.neckY+10} L117,${s.neckY} Z"
+      fill="rgba(255,255,255,0.07)" stroke="rgba(200,230,255,0.45)" stroke-width="1.5"/>`;
+
+  // Cork — 3D pill shape
+  const ck = s.cork;
+  const corkSVG = `
+    <rect x="${ck.x}" y="${ck.y}" width="${ck.w}" height="${ck.h}" rx="5" fill="#d4956a" stroke="#a0622a" stroke-width="1.5"/>
+    <rect x="${ck.x+3}" y="${ck.y+2}" width="${ck.w-6}" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+    <rect x="${ck.x}" y="${ck.y+ck.h-3}" width="${ck.w}" height="3" rx="0 0 5 5" fill="rgba(0,0,0,0.15)"/>`;
+
+  return `<svg class="center-bottle-svg" viewBox="0 0 200 185" style="overflow:visible;width:100%;height:100%">
+  <defs>
+    <clipPath id="${clipId}"><path d="${s.clip}"/></clipPath>
+    <filter id="${glowId}">
+      <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#ffd700" flood-opacity="0.9"/>
+    </filter>
+    <filter id="${shineId}">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+    <radialGradient id="rg${uid}" cx="35%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- outer glow ring when selected or done -->
+  ${selected ? `<path d="${s.body}" fill="none" stroke="#ffd700" stroke-width="6" opacity="0.25"/>` : ''}
+  ${done     ? `<path d="${s.body}" fill="none" stroke="#7bed9f" stroke-width="8" opacity="0.3"/>` : ''}
+
+  <!-- liquid fills (clipped to inner shape) -->
+  ${liquidSVG}
+
+  <!-- glass body outer -->
+  <path d="${s.body}" fill="none" stroke="${outerStroke}" stroke-width="${outerStrokeW}" ${selFilter}/>
+
+  <!-- inner glass tint & highlight overlay -->
+  <path d="${s.clip}" fill="url(#rg${uid})"/>
+  <path d="${s.clip}" fill="rgba(255,255,255,0.04)" stroke="${innerStroke}" stroke-width="1"/>
+
+  <!-- outline dot accents -->
+  ${dotsSVG}
+
+  <!-- neck + cork -->
+  ${neckSVG}
+  ${corkSVG}
+
+  <!-- main shine streak -->
+  <line x1="${s.shine1.x1}" y1="${s.shine1.y1}" x2="${s.shine1.x2}" y2="${s.shine1.y2}"
+    stroke="rgba(255,255,255,0.18)" stroke-width="4" stroke-linecap="round"/>
+  <!-- secondary small shine -->
+  <line x1="${s.shine2.x1}" y1="${s.shine2.y1}" x2="${s.shine2.x2}" y2="${s.shine2.y2}"
+    stroke="rgba(255,255,255,0.28)" stroke-width="2" stroke-linecap="round"/>
+
+  </svg>`;
+}
+
+// =====================
+// LAYOUT HELPERS
+// =====================
+function getBottleSize(){
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  if(w < 400) return { bw: 46, bh: 96 };
+  if(w < 600) return { bw: 52, bh: 108 };
+  return { bw: 60, bh: 124 };
+}
+
+function calcGridCols(nBottles){
+  const w = window.innerWidth;
+  if(w >= 900) return Math.min(nBottles, 8);
+  if(w >= 600) return Math.min(nBottles, 6);
+  // For portrait phone: arrange around center
+  return Math.min(nBottles, 5);
+}
+
+// =====================
+// RENDER HOME
+// =====================
+function renderHome(){
+  document.getElementById('home-screen').style.display='flex';
+  document.getElementById('game-screen').classList.remove('active');
+
+  const wrap = document.getElementById('stage-grid-wrap');
+  const diffs = [
+    {label:'🟢 かんたん (Lv 1〜10)', cls:'diff-easy', range:[1,10], icon:DECO_ICONS.slice(0,10)},
+    {label:'🟡 ふつう (Lv 11〜20)', cls:'diff-normal', range:[11,20], icon:DECO_ICONS.slice(10,20)},
+    {label:'🔴 むずかしい (Lv 21〜35)', cls:'diff-hard', range:[21,35], icon:DECO_ICONS.slice(20,35)},
+    {label:'🟣 超むずかしい (Lv 36〜50)', cls:'diff-ex', range:[36,50], icon:DECO_ICONS.slice(35,50)},
+  ];
+  let html='';
+  for(const d of diffs){
+    html+=`<div class="difficulty-section ${d.cls}">
+      <div class="difficulty-label">${d.label}</div>
+      <div class="stage-grid">`;
+    for(let i=d.range[0];i<=d.range[1];i++){
+      const cleared = State.cleared.includes(i);
+      html+=`<div class="stage-tile${cleared?' cleared':''}" data-level="${i}">
+        <div class="stage-tile-icon">${d.icon[i-d.range[0]]||'💧'}</div>
+        <div class="stage-tile-num">${i}</div>
+      </div>`;
+    }
+    html+='</div></div>';
+  }
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('.stage-tile').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      SE.btn();
+      startLevel(parseInt(el.dataset.level));
+    });
+  });
+}
+// Reset handler registered once, outside renderHome (prevents duplicate listeners)
+document.getElementById('btn-reset-progress').addEventListener('click', ()=>{
+  if(confirm('クリアデータをすべて消しますか？')) {
+    State.cleared = [];
+    localStorage.removeItem('ws_cleared');
+    renderHome();
+  }
+});
+
+// =====================
+// RENDER GAME
+// =====================
+function renderGame(){
+  document.getElementById('home-screen').style.display='none';
+  document.getElementById('game-screen').classList.add('active');
+  document.getElementById('level-display').textContent = 'レベル ' + State.currentLevel;
+  document.getElementById('add-badge').textContent = State.bottleAddUsed ? '✗' : '1';
+  renderBottles();
+}
+
+function getBottleSize(){
+  const w = window.innerWidth;
+  if(w < 400) return {bw:44,bh:90};
+  if(w < 600) return {bw:50,bh:104};
+  return {bw:56,bh:116};
+}
+
+function renderBottles(){
+  const gameArea = document.getElementById('game-area');
+  gameArea.innerHTML = '';
+  const n = State.bottles.length;
+  const {bw} = getBottleSize();
+  const layout = document.createElement('div');
+  layout.className = 'game-layout';
+
+  if(!State.hasCenterBottle){
+    // === Lv1-5: simple grid, no center ===
+    const row = document.createElement('div');
+    row.className = 'bottles-row';
+    row.style.flexWrap = 'wrap';
+    for(let i=0;i<n;i++) row.appendChild(makeBottleEl(State.bottles[i], i, bw));
+    layout.appendChild(row);
+  } else {
+    // === Lv6+: center layout ===
+    const shape = CENTER_SHAPES[(State.currentLevel-1) % CENTER_SHAPES.length];
+    const cw = Math.min(window.innerWidth * 0.44, 190); // bigger center
+
+    // Distribute: sides get 2 each, rest go top+bottom
+    const sideMax = 2;
+    const leftCount  = Math.min(sideMax, Math.floor(n/2));
+    const rightCount = Math.min(sideMax, Math.max(0, n - leftCount - Math.max(0,n-leftCount-sideMax)));
+    const midUsed    = leftCount + rightCount;
+    const remaining  = n - midUsed;
+    const topCount   = Math.ceil(remaining/2);
+
+    const iTop=0, iLeft=topCount, iRight=topCount+leftCount, iBot=topCount+midUsed;
+
+    // TOP
+    if(topCount>0){
+      const row=document.createElement('div'); row.className='bottles-row';
+      for(let i=0;i<topCount;i++) row.appendChild(makeBottleEl(State.bottles[iTop+i],iTop+i,bw));
+      layout.appendChild(row);
+    }
+
+    // MIDDLE: left | center | right
+    const midRow=document.createElement('div'); midRow.className='middle-row';
+
+    const leftSide=document.createElement('div'); leftSide.className='side-bottles';
+    for(let i=0;i<leftCount;i++) leftSide.appendChild(makeBottleEl(State.bottles[iLeft+i],iLeft+i,bw));
+    midRow.appendChild(leftSide);
+
+    // Center bottle (receive-only — no selection, tap routes directly as destination)
+    const centerDone = isCenterDone();
+    const centerWrap = document.createElement('div');
+    centerWrap.id = 'center-bottle-wrap';
+    let cCls = 'bottle-wrap center-bottle';
+    if(centerDone) cCls += ' bottle-done';
+    centerWrap.className = cCls;
+    centerWrap.style.cssText = `width:${cw}px;height:${cw}px;cursor:pointer;`;
+    centerWrap.innerHTML = makeCenterBottleSVG(State.centerBottle, CENTER_CAPACITY, shape, false, centerDone);
+    centerWrap.addEventListener('click', (e)=>{
+      spawnRipple(e.clientX, e.clientY);
+      // If a normal bottle is selected, try to pour into center
+      if(State.selected && State.selected.type==='normal'){
+        const from = State.selected;
+        if(canPourSel(from, {type:'center'})){
+          pourSel(from, {type:'center'});
+        } else {
+          SE.error();
+          const el = document.getElementById('center-bottle-wrap');
+          if(el){ el.classList.add('shake'); setTimeout(()=>el.classList.remove('shake'),400); }
+          State.selected = null; renderBottles();
+        }
+      }
+      // else: nothing selected, tapping center does nothing
+    });
+    midRow.appendChild(centerWrap);
+
+    const rightSide=document.createElement('div'); rightSide.className='side-bottles';
+    for(let i=0;i<rightCount;i++) rightSide.appendChild(makeBottleEl(State.bottles[iRight+i],iRight+i,bw));
+    midRow.appendChild(rightSide);
+    layout.appendChild(midRow);
+
+    // BOTTOM
+    const botCount = n - midUsed - topCount;
+    if(botCount>0){
+      const row=document.createElement('div'); row.className='bottles-row';
+      for(let i=0;i<botCount;i++) row.appendChild(makeBottleEl(State.bottles[iBot+i],iBot+i,bw));
+      layout.appendChild(row);
+    }
+  }
+
+  gameArea.appendChild(layout);
+}
+
+function isBottleDone(layers){
+  return layers.length === 4 && layers.every(c => c === layers[0]);
+}
+
+function makeBottleEl(layers, idx, bw){
+  const isSel = State.selected && State.selected.type==='normal' && State.selected.idx===idx;
+  const done  = isBottleDone(layers);
+  const div = document.createElement('div');
+  div.id = 'btl-' + idx;
+  let cls = 'bottle-wrap';
+  if(isSel) cls += ' selected';
+  if(done)  cls += ' bottle-done';
+  div.className = cls;
+  div.style.width = bw+'px';
+  div.innerHTML = makeSVGBottle(layers, 4, isSel, done);
+  div.addEventListener('click', (e)=>{
+    if(done) return;          // completed bottles are locked — no interaction
+    spawnRipple(e.clientX, e.clientY);
+    onBottleTap({type:'normal', idx});
+  });
+  return div;
+}
+
+// =====================
+// GAME LOGIC
+// =====================
+function getBottleArr(sel){
+  if(!sel) return null;
+  return sel.type==='center' ? State.centerBottle : State.bottles[sel.idx];
+}
+function getCapacity(sel){
+  return sel && sel.type==='center' ? CENTER_CAPACITY : 4;
+}
+
+function centerFreeCount(){
+  // no locked cells; all cells are free
+  return State.centerBottle.length;
+}
+function centerTopColor(){
+  if(State.centerBottle.length === 0) return null;
+  return State.centerBottle[State.centerBottle.length-1];
+}
+
+function canPourSel(from, to){
+  if(!from||!to) return false;
+  if(selMatch(from, to)) return false;
+
+  // CENTER IS RECEIVE-ONLY — can never pour FROM center
+  if(from.type==='center') return false;
+
+  const src = State.bottles[from.idx];
+  if(!src || src.length===0) return false;
+
+  // pouring INTO center
+  if(to.type==='center'){
+    if(!State.hasCenterBottle) return false;
+    if(isCenterDone()) return false;
+    if(State.centerBottle.length >= CENTER_CAPACITY) return false;
+    const srcTop = src[src.length-1];
+    // center only accepts its designated color
+    if(srcTop !== State.centerColorIdx) return false;
+    // color must match top of center if non-empty (always centerColorIdx, so OK)
+    return true;
+  }
+
+  // pouring into normal bottle
+  const dstArr = State.bottles[to.idx];
+  if(!dstArr) return false;
+  if(dstArr.length >= 4) return false;
+  if(isBottleDone(dstArr)) return false;
+
+  const srcTop = src[src.length-1];
+  if(dstArr.length === 0) return true;
+  return dstArr[dstArr.length-1] === srcTop;
+}
+
+function topColorCount(bottle){
+  if(bottle.length === 0) return 0;
+  const topColor = bottle[bottle.length-1];
+  let count = 0;
+  for(let i=bottle.length-1;i>=0;i--){
+    if(bottle[i]===topColor) count++; else break;
+  }
+  return count;
+}
+
+function pourSel(from, to){
+  if(State.isAnimating) return;
+  State.isAnimating = true;
+
+  // Save history
+  State.history.push({
+    bottles: State.bottles.map(b=>[...b]),
+    center: [...State.centerBottle],
+  });
+  if(State.history.length > 30) State.history.shift();
+
+  // from is always a normal bottle (center is receive-only)
+  const src = State.bottles[from.idx];
+  const dst = getBottleArr(to);
+  const dstCap = getCapacity(to);
+  const topColor = src[src.length-1];
+  const srcTopCount = topColorCount(src);
+  const countToMove = Math.min(srcTopCount, dstCap - dst.length);
+
+  SE.pour();
+  const fromEl = document.getElementById('btl-' + from.idx);
+  if(fromEl) fromEl.classList.add('pour-anim');
+
+  setTimeout(()=>{
+    for(let i=0;i<countToMove;i++){ dst.push(topColor); src.pop(); }
+    SE.land();
+    if(fromEl) fromEl.classList.remove('pour-anim');
+
+    const allBottles = [...State.bottles, State.centerBottle];
+    const isComplete = allBottles.some(b=> b.length>=2 && b.every(c=>c===b[0]));
+    if(isComplete) SE.complete();
+
+    State.selected = null;
+    renderBottles();
+
+    if(checkWin()){
+      State.isAnimating = false;
+      setTimeout(showClear, 400);
+    } else {
+      State.isAnimating = false;
+    }
+  }, 350);
+}
+
+function isCenterDone(){
+  if(!State.hasCenterBottle) return true;
+  return State.centerBottle.length === CENTER_CAPACITY;
+}
+
+function checkWin(){
+  const normOk = State.bottles.every(b =>
+    b.length===0 || (b.length===4 && b.every(c=>c===b[0]))
+  );
+  return normOk && isCenterDone();
+}
+
+function selMatch(a, b){
+  if(!a||!b) return false;
+  if(a.type!==b.type) return false;
+  return a.type==='center' || a.idx===b.idx;
+}
+
+function onBottleTap(sel){
+  if(State.isAnimating) return;
+  const bottle = getBottleArr(sel);
+
+  if(State.selected === null){
+    // Center is receive-only — tapping it with nothing selected does nothing
+    if(sel.type==='center') return;
+    if(!bottle || bottle.length===0) return;
+    if(isBottleDone(bottle)) return;
+    SE.select();
+    State.selected = sel;
+    renderBottles();
+  } else if(selMatch(State.selected, sel)){
+    State.selected = null;
+    renderBottles();
+  } else {
+    if(canPourSel(State.selected, sel)){
+      pourSel(State.selected, sel);
+    } else {
+      SE.error();
+      const el = sel.type==='center'
+        ? document.getElementById('center-bottle-wrap')
+        : document.getElementById('btl-' + sel.idx);   // ← use btl-N id
+      if(el){ el.classList.add('shake'); setTimeout(()=>el.classList.remove('shake'),400); }
+      State.selected = null;
+      renderBottles();
+    }
+  }
+}
+
+// =====================
+// START LEVEL
+// =====================
+function startLevel(lvl){
+  const stageData = STAGES[lvl-1];
+  State.currentLevel = lvl;
+  State.bottles = stageData.bottles.map(b=>[...b]);
+  State.centerColorIdx = stageData.centerColorIdx;
+  State.hasCenterBottle = (lvl >= CENTER_FROM_LEVEL);
+  CENTER_CAPACITY = stageData.centerCap || 5;
+  // Center starts with 1 cell of centerColor as hint (only if has center)
+  State.centerBottle = State.hasCenterBottle ? [stageData.centerColorIdx] : [];
+  State.selected = null;
+  State.history = [];
+  State.bottleAddUsed = false;
+  State.isAnimating = false;
+  State.screen = 'game';
+  renderGame();
+}
+
+// =====================
+// CONTROLS
+// =====================
+document.getElementById('btn-home').addEventListener('click', ()=>{
+  SE.btn(); stopBGM(); State.screen='home'; renderHome();
+  document.getElementById('home-screen').style.display='flex';
+  document.getElementById('game-screen').classList.remove('active');
+});
+
+document.getElementById('btn-settings').addEventListener('click', ()=>{
+  SE.btn(); document.getElementById('settings-modal').classList.remove('hidden');
+});
+document.getElementById('btn-settings-close').addEventListener('click', ()=>{
+  SE.btn(); document.getElementById('settings-modal').classList.add('hidden');
+});
+
+document.getElementById('btn-reset').addEventListener('click', ()=>{
+  SE.btn();
+  if(State.isAnimating) return;
+  const sd = STAGES[State.currentLevel-1];
+  State.bottles = sd.bottles.map(b=>[...b]);
+  CENTER_CAPACITY = sd.centerCap || 5;
+  State.centerBottle = State.hasCenterBottle ? [sd.centerColorIdx] : [];
+  State.selected=null; State.history=[]; State.isAnimating=false;
+  State.bottleAddUsed=false;
+  renderGame();
+});
+
+document.getElementById('btn-undo').addEventListener('click', ()=>{
+  SE.btn();
+  if(State.isAnimating || State.history.length===0) return;
+  const snap = State.history.pop();
+  State.bottles = snap.bottles;
+  State.centerBottle = snap.center;
+  State.selected=null;
+  renderBottles();
+});
+
+document.getElementById('btn-add').addEventListener('click', ()=>{
+  SE.btn();
+  if(State.bottleAddUsed || State.isAnimating) return;
+  State.bottles.push([]);
+  State.bottleAddUsed = true;
+  document.getElementById('add-badge').textContent='✗';
+  renderBottles();
+});
+
+document.getElementById('btn-next-level').addEventListener('click', ()=>{
+  SE.btn();
+  document.getElementById('clear-modal').classList.add('hidden');
+  const next = State.currentLevel < 50 ? State.currentLevel+1 : 1;
+  startLevel(next);
+});
+
+document.getElementById('btn-home-from-clear').addEventListener('click', ()=>{
+  SE.btn();
+  document.getElementById('clear-modal').classList.add('hidden');
+  stopBGM(); State.screen='home'; renderHome();
+  document.getElementById('home-screen').style.display='flex';
+  document.getElementById('game-screen').classList.remove('active');
+});
+
+// Toggle SE/BGM
+document.getElementById('toggle-se').addEventListener('click', function(){
+  State.settings.se = !State.settings.se;
+  this.classList.toggle('on', State.settings.se);
+});
+
+const THEMES = {
+  A: { // 標準（ダーク紫）
+    '--bg1':'#1a1147','--bg2':'#2d1b69',
+    '--btn':'#5f3dc4','--btn-h':'#7c52d4','--accent':'#feca57',
+    '--body-bg':'linear-gradient(170deg,#1a1147 0%,#2d1b69 100%)',
+    '--text':'#ffffff',
+  },
+  B: { // パステル（やわらか紫）
+    '--bg1':'#2a1a3a','--bg2':'#3d2255',
+    '--btn':'#9966cc','--btn-h':'#bb88ee','--accent':'#ffcc88',
+    '--body-bg':'linear-gradient(170deg,#2a1a3a 0%,#3d2255 100%)',
+    '--text':'#ffffff',
+  },
+  C: { // ネオン（ダークブルー）
+    '--bg1':'#000820','--bg2':'#001440',
+    '--btn':'#0044cc','--btn-h':'#0066ff','--accent':'#00ffcc',
+    '--body-bg':'linear-gradient(170deg,#000820 0%,#001440 100%)',
+    '--text':'#ffffff',
+  },
+  D: { // ガーリー（ピンク＆カラフル）
+    '--bg1':'#ff6eb4','--bg2':'#ff9ecc',
+    '--btn':'#ff3399','--btn-h':'#ff66bb','--accent':'#ffee00',
+    '--body-bg':'linear-gradient(170deg,#ff6eb4 0%,#c847a0 50%,#7733cc 100%)',
+    '--text':'#ffffff',
+  },
+};
+function setTheme(t){
+  State.settings.theme = t;
+  const vars = THEMES[t] || THEMES.A;
+  const root = document.documentElement.style;
+  for(const [k,v] of Object.entries(vars)) root.setProperty(k, v);
+  // Apply body background from theme (handles multi-stop gradients)
+  document.body.style.background = vars['--body-bg'] || vars['--bg1'];
+  // Update active button highlight
+  document.querySelectorAll('.theme-btn').forEach(el=>{
+    el.style.outline = el.dataset.theme===t ? '2px solid var(--accent)' : 'none';
+  });
+}
+
+// =====================
+// CLEAR SCREEN
+// =====================
+function showClear(){
+  SE.clear();
+  if(!State.cleared.includes(State.currentLevel)){
+    State.cleared.push(State.currentLevel);
+    localStorage.setItem('ws_cleared', JSON.stringify(State.cleared));
+  }
+  document.getElementById('clear-msg').textContent = `レベル ${State.currentLevel} クリア！`;
+  document.getElementById('clear-modal').classList.remove('hidden');
+  showConfetti();
+}
+
+// =====================
+// CONFETTI
+// =====================
+function showConfetti(){
+  const canvas = document.getElementById('confetti-canvas');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const pieces = Array.from({length:60}, ()=>({
+    x: Math.random()*canvas.width, y: -10,
+    vx: (Math.random()-0.5)*4, vy: Math.random()*4+2,
+    color: COLORS[Math.floor(Math.random()*COLORS.length)],
+    rot: Math.random()*360, rotV: (Math.random()-0.5)*8,
+    w: Math.random()*10+5, h: Math.random()*6+4,
+  }));
+  let frame=0;
+  function tick(){
+    if(frame++>120){ctx.clearRect(0,0,canvas.width,canvas.height);return;}
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(const p of pieces){
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rotV;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.globalAlpha=Math.max(0,1-frame/120);
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+// =====================
+// VH FIX & RESIZE
+// =====================
+function setVH(){
+  document.documentElement.style.setProperty('--vh', (window.innerHeight*0.01)+'px');
+}
+setVH(); window.addEventListener('resize', ()=>{setVH(); if(State.screen==='game') renderBottles();});
+
+// =====================
+// INIT
+// =====================
+setVH();
+renderHome();
+</script>
+</body>
+</html>

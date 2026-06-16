@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEPCO Workspace – Vision Demo</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --color-header-bg: #FFFFFF;
+  --color-header-text: #181818;
+  --color-nav-active-line: #0176D3;
+  --color-link: #0176D3;
+  --color-brand-btn: #0176D3;
+  --color-page-bg: #F3F3F3;
+  --color-card-bg: #FFFFFF;
+  --color-border: #DDDBDA;
+  --color-label: #3E3E3C;
+  --color-text: #181818;
+  --color-critical: #EA001E;
+  --color-success: #2E844A;
+  --color-warning: #FE9339;
+  --color-util-bar: #1B1B1B;
+  --color-agentpanel-bg: #FFFFFF;
+  --color-agent-bubble: #F3F3F3;
+  --color-user-bubble: #0176D3;
+  --font: 'Salesforce Sans','Hiragino Sans','Yu Gothic UI',Arial,sans-serif;
+}
+html, body { height: 100%; overflow: hidden; font-family: var(--font); font-size: 13px; color: var(--color-text); background: var(--color-page-bg); }
+
+/* ====== GLOBAL HEADER ====== */
+#global-header { position: fixed; top: 0; left: 0; right: 0; z-index: 900; background: #fff; box-shadow: 0 1px 0 #DDDBDA; }
+
+/* Row 1: Logo / Search / Icons */
+.header-row1 { height: 50px; display: flex; align-items: center; padding: 0 12px; gap: 0; border-bottom: 1px solid #EEEEEE; }
+/* Logo area – left of row1, contains the brand image */
+.header-logo { display: flex; align-items: center; gap: 0; min-width: 170px; padding-right: 12px; }
+.logo-img { display: flex; align-items: center; gap: 6px; text-decoration: none; }
+/* Colorful TEPCO logo block (4-quadrant style like JP CompleteDemo) */
+.logo-mark { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; width: 30px; height: 30px; }
+.logo-mark-q { border-radius: 3px; }
+.logo-mark-q:nth-child(1) { background: #0078D4; }
+.logo-mark-q:nth-child(2) { background: #E60012; }
+.logo-mark-q:nth-child(3) { background: #F0AB00; }
+.logo-mark-q:nth-child(4) { background: #2E844A; }
+.logo-name { font-size: 15px; font-weight: 800; color: #181818; letter-spacing: -0.3px; line-height: 1; }
+.logo-name span { color: #0176D3; }
+
+/* Search bar – centered, takes remaining space */
+.header-search { flex: 1; max-width: 520px; margin: 0 auto; display: flex; gap: 6px; align-items: center; }
+.search-wrap { flex: 1; display: flex; align-items: center; border: 1px solid #AEAEAC; border-radius: 20px; background: white; padding: 0 12px; height: 32px; gap: 6px; }
+.search-wrap:focus-within { border-color: #0176D3; box-shadow: 0 0 0 2px rgba(1,118,211,0.2); }
+.search-icon { color: #706E6B; font-size: 13px; flex-shrink: 0; }
+.search-input { flex: 1; border: none; outline: none; font-size: 13px; font-family: var(--font); color: #181818; background: transparent; }
+.search-input::placeholder { color: #9E9E9E; }
+.ask-btn { height: 32px; padding: 0 14px; background: white; color: #0176D3; border: 1px solid #DDDBDA; border-radius: 20px; font-size: 12px; font-family: var(--font); cursor: pointer; display: flex; align-items: center; gap: 5px; white-space: nowrap; font-weight: 500; }
+.ask-btn:hover { background: #F3F3F3; }
+.ask-btn-icon { font-size: 14px; }
+
+/* Icon row – right side */
+.header-icons { display: flex; align-items: center; gap: 1px; margin-left: auto; padding-left: 8px; }
+.hicon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 4px; font-size: 15px; position: relative; color: #706E6B; }
+.hicon:hover { background: #F3F3F3; }
+.hicon svg { width: 18px; height: 18px; fill: #706E6B; }
+.hicon-badge { position: absolute; top: 3px; right: 3px; background: var(--color-critical); color: white; font-size: 9px; min-width: 14px; height: 14px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 700; padding: 0 2px; }
+.hicon-avatar { background: #0176D3; color: white; font-size: 11px; font-weight: 700; border-radius: 50% !important; width: 28px; height: 28px; }
+.hicon-star { display: flex; align-items: center; gap: 1px; }
+
+/* Row 2: Waffle + App name + Nav tabs */
+.header-row2 { height: 44px; display: flex; align-items: stretch; border-bottom: 1px solid #DDDBDA; overflow-x: auto; scrollbar-width: none; }
+.header-row2::-webkit-scrollbar { display: none; }
+
+/* Waffle + App name block */
+.nav-app-block { display: flex; align-items: center; gap: 0; padding: 0 4px 0 8px; flex-shrink: 0; border-right: 1px solid #DDDBDA; }
+.nav-waffle { display: flex; align-items: center; justify-content: center; width: 36px; height: 44px; cursor: pointer; flex-shrink: 0; }
+/* Waffle icon: 3 rows of 3 dots */
+.waffle-icon { display: grid; grid-template-columns: repeat(3, 5px); grid-template-rows: repeat(3, 5px); gap: 3px; }
+.waffle-dot { width: 5px; height: 5px; background: #706E6B; border-radius: 1px; }
+.nav-app-name { font-size: 13px; font-weight: 700; color: #181818; padding: 0 10px 0 6px; white-space: nowrap; line-height: 44px; }
+
+/* Nav tabs */
+.nav-tabs { display: flex; align-items: stretch; }
+/* Each tab = label span + separate chevron button, matching SF structure */
+.nav-tab-group { display: flex; align-items: stretch; position: relative; }
+.nav-tab-group:hover .nav-tab-label { background: #F3F3F3; }
+.nav-tab-group.active .nav-tab-label { font-weight: 500; }
+.nav-tab-group.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: #0176D3; }
+.nav-tab-label { display: flex; align-items: center; padding: 0 8px 0 12px; font-size: 13px; color: #181818; cursor: pointer; border: none; background: none; font-family: var(--font); white-space: nowrap; height: 44px; }
+.nav-tab-group.active .nav-tab-label { color: #0176D3; }
+.nav-tab-chevron { display: flex; align-items: center; justify-content: center; width: 24px; height: 44px; border: none; background: none; cursor: pointer; color: #706E6B; font-size: 9px; padding: 0; }
+.nav-tab-chevron:hover { background: #F3F3F3; }
+/* Tab with no dropdown (like ホーム or standalone items) */
+.nav-tab-single { display: flex; align-items: center; padding: 0 14px; font-size: 13px; color: #181818; cursor: pointer; border: none; background: none; font-family: var(--font); white-space: nowrap; height: 44px; position: relative; }
+.nav-tab-single:hover { background: #F3F3F3; }
+.nav-tab-single.active { color: #0176D3; font-weight: 500; }
+.nav-tab-single.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: #0176D3; }
+/* More / pencil at far right */
+.nav-tab-more { display: flex; align-items: center; padding: 0 10px; font-size: 13px; color: #181818; cursor: pointer; border: none; background: none; font-family: var(--font); white-space: nowrap; height: 44px; gap: 3px; margin-left: auto; }
+.nav-tab-more:hover { background: #F3F3F3; }
+.nav-pencil { display: flex; align-items: center; justify-content: center; width: 30px; height: 44px; border: none; background: none; cursor: pointer; color: #706E6B; font-size: 15px; margin-left: 2px; }
+
+/* ====== UTILITY BAR ====== */
+#util-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 900; height: 36px; background: var(--color-util-bar); display: flex; align-items: center; padding: 0 8px; gap: 2px; overflow-x: auto; }
+.util-btn { height: 28px; padding: 0 10px; color: white; background: transparent; border: none; border-radius: 4px; font-size: 11px; font-family: var(--font); cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+.util-btn:hover { background: rgba(255,255,255,0.12); }
+
+/* ====== SCENE NAV ====== */
+#scene-nav { position: fixed; bottom: 44px; right: 16px; z-index: 950; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.95); border: 1px solid var(--color-border); border-radius: 8px; padding: 6px 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-size: 12px; }
+.scene-nav-btn { width: 28px; height: 28px; border: 1px solid var(--color-border); border-radius: 4px; background: white; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+.scene-nav-btn:hover { background: #F3F3F3; }
+#scene-label { font-size: 12px; color: #3E3E3C; white-space: nowrap; }
+
+/* ====== LAYER INDICATOR ====== */
+#layer-indicator { position: fixed; bottom: 44px; left: 16px; z-index: 950; background: rgba(255,255,255,0.97); border: 1px solid var(--color-border); border-radius: 8px; padding: 8px 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 150px; }
+.layer-title { font-size: 10px; font-weight: 700; color: #3E3E3C; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--color-border); padding-bottom: 5px; margin-bottom: 5px; }
+.layer-row { font-size: 11px; padding: 3px 6px; border-radius: 4px; color: #3E3E3C; cursor: default; transition: all 0.3s; margin-bottom: 1px; }
+.layer-row.active { background: #0176D3; color: white; animation: pulse-layer 1.5s infinite; }
+@keyframes pulse-layer { 0%,100%{opacity:1} 50%{opacity:0.8} }
+
+/* ====== MAIN CONTENT AREA ====== */
+#main-area { position: fixed; top: 95px; left: 0; right: 0; bottom: 36px; overflow: hidden; }
+.scene { display: none; width: 100%; height: 100%; }
+.scene.active { display: flex; flex-direction: column; }
+
+/* ====== PAGE HEADER ====== */
+.page-header { background: var(--color-card-bg); border-bottom: 1px solid var(--color-border); padding: 12px 16px 0; flex-shrink: 0; }
+.page-header-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.page-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.page-icon.blue { background: #E8F4FD; }
+.page-icon.red { background: #FEEBEB; }
+.page-icon.green { background: #EAF5EA; }
+.page-header-info { flex: 1; }
+.page-header-type { font-size: 11px; color: #3E3E3C; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 2px; }
+.page-header-name { font-size: 20px; font-weight: 700; color: var(--color-text); }
+.page-header-name a { color: var(--color-link); text-decoration: none; }
+.page-header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; padding-top: 4px; }
+.btn-secondary { height: 30px; padding: 0 12px; border: 1px solid var(--color-border); border-radius: 4px; background: white; font-size: 12px; font-family: var(--font); cursor: pointer; color: var(--color-text); display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.btn-secondary:hover { background: #F3F3F3; }
+.btn-primary { height: 30px; padding: 0 12px; border: 1px solid var(--color-brand-btn); border-radius: 4px; background: var(--color-brand-btn); font-size: 12px; font-family: var(--font); cursor: pointer; color: white; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.btn-ai { height: 30px; padding: 0 12px; border: 1px solid #0176D3; border-radius: 4px; background: white; font-size: 12px; font-family: var(--font); cursor: pointer; color: #0176D3; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.btn-dropdown-arrow { font-size: 10px; }
+.related-links-row { display: flex; align-items: center; gap: 16px; padding: 6px 0; overflow-x: auto; }
+.related-link { font-size: 12px; color: var(--color-link); cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; text-decoration: none; }
+.related-link:hover { text-decoration: underline; }
+.subtab-row { display: flex; align-items: stretch; gap: 0; border-top: 1px solid var(--color-border); }
+.subtab { padding: 8px 14px; font-size: 12px; color: var(--color-label); cursor: pointer; border: none; background: none; position: relative; font-family: var(--font); white-space: nowrap; }
+.subtab.active { color: #0176D3; font-weight: 600; }
+.subtab.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: #0176D3; border-radius: 2px 2px 0 0; }
+.subtab:hover:not(.active) { background: rgba(1,118,211,0.06); }
+
+/* ====== CONTENT BODY ====== */
+.content-body { display: flex; flex: 1; overflow: hidden; }
+.main-content { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.agent-panel { width: 340px; flex-shrink: 0; background: var(--color-agentpanel-bg); border-left: 1px solid var(--color-border); display: flex; flex-direction: column; overflow: hidden; }
+
+/* ====== CARDS / SECTIONS ====== */
+.sf-card { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 4px; overflow: hidden; }
+.sf-card-header { padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--color-border); }
+.sf-card-title { font-size: 12px; font-weight: 700; color: var(--color-label); text-transform: uppercase; letter-spacing: 0.5px; }
+.sf-card-body { padding: 12px; }
+.section-header { font-size: 11px; font-weight: 700; color: var(--color-label); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; background: var(--color-card-bg); border-bottom: 1px solid var(--color-border); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.collapsible-body { padding: 0 }
+
+/* ====== FIELD GRID ====== */
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.field-item { padding: 8px 12px; border-bottom: 1px solid #F0EFED; display: flex; flex-direction: column; gap: 2px; position: relative; }
+.field-item:hover .field-edit { opacity: 1; }
+.field-label { font-size: 11px; color: var(--color-label); font-weight: 400; }
+.field-value { font-size: 13px; color: var(--color-text); display: flex; align-items: center; gap: 4px; }
+.field-value a { color: var(--color-link); text-decoration: none; }
+.field-edit { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); opacity: 0; cursor: pointer; font-size: 13px; color: #0176D3; transition: opacity 0.2s; }
+
+/* ====== TABLES ====== */
+.sf-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.sf-table th { padding: 6px 10px; background: #FAFAF9; color: var(--color-label); font-size: 11px; font-weight: 700; text-align: left; border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+.sf-table td { padding: 7px 10px; border-bottom: 1px solid #F0EFED; vertical-align: middle; }
+.sf-table tr:hover td { background: #F7F7F7; }
+.sf-table-row-critical td { background: rgba(234,0,30,0.04); }
+.sf-table-row-critical td:first-child { border-left: 3px solid var(--color-critical); }
+
+/* ====== BADGES ====== */
+.badge { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 20px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+.badge-critical { background: var(--color-critical); color: white; }
+.badge-success { background: var(--color-success); color: white; }
+.badge-warning { background: var(--color-warning); color: white; }
+.badge-info { background: #E8F4FD; color: #0176D3; }
+.badge-new { background: #F3F3F3; color: #3E3E3C; border: 1px solid var(--color-border); }
+
+/* Source badges */
+.src-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; color: white; white-space: nowrap; }
+.src-sf { background: #0176D3; }
+.src-sap { background: #F0AB00; color: #333; }
+.src-teams { background: #6264A7; }
+.src-m365 { background: #D83B01; }
+.src-slack { background: #4A154B; }
+.src-aws { background: #FF9900; color: #333; }
+.src-tableau { background: #0078D4; }
+.src-dc { background: #032D60; }
+.src-sp { background: #036C70; }
+.src-kiteikb { background: #2E844A; }
+
+/* ====== AGENT PANEL ====== */
+.agent-panel-header { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--color-border); gap: 6px; background: white; flex-shrink: 0; }
+.agent-panel-title { font-size: 13px; font-weight: 600; color: var(--color-text); flex: 1; display: flex; align-items: center; gap: 4px; }
+.agent-panel-icons { display: flex; gap: 4px; }
+.agent-panel-icon { width: 26px; height: 26px; border: none; background: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+.agent-panel-icon:hover { background: #F3F3F3; }
+.agent-chat { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.chat-initial { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
+.astro-icon { width: 64px; height: 64px; position: relative; }
+.astro-body { width: 50px; height: 52px; background: linear-gradient(135deg,#032D60,#0176D3); border-radius: 50% 50% 40% 40%; position: absolute; bottom: 0; left: 7px; }
+.astro-head { width: 44px; height: 44px; background: linear-gradient(135deg,#1B96FF,#0176D3); border-radius: 50%; position: absolute; top: 0; left: 10px; border: 3px solid white; }
+.astro-visor { width: 28px; height: 16px; background: linear-gradient(180deg,#B0D4FF,#E8F4FD); border-radius: 50%; position: absolute; top: 12px; left: 18px; }
+.astro-eye-l { width: 5px; height: 5px; background: #0176D3; border-radius: 50%; position: absolute; top: 16px; left: 21px; }
+.astro-eye-r { width: 5px; height: 5px; background: #0176D3; border-radius: 50%; position: absolute; top: 16px; left: 29px; }
+.chat-start-text { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.chat-suggest-btn { width: 100%; padding: 8px 12px; background: #F3F3F3; border: 1px solid var(--color-border); border-radius: 6px; text-align: left; cursor: pointer; font-size: 12px; font-family: var(--font); color: var(--color-text); display: flex; align-items: center; justify-content: space-between; transition: background 0.2s; }
+.chat-suggest-btn:hover, .chat-suggest-btn.highlight { background: #E8F4FD; border-color: #0176D3; }
+.chat-suggest-btn.highlight { animation: highlight-pulse 0.8s ease-in-out; }
+@keyframes highlight-pulse { 0%{box-shadow:0 0 0 0 rgba(1,118,211,0.5)} 70%{box-shadow:0 0 0 8px rgba(1,118,211,0)} 100%{box-shadow:0 0 0 0 rgba(1,118,211,0)} }
+.agent-input-area { padding: 10px; border-top: 1px solid var(--color-border); flex-shrink: 0; background: white; }
+.agent-input { width: 100%; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 12px; font-family: var(--font); outline: none; resize: none; height: 56px; }
+.agent-input:focus { border-color: #0176D3; }
+
+/* Chat messages */
+.chat-msg { display: flex; gap: 8px; max-width: 100%; }
+.chat-msg.user { flex-direction: row-reverse; }
+.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: #0176D3; color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.chat-avatar-agent { width: 28px; height: 28px; position: relative; flex-shrink: 0; }
+.chat-bubble { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+.chat-bubble.agent { background: var(--color-agent-bubble); }
+.chat-bubble.user { background: var(--color-user-bubble); color: white; border-radius: 8px 8px 2px 8px; }
+.chat-typing { display: flex; align-items: center; gap: 4px; padding: 8px 12px; }
+.typing-dot { width: 6px; height: 6px; background: #9E9E9E; border-radius: 50%; animation: typing-bounce 1.2s infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing-bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+/* Agent info cards */
+.agent-info-card { background: white; border: 1px solid var(--color-border); border-radius: 6px; padding: 10px; margin-top: 6px; opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(8px); }
+.agent-info-card.visible { opacity: 1; transform: translateY(0); }
+.agent-info-card.blue-border { border-left: 3px solid #0176D3; }
+.agent-info-card.green-border { border-left: 3px solid #2E844A; }
+.agent-info-card.orange-border { border-left: 3px solid #FE9339; }
+.agent-info-card.red-border { border-left: 3px solid #EA001E; }
+.agent-info-card.gray-border { border-left: 3px solid #9E9E9E; }
+.agent-card-title { font-size: 11px; font-weight: 700; color: #3E3E3C; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+.agent-card-row { font-size: 11px; padding: 2px 0; color: var(--color-text); display: flex; align-items: center; gap: 6px; }
+.agent-card-row .lbl { color: #6E6E6E; min-width: 60px; }
+.source-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+
+/* A2A orchestration card */
+.a2a-card { background: #F8F8F8; border: 1px solid var(--color-border); border-radius: 6px; padding: 10px; margin-top: 6px; }
+.a2a-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--color-text); }
+.a2a-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; color: #3E3E3C; border-bottom: 1px solid #EEEEEE; }
+.a2a-row:last-child { border-bottom: none; }
+.a2a-status { font-size: 14px; width: 20px; }
+.a2a-name { font-weight: 600; flex: 1; }
+.a2a-state { color: #6E6E6E; font-size: 11px; }
+.a2a-complete-msg { color: var(--color-success); font-size: 12px; font-weight: 600; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--color-border); }
+
+/* Action buttons in agent */
+.agent-action-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-family: var(--font); cursor: pointer; border: 1px solid var(--color-border); background: white; color: var(--color-text); margin: 3px 3px 3px 0; transition: background 0.15s; }
+.agent-action-btn:hover { background: #F3F3F3; }
+.agent-action-btn.primary-action { background: #0176D3; color: white; border-color: #0176D3; }
+.agent-action-btn.primary-action:hover { background: #015fad; }
+
+/* ====== TOAST ====== */
+.toast-container { position: fixed; top: 100px; right: 16px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-family: var(--font); color: white; max-width: 360px; pointer-events: auto; transform: translateX(120%); transition: transform 0.35s cubic-bezier(.22,1,.36,1); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.toast.show { transform: translateX(0); }
+.toast-success { background: #2E844A; }
+.toast-info { background: #0176D3; }
+.toast-warning { background: #FE9339; }
+
+/* ====== HOME SCENE ====== */
+.home-body { display: flex; gap: 12px; flex: 1; overflow: hidden; padding: 12px; }
+.home-left { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.home-right { width: 300px; flex-shrink: 0; }
+.news-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid #F0EFED; font-size: 12px; }
+.news-item:last-child { border-bottom: none; }
+.news-date { color: #6E6E6E; white-space: nowrap; font-size: 11px; }
+.news-text { flex: 1; color: var(--color-text); }
+.metrics-row { display: flex; gap: 0; border-bottom: 1px solid var(--color-border); }
+.metric-tile { flex: 1; padding: 12px; text-align: center; border-right: 1px solid var(--color-border); }
+.metric-tile:last-child { border-right: none; }
+.metric-num { font-size: 28px; font-weight: 700; color: var(--color-text); line-height: 1; }
+.metric-num.urgent { color: var(--color-critical); }
+.metric-label { font-size: 11px; color: var(--color-label); margin-top: 4px; }
+.account-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 12px; }
+.account-card { border: 1px solid var(--color-border); border-radius: 4px; padding: 10px; background: white; }
+.account-logo { width: 36px; height: 36px; background: #E8F4FD; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 8px; }
+.account-name { font-size: 12px; font-weight: 600; color: #0176D3; margin-bottom: 2px; }
+.account-industry { font-size: 11px; color: #6E6E6E; }
+.account-revenue { font-size: 11px; color: var(--color-text); font-weight: 600; margin-top: 4px; }
+.recent-list { padding: 8px 12px; }
+.recent-item { display: flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 12px; border-bottom: 1px solid #F0EFED; }
+.recent-item:last-child { border-bottom: none; }
+.recent-item a { color: #0176D3; text-decoration: none; }
+.recent-item a:hover { text-decoration: underline; }
+
+/* ====== CHART CONTAINERS ====== */
+.chart-wrap { position: relative; }
+.chart-badge { position: absolute; top: 6px; right: 8px; display: flex; gap: 4px; }
+
+/* ====== DASHBOARD ====== */
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto; gap: 12px; }
+.dash-tile { background: white; border: 1px solid var(--color-border); border-radius: 4px; overflow: hidden; }
+.dash-tile-header { padding: 8px 12px; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; }
+.dash-tile-title { font-size: 12px; font-weight: 700; color: var(--color-label); text-transform: uppercase; letter-spacing: 0.4px; }
+.dash-tile-body { padding: 10px 12px; }
+
+/* ====== PSEUDO MAP ====== */
+.pseudo-map { background: #E8EEF4; border-radius: 4px; height: 140px; position: relative; overflow: hidden; }
+.map-region { position: absolute; background: rgba(1,118,211,0.08); border: 1px dashed rgba(1,118,211,0.3); border-radius: 6px; }
+.map-dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.3); transform: translate(-50%,-50%); cursor: pointer; }
+.map-dot-label { position: absolute; font-size: 9px; white-space: nowrap; font-weight: 600; color: #333; transform: translateX(-50%); }
+
+/* ====== WORD CLOUD ====== */
+.word-cloud { position: relative; height: 130px; overflow: hidden; }
+.wc-word { position: absolute; font-weight: 700; color: #0176D3; cursor: default; }
+
+/* ====== CASE ====== */
+.alert-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; font-size: 12px; padding: 10px 12px; }
+.alert-row { display: flex; flex-direction: column; gap: 2px; }
+.alert-label { font-size: 11px; color: #6E6E6E; }
+.alert-value { font-weight: 600; color: var(--color-text); }
+.alert-value.critical { color: var(--color-critical); }
+.tech-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tech-table th { font-size: 11px; font-weight: 700; color: var(--color-label); padding: 5px 8px; background: #FAFAF9; border-bottom: 1px solid var(--color-border); text-align: left; }
+.tech-table td { padding: 6px 8px; border-bottom: 1px solid #F0EFED; }
+.tech-table tr:nth-child(even) td { background: #FAFAF9; }
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+.status-dot.green { background: #2E844A; }
+.status-dot.yellow { background: #FE9339; }
+.parts-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #F0EFED; font-size: 12px; }
+.parts-row:last-child { border-bottom: none; }
+.parts-stock { font-weight: 600; }
+.parts-stock.ok { color: #2E844A; }
+.parts-stock.warn { color: #FE9339; }
+
+/* Status animation */
+.status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; transition: background 0.5s, color 0.5s; }
+.status-new { background: #F3F3F3; color: #3E3E3C; border: 1px solid var(--color-border); }
+.status-inprogress { background: #0176D3; color: white; }
+.critical-badge { background: var(--color-critical); color: white; animation: blink-anim 1.5s infinite; }
+@keyframes blink-anim { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+/* Dashboard subtabs */
+.dash-subtabs { display: flex; padding: 0 16px; background: white; border-bottom: 1px solid var(--color-border); flex-shrink: 0; }
+.dash-subtab { padding: 8px 14px; font-size: 12px; color: #3E3E3C; cursor: pointer; position: relative; }
+.dash-subtab.active { color: #0176D3; font-weight: 600; }
+.dash-subtab.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: #0176D3; border-radius: 2px 2px 0 0; }
+
+/* Utility */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.gap-2 { gap: 8px; }
+.gap-1 { gap: 4px; }
+.text-link { color: var(--color-link); text-decoration: none; cursor: pointer; }
+.text-link:hover { text-decoration: underline; }
+.text-muted { color: #6E6E6E; }
+.text-critical { color: var(--color-critical); }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.font-bold { font-weight: 700; }
+.font-600 { font-weight: 600; }
+.text-sm { font-size: 11px; }
+.mt-1 { margin-top: 4px; }
+.mt-2 { margin-top: 8px; }
+.p-2 { padding: 8px; }
+.divider { border: none; border-top: 1px solid var(--color-border); margin: 8px 0; }
+</style>
+</head>
+<body>
+
+<!-- GLOBAL HEADER -->
+<div id="global-header">
+  <!-- Row 1: Logo / Search / Icons -->
+  <div class="header-row1">
+    <div class="header-logo">
+      <div class="logo-img">
+        <div class="logo-mark">
+          <div class="logo-mark-q"></div><div class="logo-mark-q"></div>
+          <div class="logo-mark-q"></div><div class="logo-mark-q"></div>
+        </div>
+        <div class="logo-name">TEPCO <span>HD</span></div>
+      </div>
+    </div>
+    <div class="header-search">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" placeholder="検索するか、何か質問してください...">
+      </div>
+      <button class="ask-btn"><span class="ask-btn-icon">🤖</span> Ask</button>
+    </div>
+    <div class="header-icons">
+      <!-- cat icon -->
+      <div class="hicon">🐱</div>
+      <!-- favorite star with dropdown -->
+      <div class="hicon hicon-star">★<span style="font-size:8px;color:#706E6B">▾</span></div>
+      <!-- add -->
+      <div class="hicon" style="font-size:19px;font-weight:300">+</div>
+      <!-- setup/cloud -->
+      <div class="hicon"><svg viewBox="0 0 52 52"><path d="M45 24h-2.2c-.5-2.2-1.5-4.3-2.8-6.1l1.5-1.5c.8-.8.8-2 0-2.8l-3.1-3.1c-.8-.8-2-.8-2.8 0L34.1 12c-1.8-1.3-3.9-2.3-6.1-2.8V7c0-1.1-.9-2-2-2h-4.4c-1.1 0-2 .9-2 2v2.2c-2.2.5-4.3 1.5-6.1 2.8l-1.5-1.5c-.8-.8-2-.8-2.8 0L6.1 13.6c-.8.8-.8 2 0 2.8L7.6 18c-1.3 1.8-2.3 3.9-2.8 6.1H2.7c-1.1 0-2 .9-2 2v4.4c0 1.1.9 2 2 2h2.2c.5 2.2 1.5 4.3 2.8 6.1l-1.5 1.5c-.8.8-.8 2 0 2.8l3.1 3.1c.8.8 2 .8 2.8 0l1.5-1.5c1.8 1.3 3.9 2.3 6.1 2.8V45c0 1.1.9 2 2 2H26c1.1 0 2-.9 2-2v-2.2c2.2-.5 4.3-1.5 6.1-2.8l1.5 1.5c.8.8 2 .8 2.8 0l3.1-3.1c.8-.8.8-2 0-2.8L40 34c1.3-1.8 2.3-3.9 2.8-6.1H45c1.1 0 2-.9 2-2V26c0-1.1-.9-2-2-2zm-19 9c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7z"/></svg></div>
+      <!-- help ? -->
+      <div class="hicon" style="font-size:16px;font-weight:700;color:#706E6B">?</div>
+      <!-- settings gear -->
+      <div class="hicon" style="font-size:16px">⚙</div>
+      <!-- notification bell with badge -->
+      <div class="hicon" style="position:relative">
+        <svg viewBox="0 0 52 52"><path d="M26 4c-1.1 0-2 .9-2 2v2.1C16.2 9.5 10 16.1 10 24v12l-4 4v2h40v-2l-4-4V24c0-7.9-6.2-14.5-14-15.9V6c0-1.1-.9-2-2-2zm0 44c2.2 0 4-1.8 4-4H22c0 2.2 1.8 4 4 4z"/></svg>
+        <span class="hicon-badge">3</span>
+      </div>
+      <!-- user avatar -->
+      <div class="hicon hicon-avatar">田</div>
+    </div>
+  </div>
+
+  <!-- Row 2: Waffle + App name + Nav tabs -->
+  <div class="header-row2">
+    <div class="nav-app-block">
+      <div class="nav-waffle">
+        <div class="waffle-icon">
+          <div class="waffle-dot"></div><div class="waffle-dot"></div><div class="waffle-dot"></div>
+          <div class="waffle-dot"></div><div class="waffle-dot"></div><div class="waffle-dot"></div>
+          <div class="waffle-dot"></div><div class="waffle-dot"></div><div class="waffle-dot"></div>
+        </div>
+      </div>
+      <span class="nav-app-name">TEPCO Workspace</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab-single active" onclick="switchScene(1)" id="nav-home">ホーム</button>
+      <div class="nav-tab-group" onclick="switchScene(2)" id="nav-acct">
+        <button class="nav-tab-label">取引先</button>
+        <button class="nav-tab-chevron">▾</button>
+      </div>
+      <div class="nav-tab-group">
+        <button class="nav-tab-label">商談</button>
+        <button class="nav-tab-chevron">▾</button>
+      </div>
+      <div class="nav-tab-group" onclick="switchScene(3)" id="nav-case">
+        <button class="nav-tab-label">ケース</button>
+        <button class="nav-tab-chevron">▾</button>
+      </div>
+      <div class="nav-tab-group">
+        <button class="nav-tab-label">レポート</button>
+        <button class="nav-tab-chevron">▾</button>
+      </div>
+      <div class="nav-tab-group">
+        <button class="nav-tab-label">ダッシュボード</button>
+        <button class="nav-tab-chevron">▾</button>
+      </div>
+      <div class="nav-tab-group">
+        <button class="nav-tab-label">問合せ</button>
+        <button class="nav-tab-chevron">▾</button>
+      </div>
+      <button class="nav-tab-single" onclick="switchScene(4)" id="nav-dash">分析</button>
+    </div>
+    <button class="nav-tab-more">さらに表示 ▾</button>
+    <button class="nav-pencil">✏</button>
+  </div>
+</div>
+
+<!-- MAIN AREA -->
+<div id="main-area">
+
+<!-- ===== SCENE 1: HOME ===== -->
+<div class="scene active" id="scene-1">
+  <div class="home-body">
+    <div class="home-left">
+      <!-- News -->
+      <div class="sf-card">
+        <div class="sf-card-header"><span class="sf-card-title">📰 News お知らせ</span></div>
+        <div class="sf-card-body" style="padding:4px 12px">
+          <div class="news-item"><span class="news-date">2026/06/12</span><span class="news-text">⚡ 変電所A 温度異常アラート発生 <span class="badge badge-critical">Critical</span></span></div>
+          <div class="news-item"><span class="news-date">2026/06/11</span><span class="news-text">📋 関電力 特高契約更改 明日期限</span></div>
+          <div class="news-item"><span class="news-date">2026/06/10</span><span class="news-text">✅ SAP購買承認 ¥1.2M 承認待ち</span></div>
+        </div>
+      </div>
+      <!-- KPI -->
+      <div class="sf-card">
+        <div class="sf-card-header"><span class="sf-card-title">田中 さんの主要数値</span><span class="text-link text-sm">▼ マイ数値</span></div>
+        <div class="metrics-row">
+          <div class="metric-tile"><div class="metric-num">12</div><div class="metric-label">今月の商談</div></div>
+          <div class="metric-tile"><div class="metric-num">3</div><div class="metric-label">本日の活動</div></div>
+          <div class="metric-tile"><div class="metric-num">2</div><div class="metric-label">承認待ち</div></div>
+          <div class="metric-tile"><div class="metric-num urgent">1</div><div class="metric-label">期限超過</div></div>
+        </div>
+        <div style="padding:6px 12px 4px"><div class="text-sm text-muted" style="font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">最近見たレコード</div></div>
+        <div class="recent-list">
+          <div class="recent-item"><span style="color:#0176D3">🏢</span><a href="#" onclick="switchScene(2);return false">関電力株式会社</a></div>
+          <div class="recent-item"><span style="color:#0176D3">💼</span><a href="#" onclick="switchScene(2);return false">特高契約更改2026</a></div>
+          <div class="recent-item"><span style="color:#EA001E">⚡</span><a href="#" onclick="switchScene(3);return false">変電所Aケース</a></div>
+        </div>
+      </div>
+      <!-- Accounts -->
+      <div class="sf-card">
+        <div class="sf-card-header"><span class="sf-card-title">🏢 主要取引先</span><span class="text-link text-sm">すべて表示</span></div>
+        <div class="account-grid">
+          <div class="account-card"><div class="account-logo">⚡</div><div class="account-name">関電力株式会社</div><div class="account-industry">電力・エネルギー</div><div class="account-revenue">¥85B</div></div>
+          <div class="account-card"><div class="account-logo">🔧</div><div class="account-name">東芝エネルギー</div><div class="account-industry">製造</div><div class="account-revenue">¥42B</div></div>
+          <div class="account-card"><div class="account-logo">⚙</div><div class="account-name">三菱電機株式会社</div><div class="account-industry">製造</div><div class="account-revenue">¥38B</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Right: Agent Panel Home -->
+    <div class="home-right">
+      <div class="sf-card" style="height:100%;display:flex;flex-direction:column;overflow:hidden">
+        <div class="agent-panel-header">
+          <div class="agent-panel-title">🤖 TEPCO Coworker <span class="nav-tab-arrow">▼</span></div>
+          <div class="agent-panel-icons">
+            <button class="agent-panel-icon">ℹ</button>
+            <button class="agent-panel-icon">👥</button>
+            <button class="agent-panel-icon">✕</button>
+          </div>
+        </div>
+        <div class="agent-chat" id="home-chat">
+          <div class="chat-initial" id="home-initial">
+            <div class="astro-icon">
+              <div class="astro-head"></div>
+              <div class="astro-visor"></div>
+              <div class="astro-eye-l"></div>
+              <div class="astro-eye-r"></div>
+              <div class="astro-body"></div>
+            </div>
+            <div class="chat-start-text">チャットを始めましょう</div>
+            <div style="width:100%;display:flex;flex-direction:column;gap:6px">
+              <button class="chat-suggest-btn" id="home-suggest-1" onclick="startHomeChat()">今日のタスクを教えて <span>→</span></button>
+              <button class="chat-suggest-btn" onclick="startHomeChat()">急ぎの承認待ちは？ <span>→</span></button>
+              <button class="chat-suggest-btn" onclick="startHomeChat()">11時の会議の準備状況 <span>→</span></button>
+            </div>
+          </div>
+          <div id="home-chat-messages" style="display:none;flex-direction:column;gap:10px"></div>
+        </div>
+        <div class="agent-input-area">
+          <textarea class="agent-input" placeholder="タスクについて説明するか、質問する..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCENE 2: ACCOUNT RECORD ===== -->
+<div class="scene" id="scene-2">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-top">
+      <div class="page-icon blue">🏢</div>
+      <div class="page-header-info">
+        <div class="page-header-type">取引先</div>
+        <div class="page-header-name"><a href="#">関電力 株式会社</a></div>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn-secondary">👤</button>
+        <button class="btn-secondary">＋ フォローする</button>
+        <button class="btn-secondary">活動の記録</button>
+        <button class="btn-secondary">Slackチャンネルをリンク</button>
+        <button class="btn-ai">✨ サマリ作成 <span class="btn-dropdown-arrow">▼</span></button>
+      </div>
+    </div>
+    <div class="related-links-row">
+      <a class="related-link">📝 メモ(2)</a>
+      <a class="related-link">📋 商談(5)</a>
+      <a class="related-link" style="color:#EA001E">🔴 問合せ(3)</a>
+      <a class="related-link">💰 実績(10+)</a>
+      <a class="related-link">📁 ファイル(8)</a>
+      <a class="related-link">👥 関連担当者(4)</a>
+      <a class="related-link">すべて表示(12)</a>
+    </div>
+    <div class="subtab-row">
+      <button class="subtab active">詳細</button>
+      <button class="subtab">関連</button>
+      <button class="subtab">ファイル</button>
+      <button class="subtab">取引先階層</button>
+      <button class="subtab">検索</button>
+      <button class="subtab">その他 ▼</button>
+    </div>
+  </div>
+  <div class="content-body">
+    <div class="main-content">
+      <!-- Account Info -->
+      <div class="sf-card">
+        <div class="section-header">∨ 取引先情報</div>
+        <div class="field-grid">
+          <div class="field-item"><span class="field-label">取引先所有者</span><span class="field-value"><a href="#">👤 田中 健一</a></span><span class="field-edit">✏</span></div>
+          <div class="field-item"><span class="field-label">電話</span><span class="field-value">📞 03-1234-5678</span><span class="field-edit">✏</span></div>
+          <div class="field-item"><span class="field-label">取引先名</span><span class="field-value font-600">関電力 株式会社</span><span class="field-edit">✏</span></div>
+          <div class="field-item"><span class="field-label">Webサイト</span><span class="field-value"><a href="#">https://www.kanden.co.jp</a></span><span class="field-edit">✏</span></div>
+          <div class="field-item"><span class="field-label">取引先部門</span><span class="field-value">本社</span><span class="field-edit">✏</span></div>
+          <div class="field-item"><span class="field-label">年間売上</span><span class="field-value font-600">JPY 85,000,000,000</span><span class="field-edit">✏</span></div>
+          <div class="field-item"><span class="field-label">取引先通貨</span><span class="field-value">JPY - 日本円</span><span class="field-edit">✏</span></div>
+          <div class="field-item"><span class="field-label">従業員数</span><span class="field-value">18,000</span><span class="field-edit">✏</span></div>
+        </div>
+      </div>
+      <!-- SAP Finance -->
+      <div class="sf-card">
+        <div class="sf-card-header">
+          <span class="sf-card-title">SAP財務情報</span>
+          <div style="display:flex;gap:6px"><span class="src-badge src-sap">SAP Live from S/4HANA</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-bottom:1px solid var(--color-border)">
+          <div class="field-item"><span class="field-label">直近12ヶ月売上</span><span class="field-value font-600">¥2.85B</span></div>
+          <div class="field-item"><span class="field-label">未収金</span><span class="field-value text-success font-600">¥0</span></div>
+          <div class="field-item"><span class="field-label">取引リスク</span><span class="field-value"><span class="badge badge-success">低 ✓</span></span></div>
+          <div class="field-item"><span class="field-label">与信枠残高</span><span class="field-value font-600">¥1.2B</span></div>
+          <div class="field-item"><span class="field-label">支払遅延</span><span class="field-value text-success">0件</span></div>
+        </div>
+        <div class="sf-card-body">
+          <div style="position:relative">
+            <div class="chart-badge"><span class="src-badge src-tableau">T Tableau Cloud</span></div>
+            <canvas id="chart-sales-trend" height="130"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Opportunities -->
+      <div class="sf-card">
+        <div class="sf-card-header"><span class="sf-card-title">商談 (5件)</span><span class="text-link text-sm">新規</span></div>
+        <div style="overflow-x:auto">
+          <table class="sf-table">
+            <thead>
+              <tr><th><input type="checkbox"></th><th>商談名</th><th>金額</th><th>確度</th><th>フェーズ</th><th>完了予定日</th><th>所有者</th></tr>
+            </thead>
+            <tbody>
+              <tr class="sf-table-row-critical"><td><input type="checkbox"></td><td><a class="text-link">特高契約更改 2026</a> <span class="badge badge-critical" style="font-size:9px">⚠ 本日期限</span></td><td>¥320M</td><td>75%</td><td>提案中</td><td style="color:var(--color-critical);font-weight:600">2026-06-12</td><td>田中</td></tr>
+              <tr><td><input type="checkbox"></td><td><a class="text-link">PPA併用提案</a></td><td>¥150M</td><td>40%</td><td>検討中</td><td>2026-09-30</td><td>田中</td></tr>
+              <tr><td><input type="checkbox"></td><td><a class="text-link">省エネ診断サービス</a></td><td>¥28M</td><td>60%</td><td>提案中</td><td>2026-07-15</td><td>田中</td></tr>
+              <tr><td><input type="checkbox"></td><td><a class="text-link">需要側管理システム</a></td><td>¥95M</td><td>25%</td><td>初回訪問</td><td>2026-12-01</td><td>田中</td></tr>
+              <tr><td><input type="checkbox"></td><td><a class="text-link">EV充電インフラ</a></td><td>¥42M</td><td>50%</td><td>ヒアリング</td><td>2026-08-30</td><td>田中</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Agent Panel Scene 2 -->
+    <div class="agent-panel">
+      <div class="agent-panel-header">
+        <div class="agent-panel-title">🤖 TEPCO Coworker <span class="nav-tab-arrow">▼</span></div>
+        <div class="agent-panel-icons">
+          <button class="agent-panel-icon">ℹ</button>
+          <button class="agent-panel-icon">👥</button>
+          <button class="agent-panel-icon">✕</button>
+          <button class="agent-panel-icon">←</button>
+        </div>
+      </div>
+      <div class="agent-chat" id="scene2-chat" style="flex-direction:column;gap:10px">
+        <!-- populated by JS -->
+      </div>
+      <div class="agent-input-area">
+        <textarea class="agent-input" placeholder="タスクについて説明するか、質問する..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCENE 3: CASE RECORD ===== -->
+<div class="scene" id="scene-3">
+  <div class="page-header">
+    <div class="page-header-top">
+      <div class="page-icon red">⚡</div>
+      <div class="page-header-info">
+        <div class="page-header-type">ケース</div>
+        <div class="page-header-name">川崎変電所A 温度異常</div>
+      </div>
+      <div class="page-header-actions">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span>ケース#00012345</span>
+          <span class="badge badge-critical critical-badge">⚡ Critical</span>
+          <span>Status: </span><span class="status-badge status-new" id="case-status">New</span>
+          <span class="text-muted">発生: 2026-06-12 09:42</span>
+        </div>
+        <button class="btn-secondary">＋ フォローする</button>
+        <button class="btn-secondary">活動の記録</button>
+        <button class="btn-secondary">エスカレーション</button>
+        <button class="btn-secondary">クローズ <span class="btn-dropdown-arrow">▼</span></button>
+      </div>
+    </div>
+    <div class="subtab-row">
+      <button class="subtab active">詳細</button>
+      <button class="subtab">関連</button>
+      <button class="subtab">ファイル</button>
+      <button class="subtab">その他 ▼</button>
+    </div>
+  </div>
+  <div class="content-body">
+    <div class="main-content">
+      <!-- Alert Detail -->
+      <div class="sf-card">
+        <div class="sf-card-header"><span class="sf-card-title">アラート詳細</span><span class="src-badge src-aws">AWS IoT Core</span></div>
+        <div class="alert-detail-grid">
+          <div class="alert-row"><span class="alert-label">センサーID</span><span class="alert-value">TR-KWS-A-03</span></div>
+          <div class="alert-row"><span class="alert-label">現在温度</span><span class="alert-value critical">89℃ <span style="font-size:11px;font-weight:400">（⚠ 基準70℃超過）</span></span></div>
+          <div class="alert-row"><span class="alert-label">最終正常値</span><span class="alert-value">09:38</span></div>
+          <div class="alert-row"><span class="alert-label">異常検知</span><span class="alert-value">09:42</span></div>
+          <div class="alert-row"><span class="alert-label">設置場所</span><span class="alert-value">川崎変電所 A棟</span></div>
+        </div>
+        <div class="sf-card-body" style="padding-top:0">
+          <div style="font-size:11px;color:#6E6E6E;margin-bottom:4px">温度推移（直近60分）</div>
+          <canvas id="chart-temp" height="110"></canvas>
+        </div>
+      </div>
+      <!-- Equipment Master -->
+      <div class="sf-card">
+        <div class="sf-card-header"><span class="sf-card-title">設備マスタ情報</span><span class="src-badge src-sap">SAP PM</span></div>
+        <div class="alert-detail-grid">
+          <div class="alert-row"><span class="alert-label">設備ID</span><span class="alert-value">KWS-TR-A-03</span></div>
+          <div class="alert-row"><span class="alert-label">型式</span><span class="alert-value">3φ油入変圧器 66kV/6.6kV</span></div>
+          <div class="alert-row"><span class="alert-label">設置年月</span><span class="alert-value">2014-03</span></div>
+          <div class="alert-row"><span class="alert-label">直近点検</span><span class="alert-value">2026-04-18</span></div>
+          <div class="alert-row"><span class="alert-label">メーカー</span><span class="alert-value">X電機株式会社</span></div>
+          <div class="alert-row"><span class="alert-label">次回点検</span><span class="alert-value">2026-10-20</span></div>
+        </div>
+      </div>
+      <!-- Map -->
+      <div class="sf-card">
+        <div class="sf-card-header"><span class="sf-card-title">現場マップ</span></div>
+        <div class="sf-card-body">
+          <div class="pseudo-map">
+            <div class="map-region" style="left:20px;top:15px;width:220px;height:110px"></div>
+            <div class="map-dot" style="background:#EA001E;left:110px;top:65px" title="変電所A"></div>
+            <div class="map-dot-label" style="left:110px;top:82px">変電所A</div>
+            <div class="map-dot" style="background:#0176D3;left:165px;top:45px" title="佐藤 健一"></div>
+            <div class="map-dot-label" style="left:165px;top:62px">佐藤(8km)</div>
+            <div class="map-dot" style="background:#FE9339;left:185px;top:90px" title="鈴木 隆"></div>
+            <div class="map-dot-label" style="left:185px;top:107px">鈴木(12km)</div>
+            <div class="map-dot" style="background:#2E844A;left:75px;top:50px" title="高橋 美咲"></div>
+            <div class="map-dot-label" style="left:75px;top:67px">高橋(18km)</div>
+            <div style="position:absolute;bottom:4px;right:8px;font-size:10px;color:#6E6E6E">● 変電所 ● 技術者</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Agent Panel Scene 3 -->
+    <div class="agent-panel">
+      <div class="agent-panel-header">
+        <div class="agent-panel-title">🤖 TEPCO Coworker <span class="nav-tab-arrow">▼</span></div>
+        <div class="agent-panel-icons">
+          <button class="agent-panel-icon">ℹ</button>
+          <button class="agent-panel-icon">👥</button>
+          <button class="agent-panel-icon">✕</button>
+          <button class="agent-panel-icon">←</button>
+        </div>
+      </div>
+      <div class="agent-chat" id="scene3-chat" style="flex-direction:column;gap:10px"></div>
+      <div class="agent-input-area">
+        <textarea class="agent-input" placeholder="タスクについて説明するか、質問する..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCENE 4: DASHBOARD ===== -->
+<div class="scene" id="scene-4">
+  <div class="page-header">
+    <div class="page-header-top">
+      <div class="page-icon blue">📊</div>
+      <div class="page-header-info">
+        <div class="page-header-type">ダッシュボード</div>
+        <div class="page-header-name">Executive Cockpit</div>
+        <div style="font-size:11px;color:#6E6E6E;margin-top:2px">最終更新: 数秒前</div>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn-secondary">編集</button>
+        <button class="btn-secondary">更新</button>
+        <button class="btn-secondary">フォロー</button>
+        <button class="btn-secondary">▼</button>
+      </div>
+    </div>
+    <div class="subtab-row" id="dash-subtabs">
+      <button class="subtab active">サマリー</button>
+      <button class="subtab">法人営業</button>
+      <button class="subtab">小売</button>
+      <button class="subtab">設備</button>
+      <button class="subtab">人材</button>
+    </div>
+  </div>
+  <div class="content-body">
+    <div class="main-content" style="overflow-y:auto">
+      <div class="dashboard-grid">
+        <!-- Tile 1: Sales vs Plan -->
+        <div class="dash-tile">
+          <div class="dash-tile-header">
+            <span class="dash-tile-title">売上 vs 計画</span>
+            <div style="display:flex;gap:4px"><span class="src-badge src-tableau" style="font-size:9px">T Tableau</span><span class="src-badge" style="background:#F0AB00;color:#333;font-size:9px">SAP BW</span></div>
+          </div>
+          <div class="dash-tile-body">
+            <canvas id="chart-sales-plan" height="140"></canvas>
+          </div>
+        </div>
+        <!-- Tile 2: Pipeline Stack -->
+        <div class="dash-tile">
+          <div class="dash-tile-header">
+            <span class="dash-tile-title">法人パイプライン</span>
+            <div style="display:flex;gap:4px"><span class="src-badge src-sf" style="font-size:9px">Salesforce</span><span class="src-badge src-dc" style="font-size:9px">DC</span></div>
+          </div>
+          <div class="dash-tile-body">
+            <canvas id="chart-pipeline" height="140"></canvas>
+          </div>
+        </div>
+        <!-- Tile 3: Churn Score -->
+        <div class="dash-tile">
+          <div class="dash-tile-header">
+            <span class="dash-tile-title">解約予兆スコア Top5</span>
+            <span class="src-badge src-dc" style="font-size:9px">Data Cloud</span>
+          </div>
+          <div class="dash-tile-body">
+            <canvas id="chart-churn" height="140"></canvas>
+          </div>
+        </div>
+        <!-- Tile 4: Equipment Risk Map -->
+        <div class="dash-tile">
+          <div class="dash-tile-header">
+            <span class="dash-tile-title">設備リスクマップ</span>
+            <span class="src-badge src-aws" style="font-size:9px">AWS IoT</span>
+          </div>
+          <div class="dash-tile-body" style="padding:8px">
+            <div class="pseudo-map" style="height:130px">
+              <div class="map-region" style="left:10px;top:10px;width:180px;height:90px"></div>
+              <div class="map-region" style="left:200px;top:15px;width:100px;height:80px;border-color:rgba(46,132,74,0.3)"></div>
+              <div style="position:absolute;left:12px;top:14px;font-size:10px;color:#555;font-weight:600">関東エリア</div>
+              <div style="position:absolute;left:205px;top:18px;font-size:10px;color:#555;font-weight:600">中部エリア</div>
+              <div class="map-dot" style="background:#EA001E;left:95px;top:65px;width:16px;height:16px"></div>
+              <div class="map-dot-label" style="left:95px;top:84px;font-size:10px;color:#EA001E">川崎変電所 ⚠</div>
+              <div class="map-dot" style="background:#2E844A;left:140px;top:45px;width:12px;height:12px"></div>
+              <div class="map-dot-label" style="left:140px;top:60px;font-size:9px">変電所B</div>
+              <div class="map-dot" style="background:#2E844A;left:55px;top:40px;width:12px;height:12px"></div>
+              <div class="map-dot-label" style="left:55px;top:55px;font-size:9px">変電所C</div>
+              <div class="map-dot" style="background:#2E844A;left:235px;top:55px;width:12px;height:12px"></div>
+              <div class="map-dot-label" style="left:235px;top:70px;font-size:9px">変電所D</div>
+              <div style="position:absolute;bottom:4px;right:8px;font-size:9px;color:#6E6E6E">● 正常 ● 要確認</div>
+            </div>
+          </div>
+        </div>
+        <!-- Tile 5: Word Cloud -->
+        <div class="dash-tile">
+          <div class="dash-tile-header">
+            <span class="dash-tile-title">現場の声トピック</span>
+            <div style="display:flex;gap:4px"><span class="src-badge src-teams" style="font-size:9px">Teams</span><span class="src-badge src-slack" style="font-size:9px">Slack</span></div>
+          </div>
+          <div class="dash-tile-body">
+            <div class="word-cloud" id="word-cloud"></div>
+          </div>
+        </div>
+        <!-- Tile 6: Doughnut -->
+        <div class="dash-tile">
+          <div class="dash-tile-header">
+            <span class="dash-tile-title">再エネ供給比率</span>
+            <span class="src-badge src-aws" style="font-size:9px">AWS</span>
+          </div>
+          <div class="dash-tile-body" style="display:flex;align-items:center;justify-content:center;gap:16px">
+            <div style="position:relative;width:120px;height:140px">
+              <canvas id="chart-renew" height="140"></canvas>
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:22px;font-weight:700;color:#2E844A">42%</div>
+            </div>
+            <div style="font-size:11px">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="width:12px;height:12px;background:#2E844A;border-radius:2px;display:inline-block"></span>再エネ 42%</div>
+              <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;background:#9E9E9E;border-radius:2px;display:inline-block"></span>従来電源 58%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Agent Panel Scene 4 -->
+    <div class="agent-panel">
+      <div class="agent-panel-header">
+        <div class="agent-panel-title">🤖 TEPCO Coworker <span class="nav-tab-arrow">▼</span></div>
+        <div class="agent-panel-icons">
+          <button class="agent-panel-icon">ℹ</button>
+          <button class="agent-panel-icon">👥</button>
+          <button class="agent-panel-icon">✕</button>
+        </div>
+      </div>
+      <div class="agent-chat" id="scene4-chat" style="flex-direction:column;gap:10px">
+        <div style="display:flex;flex-direction:column;gap:6px;padding:8px 0">
+          <div style="font-size:11px;color:#6E6E6E;margin-bottom:4px">サジェスト</div>
+          <button class="chat-suggest-btn" onclick="startScene4Chat()">今期の進捗とリスクを3つ →</button>
+          <button class="chat-suggest-btn">現場で何が話されてる？ →</button>
+          <button class="chat-suggest-btn">解約予兆の上位顧客 →</button>
+        </div>
+      </div>
+      <div class="agent-input-area">
+        <textarea class="agent-input" placeholder="タスクについて説明するか、質問する..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main-area -->
+
+<!-- UTILITY BAR -->
+<div id="util-bar">
+  <button class="util-btn">💬 ダイレクトメッセージ</button>
+  <button class="util-btn">📋 活動登録</button>
+  <button class="util-btn">⚡ 日報提出</button>
+  <button class="util-btn">⚡ AI日報作成</button>
+  <button class="util-btn">⚡ 最近使ったデータ</button>
+  <button class="util-btn">📔 Notes</button>
+  <button class="util-btn">⚡ Chatterフィード</button>
+  <button class="util-btn">⚡ Chatterパブリッシャー</button>
+  <button class="util-btn">🌐 Google翻訳</button>
+  <button class="util-btn">📡 Omni-Channel</button>
+</div>
+
+<!-- SCENE NAV -->
+<div id="scene-nav">
+  <button class="scene-nav-btn" onclick="prevScene()">◀</button>
+  <span id="scene-label">シーン 1 / 4</span>
+  <button class="scene-nav-btn" onclick="nextScene()">次へ ▶</button>
+</div>
+
+<!-- LAYER INDICATOR -->
+<div id="layer-indicator">
+  <div class="layer-title">To-Be アーキテクチャ</div>
+  <div class="layer-row active" id="layer-engagement">🟦 Engagement</div>
+  <div class="layer-row" id="layer-work">⬜ Work</div>
+  <div class="layer-row" id="layer-agency">⬜ Agency</div>
+  <div class="layer-row" id="layer-context">⬜ Context</div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ====== Chart.js defaults ======
+Chart.defaults.font.family = "'Salesforce Sans','Hiragino Sans','Yu Gothic UI',Arial,sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.plugins.legend.display = false;
+
+// ====== State ======
+let currentScene = 1;
+const chartInstances = {};
+
+// ====== Scene Management ======
+function switchScene(n) {
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  document.getElementById('scene-' + n).classList.add('active');
+  currentScene = n;
+  document.getElementById('scene-label').textContent = 'シーン ' + n + ' / 4';
+  // Update nav tabs - remove active from all
+  document.querySelectorAll('.nav-tab-single, .nav-tab-group').forEach(t => t.classList.remove('active'));
+  const navMap = {1:'nav-home', 2:'nav-acct', 3:'nav-case', 4:'nav-dash'};
+  if (navMap[n]) { const el = document.getElementById(navMap[n]); if (el) el.classList.add('active'); }
+  // Update layer indicator
+  updateLayer(n);
+  // Init scene if needed
+  initScene(n);
+}
+function nextScene() { if (currentScene < 4) switchScene(currentScene + 1); }
+function prevScene() { if (currentScene > 1) switchScene(currentScene - 1); }
+
+function updateLayer(scene) {
+  document.querySelectorAll('.layer-row').forEach(r => r.classList.remove('active'));
+  const map = {1:'layer-engagement', 2:'layer-work', 3:'layer-agency', 4:'layer-context'};
+  if (map[scene]) document.getElementById(map[scene]).classList.add('active');
+}
+
+// ====== Init scenes ======
+const sceneInited = {1:false, 2:false, 3:false, 4:false};
+function initScene(n) {
+  if (sceneInited[n]) return;
+  sceneInited[n] = true;
+  if (n === 1) initScene1();
+  if (n === 2) initScene2();
+  if (n === 3) initScene3();
+  if (n === 4) initScene4();
+}
+
+// ====== Toast ======
+function toast(msg, type = 'success') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(() => t.remove(), 400);
+  }, 3500);
+}
+
+// ====== Typewriter ======
+function typewriter(text, el, speed = 25) {
+  return new Promise(resolve => {
+    let i = 0;
+    const tick = () => {
+      if (i <= text.length) {
+        el.textContent = text.substring(0, i);
+        i++;
+        setTimeout(tick, speed);
+      } else resolve();
+    };
+    tick();
+  });
+}
+
+// ====== Fade-in card ======
+function fadeInCard(el, delay = 0) {
+  setTimeout(() => { el.classList.add('visible'); }, delay);
+}
+
+// ====== Astro mini SVG for chat ======
+function astroMini() {
+  return `<div class="chat-avatar-agent" style="width:28px;height:28px;position:relative;flex-shrink:0">
+    <div style="width:22px;height:22px;background:linear-gradient(135deg,#1B96FF,#0176D3);border-radius:50%;position:absolute;top:0;left:3px;border:2px solid white;"></div>
+    <div style="width:13px;height:7px;background:linear-gradient(180deg,#B0D4FF,#E8F4FD);border-radius:50%;position:absolute;top:5px;left:10px;"></div>
+  </div>`;
+}
+
+// ====== Scroll chat to bottom ======
+function scrollChat(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollTop = el.scrollHeight;
+}
+
+// ====== SOURCE PILLS ======
+function sourcePills(sources) {
+  return sources.map(s => `<span class="src-badge src-${s.cls}">${s.label}</span>`).join('');
+}
+
+// =============================
+// SCENE 1
+// =============================
+function initScene1() {
+  setTimeout(() => {
+    const btn = document.getElementById('home-suggest-1');
+    if (btn) {
+      btn.classList.add('highlight');
+      setTimeout(() => {
+        btn.classList.remove('highlight');
+        startHomeChat();
+      }, 1200);
+    }
+  }, 3000);
+}
+
+function startHomeChat() {
+  const initial = document.getElementById('home-initial');
+  const msgArea = document.getElementById('home-chat-messages');
+  if (!initial || !msgArea) return;
+  initial.style.display = 'none';
+  msgArea.style.display = 'flex';
+
+  // User message
+  addUserMsg('home-chat-messages', '今日のタスクを教えて');
+
+  // Typing
+  setTimeout(() => {
+    const typingEl = addTyping('home-chat-messages');
+    setTimeout(() => {
+      typingEl.remove();
+      // Agent reply 1
+      addAgentText('home-chat-messages', 'おはようございます、田中さん。複数のシステムを横断して確認しました。');
+
+      // Info card
+      setTimeout(() => {
+        const card = createHomeCard1();
+        document.getElementById('home-chat-messages').appendChild(card);
+        fadeInCard(card, 50);
+        scrollChat('home-chat');
+
+        // Action card
+        setTimeout(() => {
+          const card2 = createHomeCard2();
+          document.getElementById('home-chat-messages').appendChild(card2);
+          fadeInCard(card2, 50);
+          scrollChat('home-chat');
+        }, 600);
+      }, 300);
+    }, 1800);
+  }, 600);
+}
+
+function createHomeCard1() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card blue-border';
+  d.innerHTML = `
+    <div class="agent-card-title"><span>📊 本日のサマリー</span></div>
+    <div class="agent-card-row">🔴 <span><strong>期限超過 1件</strong> — 関電力 特高契約更改（本日17時）</span></div>
+    <div class="agent-card-row">🟠 <span><strong>承認待ち 2件</strong> — SAP経費 ¥48,200 / SAP購買 ¥1.2M</span></div>
+    <div class="agent-card-row">💬 <span><strong>重要メンション 3件</strong> — Teams 2件 / Slack 1件</span></div>
+    <div class="agent-card-row">📅 <span><strong>直近の会議</strong> 11:00 関電力役員定例</span></div>
+    <div class="source-pills">
+      <span class="src-badge src-m365">M365</span>
+      <span class="src-badge src-sap">SAP</span>
+      <span class="src-badge src-slack">Slack</span>
+      <span class="src-badge src-sf">Salesforce</span>
+    </div>`;
+  return d;
+}
+
+function createHomeCard2() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card orange-border';
+  d.innerHTML = `
+    <div class="agent-card-title"><span>🔥 最優先: 関電力 特高契約更改 — 本日17時期限</span></div>
+    <div class="agent-card-row">• 契約書ドラフト: SharePointに最新版あり</div>
+    <div class="agent-card-row">• SAP与信チェック: <span class="text-critical font-600">未実施 ⚠</span></div>
+    <div class="agent-card-row">• 先方議事録: Teams 5/28にあり</div>
+    <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+      <button class="agent-action-btn primary-action" onclick="goToScene2FromHome()">📋 まとめて準備する</button>
+      <button class="agent-action-btn">📅 関係者を招集</button>
+    </div>`;
+  return d;
+}
+
+function goToScene2FromHome() {
+  switchScene(2);
+}
+
+function addUserMsg(containerId, text) {
+  const c = document.getElementById(containerId);
+  const d = document.createElement('div');
+  d.className = 'chat-msg user';
+  d.innerHTML = `<div class="chat-avatar">田</div><div class="chat-bubble user">${text}</div>`;
+  c.appendChild(d);
+  scrollChat(containerId.replace('-messages',''));
+}
+
+function addAgentText(containerId, text) {
+  const c = document.getElementById(containerId);
+  const d = document.createElement('div');
+  d.className = 'chat-msg';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble agent';
+  d.innerHTML = astroMini();
+  d.appendChild(bubble);
+  c.appendChild(d);
+  typewriter(text, bubble, 20);
+  scrollChat(containerId.replace('-messages', ''));
+  return bubble;
+}
+
+function addTyping(containerId) {
+  const c = document.getElementById(containerId);
+  const d = document.createElement('div');
+  d.className = 'chat-msg';
+  d.innerHTML = astroMini() + `<div class="chat-bubble agent"><div class="chat-typing"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div></div>`;
+  c.appendChild(d);
+  scrollChat(containerId.replace('-messages', ''));
+  return d;
+}
+
+// =============================
+// SCENE 2
+// =============================
+function initScene2() {
+  // Init chart
+  const ctx = document.getElementById('chart-sales-trend');
+  if (ctx && !chartInstances['sales-trend']) {
+    chartInstances['sales-trend'] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['7月','8月','9月','10月','11月','12月','1月','2月','3月','4月','5月','6月'],
+        datasets: [{
+          data: [210,225,240,235,260,280,255,270,285,290,295,285],
+          borderColor: '#0176D3', backgroundColor: 'rgba(1,118,211,0.08)',
+          tension: 0.4, fill: true, pointRadius: 2
+        }]
+      },
+      options: { scales: { y: { ticks: { callback: v => '¥'+v+'M' } }, x: {} }, plugins: { legend: { display: false } }, maintainAspectRatio: false }
+    });
+  }
+
+  // Populate scene2 chat
+  const chat = document.getElementById('scene2-chat');
+  chat.innerHTML = '';
+
+  // Previous context from scene 1
+  const prevCtx = document.createElement('div');
+  prevCtx.style.cssText = 'font-size:11px;color:#6E6E6E;text-align:center;padding:6px 0;border-bottom:1px solid var(--color-border);margin-bottom:8px';
+  prevCtx.textContent = '— ホームからの続き —';
+  chat.appendChild(prevCtx);
+
+  // User message
+  setTimeout(() => {
+    addUserMsg('scene2-chat', '特高契約更改の状況を整理して。SAPの取引と、先方の最新ニーズも込みで');
+    // Typing
+    setTimeout(() => {
+      const t = addTyping('scene2-chat');
+      setTimeout(() => {
+        t.remove();
+        // 4 cards fade in
+        const cards = [
+          createS2Card1(), createS2Card2(), createS2Card3(), createS2Card4()
+        ];
+        cards.forEach((card, i) => {
+          chat.appendChild(card);
+          fadeInCard(card, i * 300 + 100);
+        });
+        scrollChat('scene2-chat');
+      }, 1800);
+    }, 400);
+  }, 500);
+}
+
+function createS2Card1() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card blue-border';
+  d.innerHTML = `<div class="agent-card-title"><span>🏢 商談ステータス</span><span class="src-badge src-sf" style="font-size:9px">Salesforce</span></div>
+    <div class="agent-card-row"><span class="lbl">案件名</span><strong>特高契約更改 2026</strong></div>
+    <div class="agent-card-row"><span class="lbl">金額</span><strong>¥320M</strong> <span class="text-muted">確度: 75%</span></div>
+    <div class="agent-card-row"><span class="lbl">期限</span><span class="text-critical font-600">本日 17:00 ⚠</span></div>
+    <div class="agent-card-row"><span class="lbl">フェーズ</span>提案中</div>`;
+  return d;
+}
+function createS2Card2() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card green-border';
+  d.innerHTML = `<div class="agent-card-title"><span>💹 SAP取引健全性</span><span class="src-badge src-sap" style="font-size:9px">SAP S/4HANA</span></div>
+    <div class="agent-card-row">売上トレンド: <strong>前年比 +6% ✓</strong></div>
+    <div class="agent-card-row">与信: <span class="text-success font-600">余裕あり</span> / 未収金 <span class="text-success font-600">¥0 ✓</span></div>
+    <div class="agent-card-row">取引リスク: <span class="badge badge-success">低</span></div>`;
+  return d;
+}
+function createS2Card3() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card orange-border';
+  d.innerHTML = `<div class="agent-card-title"><span>💬 先方の最新ニーズ</span>
+    <div style="display:flex;gap:3px"><span class="src-badge src-teams" style="font-size:9px">Teams</span><span class="src-badge src-slack" style="font-size:9px">Slack</span></div></div>
+    <div class="agent-card-row" style="font-style:italic;color:#333">「省エネ提案を歓迎、PPA併用検討したい」</div>
+    <div class="agent-card-row text-sm text-muted">— 先方 山田部長（Teams 5/28議事録より）</div>
+    <div class="agent-card-row text-sm" style="margin-top:4px">競合A社が同じ枠で動いている兆し（Slack 6/3）</div>
+    <div class="agent-card-row text-sm text-success">→ PPA併用提案テンプレが活用できそうです</div>`;
+  return d;
+}
+function createS2Card4() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card gray-border';
+  d.innerHTML = `<div class="agent-card-title"><span>💡 推奨アクション</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px">
+      <button class="agent-action-btn primary-action" onclick="doWordDraft()">📝 提案ドラフトをWordで作成</button>
+      <button class="agent-action-btn">📊 PPT資料を作成</button>
+      <button class="agent-action-btn">📨 Teams会議招集</button>
+    </div>`;
+  return d;
+}
+
+function doWordDraft() {
+  toast('M365 Word に下書きを作成しました ✓', 'success');
+  const chat = document.getElementById('scene2-chat');
+  setTimeout(() => {
+    const d = document.createElement('div');
+    d.className = 'chat-msg';
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble agent';
+    d.innerHTML = astroMini();
+    d.appendChild(bubble);
+    chat.appendChild(d);
+    typewriter('ドラフトの要点: 1. PPA概要  2. コスト試算  3. 競合優位性', bubble, 25);
+    scrollChat('scene2-chat');
+  }, 400);
+}
+
+// =============================
+// SCENE 3
+// =============================
+function initScene3() {
+  // Temp chart
+  const ctx = document.getElementById('chart-temp');
+  if (ctx && !chartInstances['temp']) {
+    const labels = [];
+    const data = [];
+    for (let i = 60; i >= 0; i -= 5) {
+      const m = new Date(); m.setMinutes(m.getMinutes() - i);
+      labels.push(m.getHours() + ':' + String(m.getMinutes()).padStart(2,'0'));
+      if (i > 20) data.push(62 + Math.random() * 4);
+      else if (i > 10) data.push(68 + (20 - i) * 1.2 + Math.random()*2);
+      else data.push(80 + (10 - i) * 0.9 + Math.random()*2);
+    }
+    chartInstances['temp'] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { data, borderColor: '#EA001E', backgroundColor: 'rgba(234,0,30,0.07)', tension: 0.3, fill: true, pointRadius: 2 },
+          { data: data.map(() => 70), borderColor: '#9E9E9E', borderDash: [5,3], borderWidth: 1.5, pointRadius: 0, fill: false }
+        ]
+      },
+      options: {
+        scales: { y: { min: 55, max: 100, ticks: { callback: v => v+'℃' } } },
+        plugins: { legend: { display: false } },
+        maintainAspectRatio: false
+      }
+    });
+  }
+
+  // Populate scene3 chat
+  const chat = document.getElementById('scene3-chat');
+  chat.innerHTML = '';
+
+  setTimeout(() => {
+    addUserMsg('scene3-chat', '変電所Aの異常、過去の類似事例、出動可能な技術者、必要部品の在庫を一気に教えて');
+
+    // A2A card
+    setTimeout(() => {
+      const a2a = createA2ACard();
+      chat.appendChild(a2a);
+      scrollChat('scene3-chat');
+
+      const agents = [
+        { name: '設備保全Agent', time: '1.2' },
+        { name: '人事Agent', time: '0.9' },
+        { name: '調達Agent', time: '1.5' },
+        { name: '安全管理Agent', time: '0.8' }
+      ];
+      agents.forEach((ag, i) => {
+        setTimeout(() => {
+          const row = document.getElementById('a2a-row-' + i);
+          if (row) {
+            row.querySelector('.a2a-status').textContent = '✅';
+            row.querySelector('.a2a-state').textContent = `完了 (${ag.time}s)`;
+            row.querySelector('.a2a-state').style.color = '#2E844A';
+          }
+          if (i === agents.length - 1) {
+            setTimeout(() => {
+              const msg = document.createElement('div');
+              msg.className = 'a2a-complete-msg';
+              msg.textContent = '✅ 4つのAgentから回答を統合しました';
+              a2a.querySelector('.a2a-card-inner').appendChild(msg);
+              scrollChat('scene3-chat');
+
+              // Show result cards
+              setTimeout(() => {
+                const cards = [createS3Card1(), createS3Card2(), createS3Card3(), createS3Card4()];
+                cards.forEach((card, ci) => {
+                  setTimeout(() => { chat.appendChild(card); fadeInCard(card, 50); scrollChat('scene3-chat'); }, ci * 300);
+                });
+              }, 500);
+            }, 300);
+          }
+        }, 800 + i * 500);
+      });
+    }, 600);
+  }, 500);
+}
+
+function createA2ACard() {
+  const d = document.createElement('div');
+  d.className = 'chat-msg';
+  d.innerHTML = astroMini() + `<div style="flex:1">
+    <div class="a2a-card">
+      <div class="a2a-title">🤖 関連Agentに問い合わせ中...</div>
+      <div class="a2a-card-inner">
+        <div class="a2a-row" id="a2a-row-0"><span class="a2a-status">⏳</span><span class="a2a-name">設備保全Agent</span><span class="a2a-state">過去ログ照合中...</span></div>
+        <div class="a2a-row" id="a2a-row-1"><span class="a2a-status">⏳</span><span class="a2a-name">人事Agent</span><span class="a2a-state">在席・スキル照合中...</span></div>
+        <div class="a2a-row" id="a2a-row-2"><span class="a2a-status">⏳</span><span class="a2a-name">調達Agent</span><span class="a2a-state">部品在庫確認中...</span></div>
+        <div class="a2a-row" id="a2a-row-3"><span class="a2a-status">⏳</span><span class="a2a-name">安全管理Agent</span><span class="a2a-state">作業ルール確認中...</span></div>
+      </div>
+    </div>
+  </div>`;
+  return d;
+}
+
+function createS3Card1() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card blue-border';
+  d.innerHTML = `<div class="agent-card-title"><span>📋 類似事例</span>
+    <div style="display:flex;gap:3px"><span class="src-badge src-sp" style="font-size:9px">SharePoint</span><span class="src-badge src-dc" style="font-size:9px">DC</span></div></div>
+    <div class="agent-card-row font-600">2024/11/08 — 変電所C 同型トランス過熱</div>
+    <div class="agent-card-row text-sm">復旧所要: <strong>3.2時間</strong> / 手順書: v2.3</div>
+    <div class="agent-card-row text-sm">当時の担当: <strong>佐藤 健一</strong>（→今回も推奨）</div>
+    <div style="margin-top:6px"><button class="agent-action-btn">📄 復旧手順書を開く</button></div>`;
+  return d;
+}
+function createS3Card2() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card green-border';
+  d.innerHTML = `<div class="agent-card-title"><span>👷 出動可能技術者</span><span class="src-badge src-teams" style="font-size:9px">M365 Teams</span></div>
+    <table class="tech-table">
+      <thead><tr><th>氏名</th><th>資格</th><th>距離</th><th>状況</th></tr></thead>
+      <tbody>
+        <tr><td><strong>佐藤 健一</strong></td><td>高圧★★★</td><td>8km</td><td><span class="status-dot green"></span><span class="text-success font-600">対応可 ✓</span></td></tr>
+        <tr><td>鈴木 隆</td><td>中圧★★</td><td>12km</td><td><span class="status-dot yellow"></span>会議中</td></tr>
+        <tr><td>高橋 美咲</td><td>高圧★★</td><td>18km</td><td><span class="status-dot green"></span><span class="text-success">対応可</span></td></tr>
+      </tbody>
+    </table>`;
+  return d;
+}
+function createS3Card3() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card orange-border';
+  d.innerHTML = `<div class="agent-card-title"><span>📦 部品在庫</span><span class="src-badge src-sap" style="font-size:9px">SAP MM</span></div>
+    <div class="parts-row"><span>油圧センサー TYPE-3</span><span class="text-muted text-sm">川崎倉庫</span><span class="parts-stock ok">在庫 6個 ✓</span></div>
+    <div class="parts-row"><span>冷却ファンユニット</span><span class="text-muted text-sm">横浜倉庫</span><span class="parts-stock warn">在庫 2個 △</span></div>`;
+  return d;
+}
+function createS3Card4() {
+  const d = document.createElement('div');
+  d.className = 'agent-info-card red-border';
+  d.innerHTML = `<div class="agent-card-title"><span>⚠ 安全注意事項</span><span class="src-badge src-kiteikb" style="font-size:9px">社内規程DB</span></div>
+    <div class="agent-card-row">⚠ 高圧活線作業: <strong>二人作業必須</strong></div>
+    <div class="agent-card-row">絶縁手袋: 点検期限確認のこと</div>
+    <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">
+      <button class="agent-action-btn primary-action" onclick="doDispatch()">🚨 佐藤健一さんに出動依頼</button>
+      <button class="agent-action-btn">📦 部品ピッキング指示</button>
+      <button class="agent-action-btn">📋 KY書ドラフトを作成</button>
+    </div>`;
+  return d;
+}
+
+function doDispatch() {
+  toast('Teams で佐藤健一さんに通知しました ✓', 'info');
+  setTimeout(() => {
+    toast('SAP 作業オーダー WO-2026-0612-003 を起票しました ✓', 'success');
+    // Status change
+    const statusEl = document.getElementById('case-status');
+    if (statusEl) {
+      statusEl.classList.remove('status-new');
+      statusEl.classList.add('status-inprogress');
+      statusEl.textContent = 'In Progress';
+    }
+  }, 1200);
+}
+
+// =============================
+// SCENE 4
+// =============================
+function initScene4() {
+  // Sales vs Plan
+  const ctx1 = document.getElementById('chart-sales-plan');
+  if (ctx1 && !chartInstances['sales-plan']) {
+    chartInstances['sales-plan'] = new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: ['4月','5月','6月'],
+        datasets: [
+          { label: '計画', data: [850, 900, 920], borderColor: '#9E9E9E', borderDash: [5,3], tension: 0.3, pointRadius: 3, fill: false },
+          { label: '実績', data: [870, 930, 940], borderColor: '#0176D3', backgroundColor: 'rgba(1,118,211,0.08)', tension: 0.3, pointRadius: 3, fill: false }
+        ]
+      },
+      options: { plugins: { legend: { display: true, position: 'top', labels: { boxWidth: 12, font: { size: 10 } } } }, scales: { y: { ticks: { callback: v => v+'M' } } }, maintainAspectRatio: false }
+    });
+  }
+  // Pipeline stacked bar
+  const ctx2 = document.getElementById('chart-pipeline');
+  if (ctx2 && !chartInstances['pipeline']) {
+    chartInstances['pipeline'] = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['Q1','Q2','Q3','Q4'],
+        datasets: [
+          { label: '受注確定', data: [320, 280, 150, 80], backgroundColor: '#2E844A' },
+          { label: '提案中', data: [180, 220, 310, 200], backgroundColor: '#0176D3' },
+          { label: '検討中', data: [90, 130, 250, 380], backgroundColor: '#B0D4FF' }
+        ]
+      },
+      options: { plugins: { legend: { display: true, position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } }, scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: v => v+'M' } } }, maintainAspectRatio: false }
+    });
+  }
+  // Churn horizontal bar
+  const ctx3 = document.getElementById('chart-churn');
+  if (ctx3 && !chartInstances['churn']) {
+    chartInstances['churn'] = new Chart(ctx3, {
+      type: 'bar',
+      data: {
+        labels: ['関電力', '東芝エネルギー', '三菱電機', 'ABC製造', 'XYZ工業'],
+        datasets: [{
+          data: [0.78, 0.72, 0.65, 0.58, 0.51],
+          backgroundColor: [0.78, 0.72, 0.65, 0.58, 0.51].map(v => v >= 0.7 ? '#EA001E' : '#0176D3')
+        }]
+      },
+      options: { indexAxis: 'y', scales: { x: { min: 0, max: 1, ticks: { callback: v => v.toFixed(1) } } }, plugins: { legend: { display: false } }, maintainAspectRatio: false }
+    });
+  }
+  // Donut
+  const ctx4 = document.getElementById('chart-renew');
+  if (ctx4 && !chartInstances['renew']) {
+    chartInstances['renew'] = new Chart(ctx4, {
+      type: 'doughnut',
+      data: {
+        datasets: [{ data: [42, 58], backgroundColor: ['#2E844A', '#E0E0E0'], borderWidth: 0 }]
+      },
+      options: { cutout: '65%', plugins: { legend: { display: false } }, maintainAspectRatio: false }
+    });
+  }
+  // Word cloud
+  buildWordCloud();
+  // Auto-start chat
+  setTimeout(() => startScene4Chat(), 1500);
+}
+
+function buildWordCloud() {
+  const wc = document.getElementById('word-cloud');
+  if (!wc) return;
+  const words = [
+    { text: '再エネメニュー資料が古い', size: 18, x: 5, y: 10, color: '#0176D3' },
+    { text: '与信回答が遅い', size: 15, x: 55, y: 5, color: '#EA001E' },
+    { text: 'PPA提案テンプレ', size: 13, x: 10, y: 45, color: '#6264A7' },
+    { text: '省エネ', size: 16, x: 65, y: 40, color: '#2E844A' },
+    { text: '契約書フォーマット', size: 11, x: 5, y: 72, color: '#0176D3' },
+    { text: '現場対応マニュアル', size: 12, x: 50, y: 65, color: '#FE9339' },
+    { text: 'Teams連携', size: 10, x: 70, y: 80, color: '#6264A7' },
+    { text: 'SAP承認フロー', size: 11, x: 20, y: 55, color: '#F0AB00' },
+  ];
+  words.forEach(w => {
+    const span = document.createElement('span');
+    span.className = 'wc-word';
+    span.textContent = w.text;
+    span.style.cssText = `left:${w.x}%;top:${w.y}%;font-size:${w.size}px;color:${w.color}`;
+    wc.appendChild(span);
+  });
+}
+
+function startScene4Chat() {
+  const chat = document.getElementById('scene4-chat');
+  // Clear suggest buttons
+  chat.innerHTML = '';
+  addUserMsg('scene4-chat', '今期の法人営業の進捗とリスク、現場の声を3行でまとめて');
+
+  setTimeout(() => {
+    const t = addTyping('scene4-chat');
+    setTimeout(() => {
+      t.remove();
+      const lines = [
+        { icon: '✅', text: '進捗: 売上 計画比102%、パイプライン前年比+8%。Q2着地はプラス見込み。', color: '#2E844A' },
+        { icon: '⚠', text: 'リスク: 製造業セグメント使用量▲5%（3社工場縮小兆候）/ 関電力PPA競合A社接近 / 大口2社 解約予兆スコア0.78↑', color: '#FE9339' },
+        { icon: '💬', text: '現場の声: 「再エネメニュー資料が古い」42回 /「与信回答が遅い」28回 — 現場の改善ニーズが顕在化', color: '#6264A7' }
+      ];
+      lines.forEach((line, i) => {
+        setTimeout(() => {
+          const d = document.createElement('div');
+          d.className = 'chat-msg';
+          d.style.cssText = 'opacity:0;transition:opacity 0.4s';
+          const bubble = document.createElement('div');
+          bubble.className = 'chat-bubble agent';
+          bubble.style.cssText = `border-left:3px solid ${line.color};padding-left:10px`;
+          bubble.innerHTML = `<span style="font-size:14px">${line.icon}</span> ${line.text}`;
+          if (i === 0) d.innerHTML = astroMini();
+          d.appendChild(bubble);
+          chat.appendChild(d);
+          setTimeout(() => d.style.opacity = '1', 30);
+          scrollChat('scene4-chat');
+
+          if (i === 2) {
+            setTimeout(() => {
+              const actions = document.createElement('div');
+              actions.style.cssText = 'padding:6px 0;opacity:0;transition:opacity 0.4s';
+              actions.innerHTML = `<div style="font-size:11px;color:#6E6E6E;margin-bottom:6px">推奨アクション</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <button class="agent-action-btn primary-action">📅 製造業緊急レビュー会議を設定</button>
+                  <button class="agent-action-btn">📝 再エネ資料更新を広報部に依頼</button>
+                </div>`;
+              chat.appendChild(actions);
+              setTimeout(() => actions.style.opacity = '1', 30);
+              scrollChat('scene4-chat');
+            }, 600);
+          }
+        }, i * 1000);
+      });
+    }, 2000);
+  }, 600);
+}
+
+// ====== Keyboard Navigation ======
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextScene();
+  if (e.key === 'ArrowLeft') prevScene();
+  if (e.key === 'r' || e.key === 'R') {
+    sceneInited[currentScene] = false;
+    switchScene(currentScene);
+  }
+  if (e.key >= '1' && e.key <= '4') switchScene(parseInt(e.key));
+});
+
+// ====== Boot ======
+initScene(1);
+</script>
+</body>
+</html>

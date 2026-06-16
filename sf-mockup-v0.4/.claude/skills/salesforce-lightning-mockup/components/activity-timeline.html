@@ -1,0 +1,201 @@
+<!--
+  Activity Timeline / Files / Chatter Feed
+  ===========================================
+  使用箇所: Recordページの右カラムに積む
+-->
+
+<!-- ============ Activity Timeline カード ============ -->
+<article class="slds-card">
+  <!-- タブ -->
+  <div class="slds-tabs_default">
+    <ul class="slds-tabs_default__nav" role="tablist">
+      <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="0">活動</a></li>
+      <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">フィード</a></li>
+      <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">Agentforce</a></li>
+    </ul>
+
+    <div class="slds-tabs_default__content slds-show" role="tabpanel">
+      <!-- アクションボタン群 -->
+      <div class="slds-grid slds-grid_pull-padded slds-m-bottom_medium">
+        <div class="slds-col slds-p-horizontal_xx-small">
+          <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="電話">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/call.svg" alt="" class="slds-button__icon" style="fill:#057be5" />
+          </button>
+        </div>
+        <div class="slds-col slds-p-horizontal_xx-small">
+          <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="メール">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/email.svg" alt="" class="slds-button__icon" />
+          </button>
+        </div>
+        <div class="slds-col slds-p-horizontal_xx-small">
+          <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="ToDo">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/task.svg" alt="" class="slds-button__icon" />
+          </button>
+        </div>
+      </div>
+
+      <!-- タイムライン -->
+      <h3 class="slds-text-title_caps slds-m-bottom_x-small">今後 &amp; 期限切れ (2)</h3>
+      <ul class="slds-timeline">
+        <li>
+          <div class="slds-timeline__item_expandable slds-timeline__item_call">
+            <span class="slds-assistive-text">call</span>
+            <div class="slds-media">
+              <div class="slds-media__figure">
+                <span class="slds-icon_container slds-icon-standard-log-a-call slds-timeline__icon" title="call">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg" alt="" class="slds-icon slds-icon_small" />
+                </span>
+              </div>
+              <div class="slds-media__body">
+                <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                  <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
+                    <h3 class="slds-truncate" title="フォローアップコール">
+                      <a href="#"><strong>フォローアップコール</strong></a>
+                    </h3>
+                  </div>
+                  <div class="slds-timeline__actions slds-timeline__actions_inline">
+                    <p class="slds-timeline__date">期日 6月15日</p>
+                  </div>
+                </div>
+                <p class="slds-m-horizontal_xx-small slds-text-body_small">担当: Aoshima Tetsuya</p>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="slds-timeline__item_expandable slds-timeline__item_email">
+            <span class="slds-assistive-text">email</span>
+            <div class="slds-media">
+              <div class="slds-media__figure">
+                <span class="slds-icon_container slds-icon-standard-email slds-timeline__icon" title="email">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/email.svg" alt="" class="slds-icon slds-icon_small" />
+                </span>
+              </div>
+              <div class="slds-media__body">
+                <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                  <h3 class="slds-truncate" title="提案書を送付">
+                    <a href="#"><strong>提案書を送付</strong></a>
+                  </h3>
+                  <p class="slds-timeline__date slds-text-color_destructive">期日 6月10日 (期限切れ)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- ============ Chatter Publisher ============ -->
+<article class="slds-card slds-m-top_small">
+  <div class="slds-publisher slds-publisher_comment slds-is-active slds-p-around_medium">
+    <div class="slds-grid">
+      <span class="slds-avatar slds-avatar_circle slds-avatar_small slds-m-right_small">
+        <img src="https://ui-avatars.com/api/?name=Aoshima+Tetsuya&background=1B96FF&color=fff" alt="">
+      </span>
+      <textarea class="slds-textarea slds-publisher__input" placeholder="共有する..." rows="2"></textarea>
+    </div>
+    <div class="slds-publisher__actions slds-grid slds-grid_align-end slds-m-top_x-small">
+      <button class="slds-button slds-button_brand">投稿</button>
+    </div>
+  </div>
+
+  <div class="slds-feed slds-p-around_medium">
+    <article class="slds-post">
+      <header class="slds-post__header slds-media">
+        <div class="slds-media__figure">
+          <span class="slds-avatar slds-avatar_circle slds-avatar_small">
+            <img src="https://ui-avatars.com/api/?name=Yamada+Hanako&background=a094ed&color=fff" alt="">
+          </span>
+        </div>
+        <div class="slds-media__body">
+          <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+            <p>
+              <a href="#"><strong>Yamada Hanako</strong></a>
+            </p>
+            <span class="slds-text-body_small slds-text-color_weak">2時間前</span>
+          </div>
+        </div>
+      </header>
+      <div class="slds-post__content">
+        <p>提案書のレビューが完了しました。確認お願いします。</p>
+      </div>
+      <footer class="slds-post__footer slds-m-top_small">
+        <ul class="slds-post__footer-actions-list slds-list_horizontal slds-grid_vertical-align-center">
+          <li>
+            <button class="slds-button">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/like.svg" alt="" class="slds-button__icon slds-button__icon_small slds-m-right_xx-small" />
+              いいね
+            </button>
+          </li>
+          <li>
+            <button class="slds-button">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/share_post.svg" alt="" class="slds-button__icon slds-button__icon_small slds-m-right_xx-small" />
+              コメント
+            </button>
+          </li>
+        </ul>
+      </footer>
+    </article>
+  </div>
+</article>
+
+<!-- ============ Files カード ============ -->
+<article class="slds-card slds-m-top_small">
+  <div class="slds-card__header slds-grid">
+    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+      <div class="slds-media__figure">
+        <span class="slds-icon_container slds-icon-standard-document" title="ファイル">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/document.svg" alt="" class="slds-icon slds-icon_small" />
+        </span>
+      </div>
+      <div class="slds-media__body">
+        <h2 class="slds-card__header-title">
+          <a href="#" class="slds-card__header-link slds-truncate">
+            <span>ファイル (2)</span>
+          </a>
+        </h2>
+      </div>
+    </header>
+  </div>
+  <div class="slds-card__body">
+    <ul>
+      <li class="slds-grid slds-grid_align-spread slds-p-around_x-small slds-border_top">
+        <div class="slds-media slds-media_center">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-doctype-pdf">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/pdf.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <a href="#" class="slds-truncate">提案書_v2.pdf</a>
+            <p class="slds-text-body_small slds-text-color_weak">2.4 MB · 6月8日</p>
+          </div>
+        </div>
+        <button class="slds-button slds-button_icon slds-button_icon-x-small">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" />
+        </button>
+      </li>
+      <li class="slds-grid slds-grid_align-spread slds-p-around_x-small slds-border_top">
+        <div class="slds-media slds-media_center">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-doctype-excel">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/excel.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <a href="#" class="slds-truncate">見積_2026Q2.xlsx</a>
+            <p class="slds-text-body_small slds-text-color_weak">340 KB · 6月5日</p>
+          </div>
+        </div>
+        <button class="slds-button slds-button_icon slds-button_icon-x-small">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" />
+        </button>
+      </li>
+    </ul>
+  </div>
+  <footer class="slds-card__footer">
+    <a href="#" class="slds-card__footer-action">すべて表示</a>
+  </footer>
+</article>

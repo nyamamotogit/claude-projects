@@ -1,0 +1,4 @@
+Name,Project_Code__c,Status__c,Priority__c,Budget__c,Start_Date__c,End_Date__c
+顧客ポータル開発プロジェクト,CUST-001,In Progress,High,5000000,2026-02-21,2026-05-22
+モバイルアプリ刷新,MOBILE-002,In Progress,Medium,3000000,2026-03-23,2026-06-21
+社内業務システム改修,INTERNAL-003,Planning,Low,1500000,2026-04-22,2026-07-21

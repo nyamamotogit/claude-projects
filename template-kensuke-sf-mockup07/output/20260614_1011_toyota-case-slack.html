@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS-04821 ECUハーネス加締め不良 | ケース | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1024px; margin: 0; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .slds-global-header_container { position: sticky; top: 0; z-index: 50; background: white; border-bottom: 1px solid #c9c9c9; }
+  .slds-global-header { height: 3rem; padding: 0 1rem; }
+  .slds-global-header__item_search { width: 56%; max-width: 48rem; }
+  .slds-global-header .slds-button .slds-button__icon,
+  .slds-context-bar .slds-button_icon .slds-button__icon,
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); width: 14px; height: 14px; }
+  .sf-search-combo { display: flex; height: 2rem; border: 1px solid #dddbda; border-radius: 0.25rem; background: white; overflow: hidden; }
+  .sf-search-combo .slds-form-element { flex: 1; }
+  .sf-search-combo .slds-input { border: none; height: 100%; box-shadow: none; background: white; }
+  .sf-scope-selector { flex: 0 0 8rem; border: none; border-right: 1px solid #dddbda; background: white; height: 2rem; padding: 0 0.5rem 0 0.75rem; display: inline-flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .sf-scope-selector .sf-scope-name { font-size: 0.8125rem; color: #181818; }
+  .sf-scope-selector .sf-scope-chev { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(43%); }
+  .slds-global-header .slds-global-actions__favorites { margin-right: 0; }
+  .slds-global-header .slds-global-actions__favorites,
+  .slds-global-header .slds-global-actions__favorites-more { background: white; border: 1px solid #dddbda; height: 2rem; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+  .slds-global-header .slds-global-actions__favorites { border-right: none; border-radius: 0.25rem 0 0 0.25rem; width: 2rem; }
+  .slds-global-header .slds-global-actions__favorites-more { border-radius: 0 0.25rem 0.25rem 0; width: 1.5rem; margin-left: 0; }
+  .slds-global-header .slds-global-actions__favorites-more .slds-button__icon { width: 10px; height: 10px; }
+  .sf-action-add { width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #747474; display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; padding: 0; }
+  .sf-action-add img { filter: brightness(0) invert(1); width: 12px; height: 12px; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+
+  /* Slack 埋め込み (components/slack-channel-embed.html より) */
+  .sf-slack { font-family: "Lato", -apple-system, BlinkMacSystemFont, sans-serif; color: #1d1c1d; font-size: 14px; line-height: 1.46; }
+  .sf-slack a { color: #1264a3; text-decoration: none; }
+  .sf-slack a:hover { text-decoration: underline; }
+  .sf-slack-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #e1e1e1; }
+  .sf-slack-header-left { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 900; }
+  .sf-slack-logo { width: 24px; height: 24px; }
+  .sf-slack-channel-name { font-size: 15px; font-weight: 900; color: #1d1c1d; }
+  .sf-slack-members { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #dddbda; border-radius: 9999px; padding: 3px 10px; font-size: 12px; background: white; cursor: pointer; }
+  .sf-slack-members .icon { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(20%); }
+  .sf-slack-msg { position: relative; display: flex; align-items: flex-start; gap: 10px; padding: 8px 14px; }
+  .sf-slack-msg:hover { background: #f8f8f8; }
+  .sf-slack-avatar { width: 32px; height: 32px; border-radius: 5px; flex-shrink: 0; object-fit: cover; }
+  .sf-slack-body { flex: 1; min-width: 0; }
+  .sf-slack-author-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; flex-wrap: wrap; }
+  .sf-slack-author { font-weight: 900; font-size: 14px; }
+  .sf-slack-time { color: #616061; font-size: 11px; }
+  .sf-slack-text p { margin: 0 0 4px; }
+  .sf-slack-mention { background: rgba(29, 155, 209, 0.1); color: #1264a3; border-radius: 3px; padding: 0 3px; font-weight: 700; }
+  .sf-slack-channel-tag { background: rgba(29, 155, 209, 0.1); color: #1264a3; border-radius: 3px; padding: 0 3px; font-weight: 700; }
+  .sf-slack-agent-tag { display: inline-block; padding: 1px 6px; background: #f1f1f1; color: #616061; border-radius: 3px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; }
+  .sf-slack-card { margin-top: 8px; border: 1px solid #dddbda; border-left: 4px solid #1264a3; border-radius: 4px; padding: 8px 12px; max-width: 520px; background: white; }
+  .sf-slack-card-source { font-size: 11px; color: #616061; }
+  .sf-slack-card-title { font-size: 14px; font-weight: 700; color: #1264a3; margin-top: 2px; }
+  .sf-slack-card-meta { font-size: 11px; color: #616061; margin-top: 2px; }
+  .sf-slack-card-preview { background: linear-gradient(135deg, #1f4e8c 0%, #1264a3 100%); border-radius: 4px; height: 90px; margin-top: 8px; padding: 8px; display: flex; align-items: flex-end; }
+  .sf-slack-card-preview .bars { display: flex; align-items: flex-end; gap: 6px; height: 60px; width: 100%; }
+  .sf-slack-card-preview .bar { width: 18px; background: rgba(255,255,255,0.85); border-radius: 2px; }
+  .sf-slack-replies { margin-top: 4px; display: inline-flex; align-items: center; gap: 8px; padding: 3px 8px; cursor: pointer; border-radius: 6px; }
+  .sf-slack-replies:hover { background: #f1f1f1; }
+  .sf-slack-replies .count { color: #1264a3; font-weight: 700; font-size: 12px; }
+  .sf-slack-replies .since { color: #616061; font-size: 12px; }
+  .sf-slack-replies .avatars { display: inline-flex; }
+  .sf-slack-replies .avatars img { width: 18px; height: 18px; border-radius: 4px; border: 2px solid white; margin-right: -4px; }
+  .sf-slack-input-wrap { padding: 10px 14px; border-top: 1px solid #e1e1e1; }
+  .sf-slack-input { border: 1px solid #dddbda; border-radius: 8px; background: white; padding: 8px 10px; color: #616061; font-size: 13px; }
+  .sf-slack-footer-banner { padding: 8px 14px; background: #f4f4f4; border-top: 1px solid #e1e1e1; color: #1264a3; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+  .sf-slack-footer-banner .agent-icon { width: 18px; height: 18px; border-radius: 50%; background: #1264a3; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+</style>
+</head>
+<body class="slds-scope">
+
+<header class="slds-global-header_container slds-no-print">
+  <div class="slds-global-header slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+    <div class="slds-global-header__item"><img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" /></div>
+    <div class="slds-global-header__item slds-global-header__item_search">
+      <div class="sf-search-combo">
+        <button class="sf-scope-selector"><span class="sf-scope-name">ケース</span><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="sf-scope-chev" /></button>
+        <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+          <input type="search" placeholder="Salesforce を検索..." class="slds-input">
+        </div></div>
+      </div>
+    </div>
+    <ul class="slds-global-actions slds-grid slds-grid_vertical-align-center" style="gap:0.25rem;">
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" class="slds-button__icon" /></button></li>
+      <li class="slds-global-actions__item"><div class="slds-grid">
+        <button class="slds-button slds-button_icon slds-global-actions__favorites"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" class="slds-button__icon" /></button>
+        <button class="slds-button slds-button_icon slds-global-actions__favorites-more"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" /></button>
+      </div></li>
+      <li class="slds-global-actions__item"><button class="sf-action-add"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" class="slds-button__icon" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" class="slds-button__icon" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon" style="position:relative;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" class="slds-button__icon" /><span class="slds-notification-badge slds-incoming-notification slds-show-notification">5</span></button></li>
+      <li class="slds-global-actions__item slds-m-left_x-small"><span class="slds-avatar slds-avatar_circle slds-avatar_small"><img src="https://i.pravatar.cc/64?img=12" alt="User"></span></li>
+    </ul>
+  </div>
+</header>
+
+<div class="slds-context-bar">
+  <div class="slds-context-bar__primary slds-context-bar__item_app">
+    <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+    <span class="slds-context-bar__label-action slds-context-bar__app-name"><span>自動車部品 Sales</span></span>
+  </div>
+  <nav class="slds-context-bar__secondary"><ul class="slds-grid">
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ホーム</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">取引先</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">取引先責任者</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">リード</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">商談</a></li>
+    <li class="slds-context-bar__item slds-is-active"><a href="#" class="slds-context-bar__label-action">ケース</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">部品マスタ</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ダッシュボード</a></li>
+  </ul></nav>
+</div>
+
+<main class="sf-main">
+
+  <!-- Page Header -->
+  <div class="slds-page-header slds-page-header_record-home slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-case">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/case.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-page-header__name-meta">ケース · 品質クレーム (4M変動)</p>
+            <div class="slds-page-header__name">
+              <h1><span class="slds-page-header__title">CS-04821 / ECUハーネス 加締め不良 12個 (堤工場 Lot#TM-25-0612)</span></h1>
+            </div>
+            <p class="slds-page-header__name-meta">取引先: <a href="#">トヨタ自動車株式会社</a> · 部品: <a href="#">NMP-EH-44210</a> · 起票: 2026/06/12 09:42</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <div class="slds-page-header__controls">
+          <div class="slds-page-header__control">
+            <ul class="slds-button-group-list">
+              <li><button class="slds-button slds-button_neutral">編集</button></li>
+              <li><button class="slds-button slds-button_neutral">活動の記録</button></li>
+              <li><button class="slds-button slds-button_neutral">8D起票</button></li>
+              <li><button class="slds-button slds-button_brand">クローズ</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slds-page-header__row slds-page-header__row_gutters">
+      <div class="slds-page-header__col-details">
+        <ul class="slds-page-header__detail-row">
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">優先度</div><p><span class="slds-badge slds-theme_error">高 (P1)</span></p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">SLA 残</div><p><strong style="color:#ba0517;">残 4時間 12分</strong></p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">不良数</div><p><strong>12 / 4,200 個</strong></p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">影響車種</div><p>クラウン S235</p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">所有者</div><p><a href="#">青島 哲也</a></p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">受信元</div><p>Toyota JAMA-EDI 通知</p></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Path -->
+  <article class="slds-card slds-m-bottom_small">
+    <div class="slds-path">
+      <div class="slds-grid slds-path__track">
+        <div class="slds-grid slds-path__scroller-container">
+          <div class="slds-path__scroller">
+            <div class="slds-path__scroller_inner">
+              <ul class="slds-path__nav">
+                <li class="slds-path__item slds-is-complete"><a class="slds-path__link" href="#"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-icon slds-icon_x-small" /></span><span class="slds-path__title">起票</span></a></li>
+                <li class="slds-path__item slds-is-complete"><a class="slds-path__link" href="#"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-icon slds-icon_x-small" /></span><span class="slds-path__title">一次切分け</span></a></li>
+                <li class="slds-path__item slds-is-current slds-is-active"><a class="slds-path__link" href="#"><span class="slds-path__stage"></span><span class="slds-path__title">原因調査 (4M)</span></a></li>
+                <li class="slds-path__item slds-is-incomplete"><a class="slds-path__link" href="#"><span class="slds-path__stage"></span><span class="slds-path__title">是正処置 (CA)</span></a></li>
+                <li class="slds-path__item slds-is-incomplete"><a class="slds-path__link" href="#"><span class="slds-path__stage"></span><span class="slds-path__title">水平展開</span></a></li>
+                <li class="slds-path__item slds-is-incomplete"><a class="slds-path__link" href="#"><span class="slds-path__stage"></span><span class="slds-path__title">クローズ</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="slds-grid slds-path__action">
+          <span class="slds-path__stage-name">ステージ: 原因調査 (4M)</span>
+          <button class="slds-button slds-button_brand slds-path__mark-complete"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-button__icon slds-button__icon_left" />現ステージとしてマーク</button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2-Column -->
+  <div class="slds-grid slds-gutters_small slds-wrap">
+
+    <!-- Left -->
+    <div class="slds-col slds-size_2-of-3">
+      <article class="slds-card">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav">
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">詳細</a></li>
+            <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="0"><img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;" />Slack: #cs-04821-toyota-ecu-claim</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">関連</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">8Dレポート</a></li>
+          </ul>
+          <div class="slds-tabs_default__content slds-show" role="tabpanel">
+
+            <!-- Slack Embed -->
+            <div class="sf-slack">
+
+              <header class="sf-slack-header">
+                <div class="sf-slack-header-left">
+                  <img class="sf-slack-logo" src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="Slack" />
+                  <div>
+                    <div class="sf-slack-channel-name"># cs-04821-toyota-ecu-claim</div>
+                    <div style="font-size:11px;color:#616061;font-weight:400;">関係者: 営業 / 品証 / 設計 / 製造 / Toyota様 (ゲスト)</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <button class="sf-slack-members"><img class="icon" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" /><span>8</span></button>
+                  <button class="sf-slack-members"><img class="icon" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/pin.svg" alt="" /><span>3</span></button>
+                </div>
+              </header>
+
+              <!-- Msg 1: 営業から起票通知 -->
+              <div class="sf-slack-msg">
+                <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/74.jpg" alt="" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row"><span class="sf-slack-author">青島 哲也</span><span style="background:#36c5f0;color:white;font-size:9px;padding:1px 4px;border-radius:2px;font-weight:700;">営業1部</span><span class="sf-slack-time">6月12日 09:48</span></div>
+                  <div class="sf-slack-text">
+                    <p><a class="sf-slack-channel-tag" href="#">@channel</a> Toyota堤工場から ECUハーネス (NMP-EH-44210) で <strong>加締め不良 12個 / Lot#TM-25-0612 (4,200個納入)</strong> の通知が来ました。</p>
+                    <p>影響車種: <strong>クラウン S235</strong> / SLA: 24h 以内に一次回答 / 4Dレポートが必要です。</p>
+                    <p>Salesforce ケース: <a href="#">CS-04821</a> を起票しました。品証・設計・製造の皆さん、調査お願いします。 🙇‍♂️</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Msg 2: 品証 4M分析 -->
+              <div class="sf-slack-msg">
+                <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/women/65.jpg" alt="" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row"><span class="sf-slack-author">高橋 由紀</span><span style="background:#2eb67d;color:white;font-size:9px;padding:1px 4px;border-radius:2px;font-weight:700;">品証部</span><span class="sf-slack-time">6月12日 11:15</span></div>
+                  <div class="sf-slack-text">
+                    <p>不良品 3 個を堤工場から回収し、SEMで断面観察しました。<strong>圧着部の高さばらつき (規格 1.85±0.05mm に対し最小 1.72mm)</strong> を確認。圧着工具の摩耗が疑われます。</p>
+                    <p>Lot#TM-25-0612 は <strong>第3ライン #4 端子圧着機</strong> で 6/9 17:30〜21:00 に生産。同時間帯に工具交換履歴なし。</p>
+                  </div>
+                  <div class="sf-slack-card">
+                    <div class="sf-slack-card-source">📎 4M分析_NMP-EH-44210_Lot25-0612.xlsx</div>
+                    <div class="sf-slack-card-title">圧着高さ測定データ (3個分)</div>
+                    <div class="sf-slack-card-meta">348 KB · 6/12 11:14</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Msg 3: 製造から圧着機データ -->
+              <div class="sf-slack-msg">
+                <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/81.jpg" alt="" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row"><span class="sf-slack-author">松本 健司</span><span style="background:#ecb22e;color:#1d1c1d;font-size:9px;padding:1px 4px;border-radius:2px;font-weight:700;">第3工場 製造課</span><span class="sf-slack-time">6月12日 13:02</span></div>
+                  <div class="sf-slack-text">
+                    <p>第3ライン #4 圧着機の MES データを確認しました。<a class="sf-slack-mention" href="#">@Tableau Next Agentforce in Slack</a> 圧着圧プロファイルを6/8〜6/12で時系列表示してください。</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Msg 4: Tableau Next Agentforce 応答 -->
+              <div class="sf-slack-msg" style="background:#fafbfc;">
+                <img class="sf-slack-avatar" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="background:#1264a3; padding:6px;" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row"><span class="sf-slack-author">Tableau Next Agentforce in Slack</span><span class="sf-slack-agent-tag">AGENTFORCE</span><span class="sf-slack-time">6月12日 13:02</span></div>
+                  <div class="sf-slack-text">
+                    <p>第3ライン #4 端子圧着機の圧着圧プロファイル (6/8〜6/12) を集計しました。<strong>6/9 18:10 以降、平均圧着圧が規格中央比 -7.2% で推移</strong> しています。ヒストグラムは以下の通りです。</p>
+                  </div>
+                  <div class="sf-slack-card">
+                    <div class="sf-slack-card-source">Tableau Next</div>
+                    <div class="sf-slack-card-title">圧着圧プロファイル (Line3 #4)</div>
+                    <div class="sf-slack-card-meta">2026-06-12 13:02:14 時点 · 14,820 ショット</div>
+                    <div class="sf-slack-card-preview">
+                      <div class="bars">
+                        <div class="bar" style="height:75%;"></div>
+                        <div class="bar" style="height:80%;"></div>
+                        <div class="bar" style="height:78%;"></div>
+                        <div class="bar" style="height:82%;"></div>
+                        <div class="bar" style="height:55%;background:#ff6b6b;"></div>
+                        <div class="bar" style="height:48%;background:#ff6b6b;"></div>
+                        <div class="bar" style="height:50%;background:#ff6b6b;"></div>
+                        <div class="bar" style="height:52%;background:#ff6b6b;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Msg 5: 設計部からの仮説 -->
+              <div class="sf-slack-msg">
+                <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/women/82.jpg" alt="" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row"><span class="sf-slack-author">石田 涼子</span><span style="background:#e01e5a;color:white;font-size:9px;padding:1px 4px;border-radius:2px;font-weight:700;">設計部</span><span class="sf-slack-time">6月12日 13:30</span></div>
+                  <div class="sf-slack-text">
+                    <p>圧力低下と圧着不良の関係は確実です。圧着工具 (アンビル) の摩耗指数を見ると 6/9 時点で <strong>累計 142,000 ショット</strong>。社内基準の 120,000 ショットを超過しています。</p>
+                    <p><strong>是正案</strong>: ① アンビルを即時交換、② 同ロットで生産した残 4,188個 を全数再検査、③ 摩耗管理を MES に組み込み 110,000 ショットでアラート。</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Msg 6: Toyotaゲスト -->
+              <div class="sf-slack-msg" style="border-left:3px solid #36c5f0;">
+                <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/91.jpg" alt="" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row"><span class="sf-slack-author">中島 健一</span><span style="background:#eb0a1e;color:white;font-size:9px;padding:1px 4px;border-radius:2px;font-weight:700;">トヨタ自動車 (ゲスト)</span><span class="sf-slack-time">6月12日 14:08</span></div>
+                  <div class="sf-slack-text">
+                    <p>速い対応ありがとうございます。原因と是正案、了解しました。以下を確認させてください:</p>
+                    <p>1. 残 4,188個 の再検査完了見込み (堤工場の組立着手は 6/15 朝です)<br>
+                    2. 同型圧着機を使う他品番への水平展開計画<br>
+                    3. 4Dレポート提出は 6/13 17:00 まででお願いします</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Msg 7: Agentforce が要約 -->
+              <div class="sf-slack-msg" style="background:#fafbfc;">
+                <img class="sf-slack-avatar" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="background:#1264a3; padding:6px;" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row"><span class="sf-slack-author">Salesforce Agentforce</span><span class="sf-slack-agent-tag">AGENTFORCE</span><span class="sf-slack-time">6月12日 14:10</span></div>
+                  <div class="sf-slack-text">
+                    <p>📋 <strong>議論サマリ &amp; 次アクション</strong> (CS-04821)</p>
+                    <p>✅ 原因: 第3ライン #4 圧着機 アンビル摩耗 (累計 142,000 ショット / 基準 120,000)<br>
+                    ✅ 是正: アンビル交換 ・ 残 4,188個 全数再検査 ・ MES に摩耗アラート追加<br>
+                    📌 トヨタ様確認事項 3点 (再検査完了見込/水平展開/4D提出)</p>
+                    <p style="margin-top:6px;"><strong>提案アクション:</strong></p>
+                    <ul style="margin-left:18px;">
+                      <li>👉 <a href="#">青島さん</a> に「4Dレポート起票 (期限 6/13 17:00)」をToDo割当</li>
+                      <li>👉 <a href="#">松本さん</a> に「再検査計画立案 (6/14午後 完了目標)」を起票</li>
+                      <li>👉 <a href="#">石田さん</a> に「水平展開対象 28品番リストアップ」を起票</li>
+                    </ul>
+                  </div>
+                  <div style="margin-top:8px;display:flex;gap:6px;">
+                    <button class="slds-button slds-button_brand slds-button_stretch" style="font-size:12px;padding:4px 10px;width:auto;">3件まとめて起票</button>
+                    <button class="slds-button slds-button_neutral" style="font-size:12px;padding:4px 10px;">編集して起票</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 入力欄 -->
+              <div class="sf-slack-input-wrap">
+                <div class="sf-slack-input">#cs-04821-toyota-ecu-claim にメッセージを送信...</div>
+              </div>
+
+              <!-- フッターバナー -->
+              <div class="sf-slack-footer-banner">
+                <span class="agent-icon">2</span>
+                <strong>2 エージェント</strong>
+                <span style="color:#616061;">(Tableau Next / Salesforce) はこのチャンネルで自動応答します</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Right -->
+    <div class="slds-col slds-size_1-of-3">
+      <!-- ケース詳細 -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header"><h2 class="slds-card__header-title">ケース情報</h2></div>
+        <div class="slds-p-around_medium">
+          <dl class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">ケース番号</dt><dd class="slds-item_detail">CS-04821</dd></div>
+            <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">種別</dt><dd class="slds-item_detail">品質クレーム</dd></div>
+            <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">部品番号</dt><dd class="slds-item_detail"><a href="#">NMP-EH-44210</a></dd></div>
+            <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">ロット</dt><dd class="slds-item_detail">TM-25-0612</dd></div>
+            <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">納入先</dt><dd class="slds-item_detail">堤工場 G3ライン</dd></div>
+            <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">不良率</dt><dd class="slds-item_detail">0.286%</dd></div>
+            <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">起票元</dt><dd class="slds-item_detail">Toyota JAMA-EDI 受信メッセージ #JE-2026-061209</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <!-- ToDo -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-task"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" class="slds-icon slds-icon_small" /></span></div>
+            <div class="slds-media__body"><h2 class="slds-card__header-title">ToDo (3)</h2></div>
+          </header>
+        </div>
+        <ul class="slds-has-dividers_top-space">
+          <li class="slds-item slds-p-around_x-small"><strong>4Dレポート起票</strong><span class="slds-badge slds-theme_error slds-m-left_small">期限切迫</span><p class="slds-text-body_small">期限 6/13 17:00 / 担当 青島</p></li>
+          <li class="slds-item slds-p-around_x-small"><strong>残4,188個 再検査計画</strong><p class="slds-text-body_small">期限 6/14 午後 / 担当 松本</p></li>
+          <li class="slds-item slds-p-around_x-small"><strong>水平展開対象 28品番リストアップ</strong><p class="slds-text-body_small">期限 6/16 / 担当 石田</p></li>
+        </ul>
+      </article>
+
+      <!-- 関連レコード -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header"><h2 class="slds-card__header-title">関連レコード</h2></div>
+        <ul class="slds-has-dividers_top-space">
+          <li class="slds-item slds-p-around_x-small">📦 <a href="#">部品: NMP-EH-44210 ECUハーネスASSY</a></li>
+          <li class="slds-item slds-p-around_x-small">🏭 <a href="#">資産: 第3ライン #4 端子圧着機</a></li>
+          <li class="slds-item slds-p-around_x-small">📋 <a href="#">商談: クラウン HEV用 高耐熱ECUハーネス (P5)</a></li>
+          <li class="slds-item slds-p-around_x-small">🚗 <a href="#">取引先: トヨタ自動車株式会社</a></li>
+        </ul>
+      </article>
+
+      <!-- Agentforce -->
+      <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure"><span class="slds-icon_container"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" class="slds-icon slds-icon_small" style="background:#0070d2; padding:4px; border-radius:4px;" /></span></div>
+            <div class="slds-media__body"><h2 class="slds-card__header-title">Agentforce サジェスト</h2></div>
+          </header>
+        </div>
+        <div class="slds-p-around_medium">
+          <div class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_x-small">
+            <span class="slds-icon_container slds-m-right_x-small"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" class="slds-icon slds-icon_x-small" /></span>
+            <h2>過去類似ケース 7件中 5件で <strong>圧着工具摩耗</strong> が真因。今回も同パターンの可能性 92%</h2>
+          </div>
+          <div class="slds-notify slds-notify_alert slds-theme_info">
+            <span class="slds-icon_container slds-m-right_x-small"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" class="slds-icon slds-icon_x-small" /></span>
+            <h2>類似圧着機 6台 (G2-#3, G2-#5, G3-#2 ほか) も累計ショット数 100,000+ 経過。点検推奨</h2>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

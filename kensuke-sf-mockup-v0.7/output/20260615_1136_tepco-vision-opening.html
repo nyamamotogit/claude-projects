@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>TEPCO Vision — Opening</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Helvetica Neue', 'Hiragino Sans', sans-serif; color: white; }
+  .stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+  /* === Slides === */
+  .slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.7s ease-out; background: radial-gradient(ellipse at center, #0a1a3a 0%, #000510 70%, #000 100%); }
+  .slide.is-active { opacity: 1; pointer-events: auto; }
+
+  /* Stars */
+  .stars { position: absolute; inset: 0; }
+  .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; opacity: 0; animation: twinkle 4s infinite; }
+  @keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: 0.85; } }
+
+  /* Brand top */
+  .brand { position: absolute; top: 28px; left: 32px; display: flex; align-items: center; gap: 0.625rem; z-index: 10; }
+  .brand-mark { width: 28px; height: 28px; border-radius: 6px; background: linear-gradient(135deg, #22d3ee, #a855f7); display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; font-size: 0.875rem; box-shadow: 0 0 18px rgba(34,211,238,0.5); }
+  .brand-text { font-size: 0.6875rem; letter-spacing: 0.28em; color: #94a3b8; }
+  .brand-r { position: absolute; top: 28px; right: 32px; font-size: 0.6875rem; letter-spacing: 0.28em; color: #94a3b8; z-index: 10; }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%); pointer-events: none; }
+
+  /* Slide indicator */
+  .slide-dots { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 20; }
+  .slide-dot { width: 32px; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; transition: all 0.3s; cursor: pointer; }
+  .slide-dot.is-active { background: linear-gradient(90deg, #22d3ee, #a855f7); width: 64px; }
+
+  .nav-hint { position: absolute; bottom: 28px; right: 32px; font-size: 0.6875rem; letter-spacing: 0.18em; color: #6b7280; z-index: 20; }
+  .nav-hint kbd { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); padding: 2px 7px; border-radius: 4px; font-family: inherit; margin: 0 2px; }
+
+  /* ====================================================
+     Slide 1: Hero / Title
+     ==================================================== */
+  .grid-floor { position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; perspective: 600px; opacity: 0.55; }
+  .grid-plane { position: absolute; bottom: 0; left: 50%; width: 200%; height: 100%; transform: translateX(-50%) rotateX(72deg); transform-origin: bottom center;
+    background: linear-gradient(to right, transparent 0%, rgba(34,211,238,0.4) 1%, transparent 1.5%), linear-gradient(to bottom, transparent 0%, rgba(34,211,238,0.4) 1%, transparent 1.5%);
+    background-size: 80px 80px; animation: gridScroll 8s linear infinite;
+    -webkit-mask-image: radial-gradient(ellipse at center top, black 0%, transparent 75%);
+            mask-image: radial-gradient(ellipse at center top, black 0%, transparent 75%);
+  }
+  @keyframes gridScroll { from { background-position: 0 0; } to { background-position: 0 80px; } }
+
+  .pl-svg { position: absolute; inset: 0; pointer-events: none; }
+  .pl-line { fill: none; stroke: #22d3ee; stroke-width: 1.5; stroke-dasharray: 1500; stroke-dashoffset: 1500; opacity: 0; }
+  .slide.is-active .pl-line { animation: drawLine 2.4s ease-out forwards; }
+  .slide.is-active .pl-line.l2 { animation-delay: 0.3s; stroke: #a855f7; }
+  .slide.is-active .pl-line.l3 { animation-delay: 0.6s; stroke: #fbbf24; stroke-width: 1; }
+  @keyframes drawLine { 0% { stroke-dashoffset: 1500; opacity: 0; } 30% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0.7; } }
+
+  .skyline { position: absolute; bottom: 0; left: 0; width: 100%; height: 38%; opacity: 0.85; pointer-events: none; }
+
+  .title-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 8rem; z-index: 5; }
+  .badge-row { display: flex; gap: 0.625rem; margin-bottom: 1.25rem; }
+  .badge { padding: 0.4rem 0.875rem; border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; font-size: 0.75rem; letter-spacing: 0.18em; backdrop-filter: blur(8px); background: rgba(255,255,255,0.04); }
+  .badge.accent { background: rgba(234,0,30,0.18); border-color: rgba(234,0,30,0.6); color: #ff8a8a; }
+  .pretitle { font-size: 0.875rem; letter-spacing: 0.32em; color: #94a3b8; margin-bottom: 1rem; }
+
+  .main-title { font-size: clamp(2rem, 5vw, 4.4rem); font-weight: 800; letter-spacing: -0.01em; line-height: 1.25; margin-bottom: 1.25rem; max-width: 1300px; position: relative; z-index: 6; }
+  .main-title .line { display: block; opacity: 0; transform: translateY(20px); filter: blur(8px); }
+  .slide.is-active .main-title .line { animation: lineIn 1s ease-out forwards; }
+  .slide.is-active .main-title .line.l1 { animation-delay: 0.6s; }
+  .slide.is-active .main-title .line.l2 { animation-delay: 1.0s; }
+  @keyframes lineIn { to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+  .gradient-cyan { background-image: linear-gradient(135deg, #22d3ee 0%, #fbbf24 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; padding: 0 0.1em; }
+  .gradient-purple { background-image: linear-gradient(135deg, #a855f7 0%, #22d3ee 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; padding: 0 0.1em; }
+
+  .subtitle { font-size: clamp(1rem, 1.6vw, 1.4rem); color: #cbd5e1; max-width: 920px; line-height: 1.7; opacity: 0; padding: 0 1rem; position: relative; z-index: 6; }
+  .slide.is-active .subtitle { animation: fadeIn 1.2s ease-out 1.6s forwards; }
+  @keyframes fadeIn { to { opacity: 1; } }
+  .subtitle .pop { color: white; font-weight: 700; }
+  .subtitle .ai-glow { background-image: linear-gradient(135deg, #22d3ee 30%, #a855f7 70%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; font-weight: 800; }
+
+  /* Orbits — restricted in size, rendered behind title via z-index */
+  .orbit-wrap { position: absolute; top: 50%; left: 50%; width: 540px; height: 540px; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; z-index: 2; }
+  .slide.is-active .orbit-wrap { animation: fadeIn 1.5s ease-out 2.4s forwards; }
+  .orbit-ring { position: absolute; inset: 0; border: 1px solid rgba(34,211,238,0.12); border-radius: 50%; animation: rotate 28s linear infinite; }
+  .orbit-ring.r2 { inset: 80px; border-color: rgba(168,85,247,0.12); animation-duration: 22s; animation-direction: reverse; }
+  @keyframes rotate { to { transform: rotate(360deg); } }
+  .orbit-node { position: absolute; width: 38px; height: 38px; border-radius: 8px; color: white; font-weight: 800; font-size: 0.625rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(34,211,238,0.3), 0 0 0 1px rgba(255,255,255,0.18); top: calc(50% - 19px); left: calc(50% - 19px); }
+  .orbit-node.sap { background: #0073e6; } .orbit-node.aws { background: #ff9900; } .orbit-node.m365 { background: #d83b01; }
+  .orbit-node.teams { background: #6264a7; } .orbit-node.tab { background: #1f447e; } .orbit-node.slack { background: #4a154b; }
+  .orbit-node.dc { background: linear-gradient(135deg, #032d60, #0070d2); } .orbit-node.iot { background: #1abc9c; }
+  .orbit-node-inner { animation: counterRotate 28s linear infinite; }
+  .orbit-ring.r2 .orbit-node-inner { animation-duration: 22s; animation-direction: reverse; }
+  @keyframes counterRotate { to { transform: rotate(-360deg); } }
+
+  .ai-core { position: absolute; top: 50%; left: 50%; width: 110px; height: 110px; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(34,211,238,0.6) 0%, rgba(34,211,238,0.15) 50%, transparent 80%); display: flex; align-items: center; justify-content: center; opacity: 0; z-index: 3; }
+  .slide.is-active .ai-core { animation: coreIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 2.8s forwards; }
+  @keyframes coreIn { from { opacity: 0; transform: translate(-50%, -50%) scale(0); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+  .ai-core::before { content: ""; position: absolute; inset: -16px; border-radius: 50%; background: radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%); animation: pulseCore 2.4s ease-in-out infinite; }
+  @keyframes pulseCore { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.3); opacity: 0.8; } }
+  .ai-core-text { position: relative; z-index: 2; font-weight: 800; font-size: 0.6875rem; letter-spacing: 0.2em; color: white; text-shadow: 0 0 12px rgba(34,211,238,0.8); }
+
+  .tag-mid { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); font-size: clamp(0.75rem, 1.1vw, 1rem); color: #fbbf24; letter-spacing: 0.16em; opacity: 0; text-shadow: 0 0 16px rgba(251,191,36,0.4); }
+  .slide.is-active .tag-mid { animation: fadeIn 1.2s ease-out 3.4s forwards; }
+
+  /* ====================================================
+     Slide 2: Three Walls (the problem)
+     ==================================================== */
+  .s2-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 3rem 6rem; z-index: 5; }
+  .s2-pretitle { font-size: 0.875rem; letter-spacing: 0.36em; color: #ef4444; margin-bottom: 1rem; }
+  .s2-heading { font-size: clamp(1.75rem, 4vw, 3.25rem); font-weight: 800; line-height: 1.25; text-align: center; margin-bottom: 0.5rem; max-width: 1100px; opacity: 0; transform: translateY(16px); }
+  .slide.is-active .s2-heading { animation: lineIn 1s ease-out 0.3s forwards; }
+  .s2-sub { font-size: 1.0625rem; color: #94a3b8; text-align: center; max-width: 900px; margin-bottom: 2.5rem; opacity: 0; }
+  .slide.is-active .s2-sub { animation: fadeIn 1s ease-out 0.7s forwards; }
+
+  .walls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; max-width: 1280px; width: 100%; }
+  .wall { padding: 1.75rem 1.5rem; background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; backdrop-filter: blur(10px); position: relative; overflow: hidden; opacity: 0; transform: translateY(24px); }
+  .slide.is-active .wall { animation: pillarIn 0.8s ease-out forwards; }
+  .slide.is-active .wall:nth-child(1) { animation-delay: 1.0s; }
+  .slide.is-active .wall:nth-child(2) { animation-delay: 1.2s; }
+  .slide.is-active .wall:nth-child(3) { animation-delay: 1.4s; }
+  @keyframes pillarIn { to { opacity: 1; transform: translateY(0); } }
+  .wall::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--c), transparent); }
+  .wall:nth-child(1) { --c: #ef4444; }
+  .wall:nth-child(2) { --c: #fbbf24; }
+  .wall:nth-child(3) { --c: #a855f7; }
+  .wall-num { font-size: 0.75rem; letter-spacing: 0.32em; color: var(--c); font-weight: 700; }
+  .wall-icon { font-size: 2rem; margin: 0.75rem 0 0.5rem; }
+  .wall-title { font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin-bottom: 0.625rem; }
+  .wall-desc { font-size: 0.875rem; color: #cbd5e1; line-height: 1.65; }
+  .wall-stat { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.75rem; color: #6b7280; }
+  .wall-stat strong { color: white; font-size: 1rem; display: block; margin-top: 4px; }
+
+  .s2-conclusion { margin-top: 2.5rem; font-size: clamp(1.125rem, 2vw, 1.625rem); font-weight: 700; text-align: center; opacity: 0; }
+  .slide.is-active .s2-conclusion { animation: fadeIn 1s ease-out 2s forwards; }
+  .s2-conclusion .glow { background-image: linear-gradient(135deg, #22d3ee, #fbbf24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; padding: 0 0.1em; }
+
+  /* ====================================================
+     Slide 3: Today's journey (4 acts)
+     ==================================================== */
+  .s3-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 3rem 6rem; z-index: 5; }
+  .s3-pretitle { font-size: 0.875rem; letter-spacing: 0.36em; color: #22d3ee; margin-bottom: 1rem; opacity: 0; }
+  .slide.is-active .s3-pretitle { animation: fadeIn 1s ease-out 0.3s forwards; }
+  .s3-heading { font-size: clamp(1.75rem, 3.6vw, 3rem); font-weight: 800; line-height: 1.3; text-align: center; max-width: 1100px; margin-bottom: 3rem; opacity: 0; transform: translateY(16px); }
+  .slide.is-active .s3-heading { animation: lineIn 1s ease-out 0.5s forwards; }
+
+  .journey { display: flex; align-items: stretch; gap: 0; max-width: 1320px; width: 100%; position: relative; }
+  .journey-track { position: absolute; top: 60px; left: 4%; right: 4%; height: 2px; background: linear-gradient(90deg, transparent, rgba(34,211,238,0.4) 10%, rgba(168,85,247,0.4) 50%, rgba(251,191,36,0.4) 90%, transparent); z-index: 0; }
+  .journey-step { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 0.5rem; opacity: 0; transform: translateY(20px); position: relative; z-index: 2; text-align: center; }
+  .slide.is-active .journey-step { animation: pillarIn 0.7s ease-out forwards; }
+  .slide.is-active .journey-step:nth-child(2) { animation-delay: 0.9s; }
+  .slide.is-active .journey-step:nth-child(3) { animation-delay: 1.2s; }
+  .slide.is-active .journey-step:nth-child(4) { animation-delay: 1.5s; }
+  .slide.is-active .journey-step:nth-child(5) { animation-delay: 1.8s; }
+  .journey-step .num { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #001627, #003459); border: 2px solid var(--c); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 800; color: var(--c); margin-bottom: 1rem; box-shadow: 0 0 24px var(--c); position: relative; }
+  .journey-step .num::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid var(--c); opacity: 0.4; animation: ringPulse 2.4s ease-in-out infinite; }
+  @keyframes ringPulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.15); opacity: 0; } }
+  .journey-step:nth-child(2) { --c: #22d3ee; }
+  .journey-step:nth-child(3) { --c: #2eb67d; }
+  .journey-step:nth-child(4) { --c: #a855f7; }
+  .journey-step:nth-child(5) { --c: #ef4444; }
+  .journey-step .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .journey-step .label { font-size: 0.6875rem; letter-spacing: 0.2em; color: #94a3b8; }
+  .journey-step .ttl { font-size: 1.125rem; font-weight: 800; margin: 0.25rem 0 0.5rem; }
+  .journey-step .desc { font-size: 0.8125rem; color: #cbd5e1; line-height: 1.55; max-width: 220px; }
+  .journey-step .src { font-size: 0.625rem; color: #6b7280; letter-spacing: 0.04em; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed rgba(255,255,255,0.1); width: 100%; max-width: 220px; }
+
+  .s3-bottom { margin-top: 2.75rem; font-size: clamp(0.875rem, 1.4vw, 1.125rem); color: #fbbf24; letter-spacing: 0.16em; opacity: 0; text-align: center; }
+  .slide.is-active .s3-bottom { animation: fadeIn 1s ease-out 2.4s forwards; }
+
+  /* Replay button */
+  .replay { position: absolute; top: 28px; right: 32px; z-index: 100; padding: 0.4rem 0.875rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); color: white; border-radius: 999px; font-size: 0.6875rem; letter-spacing: 0.1em; cursor: pointer; backdrop-filter: blur(8px); display: none; }
+  .replay:hover { background: rgba(255,255,255,0.14); }
+
+  /* Glow orbs */
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; pointer-events: none; }
+  .s2-content .orb.o1 { width: 380px; height: 380px; background: #ef4444; top: 10%; left: -100px; }
+  .s2-content .orb.o2 { width: 380px; height: 380px; background: #a855f7; bottom: 10%; right: -100px; }
+  .s3-content .orb.o1 { width: 380px; height: 380px; background: #22d3ee; top: 10%; left: -100px; }
+  .s3-content .orb.o2 { width: 380px; height: 380px; background: #fbbf24; bottom: 10%; right: -100px; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- Brand (always visible) -->
+  <div class="brand">
+    <div class="brand-mark">⚡</div>
+    <div class="brand-text">SALESFORCE × TEPCO HD</div>
+  </div>
+  <div class="brand-r">VISION DEMO 2026</div>
+
+  <!-- ====== SLIDE 1: HERO ====== -->
+  <div class="slide is-active" id="slide-1">
+    <div class="vignette"></div>
+    <div class="stars" id="stars"></div>
+    <div class="grid-floor"><div class="grid-plane"></div></div>
+
+    <svg class="skyline" viewBox="0 0 1920 380" preserveAspectRatio="xMidYEnd slice">
+      <defs>
+        <linearGradient id="bldGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#0070d2"/>
+          <stop offset="100%" stop-color="#001627"/>
+        </linearGradient>
+      </defs>
+      <g fill="url(#bldGrad)" opacity="0.7">
+        <rect x="20" y="200" width="40" height="180"/><rect x="65" y="170" width="36" height="210"/><rect x="105" y="220" width="50" height="160"/>
+        <rect x="160" y="140" width="44" height="240"/><rect x="210" y="180" width="38" height="200"/><rect x="252" y="150" width="60" height="230"/>
+        <rect x="318" y="200" width="42" height="180"/><rect x="365" y="120" width="80" height="260"/><rect x="450" y="180" width="48" height="200"/>
+        <rect x="500" y="160" width="42" height="220"/><rect x="546" y="100" width="70" height="280"/><rect x="620" y="180" width="56" height="200"/>
+        <rect x="680" y="140" width="48" height="240"/><rect x="730" y="80" width="90" height="300"/><rect x="824" y="160" width="50" height="220"/>
+        <rect x="880" y="60" width="120" height="320"/><rect x="1004" y="200" width="44" height="180"/><rect x="1050" y="160" width="60" height="220"/>
+        <rect x="1114" y="120" width="80" height="260"/><rect x="1198" y="180" width="48" height="200"/><rect x="1250" y="100" width="100" height="280"/>
+        <rect x="1354" y="160" width="50" height="220"/><rect x="1410" y="200" width="42" height="180"/><rect x="1456" y="140" width="70" height="240"/>
+        <rect x="1530" y="180" width="50" height="200"/><rect x="1584" y="100" width="80" height="280"/><rect x="1668" y="180" width="44" height="200"/>
+        <rect x="1716" y="140" width="60" height="240"/><rect x="1780" y="200" width="50" height="180"/><rect x="1834" y="160" width="60" height="220"/>
+      </g>
+      <g fill="#fbbf24" opacity="0.7"><rect x="936" y="40" width="8" height="22"/><rect x="1296" y="80" width="8" height="22"/></g>
+      <g fill="#fbbf24" opacity="0.6" id="windows"></g>
+    </svg>
+
+    <svg class="pl-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+      <path class="pl-line l1" d="M 100 850 Q 480 700 960 740 T 1820 820"/>
+      <path class="pl-line l2" d="M 0 920 Q 480 800 1000 880 T 1920 900"/>
+      <path class="pl-line l3" d="M 200 780 Q 600 650 1100 690 T 1900 760"/>
+    </svg>
+
+    <div class="orbit-wrap" id="orbit-wrap">
+      <div class="orbit-ring r1" id="ring1"></div>
+      <div class="orbit-ring r2" id="ring2"></div>
+    </div>
+
+    <div class="ai-core"><div class="ai-core-text">AGENTFORCE</div></div>
+
+    <div class="title-wrap">
+      <div class="badge-row">
+        <span class="badge">VISION 2026</span>
+        <span class="badge accent">⚡ POWER UTILITY × AI</span>
+      </div>
+      <div class="pretitle">CRITICAL INFRASTRUCTURE × AGENT</div>
+      <h1 class="main-title">
+        <span class="line l1">現場の入口は <span class="gradient-cyan">Salesforce</span> のまま、</span>
+        <span class="line l2">AIが <span class="gradient-purple">SAP・Teams・M365・AWS</span> を束ねて働く。</span>
+      </h1>
+      <p class="subtitle">
+        自律型インフラ保全と<span class="pop">次世代の系統・経営連動</span>。<br/>
+        <span class="ai-glow">Agentforce</span> が現場の予兆検知から経営判断まで、<span class="pop">数分で繋ぐ</span>未来。
+      </p>
+    </div>
+
+    <div class="tag-mid">⚡ 新豊洲変電所 ・ 中央給電指令所 ・ 都心 24万世帯 ⚡</div>
+  </div>
+
+  <!-- ====== SLIDE 2: THREE WALLS (PROBLEM) ====== -->
+  <div class="slide" id="slide-2">
+    <div class="vignette"></div>
+    <div class="stars"></div>
+    <div class="s2-content">
+      <div class="orb o1"></div>
+      <div class="orb o2"></div>
+      <div class="s2-pretitle">THE THREE WALLS ・ なぜ今、変革が必要か</div>
+      <h2 class="s2-heading">電力インフラ運用の現場には、<br/><span class="gradient-purple" style="background-image:linear-gradient(135deg,#ef4444,#fbbf24);">3つの壁</span>がある。</h2>
+      <p class="s2-sub">設備データは増え、AIは進化したのに、なぜ判断は遅れるのか。</p>
+
+      <div class="walls">
+        <div class="wall">
+          <div class="wall-num">WALL 01</div>
+          <div class="wall-icon">🧱</div>
+          <div class="wall-title">情報のサイロ</div>
+          <div class="wall-desc">SCADA、SAP、設備カルテ、過去の事故履歴、気象、社内ナレッジ — <strong style="color:white;">人が4–5システムを横断</strong>して初めて状況が見える。</div>
+          <div class="wall-stat">情報統合に要する平均時間<strong>45 〜 90分</strong></div>
+        </div>
+        <div class="wall">
+          <div class="wall-num">WALL 02</div>
+          <div class="wall-icon">👤</div>
+          <div class="wall-title">属人化された判断</div>
+          <div class="wall-desc">ベテラン給電員・保全主任の<strong style="color:white;">経験と勘</strong>に頼る判断。後任への継承が難しく、夜間休日のリスク対応はさらに遅延。</div>
+          <div class="wall-stat">熟練オペレーター不在時の判断遅延<strong>2 〜 6時間</strong></div>
+        </div>
+        <div class="wall">
+          <div class="wall-num">WALL 03</div>
+          <div class="wall-icon">⚖️</div>
+          <div class="wall-title">経営-現場の時差</div>
+          <div class="wall-desc">現場の異常から経営層への正確な共有まで、<strong style="color:white;">複数の報告階層</strong>を経由。経営判断が必要なときには、すでに次のリスクが進行している。</div>
+          <div class="wall-stat">エスカレーションから経営承認まで<strong>2 〜 4時間</strong></div>
+        </div>
+      </div>
+
+      <div class="s2-conclusion">この壁を、<span class="glow">AIエージェントが束ねて働く</span>ことで超える。</div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: JOURNEY (4 ACTS) ====== -->
+  <div class="slide" id="slide-3">
+    <div class="vignette"></div>
+    <div class="stars"></div>
+    <div class="s3-content">
+      <div class="orb o1"></div>
+      <div class="orb o2"></div>
+      <div class="s3-pretitle">TODAY'S DEMO ・ 本日ご覧いただく流れ</div>
+      <h2 class="s3-heading">予兆検知から経営判断まで、<br/><span class="gradient-cyan">4つのシーンで体感</span>いただきます。</h2>
+
+      <div class="journey">
+        <div class="journey-track"></div>
+        <div class="journey-step">
+          <div class="num">①</div>
+          <div class="label">PREDICT</div>
+          <div class="ttl">予兆検知</div>
+          <div class="desc">AWS IoT がトランス異常を検知し、Agentforce が SAP・気象・系統データを <strong style="color:white;">3.4秒で横断照合</strong>。</div>
+          <div class="src">AWS ・ SAP ・ Data Cloud</div>
+        </div>
+        <div class="journey-step">
+          <div class="num">②</div>
+          <div class="label">ORCHESTRATE</div>
+          <div class="ttl">ゼロ・クリック手配</div>
+          <div class="desc">M365 / Teams / SAP / 給電所 / Slack の<strong style="color:white;">5系統が承認1回で同時稼働</strong>。</div>
+          <div class="src">SAP ・ M365 ・ Teams ・ Slack</div>
+        </div>
+        <div class="journey-step">
+          <div class="num">③</div>
+          <div class="label">SWARM</div>
+          <div class="ttl">部門横断スウォーミング</div>
+          <div class="desc">Slack に対策室が自動生成。<strong style="color:white;">中央給電指令所</strong>と現場・経企・広報がリアルタイムで合流。</div>
+          <div class="src">Slack ・ Tableau ・ Agentforce</div>
+        </div>
+        <div class="journey-step">
+          <div class="num">④</div>
+          <div class="label">DECIDE</div>
+          <div class="ttl">経営の決断</div>
+          <div class="desc">関 常務のスマホに VIP ダッシュボード。<strong style="color:white;">ワンタップで SAP 稟議を承認</strong>。</div>
+          <div class="src">Mobile ・ Tableau ・ SAP</div>
+        </div>
+      </div>
+
+      <div class="s3-bottom">⚡ それでは、現場のアラートから始まります ⚡</div>
+    </div>
+  </div>
+
+  <!-- Slide indicator + nav hint -->
+  <div class="slide-dots">
+    <div class="slide-dot is-active" data-slide="1"></div>
+    <div class="slide-dot" data-slide="2"></div>
+    <div class="slide-dot" data-slide="3"></div>
+  </div>
+  <div class="nav-hint"><kbd>←</kbd> <kbd>→</kbd> でスライド切替</div>
+
+  <button class="replay" onclick="location.reload()">⟳ REPLAY</button>
+</div>
+
+<script>
+  // Stars
+  document.querySelectorAll('.stars').forEach(stars => {
+    for (let i = 0; i < 100; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 70 + '%';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      s.style.width = s.style.height = (Math.random() * 2 + 1) + 'px';
+      stars.appendChild(s);
+    }
+  });
+
+  // Window lights
+  const windows = document.getElementById('windows');
+  if (windows) {
+    for (let i = 0; i < 250; i++) {
+      const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      r.setAttribute('x', 20 + Math.random() * 1880);
+      r.setAttribute('y', 80 + Math.random() * 290);
+      r.setAttribute('width', 2);
+      r.setAttribute('height', 3);
+      r.setAttribute('opacity', Math.random() * 0.7 + 0.3);
+      windows.appendChild(r);
+    }
+  }
+
+  // Orbit nodes
+  const ORBITS = [
+    { ringId: 'ring1', radius: 240, items: [
+      { label: 'SAP', cls: 'sap' }, { label: 'AWS', cls: 'aws' }, { label: 'M365', cls: 'm365' },
+      { label: 'TEAMS', cls: 'teams' }, { label: 'SLACK', cls: 'slack' }, { label: 'TBL', cls: 'tab' },
+    ]},
+    { ringId: 'ring2', radius: 170, items: [
+      { label: 'IoT', cls: 'iot' }, { label: 'DC', cls: 'dc' }, { label: 'CMS', cls: 'tab' }, { label: 'SF', cls: 'sap' },
+    ]},
+  ];
+  ORBITS.forEach(o => {
+    const ring = document.getElementById(o.ringId);
+    o.items.forEach((it, i) => {
+      const angle = (360 / o.items.length) * i;
+      const arm = document.createElement('div');
+      arm.style.position = 'absolute'; arm.style.inset = '0';
+      arm.style.transform = `rotate(${angle}deg)`;
+      const node = document.createElement('div');
+      node.className = 'orbit-node ' + it.cls;
+      node.style.transform = `translate(0, -${o.radius}px)`;
+      const inner = document.createElement('div');
+      inner.className = 'orbit-node-inner';
+      inner.textContent = it.label;
+      node.appendChild(inner);
+      arm.appendChild(node);
+      ring.appendChild(arm);
+    });
+  });
+
+  // Slide nav
+  let currentSlide = 1;
+  const TOTAL_SLIDES = 3;
+  function showSlide(n) {
+    if (n < 1 || n > TOTAL_SLIDES) return;
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('is-active'));
+    document.querySelectorAll('.slide-dot').forEach(d => d.classList.remove('is-active'));
+    document.getElementById('slide-' + n).classList.add('is-active');
+    document.querySelector(`.slide-dot[data-slide="${n}"]`).classList.add('is-active');
+    currentSlide = n;
+  }
+  document.querySelectorAll('.slide-dot').forEach(d => d.addEventListener('click', () => showSlide(parseInt(d.dataset.slide))));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); showSlide(currentSlide + 1); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); showSlide(currentSlide - 1); }
+    if (e.key === 'r' || e.key === 'R') location.reload();
+  });
+</script>
+</body>
+</html>

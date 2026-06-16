@@ -1,0 +1,60 @@
+<!--
+  Badges - ステータス・分類タグ
+  ===========================================
+  使用箇所: ハイライトパネルのステータス、関連リストの状態表示
+
+  SLDS Badge クラス:
+    slds-badge                       … 標準（グレー）
+    slds-badge slds-theme_success    … 緑
+    slds-badge slds-theme_warning    … 黄
+    slds-badge slds-theme_error      … 赤
+    slds-badge slds-theme_inverse    … 黒（ダーク背景上）
+-->
+
+<!-- 基本バリエーション -->
+<span class="slds-badge">下書き</span>
+<span class="slds-badge slds-theme_success">完了</span>
+<span class="slds-badge slds-theme_warning">注意</span>
+<span class="slds-badge slds-theme_error">遅延</span>
+<span class="slds-badge slds-theme_inverse">アーカイブ</span>
+
+<!-- アイコン付き -->
+<span class="slds-badge slds-theme_success">
+  <span class="slds-badge__icon slds-badge__icon_left">
+    <span class="slds-icon_container slds-icon-utility-success">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/success.svg" alt="" class="slds-icon slds-icon_xx-small" />
+    </span>
+  </span>
+  承認済み
+</span>
+
+<span class="slds-badge slds-theme_error">
+  <span class="slds-badge__icon slds-badge__icon_left">
+    <span class="slds-icon_container">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" class="slds-icon slds-icon_xx-small" />
+    </span>
+  </span>
+  エラー
+</span>
+
+<!-- ハイライトパネル内 ステータス表示例 -->
+<div class="slds-grid slds-grid_vertical-align-center slds-gutters_x-small">
+  <div class="slds-col"><span class="slds-form-element__label">ステータス</span></div>
+  <div class="slds-col"><span class="slds-badge slds-theme_warning">商談中</span></div>
+</div>
+
+<!-- ============ Pill (削除可能タグ) ============ -->
+<span class="slds-pill">
+  <span class="slds-pill__label" title="重要">重要</span>
+  <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="削除">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" class="slds-button__icon" />
+  </button>
+</span>
+
+<!-- ============ ドット付きステータス（簡易） ============ -->
+<span class="slds-text-body_small">
+  <span class="slds-icon_container slds-current-color">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/record.svg" alt="" class="slds-icon slds-icon_xx-small" style="fill:#04844b" />
+  </span>
+  有効
+</span>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Slack Mockup Style Tokens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slack-aubergine: #4A154B;
+    --slack-aubergine-dark: #350D36;
+    --slack-aubergine-darker: #1A0E1A;
+    --slack-yellow: #ECB22E;
+    --slack-blue:   #36C5F0;
+    --slack-green:  #2EB67D;
+    --slack-red:    #E01E5A;
+    --slack-text:   #1D1C1D;
+    --slack-text-dim: #616061;
+    --slack-border: #E1E1E1;
+    --slack-link:   #1264A3;
+  }
+  body {
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 0; padding: 32px;
+    background: #FAFAFA;
+    color: var(--slack-text);
+  }
+  h1 { font-weight: 900; font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--slack-text-dim); margin-bottom: 32px; }
+  h2 { font-weight: 900; margin: 32px 0 12px; font-size: 18px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .swatch {
+    border: 1px solid var(--slack-border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+  }
+  .swatch .color {
+    height: 80px;
+  }
+  .swatch .meta {
+    padding: 10px 12px;
+  }
+  .swatch .name { font-weight: 700; font-size: 13px; }
+  .swatch .hex {
+    font-family: Monaco, Menlo, monospace;
+    font-size: 12px; color: var(--slack-text-dim);
+    margin-top: 2px;
+  }
+  .font-sample {
+    background: white; border: 1px solid var(--slack-border);
+    border-radius: 8px; padding: 16px;
+  }
+  .font-sample p { margin: 4px 0; }
+  .w-400 { font-weight: 400; }
+  .w-700 { font-weight: 700; }
+  .w-900 { font-weight: 900; }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 14px;
+    margin-right: 8px;
+    overflow: hidden;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar.is-bot { background: #1264A3; padding: 6px; }
+  .avatar.is-bot img { filter: brightness(0) invert(1); object-fit: contain; }
+  .avatar-row {
+    background: white; border: 1px solid var(--slack-border);
+    border-radius: 8px; padding: 16px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .a-blue   { background: #1264A3; }
+  .a-green  { background: #2EB67D; }
+  .a-yellow { background: #ECB22E; color: #1D1C1D !important; }
+  .a-red    { background: #E01E5A; }
+  .a-purple { background: #7C3085; }
+  .a-teal   { background: #0F8E91; }
+  code {
+    background: #F0F0F0; padding: 1px 6px; border-radius: 3px;
+    font-family: Monaco, Menlo, monospace; font-size: 13px;
+  }
+</style>
+</head>
+<body>
+  <h1>Slack Mockup Style Tokens</h1>
+  <p class="subtitle">slack-mockup Skill で使用する公式ブランドカラー・フォント・アバターパレット早見表</p>
+
+  <h2>🎨 ブランドカラー（公式）</h2>
+  <div class="grid">
+    <div class="swatch">
+      <div class="color" style="background:#4A154B"></div>
+      <div class="meta">
+        <div class="name">Aubergine</div>
+        <div class="hex">#4A154B</div>
+        <div class="hex">--slack-aubergine</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#350D36"></div>
+      <div class="meta">
+        <div class="name">Aubergine Dark</div>
+        <div class="hex">#350D36</div>
+        <div class="hex">--slack-aubergine-dark</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#ECB22E"></div>
+      <div class="meta">
+        <div class="name">Slack Yellow</div>
+        <div class="hex">#ECB22E</div>
+        <div class="hex">--slack-yellow</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#36C5F0"></div>
+      <div class="meta">
+        <div class="name">Slack Blue</div>
+        <div class="hex">#36C5F0</div>
+        <div class="hex">--slack-blue</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#2EB67D"></div>
+      <div class="meta">
+        <div class="name">Slack Green</div>
+        <div class="hex">#2EB67D</div>
+        <div class="hex">--slack-green</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#E01E5A"></div>
+      <div class="meta">
+        <div class="name">Slack Red</div>
+        <div class="hex">#E01E5A</div>
+        <div class="hex">--slack-red</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>📝 メッセージエリア（中性色）</h2>
+  <div class="grid">
+    <div class="swatch">
+      <div class="color" style="background:#FFFFFF; border-bottom:1px solid #E1E1E1;"></div>
+      <div class="meta">
+        <div class="name">Background</div>
+        <div class="hex">#FFFFFF</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#F8F8F8"></div>
+      <div class="meta">
+        <div class="name">Hover BG</div>
+        <div class="hex">#F8F8F8</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#1D1C1D"></div>
+      <div class="meta">
+        <div class="name">Text</div>
+        <div class="hex">#1D1C1D</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#616061"></div>
+      <div class="meta">
+        <div class="name">Text Dim</div>
+        <div class="hex">#616061</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#1264A3"></div>
+      <div class="meta">
+        <div class="name">Link / Active</div>
+        <div class="hex">#1264A3</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="color" style="background:#E1E1E1"></div>
+      <div class="meta">
+        <div class="name">Border</div>
+        <div class="hex">#E1E1E1</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>🔤 フォント (Lato)</h2>
+  <div class="font-sample">
+    <p class="w-400" style="font-size:24px">Lato Regular 400 — メッセージ本文や通常テキスト</p>
+    <p class="w-700" style="font-size:24px">Lato Bold 700 — ユーザー名・チャンネル名・強調</p>
+    <p class="w-900" style="font-size:24px">Lato Black 900 — ワークスペース名・チャンネル見出し</p>
+    <p style="margin-top:16px; color: var(--slack-text-dim);">
+      フォールバック: <code>-apple-system</code>, <code>BlinkMacSystemFont</code>, <code>"Segoe UI"</code>, <code>Roboto</code>, sans-serif
+    </p>
+  </div>
+
+  <h2>👤 アバター</h2>
+  <p style="color: var(--slack-text-dim); margin-bottom: 12px;">
+    人物アバターは <code>randomuser.me/api/portraits/{men|women}/{id}.jpg</code> の **顔写真** を使う。
+    ボット（Slackbot / Agentforce）は <code>utility/agent_astro.svg</code> + <code>is-bot</code> クラス。
+    色付き四角は絵文字アバター用フォールバック。
+  </p>
+  <div class="avatar-row">
+    <span class="avatar"><img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" /></span>
+    <span class="avatar"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /></span>
+    <span class="avatar"><img src="https://randomuser.me/api/portraits/men/90.jpg" alt="" /></span>
+    <span class="avatar"><img src="https://randomuser.me/api/portraits/men/4.jpg" alt="" /></span>
+    <span class="avatar"><img src="https://randomuser.me/api/portraits/women/12.jpg" alt="" /></span>
+    <span class="avatar is-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>
+  </div>
+
+  <h2>📋 主要トークン早見表</h2>
+  <pre style="background:white; border:1px solid var(--slack-border); border-radius:8px; padding:16px; overflow:auto;"><code>--slack-aubergine:        #4A154B   /* サイドバー */
+--slack-aubergine-dark:   #350D36   /* hover/active */
+--slack-yellow:           #ECB22E
+--slack-blue:             #36C5F0
+--slack-green:            #2EB67D   /* 送信ボタン・オンライン */
+--slack-red:              #E01E5A   /* メンションバッジ */
+--slack-bg:               #FFFFFF
+--slack-bg-hover:         #F8F8F8
+--slack-text:             #1D1C1D
+--slack-text-dim:         #616061
+--slack-border:           #E1E1E1
+--slack-link:             #1264A3   /* リンク・アクティブチャンネル */
+--slack-sidebar-w:        260px
+--slack-thread-w:         380px
+--slack-header-h:         44px</code></pre>
+</body>
+</html>

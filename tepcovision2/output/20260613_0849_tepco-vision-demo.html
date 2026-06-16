@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEPCO イントラ | Vision Demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  /* ========== TEPCO Brand Palette ========== */
+  :root {
+    --tepco-primary: #003F8C;
+    --tepco-secondary: #0070C0;
+    --tepco-accent: #E60012;
+    --tepco-bg: #F3F3F3;
+    --tepco-card: #FFFFFF;
+    --tepco-border: #DDDBDA;
+    --tepco-text: #080707;
+    --tepco-text2: #3E3E3C;
+    --tepco-success: #2E844A;
+    --tepco-warning: #FE9339;
+    --tepco-error: #EA001E;
+  }
+  body {
+    background: linear-gradient(to bottom, #d6e0ee 0%, var(--tepco-bg) 250px) var(--tepco-bg);
+    min-width: 1280px; margin: 0;
+  }
+
+  /* ========== Scene Switcher (top) ========== */
+  .vision-bar {
+    background: var(--tepco-primary);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    display: flex; align-items: center; gap: 1rem;
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 3px solid var(--tepco-accent);
+  }
+  .vision-title { font-weight: 700; font-size: 0.9rem; letter-spacing: 0.05em; }
+  .vision-title .badge { background: var(--tepco-accent); padding: 2px 8px; border-radius: 3px; margin-right: 6px; font-size: 0.7rem;}
+  .vision-stepper { display: flex; gap: 0.25rem; flex: 1; }
+  .vision-step {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 14px; border-radius: 4px;
+    cursor: pointer; font-size: 0.78rem;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .vision-step:hover { background: rgba(255,255,255,0.15); }
+  .vision-step.active { background: var(--tepco-accent); border-color: var(--tepco-accent); font-weight: 700; }
+  .vision-step .num { background: rgba(255,255,255,0.2); width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+  .vision-step.active .num { background: rgba(0,0,0,0.25); }
+  .vision-step .layer { font-size: 0.65rem; opacity: 0.85; margin-left: 4px; }
+  .vision-meta { font-size: 0.7rem; opacity: 0.75; }
+
+  /* ========== Header (TEPCO ブランド) ========== */
+  .sf-header {
+    background: #fff; height: 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1rem; border-bottom: 1px solid #c9c9c9;
+  }
+  .tepco-logo {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 800; color: var(--tepco-primary); font-size: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .tepco-logo .mark {
+    background: var(--tepco-primary); color: #fff;
+    width: 32px; height: 32px; border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 800;
+    border-bottom: 3px solid var(--tepco-accent);
+  }
+  .tepco-logo .powered { font-size: 0.62rem; color: #888; font-weight: 400; display: flex; align-items: center; gap: 3px; margin-left: 4px;}
+  .tepco-logo .powered img { width: 14px; height: 14px;}
+
+  .sf-header-search { width: 45%; max-width: 32rem; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+  .sf-icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2rem; height: 2rem; border-radius: 0.25rem;
+    cursor: pointer; background: transparent; border: none;
+  }
+  .sf-icon-btn:hover { background: #f3f3f3; }
+  .sf-icon-btn img {
+    width: 18px; height: 18px;
+    filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%);
+  }
+  .slds-input__icon {
+    filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%);
+  }
+  .sf-favorite-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 0 10px; height: 2rem;
+    background: var(--tepco-secondary); border-radius: 0.25rem; border: none; cursor: pointer;
+  }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-notify-wrap { position: relative; display: inline-flex; }
+  .sf-notify-dot {
+    position: absolute; top: 4px; right: 4px;
+    width: 8px; height: 8px; background: var(--tepco-accent);
+    border-radius: 50%; border: 1.5px solid white;
+  }
+
+  /* ========== App Nav (TEPCO Primary 下線) ========== */
+  .sf-context-bar {
+    background: #fff; border-bottom: 1px solid var(--tepco-border);
+    padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .sf-context-bar nav ul {
+    display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0;
+  }
+  .sf-context-bar nav ul li {
+    display: flex; align-items: center; padding: 0 0.25rem; font-size: 0.875rem;
+  }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid var(--tepco-accent); }
+  .sf-context-bar nav ul li.is-active a { color: var(--tepco-primary); font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-app-launcher {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2rem; height: 2rem; cursor: pointer;
+  }
+  .sf-app-launcher-grid {
+    display: grid; grid-template-columns: repeat(3, 4px);
+    grid-template-rows: repeat(3, 4px); gap: 3px;
+  }
+  .sf-app-launcher-grid span {
+    width: 4px; height: 4px; background: var(--tepco-primary); border-radius: 1px;
+  }
+  .sf-app-name {
+    font-size: 1.05rem; font-weight: 700; color: var(--tepco-primary);
+    padding: 0.5rem 0; margin-right: 0.75rem;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sf-app-name::before { content: ""; width: 6px; height: 6px; background: var(--tepco-accent); border-radius: 50%; }
+
+  /* ========== Layout ========== */
+  .scene { display: none; }
+  .scene.active { display: block; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+  /* ========== 4-Layer Indicator (System of...) ========== */
+  .layer-pill-bar {
+    display: flex; gap: 4px; padding: 8px 1rem; background: #fff;
+    border-bottom: 1px solid var(--tepco-border); align-items: center;
+    font-size: 0.72rem;
+  }
+  .layer-pill-bar > span:first-child { color: #666; margin-right: 6px; }
+  .layer-pill {
+    padding: 3px 10px; border-radius: 12px; border: 1px solid #ccc;
+    color: #777; background: #fafafa;
+  }
+  .layer-pill.active {
+    background: var(--tepco-primary); color: #fff; border-color: var(--tepco-primary);
+    font-weight: 700;
+  }
+  .layer-pill .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; background: var(--tepco-accent); animation: pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  /* ========== Cards ========== */
+  .tepco-card {
+    background: #fff; border: 1px solid var(--tepco-border);
+    border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .tepco-card-header {
+    padding: 12px 16px; border-bottom: 1px solid var(--tepco-border);
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700; font-size: 0.9rem; color: var(--tepco-text);
+  }
+  .tepco-card-header .src-tag {
+    margin-left: auto; font-size: 0.68rem; padding: 2px 8px;
+    background: #eef3fb; color: var(--tepco-primary); border-radius: 3px;
+    font-weight: 600; letter-spacing: 0.03em;
+  }
+  .tepco-card-header .src-tag.sap { background: #fef0e3; color: #c46410; }
+  .tepco-card-header .src-tag.m365 { background: #e9f1fb; color: #0078d4; }
+  .tepco-card-header .src-tag.aws { background: #fef4e6; color: #ff9900; }
+  .tepco-card-header .src-tag.teams { background: #ecebfa; color: #5059c9; }
+  .tepco-card-header .src-tag.sf { background: #e0f3fc; color: #00a1e0; }
+  .tepco-card-body { padding: 14px 16px; font-size: 0.85rem; line-height: 1.5; }
+
+  /* ========== Highlight Panel ========== */
+  .hl-panel {
+    background: #fff; border: 1px solid var(--tepco-border); border-top: 3px solid var(--tepco-primary);
+    padding: 14px 18px; margin-bottom: 12px; display: flex; gap: 18px; align-items: center;
+    border-radius: 4px;
+  }
+  .hl-icon {
+    width: 56px; height: 56px; background: var(--tepco-primary); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hl-icon img { width: 32px; height: 32px; filter: brightness(0) invert(1); }
+  .hl-name { font-size: 0.7rem; color: #666; }
+  .hl-title { font-size: 1.3rem; font-weight: 700; color: var(--tepco-text); }
+  .hl-fields { display: flex; gap: 28px; margin-left: auto; }
+  .hl-field { font-size: 0.78rem; }
+  .hl-field .lbl { color: #666; margin-bottom: 2px; }
+  .hl-field .val { font-weight: 700; color: var(--tepco-text); font-size: 0.95rem; }
+
+  /* ========== Tabs ========== */
+  .tepco-tabs {
+    background: #fff; border: 1px solid var(--tepco-border); border-radius: 4px;
+  }
+  .tepco-tabs-nav {
+    display: flex; border-bottom: 1px solid var(--tepco-border);
+    padding: 0 12px; gap: 4px; list-style: none; margin: 0;
+  }
+  .tepco-tabs-nav li {
+    padding: 12px 14px; cursor: pointer; font-size: 0.85rem; color: #555;
+    border-bottom: 3px solid transparent; margin-bottom: -1px;
+  }
+  .tepco-tabs-nav li.active {
+    color: var(--tepco-primary); font-weight: 700; border-bottom-color: var(--tepco-accent);
+  }
+  .tepco-tabs-body { padding: 16px; }
+
+  /* ========== Agentforce Panel (Right Slide-in) ========== */
+  .af-panel {
+    position: fixed; top: 88px; right: 16px; width: 380px; max-height: 76vh;
+    background: #fff; border: 1px solid var(--tepco-border); border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,40,90,0.18); z-index: 50;
+    display: flex; flex-direction: column; overflow: hidden;
+    transform: translateX(0); transition: transform .25s, opacity .25s;
+  }
+  .af-panel.hidden { transform: translateX(110%); opacity: 0; pointer-events: none; }
+  .af-head {
+    background: linear-gradient(135deg, var(--tepco-primary), var(--tepco-secondary));
+    color: #fff; padding: 12px 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .af-head .astro {
+    width: 32px; height: 32px; background: rgba(255,255,255,0.18); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .af-head .astro img { width: 20px; height: 20px; filter: brightness(0) invert(1); }
+  .af-head .ttl { font-weight: 700; font-size: 0.9rem; }
+  .af-head .sub { font-size: 0.68rem; opacity: 0.85; }
+  .af-head .x { margin-left: auto; cursor: pointer; opacity: 0.9; }
+  .af-body { flex: 1; overflow-y: auto; padding: 14px; background: #f7faff; }
+  .af-msg { margin-bottom: 12px; max-width: 92%; }
+  .af-msg.bot { background: #fff; border: 1px solid #e1ecfa; border-radius: 4px 12px 12px 12px; padding: 10px 12px; font-size: 0.82rem; line-height: 1.55;}
+  .af-msg.user { background: var(--tepco-primary); color: #fff; border-radius: 12px 4px 12px 12px; padding: 8px 12px; font-size: 0.82rem; margin-left: auto; }
+  .af-msg .src { font-size: 0.65rem; color: #777; margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .af-msg .src span { background: #eef3fb; color: var(--tepco-primary); padding: 1px 6px; border-radius: 3px; }
+  .af-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .af-action-btn {
+    padding: 4px 10px; border: 1px solid var(--tepco-secondary);
+    color: var(--tepco-secondary); background: #fff; border-radius: 14px;
+    font-size: 0.72rem; cursor: pointer;
+  }
+  .af-action-btn.primary { background: var(--tepco-accent); color: #fff; border-color: var(--tepco-accent); }
+  .af-input {
+    border-top: 1px solid #e1e1e1; padding: 10px; display: flex; gap: 6px; background: #fff;
+  }
+  .af-input input { flex: 1; border: 1px solid #ddd; border-radius: 16px; padding: 6px 12px; font-size: 0.8rem; }
+  .af-input button { background: var(--tepco-primary); color: #fff; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; }
+
+  /* ========== Action Receipt (Agentforce 自律実行ログ) ========== */
+  .receipt {
+    border-left: 3px solid var(--tepco-accent); padding: 10px 12px;
+    background: #fff8f8; border-radius: 0 4px 4px 0; margin: 8px 0;
+    font-size: 0.78rem;
+  }
+  .receipt .step {
+    display: flex; align-items: center; gap: 8px; padding: 4px 0;
+  }
+  .receipt .step .ic {
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 0.65rem; font-weight: 700;
+  }
+  .receipt .step.done .ic { background: var(--tepco-success); }
+  .receipt .step.run .ic { background: var(--tepco-warning); animation: pulse 1.4s infinite; }
+  .receipt .step.wait .ic { background: #ccc; }
+  .receipt .ext-tag { margin-left: auto; font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; background: #eef3fb; color: var(--tepco-primary); }
+  .receipt .ext-tag.sap { background: #fef0e3; color: #c46410; }
+  .receipt .ext-tag.m365 { background: #e9f1fb; color: #0078d4; }
+  .receipt .ext-tag.teams { background: #ecebfa; color: #5059c9; }
+  .receipt .ext-tag.aws { background: #fef4e6; color: #ff9900; }
+
+  /* ========== KPI Tiles ========== */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kpi { background: #fff; border: 1px solid var(--tepco-border); border-top: 3px solid var(--tepco-primary); padding: 14px; border-radius: 4px; }
+  .kpi.accent { border-top-color: var(--tepco-accent); }
+  .kpi .lbl { font-size: 0.72rem; color: #666; }
+  .kpi .val { font-size: 1.6rem; font-weight: 800; color: var(--tepco-text); margin: 4px 0; }
+  .kpi .delta { font-size: 0.72rem; color: var(--tepco-success); }
+  .kpi .delta.dn { color: var(--tepco-error); }
+
+  /* ========== Bar / Donut ========== */
+  .bar-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.78rem; }
+  .bar-row .lab { width: 96px; color: #444; }
+  .bar-row .bar { flex: 1; height: 14px; background: #eef3fb; border-radius: 7px; overflow: hidden; }
+  .bar-row .bar > div { height: 100%; background: var(--tepco-primary); }
+  .bar-row .bar > div.r { background: var(--tepco-accent); }
+  .bar-row .bar > div.s { background: var(--tepco-secondary); }
+  .bar-row .num { width: 50px; text-align: right; font-weight: 700; color: var(--tepco-text); }
+
+  /* ========== Source Connector Strip ========== */
+  .connectors { display: flex; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--tepco-border); background: #fafcff; align-items: center; font-size: 0.72rem; flex-wrap: wrap;}
+  .connectors > b { color: #555; margin-right: 8px;}
+  .conn-chip {
+    display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px;
+    background: #fff; border: 1px solid var(--tepco-border); border-radius: 14px;
+  }
+  .conn-chip .live { width: 6px; height: 6px; background: var(--tepco-success); border-radius: 50%; animation: pulse 2s infinite;}
+  .conn-chip.sap b { color: #c46410; }
+  .conn-chip.m365 b { color: #0078d4; }
+  .conn-chip.aws b { color: #ff9900; }
+  .conn-chip.teams b { color: #5059c9; }
+  .conn-chip.sf b { color: var(--tepco-primary); }
+
+  /* timeline */
+  .sf-timeline { list-style: none; padding: 0; margin: 0; }
+  .sf-timeline-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px dashed #eee; }
+  .sf-timeline-item:last-child { border-bottom: none; }
+  .sf-timeline-icon { flex: 0 0 2rem; height: 2rem; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-timeline-icon img { width: 1.1rem; height: 1.1rem; filter: brightness(0) invert(1); }
+  .sf-timeline-icon-call    { background: #056764; }
+  .sf-timeline-icon-email   { background: #b0adab; }
+  .sf-timeline-icon-task    { background: var(--tepco-success); }
+  .sf-timeline-icon-event   { background: var(--tepco-secondary); }
+  .sf-timeline-icon-ai      { background: var(--tepco-accent); }
+  .sf-timeline-body { flex: 1; min-width: 0; line-height: 1.4; font-size: 0.85rem; }
+  .sf-timeline-body a { color: var(--tepco-primary); text-decoration: none; font-weight: 700; }
+  .sf-timeline-body .meta { font-size: 0.72rem; color: #666; margin-top: 2px; }
+
+  /* Section narration (経営層への説明用キャプション) */
+  .narration {
+    background: linear-gradient(90deg, var(--tepco-primary), var(--tepco-secondary));
+    color: #fff; padding: 14px 18px; margin: 12px 0;
+    border-radius: 6px; border-left: 5px solid var(--tepco-accent);
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .narration .role-tag {
+    background: var(--tepco-accent); color: #fff; font-size: 0.66rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 3px; flex-shrink: 0; letter-spacing: 0.05em;
+  }
+  .narration .body { font-size: 0.85rem; line-height: 1.6; }
+  .narration .body b { color: #ffe4ad; }
+
+  /* small */
+  .muted { color: #666; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 0.7rem; }
+  .pill.s { background: #e0f5e9; color: var(--tepco-success); }
+  .pill.w { background: #fff1e0; color: #c46410; }
+  .pill.e { background: #fde2e6; color: var(--tepco-error); }
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- =================================================================
+     SCENE SWITCHER (経営層向けナビゲーション)
+================================================================= -->
+<div class="vision-bar">
+  <div class="vision-title"><span class="badge">VISION</span>TEPCO HD × Salesforce — 関常務向け 体感デモ</div>
+  <div class="vision-stepper">
+    <div class="vision-step active" data-scene="1" onclick="goScene(1)">
+      <span class="num">1</span>朝の一望<span class="layer">Engagement</span>
+    </div>
+    <div class="vision-step" data-scene="2" onclick="goScene(2)">
+      <span class="num">2</span>顧客360°<span class="layer">Context</span>
+    </div>
+    <div class="vision-step" data-scene="3" onclick="goScene(3)">
+      <span class="num">3</span>AI が動く<span class="layer">Agency</span>
+    </div>
+    <div class="vision-step" data-scene="4" onclick="goScene(4)">
+      <span class="num">4</span>経営に届く<span class="layer">Work</span>
+    </div>
+  </div>
+  <div class="vision-meta">主人公: 田中 健一 / 法人営業マネージャー&nbsp;&nbsp;|&nbsp;&nbsp;12分</div>
+</div>
+
+<!-- =================================================================
+     COMMON HEADER (TEPCO ブランド)
+================================================================= -->
+<header class="sf-header">
+  <div class="tepco-logo">
+    <span class="mark">TEPCO</span>
+    <div>
+      <div>TEPCO HD</div>
+      <div class="powered">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="">
+        Powered by Salesforce
+      </div>
+    </div>
+  </div>
+  <div class="sf-header-search">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon_x-small">
+        <input type="search" placeholder="顧客・契約・需給データを横断検索 (SAP / M365 / AWS / Teams)..." class="slds-input">
+      </div>
+    </div>
+  </div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn" title="Agentforce" onclick="toggleAF()">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="">
+    </button>
+    <button class="sf-favorite-btn">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;">
+    </button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt=""></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt=""></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt=""></button>
+    <span class="sf-notify-wrap">
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt=""></button>
+      <span class="sf-notify-dot"></span>
+    </span>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:.5rem;">
+      <img src="https://ui-avatars.com/api/?name=Kenichi+Tanaka&background=003F8C&color=fff" alt="田中">
+    </span>
+  </div>
+</header>
+
+<!-- App Nav -->
+<div class="sf-context-bar">
+  <div class="sf-app-launcher"><div class="sf-app-launcher-grid">
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  </div></div>
+  <span class="sf-app-name">TEPCO イントラ</span>
+  <nav>
+    <ul>
+      <li id="nav-home"><a href="#">ホーム</a></li>
+      <li id="nav-cust"><a href="#">法人顧客 ▾</a></li>
+      <li><a href="#">案件 ▾</a></li>
+      <li><a href="#">契約・需給 ▾</a></li>
+      <li><a href="#">設備・工事 ▾</a></li>
+      <li id="nav-dash"><a href="#">経営ダッシュボード ▾</a></li>
+      <li><a href="#">レポート ▾</a></li>
+    </ul>
+  </nav>
+  <button class="sf-icon-btn" style="margin-left:auto;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/edit.svg" alt=""></button>
+</div>
+
+<!-- 4-Layer Indicator -->
+<div class="layer-pill-bar">
+  <span>動作中レイヤー：</span>
+  <span class="layer-pill" id="lp-eng"><span class="dot"></span>System of Engagement</span>
+  <span class="layer-pill" id="lp-ctx">System of Context</span>
+  <span class="layer-pill" id="lp-agy">System of Agency</span>
+  <span class="layer-pill" id="lp-wrk">System of Work</span>
+  <span style="margin-left:auto; color:#666; font-size:0.7rem;">— Salesforce が4層を束ね、現場の入口は1つに</span>
+</div>
+</content>
+
+<!-- =================================================================
+     SCENE 1: 朝の一望 (Engagement layer)
+     田中マネージャーが朝出社、Salesforce ホームを開いた一画面で
+     SAP の入金状況、M365 のメール要約、Teams の連絡、
+     AWS IoT の需給アラートが「同じ入口」で確認できる
+================================================================= -->
+<section class="scene active" id="scene-1">
+<div class="connectors">
+  <b>このシーンで束ねているソース：</b>
+  <span class="conn-chip sf"><span class="live"></span>Salesforce <b>顧客・案件</b></span>
+  <span class="conn-chip sap"><span class="live"></span>SAP S/4 <b>請求・契約</b></span>
+  <span class="conn-chip m365"><span class="live"></span>Microsoft 365 <b>Outlook / Teams</b></span>
+  <span class="conn-chip aws"><span class="live"></span>AWS IoT <b>需給テレメトリ</b></span>
+  <span class="conn-chip teams"><span class="live"></span>Teams <b>社内連絡</b></span>
+</div>
+
+<div class="narration">
+  <span class="role-tag">SoE</span>
+  <div class="body">
+    <b>朝、田中マネージャーが出社して最初に開く画面。</b> いつもの Salesforce です。違うのは、SAP の入金遅延、M365 のメール、AWS の IoT 需給アラート、Teams の社内連絡が <b>すべて 1 画面に集約</b> されていること。<br>
+    現場は「Salesforce を開く」、それ以外のシステムは AI が裏で取りに行く。<b>入口は1つ、システムは束ねる。</b>
+  </div>
+</div>
+
+<main class="sf-main">
+  <!-- Greeting -->
+  <div class="hl-panel">
+    <div class="hl-icon" style="background: var(--tepco-accent);">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/today.svg" alt="">
+    </div>
+    <div>
+      <div class="hl-name">2026年6月13日 (土) 8:42</div>
+      <div class="hl-title">おはようございます、田中さん</div>
+    </div>
+    <div class="hl-fields">
+      <div class="hl-field"><div class="lbl">今日のタスク</div><div class="val">7 件 <span class="pill w">うち緊急 2</span></div></div>
+      <div class="hl-field"><div class="lbl">本日の商談アクション</div><div class="val">¥4.2 億</div></div>
+      <div class="hl-field"><div class="lbl">Agentforce が完了済</div><div class="val" style="color:var(--tepco-success);">12 件</div></div>
+    </div>
+  </div>
+
+  <!-- KPI Tiles -->
+  <div class="kpi-grid" style="margin-bottom:12px;">
+    <div class="kpi"><div class="lbl">担当案件パイプライン</div><div class="val">¥38.4億</div><div class="delta">▲ ¥3.2億 / 前週比</div></div>
+    <div class="kpi"><div class="lbl">未入金 (SAP連携)</div><div class="val">¥1.8億</div><div class="delta dn">▼ 3社で督促必要</div></div>
+    <div class="kpi"><div class="lbl">今月新規面談</div><div class="val">14件</div><div class="delta">▲ +5件</div></div>
+    <div class="kpi accent"><div class="lbl">需給アラート (AWS)</div><div class="val">2件</div><div class="delta dn">▼ 即時対応推奨</div></div>
+  </div>
+
+  <div class="sf-row">
+    <!-- LEFT: 優先タスク -->
+    <div style="flex: 1.3;">
+      <div class="tepco-card" style="margin-bottom:12px;">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" style="width:18px; filter:invert(20%) sepia(99%) saturate(2%) hue-rotate(0deg);">
+          Agentforce が朝までに整理した今日のアクション
+          <span class="src-tag">Salesforce + 4 systems</span>
+        </div>
+        <div class="tepco-card-body" style="padding: 0;">
+          <ul class="sf-timeline" style="padding: 8px 16px;">
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-ai">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#" onclick="goScene(2);return false;">大成建設 — 来週の契約更新、需給予測の差分が +12% で要再見積</a>
+                <div class="meta">SAP 過去契約 + AWS IoT 実績 + M365 メール文脈を統合 / 推奨アクション 3 件</div>
+                <div style="margin-top:6px;">
+                  <span class="pill e">経営承認推奨</span>
+                  <span class="pill w">期限 6/16</span>
+                </div>
+              </div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-call">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">10:00 三菱地所 役員定例 — 4-6月需給レポートをダッシュボードで提示</a>
+                <div class="meta">M365 カレンダー連携 / 資料は Agentforce が自動生成済 (PPT)</div>
+              </div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-email">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/email.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">JFE スチール 購買部長から見積問合せ (M365 Outlook)</a>
+                <div class="meta">受信 6/13 7:21 / Agentforce 要約: 「年間 18GWh の高圧契約、PPA 併用を希望」</div>
+              </div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-event">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/insights.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">需給アラート: 茨城エリア 大規模工場 2 社で需要急増</a>
+                <div class="meta">AWS IoT スマートメーターから 6/13 6:50 検知 / 影響: 大成建設 / 日立アプライアンス</div>
+              </div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-task">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">役員報告書 (関常務向け Q1 法人実績) — Agentforce ドラフト完了</a>
+                <div class="meta">PowerPoint で Teams ファイルに保存済 / レビュー待ち</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 横断シグナル -->
+    <div style="flex:1; min-width: 360px;">
+      <div class="tepco-card" style="margin-bottom:12px;">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" style="width:18px;">
+          顧客サマリー (本日要対応)
+          <span class="src-tag sf">SF + SAP</span>
+        </div>
+        <div class="tepco-card-body" style="font-size:0.8rem;">
+          <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #eee;">
+            <a href="#" style="color:var(--tepco-primary); font-weight:700;" onclick="goScene(2);return false;">大成建設 株式会社</a>
+            <span><span class="pill e">未入金 ¥3,200万</span></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #eee;">
+            <a href="#" style="color:var(--tepco-primary); font-weight:700;">三菱地所 株式会社</a>
+            <span><span class="pill s">継続更新OK</span></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #eee;">
+            <a href="#" style="color:var(--tepco-primary); font-weight:700;">JFE スチール 株式会社</a>
+            <span><span class="pill w">PPA 提案検討中</span></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:4px 0;">
+            <a href="#" style="color:var(--tepco-primary); font-weight:700;">日立アプライアンス</a>
+            <span><span class="pill w">需要急増中</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tepco-card" style="margin-bottom:12px;">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chat.svg" style="width:16px; filter:invert(20%) sepia(99%) saturate(80%) hue-rotate(180deg);">
+          Teams からのメンション
+          <span class="src-tag teams">Teams</span>
+        </div>
+        <div class="tepco-card-body" style="font-size:0.78rem; line-height:1.5;">
+          <div style="padding:4px 0; border-bottom:1px dashed #eee;">
+            <b>関 常務</b> · 6:30<br>「Q1 法人実績、午前中までに数字を頂きたい」
+          </div>
+          <div style="padding:4px 0; border-bottom:1px dashed #eee;">
+            <b>需給管理部 山口</b> · 7:05<br>「茨城のスマートメーター値、大成案件に効いてくる可能性あり」
+          </div>
+          <div style="padding:4px 0;">
+            <b>経理部 中田</b> · 7:20<br>「大成建設の入金、SAP で確認、まだ未着」
+          </div>
+        </div>
+      </div>
+
+      <div class="tepco-card">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" style="width:18px;">
+          M365 カレンダー
+          <span class="src-tag m365">M365</span>
+        </div>
+        <div class="tepco-card-body" style="font-size:0.8rem;">
+          <div style="padding:4px 0; border-bottom:1px dashed #eee;"><b>10:00–11:00</b> 三菱地所 役員定例 (Teams)</div>
+          <div style="padding:4px 0; border-bottom:1px dashed #eee;"><b>13:00–14:00</b> 大成建設 契約更新検討 (社内)</div>
+          <div style="padding:4px 0;"><b>15:00–16:00</b> JFE スチール 提案リーガル確認</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</section>
+
+<!-- =================================================================
+     SCENE 2: 顧客 360° (Context layer)
+     大成建設のレコードページに、SAP 契約・請求、AWS IoT 需給実績、
+     M365 メール履歴、Teams 履歴がすべて統合される
+================================================================= -->
+<section class="scene" id="scene-2">
+<div class="connectors">
+  <b>このシーンで束ねているソース：</b>
+  <span class="conn-chip sf"><span class="live"></span>Salesforce <b>顧客 360°</b></span>
+  <span class="conn-chip sap"><span class="live"></span>SAP <b>契約 / 請求 / 入金</b></span>
+  <span class="conn-chip aws"><span class="live"></span>AWS IoT <b>30分粒度実績</b></span>
+  <span class="conn-chip m365"><span class="live"></span>M365 <b>メール / Files</b></span>
+  <span class="conn-chip teams"><span class="live"></span>Teams <b>会話履歴</b></span>
+</div>
+
+<div class="narration">
+  <span class="role-tag">SoC</span>
+  <div class="body">
+    <b>「大成建設」を開く。これまで4システムを行き来していた情報が、1ページに揃う。</b><br>
+    SAP の契約マスタ・未入金、AWS IoT の30分粒度の需給実績、M365 のメール、Teams の社内会話 — <b>裏では Data Cloud が常時同期</b>、表では Salesforce のいつもの画面。<br>
+    <b>「データを取りに行く時間」をゼロに。</b>
+  </div>
+</div>
+
+<main class="sf-main">
+  <!-- Highlight Panel: 大成建設 -->
+  <div class="hl-panel">
+    <div class="hl-icon">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="">
+    </div>
+    <div>
+      <div class="hl-name">法人顧客</div>
+      <div class="hl-title">大成建設 株式会社</div>
+    </div>
+    <div class="hl-fields">
+      <div class="hl-field"><div class="lbl">年間契約電力量</div><div class="val">42 GWh</div></div>
+      <div class="hl-field"><div class="lbl">契約 (SAP)</div><div class="val">高圧 8拠点</div></div>
+      <div class="hl-field"><div class="lbl">未入金 (SAP)</div><div class="val" style="color:var(--tepco-error);">¥3,200万</div></div>
+      <div class="hl-field"><div class="lbl">担当</div><div class="val">田中 健一</div></div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <!-- LEFT: 関連リスト -->
+    <div style="flex: 1; min-width: 320px;">
+      <div class="tepco-card" style="margin-bottom:12px;">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/contract.svg" style="width:16px;">
+          契約 (SAP S/4 リアルタイム連携)
+          <span class="src-tag sap">SAP</span>
+        </div>
+        <div class="tepco-card-body" style="padding:0;">
+          <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="font-size:0.78rem;">
+            <thead><tr><th>契約番号</th><th>拠点</th><th>容量</th><th>状態</th></tr></thead>
+            <tbody>
+              <tr><td>HV-2024-1042</td><td>本社ビル</td><td>2.4MW</td><td><span class="pill s">稼働中</span></td></tr>
+              <tr><td>HV-2024-1187</td><td>横浜支店</td><td>1.8MW</td><td><span class="pill s">稼働中</span></td></tr>
+              <tr><td>HV-2025-0314</td><td>千葉物流</td><td>3.6MW</td><td><span class="pill w">更新検討</span></td></tr>
+              <tr><td>HV-2026-0891</td><td>茨城工事拠点</td><td>1.2MW</td><td><span class="pill e">需要超過</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tepco-card" style="margin-bottom:12px;">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/insights.svg" style="width:16px;">
+          需給実績 (AWS IoT スマートメーター)
+          <span class="src-tag aws">AWS</span>
+        </div>
+        <div class="tepco-card-body" style="font-size:0.78rem;">
+          <div class="bar-row"><span class="lab">本社ビル</span><div class="bar"><div style="width:62%;"></div></div><span class="num">1.49 MW</span></div>
+          <div class="bar-row"><span class="lab">横浜支店</span><div class="bar"><div style="width:48%;"></div></div><span class="num">0.86 MW</span></div>
+          <div class="bar-row"><span class="lab">千葉物流</span><div class="bar"><div class="s" style="width:71%;"></div></div><span class="num">2.56 MW</span></div>
+          <div class="bar-row"><span class="lab">茨城工事</span><div class="bar"><div class="r" style="width:96%;"></div></div><span class="num">1.15 MW <span class="pill e">超過</span></span></div>
+          <div class="muted" style="font-size:0.7rem; margin-top:6px;">最終同期: 6/13 8:30 / 30分粒度 / 直近48h集計</div>
+        </div>
+      </div>
+
+      <div class="tepco-card">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/money.svg" style="width:16px; filter: invert(20%) sepia(99%) saturate(80%) hue-rotate(0deg);">
+          請求・入金 (SAP)
+          <span class="src-tag sap">SAP</span>
+        </div>
+        <div class="tepco-card-body" style="padding:0;">
+          <table class="slds-table slds-table_cell-buffer" style="font-size:0.78rem;">
+            <thead><tr><th>請求</th><th>金額</th><th>期日</th><th>状態</th></tr></thead>
+            <tbody>
+              <tr><td>INV-2026-04-088</td><td>¥1,250万</td><td>5/31</td><td><span class="pill s">入金済</span></td></tr>
+              <tr><td>INV-2026-05-088</td><td>¥1,840万</td><td>6/30</td><td><span class="pill w">期日内</span></td></tr>
+              <tr><td>INV-2026-04-091</td><td>¥3,200万</td><td>5/15</td><td><span class="pill e">29日延滞</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER: タブ -->
+    <div style="flex: 1.4; min-width: 480px;">
+      <div class="tepco-tabs">
+        <ul class="tepco-tabs-nav">
+          <li class="active">活動タイムライン</li>
+          <li>提案</li>
+          <li>関係者ネットワーク</li>
+          <li>ファイル</li>
+        </ul>
+        <div class="tepco-tabs-body">
+          <ul class="sf-timeline">
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-ai">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">Agentforce: 契約更新シナリオ 3案を生成</a>
+                <div class="meta">本日 8:15 / SAP契約 + AWS実績 + 過去M365交渉メールから生成 / 経営承認待ち</div>
+              </div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-email">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/email.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">Re: 茨城工事拠点の需要見通しについて</a>
+                <div class="meta">大成建設 購買部 山田 様 → 田中 / 6/12 16:42 / M365 Outlook 連携</div>
+              </div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-event">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">Teams 会議: 需給管理部との連携</a>
+                <div class="meta">6/12 14:00 / 議事録は AI が要点抽出 / 未対応 ToDo 2件</div>
+              </div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-call">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">電話: 経理部長との未入金確認</a>
+                <div class="meta">6/12 11:30 / 通話要約: 「決裁プロセスで遅延、来週入金見込」</div>
+              </div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-task">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg">
+              </span>
+              <div class="sf-timeline-body">
+                <a href="#">SAP 契約更新ワークフロー起票</a>
+                <div class="meta">6/11 / SAP S/4 直書き込み実行済 / 起票者: Agentforce (田中代行)</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: 関係者 + Files -->
+    <div style="flex: 0.9; min-width: 280px;">
+      <div class="tepco-card" style="margin-bottom:12px;">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/contact.svg" style="width:16px;">
+          意思決定者 (M365 + 名刺管理)
+          <span class="src-tag m365">M365</span>
+        </div>
+        <div class="tepco-card-body" style="font-size:0.78rem;">
+          <div style="padding:6px 0; border-bottom:1px dashed #eee;"><b>山田 太郎</b> · 購買部長<div class="muted">最終接触 6/12 メール</div></div>
+          <div style="padding:6px 0; border-bottom:1px dashed #eee;"><b>佐藤 一郎</b> · 経理部長<div class="muted">最終接触 6/12 電話</div></div>
+          <div style="padding:6px 0;"><b>木村 健</b> · 工務部 統括 <div class="muted">最終接触 5/28 会議</div></div>
+        </div>
+      </div>
+      <div class="tepco-card">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/document.svg" style="width:16px;">
+          ファイル (M365 SharePoint 連携)
+          <span class="src-tag m365">M365</span>
+        </div>
+        <div class="tepco-card-body" style="font-size:0.78rem;">
+          <div style="padding:6px 0; border-bottom:1px dashed #eee;">📄 2026年 契約更新提案書 v3.pptx</div>
+          <div style="padding:6px 0; border-bottom:1px dashed #eee;">📊 茨城拠点 需給シミュレーション.xlsx</div>
+          <div style="padding:6px 0;">📑 PPA 提案ドラフト.docx</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</section>
+
+<!-- =================================================================
+     SCENE 3: AI が動く (Agency layer)
+     田中が「契約更新を進めて」と指示すると、Agentforce が
+     SAP に書込み、Teams で承認回付、M365 でドラフト作成、
+     AWS から需給データ再取得 — を全部自律実行
+================================================================= -->
+<section class="scene" id="scene-3">
+<div class="connectors">
+  <b>このシーンで動かしているシステム：</b>
+  <span class="conn-chip sf"><span class="live"></span>Salesforce <b>Action 起点</b></span>
+  <span class="conn-chip sap"><span class="live"></span>SAP <b>契約書込</b></span>
+  <span class="conn-chip aws"><span class="live"></span>AWS <b>需給再計算</b></span>
+  <span class="conn-chip m365"><span class="live"></span>M365 <b>提案書ドラフト</b></span>
+  <span class="conn-chip teams"><span class="live"></span>Teams <b>承認回付</b></span>
+</div>
+
+<div class="narration">
+  <span class="role-tag">SoA</span>
+  <div class="body">
+    <b>田中はチャットで一言。「大成建設の契約更新シナリオ②で進めて」</b><br>
+    その瞬間、<b>Agentforce が4つのシステムを同時に動かす</b> — SAP に契約書込、AWS に需給再計算依頼、M365 で提案書ドラフト生成、Teams で承認回付。<br>
+    人がやれば 2 時間、Agentforce なら <b>90秒</b>。<b>AI を「同僚」として組織の中に入れる。</b>
+  </div>
+</div>
+
+<main class="sf-main">
+  <div class="hl-panel">
+    <div class="hl-icon" style="background: var(--tepco-accent);">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="">
+    </div>
+    <div>
+      <div class="hl-name">Agentforce 自律実行ログ</div>
+      <div class="hl-title">大成建設 契約更新シナリオ② 実行中</div>
+    </div>
+    <div class="hl-fields">
+      <div class="hl-field"><div class="lbl">起動者</div><div class="val">田中 健一 (チャット指示)</div></div>
+      <div class="hl-field"><div class="lbl">経過時間</div><div class="val" style="color:var(--tepco-success);">00:01:24 / 推定 90秒</div></div>
+      <div class="hl-field"><div class="lbl">承認状態</div><div class="val"><span class="pill w">経営承認待ち</span></div></div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <!-- LEFT: Action Plan -->
+    <div style="flex: 1.2; min-width: 540px;">
+      <div class="tepco-card" style="margin-bottom:12px;">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" style="width:18px; filter:invert(20%) sepia(99%) saturate(90%) hue-rotate(330deg);">
+          実行ステップ (人が承認した範囲のみ AI が動く)
+        </div>
+        <div class="tepco-card-body">
+          <div class="receipt">
+            <div class="step done"><span class="ic">✓</span><b>① 契約更新ドラフトを生成</b><span class="ext-tag sf">Salesforce</span></div>
+            <div class="muted" style="margin-left:26px; margin-top:2px;">過去契約 + 直近実績で年間契約量を 42 → 47 GWh に補正</div>
+          </div>
+          <div class="receipt">
+            <div class="step done"><span class="ic">✓</span><b>② SAP S/4 で契約マスタを書き換え</b><span class="ext-tag sap">SAP</span></div>
+            <div class="muted" style="margin-left:26px; margin-top:2px;">契約番号 HV-2025-0314 / 容量変更 3.6→4.0 MW / SAP API 経由で起票</div>
+          </div>
+          <div class="receipt">
+            <div class="step done"><span class="ic">✓</span><b>③ AWS IoT で需給シミュレーションを再実行</b><span class="ext-tag aws">AWS</span></div>
+            <div class="muted" style="margin-left:26px; margin-top:2px;">SageMaker モデル v2.4 / 茨城エリアのピーク負荷を 110% で再計算 → 適合判定 OK</div>
+          </div>
+          <div class="receipt">
+            <div class="step done"><span class="ic">✓</span><b>④ M365 で提案書 v4 をドラフト</b><span class="ext-tag m365">M365</span></div>
+            <div class="muted" style="margin-left:26px; margin-top:2px;">PowerPoint 18枚 / SharePoint 顧客フォルダに保存 / 過去類似案件3件を学習</div>
+          </div>
+          <div class="receipt">
+            <div class="step run"><span class="ic">●</span><b>⑤ Teams で関常務へ承認回付</b><span class="ext-tag teams">Teams</span></div>
+            <div class="muted" style="margin-left:26px; margin-top:2px;">承認カードを送信中 / 経営承認後に SAP 確定処理へ</div>
+          </div>
+          <div class="receipt">
+            <div class="step wait"><span class="ic">○</span><b>⑥ 承認後 SAP 契約確定 + 顧客通知メール送信</b><span class="ext-tag sap">SAP</span><span class="ext-tag m365">M365</span></div>
+          </div>
+          <div class="receipt">
+            <div class="step wait"><span class="ic">○</span><b>⑦ 田中に完了報告 + Salesforce 案件をクローズ</b><span class="ext-tag sf">Salesforce</span></div>
+          </div>
+
+          <div style="margin-top:14px; padding:10px; background:#fff8e8; border:1px solid #ffd99e; border-radius:4px; font-size:0.8rem;">
+            <b style="color:#c46410;">⚠ ガードレール</b><br>
+            金額 ¥1億超 / 契約期間 5年超 / 解約条項変更 — のいずれかに該当する場合は <b>必ず人間承認</b>。AI は提案までで止まり、書込みには進みません。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: チャット指示 -->
+    <div style="flex: 0.9; min-width: 360px;">
+      <div class="tepco-card" style="margin-bottom: 12px;">
+        <div class="tepco-card-header" style="background: linear-gradient(135deg, var(--tepco-primary), var(--tepco-secondary)); color:#fff;">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" style="width:18px; filter:brightness(0) invert(1);">
+          <span style="color:#fff;">Agentforce アシスタント</span>
+          <span class="src-tag" style="background:rgba(255,255,255,0.25); color:#fff;">SoA</span>
+        </div>
+        <div class="tepco-card-body" style="background:#f7faff;">
+          <div class="af-msg user" style="max-width:90%;">
+            大成建設の契約更新シナリオ②で進めて。茨城拠点の需要超過に対応する案。
+          </div>
+          <div class="af-msg bot" style="margin-top:10px;">
+            シナリオ②（茨城 1.2→1.6MW 増容＋PPA 併用）で着手します。<br>
+            実行内容は以下の7ステップ。経営承認が必要なポイントは関常務にカード送付します。
+            <div class="src">
+              <span>SAP: 契約書込</span><span>AWS: 需給シミュ</span><span>M365: 提案書</span><span>Teams: 承認</span>
+            </div>
+          </div>
+          <div class="af-msg user" style="max-width:90%; margin-top:10px;">
+            進めて。完了したら教えて。
+          </div>
+          <div class="af-msg bot" style="margin-top:10px;">
+            了解しました。実行開始しました。<b style="color:var(--tepco-success);">90秒以内</b> に完了見込です。<br>
+            関常務の承認結果次第で、SAP 確定処理を続行 / 中断します。
+            <div class="af-actions">
+              <button class="af-action-btn primary">実行ログを見る</button>
+              <button class="af-action-btn">途中停止</button>
+              <button class="af-action-btn">条件を変える</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tepco-card">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chat.svg" style="width:16px; filter:invert(20%) sepia(99%) saturate(80%) hue-rotate(180deg);">
+          Teams 承認カード (関常務へ送信中)
+          <span class="src-tag teams">Teams</span>
+        </div>
+        <div class="tepco-card-body" style="font-size: 0.8rem;">
+          <div style="padding:8px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+            <div style="font-weight:700; color:var(--tepco-primary);">承認依頼: 大成建設 契約更新</div>
+            <div class="muted" style="font-size:0.72rem;">起案: 田中 健一 (Agentforce 経由)</div>
+            <hr style="margin:6px 0; border-color:#eee;">
+            <div>増容: 千葉物流 +0.4MW、茨城工事 +0.4MW</div>
+            <div>新契約年額: ¥4.8億 (前年比 +7%)</div>
+            <div>PPA 併用: 3拠点 / 再エネ比率 38%</div>
+            <hr style="margin:6px 0; border-color:#eee;">
+            <button style="background:var(--tepco-success); color:#fff; border:none; padding:6px 14px; border-radius:3px; font-size:0.8rem; margin-right:6px;">承認</button>
+            <button style="background:#fff; color:#666; border:1px solid #ccc; padding:6px 14px; border-radius:3px; font-size:0.8rem;">差し戻し</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</section>
+
+<!-- =================================================================
+     SCENE 4: 経営に届く (Work layer)
+     関常務向けダッシュボード。法人セグメントの実績がリアルタイム
+     かつ Agentforce が「次の打ち手」を経営にレコメンド
+================================================================= -->
+<section class="scene" id="scene-4">
+<div class="connectors">
+  <b>このシーンが束ねるソース：</b>
+  <span class="conn-chip sf"><span class="live"></span>Salesforce <b>案件・KPI</b></span>
+  <span class="conn-chip sap"><span class="live"></span>SAP <b>売上・契約・原価</b></span>
+  <span class="conn-chip aws"><span class="live"></span>AWS IoT <b>需給実績</b></span>
+  <span class="conn-chip m365"><span class="live"></span>M365 <b>役員レポート配信</b></span>
+</div>
+
+<div class="narration">
+  <span class="role-tag">SoW</span>
+  <div class="body">
+    <b>関常務、これがあなたの画面です。</b><br>
+    法人セグメントの売上・契約・需給実績がリアルタイムで束ねられ、<b>Agentforce が「次の経営判断」を3つに絞って提案</b>します。<br>
+    Excel で集計、メールで催促、PowerPoint で清書 — その時間がゼロに。<b>意思決定そのものに集中できる経営を。</b>
+  </div>
+</div>
+
+<main class="sf-main">
+  <div class="hl-panel">
+    <div class="hl-icon" style="background: var(--tepco-primary);">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/dashboard.svg" alt="">
+    </div>
+    <div>
+      <div class="hl-name">経営ダッシュボード — 法人営業</div>
+      <div class="hl-title">関 常務 ビュー <span style="font-size:0.7rem; color:#666; font-weight:400;">FY2026 Q1 (4-6月)</span></div>
+    </div>
+    <div class="hl-fields">
+      <div class="hl-field"><div class="lbl">最終更新</div><div class="val" style="color:var(--tepco-success);">8:30 自動</div></div>
+      <div class="hl-field"><div class="lbl">データソース</div><div class="val">SF + SAP + AWS</div></div>
+      <div class="hl-field"><div class="lbl">配信</div><div class="val">M365 朝 7:00</div></div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid" style="margin-bottom:12px;">
+    <div class="kpi"><div class="lbl">法人売上 (FY26 Q1見込)</div><div class="val">¥482億</div><div class="delta">▲ +8.2% YoY</div></div>
+    <div class="kpi"><div class="lbl">新規高圧契約</div><div class="val">38社</div><div class="delta">▲ +12社</div></div>
+    <div class="kpi"><div class="lbl">PPA / 再エネ提案 採択率</div><div class="val">42%</div><div class="delta">▲ +9pt</div></div>
+    <div class="kpi accent"><div class="lbl">未入金 (>30日)</div><div class="val">¥4.1億</div><div class="delta dn">▼ 12社で督促必要</div></div>
+  </div>
+
+  <div class="sf-row">
+    <!-- LEFT: グラフ群 -->
+    <div style="flex: 1.4; min-width: 580px;">
+      <div class="tepco-card" style="margin-bottom:12px;">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/report.svg" style="width:16px;">
+          法人セグメント別 売上 (FY26 Q1 vs 計画)
+          <span class="src-tag sap">SAP</span>
+        </div>
+        <div class="tepco-card-body">
+          <div class="bar-row"><span class="lab">建設・不動産</span><div class="bar"><div style="width:88%;"></div></div><span class="num">¥142億</span></div>
+          <div class="bar-row"><span class="lab">製造業 (大手)</span><div class="bar"><div style="width:74%;"></div></div><span class="num">¥118億</span></div>
+          <div class="bar-row"><span class="lab">物流・倉庫</span><div class="bar"><div class="s" style="width:62%;"></div></div><span class="num">¥98億</span></div>
+          <div class="bar-row"><span class="lab">官公庁</span><div class="bar"><div class="s" style="width:46%;"></div></div><span class="num">¥73億</span></div>
+          <div class="bar-row"><span class="lab">サービス業</span><div class="bar"><div class="r" style="width:32%;"></div></div><span class="num">¥51億 <span class="pill e">計画未達</span></span></div>
+        </div>
+      </div>
+
+      <div class="tepco-card">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/insights.svg" style="width:16px;">
+          需給と契約のクロス (AWS IoT × SAP)
+          <span class="src-tag aws">AWS</span>
+        </div>
+        <div class="tepco-card-body" style="padding: 0;">
+          <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="font-size: 0.78rem;">
+            <thead><tr><th>セグメント</th><th>契約容量</th><th>実績平均</th><th>負荷率</th><th>判定</th></tr></thead>
+            <tbody>
+              <tr><td>建設・不動産</td><td>1,240 MW</td><td>1,120 MW</td><td>90%</td><td><span class="pill s">適正</span></td></tr>
+              <tr><td>製造業</td><td>2,840 MW</td><td>2,720 MW</td><td>96%</td><td><span class="pill w">逼迫</span></td></tr>
+              <tr><td>物流・倉庫</td><td>680 MW</td><td>410 MW</td><td>60%</td><td><span class="pill s">余裕</span></td></tr>
+              <tr><td>官公庁</td><td>520 MW</td><td>340 MW</td><td>65%</td><td><span class="pill s">余裕</span></td></tr>
+              <tr><td>サービス業</td><td>410 MW</td><td>180 MW</td><td>44%</td><td><span class="pill e">過剰契約</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: AI 経営提案 -->
+    <div style="flex: 1; min-width: 360px;">
+      <div class="tepco-card" style="margin-bottom:12px; border-top: 3px solid var(--tepco-accent);">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" style="width:18px; filter:invert(20%) sepia(99%) saturate(90%) hue-rotate(330deg);">
+          Agentforce が提案する 次の経営判断
+          <span class="src-tag" style="background:#fde2e6; color:var(--tepco-accent);">SoA → SoW</span>
+        </div>
+        <div class="tepco-card-body" style="font-size: 0.85rem;">
+          <div style="padding: 10px; border-left: 3px solid var(--tepco-error); background:#fff8f8; margin-bottom:10px;">
+            <b>① サービス業セグメント — 過剰契約の是正</b><br>
+            <span class="muted">負荷率 44% / 計画売上未達。容量 80MW 削減 + PPA 切替で年間 ¥6.8億の利益改善見込。</span><br>
+            <button class="af-action-btn primary" style="margin-top:6px;">経営会議アジェンダに追加</button>
+            <button class="af-action-btn" style="margin-top:6px;">担当に深掘指示</button>
+          </div>
+          <div style="padding: 10px; border-left: 3px solid var(--tepco-warning); background:#fff8e8; margin-bottom:10px;">
+            <b>② 製造業セグメント — 逼迫対応</b><br>
+            <span class="muted">負荷率 96%。2社（JFE/日立アプライアンス）で需要急増。需給契約の追加交渉を推奨。</span><br>
+            <button class="af-action-btn primary" style="margin-top:6px;">交渉プラン生成</button>
+          </div>
+          <div style="padding: 10px; border-left: 3px solid var(--tepco-success); background:#f3fbf5;">
+            <b>③ 建設・不動産 — PPA 採択率の横展開</b><br>
+            <span class="muted">大成建設 / 三菱地所の成功パターンを 12社へ展開すれば +¥18億の機会。</span><br>
+            <button class="af-action-btn primary" style="margin-top:6px;">提案テンプレ送付</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tepco-card">
+        <div class="tepco-card-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/email.svg" style="width:16px; filter:invert(20%) sepia(99%) saturate(80%) hue-rotate(180deg);">
+          M365 で朝7:00に自動配信
+          <span class="src-tag m365">M365</span>
+        </div>
+        <div class="tepco-card-body" style="font-size:0.8rem; line-height:1.6;">
+          <b>件名:</b> 【経営サマリー】FY26 Q1 法人営業 6/13 朝報<br>
+          <b>送信:</b> Agentforce → 関常務 / 副社長 / 経営企画部<br>
+          <b>添付:</b><br>
+          📄 法人実績サマリー.pptx (Agentforce 自動生成 18枚)<br>
+          📊 需給×契約 クロスデータ.xlsx<br>
+          📑 次のアクション提案 3件.docx
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROI -->
+  <div class="tepco-card" style="margin-top:12px; border-top: 3px solid var(--tepco-accent);">
+    <div class="tepco-card-header">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/trending.svg" style="width:18px; filter:invert(20%) sepia(99%) saturate(99%) hue-rotate(330deg);">
+      Vision 実現で得られるもの (試算)
+    </div>
+    <div class="tepco-card-body">
+      <div class="kpi-grid">
+        <div class="kpi"><div class="lbl">法人営業 1人あたり 1日</div><div class="val" style="color:var(--tepco-success);">+2.4h</div><div class="delta">資料作成・データ収集の自動化</div></div>
+        <div class="kpi"><div class="lbl">経営会議の意思決定</div><div class="val" style="color:var(--tepco-success);">3倍速</div><div class="delta">事前資料が常に最新</div></div>
+        <div class="kpi"><div class="lbl">未入金回収サイクル</div><div class="val" style="color:var(--tepco-success);">−9日</div><div class="delta">SAP×SF 自動督促</div></div>
+        <div class="kpi accent"><div class="lbl">推定 営業利益インパクト/年</div><div class="val">+¥38億</div><div class="delta">過剰契約是正 + 提案横展開</div></div>
+      </div>
+    </div>
+  </div>
+</main>
+</section>
+
+<!-- =================================================================
+     Agentforce 共通サイドパネル (常駐型・トグル可)
+================================================================= -->
+<aside class="af-panel hidden" id="af-panel">
+  <div class="af-head">
+    <div class="astro"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""></div>
+    <div>
+      <div class="ttl">Agentforce</div>
+      <div class="sub">SAP / M365 / AWS / Teams を束ねる</div>
+    </div>
+    <span class="x" onclick="toggleAF()">✕</span>
+  </div>
+  <div class="af-body">
+    <div class="af-msg bot">
+      おはようございます、田中さん。今朝までに以下を確認しました：
+      <ul style="margin: 6px 0 0 18px; padding: 0;">
+        <li>大成建設の契約更新 (要承認)</li>
+        <li>JFE スチール 新規見積依頼</li>
+        <li>茨城エリア 需給アラート</li>
+      </ul>
+      <div class="src"><span>SAP</span><span>M365</span><span>AWS</span><span>Teams</span></div>
+    </div>
+    <div class="af-msg user">大成建設のアクションを進めて</div>
+    <div class="af-msg bot">
+      シナリオ②で実行します。経営承認が要るポイントは関常務に Teams カードを送ります。
+      <div class="af-actions">
+        <button class="af-action-btn primary">実行ログ</button>
+        <button class="af-action-btn">中断</button>
+      </div>
+    </div>
+  </div>
+  <div class="af-input">
+    <input placeholder="話しかけてください...">
+    <button>↑</button>
+  </div>
+</aside>
+
+<script>
+  function goScene(n) {
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+    document.getElementById('scene-' + n).classList.add('active');
+    document.querySelectorAll('.vision-step').forEach(s => s.classList.remove('active'));
+    document.querySelector('.vision-step[data-scene="' + n + '"]').classList.add('active');
+
+    // 4-Layer Indicator 切替
+    const layers = ['eng', 'ctx', 'agy', 'wrk'];
+    layers.forEach(l => document.getElementById('lp-' + l).classList.remove('active'));
+    const map = {1:'eng', 2:'ctx', 3:'agy', 4:'wrk'};
+    document.getElementById('lp-' + map[n]).classList.add('active');
+
+    // App Nav active 切替
+    document.querySelectorAll('.sf-context-bar nav ul li').forEach(li => li.classList.remove('is-active'));
+    if (n === 1) document.getElementById('nav-home').classList.add('is-active');
+    else if (n === 2 || n === 3) document.getElementById('nav-cust').classList.add('is-active');
+    else if (n === 4) document.getElementById('nav-dash').classList.add('is-active');
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+  function toggleAF() {
+    document.getElementById('af-panel').classList.toggle('hidden');
+  }
+  // 初期化
+  goScene(1);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!--
+  Salesforce Lightning Mockup - Style Tokens (SLDS + Tailwind ハイブリッド版)
+  ==========================================================================
+  方針:
+    - スタイル本体は SLDS 公式 CSS（slds-* クラス）に任せる
+    - レイアウト・余白・色の微調整は Tailwind で書く
+    - アイコンは SLDS 公式の SVG スプライトを使う
+
+  必要な CDN（<head> 内に常に貼る）:
+    1. SLDS 公式 CSS
+       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+    2. Tailwind CDN
+       <script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { corePlugins: { preflight: false } }</script>
+
+  アイコンの書き方（SLDS スプライト使用）:
+    <span class="slds-icon_container slds-icon-standard-account">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_small" />
+    </span>
+
+  スプライトの種類:
+    - utility-sprite/svg/symbols.svg#xxx  … ボタン内・装飾の小型アイコン
+    - standard-sprite/svg/symbols.svg#xxx … オブジェクトアイコン (account, opportunity, case 等)
+    - action-sprite/svg/symbols.svg#xxx   … 「電話」「メール」等のアクション
+    - doctype-sprite/svg/symbols.svg#xxx  … ファイル種別 (pdf, xls 等)
+
+  body 末尾には何も呼ぶ必要なし（SLDS は静的 CSS のみ、JS 不要）。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SLDS Style Tokens (Hybrid)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { corePlugins: { preflight: false } }</script>
+<style>
+    /* =========================================================
+       Tailwind と SLDS の橋渡し用カスタムCSS（最小限）
+       基本は SLDS のクラスを使う。ここでは SLDS にない要素のみ。
+       ========================================================= */
+
+    /* 上部スカイブルー背景（SLDS では存在しないため自前定義） */
+    body.sf-app-bg {
+        background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) !important;
+        background-color: #f3f3f3 !important;
+        min-width: 1024px;
+        overflow-x: auto;
+    }
+
+    /* SLDS Path はデフォルトで JS 駆動（aria-selected等）。
+       静的モック用に「完了」「アクティブ」を CSS だけで表現するための補助 */
+    .slds-path__item.is-complete-static .slds-path__link {
+        background-color: #04844b !important;
+        color: white;
+    }
+    .slds-path__item.is-current-static .slds-path__link {
+        background-color: #0176d3 !important;
+        color: white;
+        font-weight: 700;
+    }
+
+    /* スクロールバー非表示（タブの横スクロールエリア用） */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+</head>
+<body class="sf-app-bg">
+
+<!-- ============================================================
+     SLDS で使う主要クラス チートシート
+     ============================================================ -->
+
+<div class="slds-p-around_large">
+  <h1 class="slds-text-heading_large slds-m-bottom_medium">SLDS + Tailwind ハイブリッド クラス早見表</h1>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">ボタン</h2>
+  <button class="slds-button slds-button_brand">Brand (主要CTA)</button>
+  <button class="slds-button slds-button_neutral">Neutral (キャンセル)</button>
+  <button class="slds-button slds-button_outline-brand">Outline (副)</button>
+  <button class="slds-button slds-button_destructive">Destructive (削除)</button>
+  <button class="slds-button slds-button_text-destructive">Text Destructive</button>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">バッジ</h2>
+  <span class="slds-badge">下書き</span>
+  <span class="slds-badge slds-theme_success">完了</span>
+  <span class="slds-badge slds-theme_warning">注意</span>
+  <span class="slds-badge slds-theme_error">遅延</span>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">アイコン</h2>
+  <span class="slds-icon_container slds-icon-standard-account" title="取引先">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_small" />
+  </span>
+  <span class="slds-icon_container slds-icon-standard-opportunity slds-m-left_small">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/opportunity.svg" alt="" class="slds-icon slds-icon_small" />
+  </span>
+  <span class="slds-icon_container slds-icon-utility-search slds-m-left_small slds-icon-utility-search">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-icon-text-default slds-icon_x-small" />
+  </span>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">よく使うレイアウト</h2>
+  <pre class="slds-box slds-text-body_small">
+slds-grid slds-wrap                      … flex 並び（折返しあり）
+slds-col slds-size_2-of-3                … 幅 2/3
+slds-col slds-size_1-of-3                … 幅 1/3
+slds-grid slds-gutters                   … カラム間ガター（標準）
+slds-p-around_medium                     … padding 全方向 (12px)
+slds-m-bottom_large                      … margin-bottom (24px)
+slds-card                                … 白い角丸カード
+slds-card__header / slds-card__body      … カード内構造
+  </pre>
+
+  <p class="slds-text-body_small slds-m-top_large">
+    実装例は <code>templates/</code> と <code>components/</code> を見ること。
+    レイアウトの細かい調整（任意の幅・色・余白）は Tailwind を併用してよい。
+  </p>
+</div>
+
+</body>
+</html>

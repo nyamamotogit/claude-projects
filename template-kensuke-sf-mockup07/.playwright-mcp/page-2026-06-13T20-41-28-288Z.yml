@@ -1,0 +1,111 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - strong [ref=e5]: Service Console
+    - searchbox "検索..." [ref=e9]
+  - tablist [ref=e12]:
+    - tab "ケース 00001234" [selected] [ref=e13] [cursor=pointer]:
+      - generic [ref=e15]: ケース 00001234
+    - tab "担当者A" [ref=e16] [cursor=pointer]:
+      - generic [ref=e18]: 担当者A
+    - button "新しいタブを開く" [ref=e19] [cursor=pointer]:
+      - generic [ref=e20]: 新しいタブを開く
+  - generic [ref=e21]:
+    - complementary [ref=e22]:
+      - generic [ref=e23]:
+        - paragraph [ref=e24]: マイケース
+        - heading "オープンケース (8)" [level=2] [ref=e25]
+      - list [ref=e26]:
+        - listitem [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]:
+            - link "00001234" [ref=e29]:
+              - /url: "#"
+              - strong [ref=e30]: "00001234"
+            - generic [ref=e31]: 高
+          - paragraph [ref=e32]: ログインできない
+          - paragraph [ref=e33]: 担当者A · 2時間前
+        - listitem [ref=e34] [cursor=pointer]:
+          - generic [ref=e35]:
+            - link "00001235" [ref=e36]:
+              - /url: "#"
+              - strong [ref=e37]: "00001235"
+            - generic [ref=e38]: 中
+          - paragraph [ref=e39]: レポートが表示されない
+          - paragraph [ref=e40]: 担当者B · 5時間前
+        - listitem [ref=e41] [cursor=pointer]:
+          - generic [ref=e42]:
+            - link "00001236" [ref=e43]:
+              - /url: "#"
+              - strong [ref=e44]: "00001236"
+            - generic [ref=e45]: 低
+          - paragraph [ref=e46]: パスワードリセット依頼
+          - paragraph [ref=e47]: 担当者C · 昨日
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e55]:
+            - paragraph [ref=e56]: ケース
+            - heading "00001234 - ログインできない" [level=1] [ref=e57]
+          - list [ref=e59]:
+            - listitem [ref=e60]:
+              - button "編集" [ref=e61] [cursor=pointer]
+            - listitem [ref=e62]:
+              - button "解決済みにする" [ref=e63] [cursor=pointer]
+        - article [ref=e66]:
+          - listbox [ref=e71]:
+            - link "新規" [ref=e72] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e74]: 新規
+            - link "作業中" [ref=e75] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e76]: 作業中
+            - link "エスカレート" [ref=e77] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e78]: エスカレート
+            - link "解決" [ref=e79] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e80]: 解決
+            - link "クローズ" [ref=e81] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e82]: クローズ
+      - generic [ref=e83]:
+        - article [ref=e85]:
+          - heading "ケース詳細" [level=2] [ref=e87]
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - term [ref=e91]: ケース番号
+              - definition [ref=e92]: "00001234"
+            - generic [ref=e93]:
+              - term [ref=e94]: 優先度
+              - definition [ref=e95]:
+                - strong [ref=e96]: 高
+            - generic [ref=e97]:
+              - term [ref=e98]: 取引先責任者
+              - definition [ref=e99]:
+                - link "担当者A" [ref=e100] [cursor=pointer]:
+                  - /url: "#"
+            - generic [ref=e101]:
+              - term [ref=e102]: 発生源
+              - definition [ref=e103]: Web
+            - generic [ref=e104]:
+              - term [ref=e105]: 説明
+              - definition [ref=e106]: ログイン画面でID/パスワード入力後、エラーが表示される。
+        - article [ref=e108]:
+          - heading "推奨記事 (Agentforce)" [level=2] [ref=e110]
+          - list [ref=e112]:
+            - listitem [ref=e113]:
+              - link "ログインできない場合の対処法" [ref=e114] [cursor=pointer]:
+                - /url: "#"
+                - strong [ref=e115]: ログインできない場合の対処法
+              - paragraph [ref=e116]: "関連度: 92%"
+            - listitem [ref=e117]:
+              - link "パスワードリセット手順" [ref=e118] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e119]: "関連度: 78%"
+  - contentinfo [ref=e120]:
+    - list [ref=e121]:
+      - listitem [ref=e122]:
+        - button "通話" [ref=e123] [cursor=pointer]:
+          - generic [ref=e124]: 通話
+      - listitem [ref=e125]:
+        - button "チャット" [ref=e126] [cursor=pointer]:
+          - generic [ref=e127]: チャット

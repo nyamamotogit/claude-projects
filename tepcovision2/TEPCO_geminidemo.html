@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEPCO Next-Gen Vision Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --sf-blue: #0ea5e9;
+            --ai-green: #10b981;
+            --alert-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans JP', sans-serif; }
+        
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        /* スクリーンコンテナ（画面全体） */
+        .screen {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-color);
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(14, 165, 233, 0.2);
+            overflow: hidden;
+            transition: all 1s ease-in-out;
+        }
+
+        /* モバイル端末風に変形するクラス */
+        .screen.mobile-view {
+            width: 400px;
+            height: 800px;
+            border-radius: 40px;
+            border: 12px solid #334155;
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.3);
+        }
+
+        /* シーン共通 */
+        .scene {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .scene.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ヘッダー UI */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 30px;
+        }
+        .app-title { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .app-title i { color: var(--sf-blue); }
+        .app-title span { color: var(--ai-green); }
+
+        /* パネルUI */
+        .panel {
+            background: var(--panel-bg);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        .panel.show { transform: translateY(0); opacity: 1; }
+
+        /* 各種コンポーネント */
+        .alert-box { border-left: 4px solid var(--alert-red); background: rgba(239, 68, 68, 0.1); }
+        .ai-box { border-left: 4px solid var(--ai-green); background: rgba(16, 185, 129, 0.05); }
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge.aws { background: #ff9900; color: #fff; }
+        .badge.sap { background: #0089d1; color: #fff; }
+        .badge.m365 { background: #ea4300; color: #fff; }
+
+        /* チャットUI (Slack風) */
+        .chat-message { display: flex; gap: 15px; margin-bottom: 20px; }
+        .avatar { width: 40px; height: 40px; border-radius: 8px; background: var(--ai-green); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .avatar.human { background: var(--sf-blue); }
+        .chat-bubble { background: #334155; padding: 16px; border-radius: 0 12px 12px 12px; font-size: 14px; max-width: 80%; }
+        
+        /* ボタン */
+        .btn {
+            background: var(--ai-green);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn.clicked { transform: scale(0.95); background: #059669; }
+
+        /* 擬似マウスカーソル */
+        .cursor {
+            position: absolute;
+            width: 20px; height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .cursor.tap {
+            transform: scale(0.5);
+            background: var(--ai-green);
+        }
+
+        /* Tableauダッシュボード風UI */
+        .tableau-grid { display: flex; flex-direction: column; gap: 15px; height: 100%; }
+        .map-mockup { height: 200px; background: radial-gradient(circle at center, rgba(239, 68, 68, 0.3) 0%, #1e293b 70%); border-radius: 8px; border: 1px solid #334155; display: flex; align-items: center; justify-content: center; }
+        .chart-mockup { height: 150px; display: flex; align-items: flex-end; gap: 10px; border-bottom: 1px solid #475569; padding-bottom: 10px; }
+        .bar { width: 40px; background: var(--ai-green); border-radius: 4px 4px 0 0; }
+        .bar.danger { background: var(--alert-red); }
+
+        /* タイピングアニメーション用 */
+        .typing::after { content: '...'; animation: ellipsis 1.5s infinite; }
+        @keyframes ellipsis { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+
+        /* 画面中央のタイトル */
+        #intro {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; height: 100%; background: var(--bg-color); z-index: 100;
+        }
+        #intro h1 { font-family: 'Montserrat'; font-size: 48px; margin-bottom: 20px; }
+        #intro span { color: var(--ai-green); }
+    </style>
+</head>
+<body>
+
+    <div class="cursor" id="cursor"></div>
+
+    <div class="screen" id="main-screen">
+        
+        <div class="scene active" id="scene-intro">
+            <div id="intro">
+                <h1>TEPCO <span>Next-Gen</span> Vision</h1>
+                <p style="font-size: 20px; color: var(--text-sub);">AIがインフラを自律的に守る、次世代の経営体験</p>
+            </div>
+        </div>
+
+        <div class="scene" id="scene-salesforce">
+            <div class="app-header">
+                <div class="app-title"><i class="fa-brands fa-salesforce"></i> TEPCO Maintenance Cockpit | <span>Agentforce</span></div>
+                <div><i class="fa-solid fa-user-circle"></i> 現場担当者UI</div>
+            </div>
+
+            <div class="grid-layout">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="panel alert-box" id="step-aws">
+                        <span class="badge aws"><i class="fa-brands fa-aws"></i> AWS IoT</span>
+                        <h3 style="color: var(--alert-red); margin: 10px 0;"><i class="fa-solid fa-triangle-exclamation"></i> 異常予兆検知</h3>
+                        <p><strong>発生箇所:</strong> 新豊洲変電所 地下275kV 1号機トランス</p>
+                        <p style="color: var(--text-sub); font-size: 14px; margin-top: 5px;">絶縁油中可燃性ガス(H2, C2H2)の微小上昇を検知。3日以内にショートの危険性あり。</p>
+                    </div>
+
+                    <div class="panel ai-box" id="step-ai-sap">
+                        <span class="badge sap"><i class="fa-solid fa-server"></i> SAP S/4HANA</span>
+                        <h3 style="color: var(--ai-green); margin: 10px 0;"><i class="fa-solid fa-microchip"></i> Agentforce 自動推論・手配</h3>
+                        <p id="ai-text-1" class="typing">AIが過去データを照合し、必要な予備部品を計算中</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="panel" id="step-m365">
+                        <span class="badge m365"><i class="fa-brands fa-microsoft"></i> Microsoft 365</span>
+                        <h3 style="margin: 10px 0;"><i class="fa-solid fa-users-gear"></i> 人員手配リコメンド</h3>
+                        <p>東京NWセンター 保守第2班の午後スケジュールを仮押さえしました。</p>
+                        
+                        <div style="margin-top: 30px; text-align: center;" id="action-area">
+                            <p style="margin-bottom: 15px; color: var(--text-sub);">SAPの部品発注と保守班の手配を確定しますか？</p>
+                            <button class="btn" id="btn-approve-scene2"><i class="fa-solid fa-check-double"></i> アクションを承認・実行</button>
+                        </div>
+                    </div>
+                    
+                    <div class="panel ai-box" id="step-teams" style="display: none; border-left-color: #6264a7;">
+                        <h3 style="color: #6264a7; margin-bottom: 10px;"><i class="fa-brands fa-teamspeak"></i> Teams 連携完了</h3>
+                        <p style="font-size: 14px;">メーカーとの緊急会議URLを発行し、AIによる事象要約をチャットに事前共有しました。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scene" id="scene-slack" style="background: #1a1d21;">
+            <div class="app-header" style="border-bottom-color: #3f0e40;">
+                <div class="app-title" style="color: #fff;"><i class="fa-brands fa-slack" style="color: #e01e5a;"></i> Slack | <span>#緊急-新豊洲トランス保全-対策室</span></div>
+                <div>中央給電指令所 連携</div>
+            </div>
+            
+            <div style="max-width: 800px; margin: 0 auto; width: 100%;">
+                <div class="chat-message" id="slack-msg-1">
+                    <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="chat-bubble">
+                        <strong>Agentforce</strong> <span style="font-size: 12px; color: #94a3b8;">14:02</span>
+                        <p style="margin-top: 5px;">中央給電指令所のメンバーを招待しました。新豊洲1号機の停止に伴う潮流変化シミュレーションを実行します。</p>
+                    </div>
+                </div>
+                
+                <div class="chat-message" id="slack-msg-2">
+                    <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="chat-bubble" style="border: 1px solid var(--ai-green);">
+                        <strong>Agentforce</strong> <span style="font-size: 12px; color: #94a3b8;">14:03</span>
+                        <p style="margin-top: 5px; font-weight: bold; color: var(--ai-green);">【系統切り替え提案】</p>
+                        <p style="margin-top: 5px;">都心の停電リスク回避のため、以下のプランを生成しました。<br>1. 富津火力発電所の出力を 30万kW 増強<br>2. 新京葉線経由で電力を迂回</p>
+                        <div style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; font-family: monospace;">※注意: LNG追加消費・緊急保全により推定2.5億円の追加予算が必要です。経営層(関常務)への決済フローを自動開始します。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scene" id="scene-mobile">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 20px;">
+                <span>14:05</span>
+                <div style="display: flex; gap: 5px;"><i class="fa-solid fa-signal"></i> <i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-battery-full"></i></div>
+            </div>
+            
+            <div class="app-header" style="border: none; padding-bottom: 0; margin-bottom: 15px;">
+                <div class="app-title" style="font-size: 18px;">Executive Board</div>
+            </div>
+
+            <div class="panel" id="mobile-notification" style="background: rgba(30, 41, 59, 0.95); border-left: 4px solid #e01e5a; padding: 15px; margin-bottom: 20px; z-index: 10;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <i class="fa-brands fa-slack" style="color: #e01e5a; font-size: 24px;"></i>
+                    <div>
+                        <strong style="font-size: 14px;">Agentforceからの承認依頼</strong>
+                        <p style="font-size: 12px; color: var(--text-sub);">新豊洲緊急保全に伴う2.5億円の特別予算執行</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tableau-grid" id="mobile-tableau" style="opacity: 0; transform: translateY(20px); transition: all 0.5s;">
+                <div>
+                    <h4 style="font-size: 14px; margin-bottom: 5px; color: var(--sf-blue);"><i class="fa-solid fa-chart-pie"></i> 都心リスクヒートマップ (Tableau)</h4>
+                    <div class="map-mockup">
+                        <div style="text-align: center;">
+                            <i class="fa-solid fa-tower-broadcast" style="color: var(--alert-red); font-size: 32px; animation: pulse 2s infinite;"></i>
+                            <p style="font-size: 10px; margin-top: 5px;">新豊洲ダウン時の影響範囲: 港区・中央区一帯</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 style="font-size: 14px; margin-bottom: 5px; color: var(--text-sub);">予算インパクト分析</h4>
+                    <div class="chart-mockup">
+                        <div class="bar" style="height: 30%;"></div>
+                        <div class="bar" style="height: 40%;"></div>
+                        <div class="bar" style="height: 50%;"></div>
+                        <div class="bar danger" style="height: 90%; position: relative;">
+                            <span style="position: absolute; top: -20px; left: -10px; font-size: 10px; color: var(--alert-red); white-space: nowrap;">+2.5億 (今回)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: auto; text-align: center;" id="mobile-action">
+                    <button class="btn" id="btn-exec-approve" style="width: 100%; justify-content: center; padding: 15px; font-size: 18px;">
+                        <i class="fa-solid fa-fingerprint"></i> 緊急予算執行を承認
+                    </button>
+                </div>
+                
+                <div class="panel" id="sap-success" style="display: none; background: rgba(16, 185, 129, 0.2); border-color: var(--ai-green); text-align: center; padding: 15px;">
+                    <i class="fa-solid fa-check-circle" style="color: var(--ai-green); font-size: 32px; margin-bottom: 10px;"></i>
+                    <h4 style="color: var(--ai-green);">SAP 稟議ステータス更新完了</h4>
+                    <p style="font-size: 12px; color: var(--text-sub);">現場にGOサインを出しました。</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- ユーティリティ関数 ---
+        const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+        
+        const showPanel = async (id, delay = 0) => {
+            await sleep(delay);
+            document.getElementById(id).classList.add('show');
+        };
+
+        const switchScene = async (oldSceneId, newSceneId) => {
+            if(oldSceneId) document.getElementById(oldSceneId).classList.remove('active');
+            await sleep(800);
+            document.getElementById(newSceneId).classList.add('active');
+        };
+
+        // カーソルアニメーション操作
+        const cursor = document.getElementById('cursor');
+        const moveCursorTo = async (elementId, offset = {x:0, y:0}) => {
+            const el = document.getElementById(elementId);
+            const rect = el.getBoundingClientRect();
+            cursor.style.opacity = 1;
+            cursor.style.left = (rect.left + (rect.width / 2) + offset.x) + 'px';
+            cursor.style.top = (rect.top + (rect.height / 2) + offset.y) + 'px';
+            await sleep(800); // 移動時間待機
+        };
+        const simulateClick = async (elementId) => {
+            cursor.classList.add('tap');
+            document.getElementById(elementId).classList.add('clicked');
+            await sleep(200);
+            cursor.classList.remove('tap');
+            document.getElementById(elementId).classList.remove('clicked');
+            await sleep(300);
+            cursor.style.opacity = 0;
+        };
+
+        // --- メインシナリオ実行制御 ---
+        async function runDemo() {
+            // Scene 0: Intro
+            await sleep(2000);
+            await switchScene('scene-intro', 'scene-salesforce');
+            
+            // Scene 1: Salesforce (AWS & SAP)
+            await showPanel('step-aws', 500);
+            await showPanel('step-ai-sap', 1500);
+            
+            await sleep(2000);
+            const aiText = document.getElementById('ai-text-1');
+            aiText.classList.remove('typing');
+            aiText.innerHTML = "千葉資材センターにて <strong>予備部品(冷却ファン等)の仮引当を完了</strong> しました。";
+            
+            // Scene 2: Salesforce (M365 & Action)
+            await showPanel('step-m365', 1000);
+            await sleep(1500);
+            
+            // AIがマウスを操作してボタンを押すシミュレーション
+            await moveCursorTo('btn-approve-scene2');
+            await simulateClick('btn-approve-scene2');
+            
+            document.getElementById('action-area').style.display = 'none';
+            const stepTeams = document.getElementById('step-teams');
+            stepTeams.style.display = 'block';
+            await sleep(100);
+            stepTeams.classList.add('show');
+            
+            await sleep(3000);
+
+            // Scene 3: Slack Swarm
+            await switchScene('scene-salesforce', 'scene-slack');
+            await showPanel('slack-msg-1', 1000);
+            await showPanel('slack-msg-2', 2500);
+            
+            await sleep(4000);
+
+            // Scene 4: Mobile Executive UI
+            const screen = document.getElementById('main-screen');
+            document.getElementById('scene-slack').classList.remove('active');
+            
+            // 画面をモバイルサイズに変形
+            await sleep(500);
+            screen.classList.add('mobile-view');
+            await sleep(1000);
+            
+            document.getElementById('scene-mobile').classList.add('active');
+            await showPanel('mobile-notification', 500);
+            
+            // 通知タップシミュレーション
+            await moveCursorTo('mobile-notification', {x: 0, y: 0});
+            await simulateClick('mobile-notification');
+            document.getElementById('mobile-notification').style.display = 'none';
+            
+            // Tableauダッシュボード表示
+            const tableau = document.getElementById('mobile-tableau');
+            tableau.style.opacity = 1;
+            tableau.style.transform = 'translateY(0)';
+            
+            await sleep(3000); // VIPがダッシュボードを確認する時間
+            
+            // 最終決裁タップ
+            await moveCursorTo('btn-exec-approve', {x: 0, y: 0});
+            await simulateClick('btn-exec-approve');
+            
+            document.getElementById('btn-exec-approve').style.display = 'none';
+            const sapSuccess = document.getElementById('sap-success');
+            sapSuccess.style.display = 'block';
+            await sleep(100);
+            sapSuccess.classList.add('show');
+
+            // End of Demo
+            await sleep(4000);
+            screen.classList.remove('mobile-view');
+            await switchScene('scene-mobile', 'scene-intro');
+            document.getElementById('intro').innerHTML = `
+                <i class="fa-solid fa-globe" style="font-size: 64px; color: var(--sf-blue); margin-bottom: 20px;"></i>
+                <h1>Welcome to the <span>Future</span></h1>
+                <p style="font-size: 20px; color: var(--text-sub);">現場と経営が、AIで一つになる。</p>
+            `;
+        }
+
+        // ページ読み込み完了後にデモ開始
+        window.onload = runDemo;
+    </script>
+</body>
+</html>

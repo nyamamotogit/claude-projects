@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- アプリ識別 -->
+    <key>CFBundleName</key>
+    <string>ScreenDemoPro</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.nyamamoto.ScreenDemoPro</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>ScreenDemoPro</string>
+
+    <!-- Dock に出さない（メニューバーアプリ） -->
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- エントリポイント -->
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+
+    <!-- 権限説明文（Privacy & Security で表示される） -->
+    <key>NSAccessibilityUsageDescription</key>
+    <string>ScreenDemoPro はプレゼン中にグローバルショートカットを登録し、マウス・キーボード入力をブロックするために Accessibility 権限を使用します。</string>
+
+    <!-- macOS 13 以降 -->
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+
+    <!-- 高解像度対応 -->
+    <key>NSHighResolutionCapable</key>
+    <true/>
+</dict>
+</plist>

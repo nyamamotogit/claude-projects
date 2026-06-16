@@ -1,0 +1,265 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - button "戻る" [ref=e5] [cursor=pointer]:
+        - img [ref=e6]
+      - button "進む" [ref=e8] [cursor=pointer]:
+        - img [ref=e9]
+      - button "履歴" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+    - generic [ref=e15]:
+      - img [ref=e16]
+      - generic [ref=e19]: Acme Corp を検索
+    - generic [ref=e20]:
+      - button "ヘルプ" [ref=e21] [cursor=pointer]:
+        - img [ref=e22]
+      - button "アカウント" [ref=e25] [cursor=pointer]
+  - complementary [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - text: Acme Corp
+        - img [ref=e30]
+      - button "メッセージを作成" [ref=e32] [cursor=pointer]:
+        - img [ref=e33]
+    - list [ref=e36]:
+      - listitem [ref=e37] [cursor=pointer]:
+        - img [ref=e38]
+        - text: スレッド
+      - listitem [ref=e40] [cursor=pointer]:
+        - img [ref=e41]
+        - text: 全アクティビティ
+      - listitem [ref=e44] [cursor=pointer]:
+        - img [ref=e45]
+        - text: あとで
+      - listitem [ref=e47] [cursor=pointer]:
+        - img [ref=e48]
+        - text: 下書きと送信済み
+      - listitem [ref=e51] [cursor=pointer]:
+        - img [ref=e52]
+        - text: その他
+    - generic [ref=e56]:
+      - generic [ref=e57] [cursor=pointer]:
+        - img [ref=e58]
+        - generic [ref=e60]: チャンネル
+        - img [ref=e61]
+      - generic [ref=e62] [cursor=pointer]:
+        - img [ref=e63]
+        - text: procurement-jp
+      - generic [ref=e66] [cursor=pointer]:
+        - img [ref=e67]
+        - text: warehouse-ops
+      - generic [ref=e70] [cursor=pointer]:
+        - img [ref=e71]
+        - text: contracts-private
+    - generic [ref=e74]:
+      - generic [ref=e75] [cursor=pointer]:
+        - img [ref=e76]
+        - generic [ref=e78]: 外部チャンネル ⟷
+        - img [ref=e79]
+      - generic [ref=e80] [cursor=pointer]:
+        - generic [ref=e81]: ⟷
+        - img [ref=e82]
+        - text: proc-silicon-materials
+      - generic [ref=e85] [cursor=pointer]:
+        - generic [ref=e86]: ⟷
+        - img [ref=e87]
+        - text: proc-tokyo-resin
+        - generic [ref=e90]: "3"
+      - generic [ref=e91] [cursor=pointer]:
+        - generic [ref=e92]: ⟷
+        - img [ref=e93]
+        - text: proc-northpac-logistics
+      - generic [ref=e96] [cursor=pointer]:
+        - img [ref=e97]
+        - text: サプライヤーを追加
+    - generic [ref=e98]:
+      - generic [ref=e99] [cursor=pointer]:
+        - img [ref=e100]
+        - generic [ref=e102]: ダイレクトメッセージ
+        - img [ref=e103]
+      - generic [ref=e104] [cursor=pointer]: 中村 玲奈
+      - generic [ref=e106] [cursor=pointer]: 青山 昇
+      - generic [ref=e108] [cursor=pointer]: Slackbot
+    - generic [ref=e110]:
+      - generic [ref=e111] [cursor=pointer]:
+        - img [ref=e112]
+        - generic [ref=e114]: アプリ
+      - generic [ref=e115] [cursor=pointer]:
+        - img [ref=e116]
+        - text: SAP S/4HANA
+      - generic [ref=e118] [cursor=pointer]:
+        - img [ref=e119]
+        - text: Google Drive
+  - main [ref=e121]:
+    - generic [ref=e122]:
+      - generic [ref=e123]:
+        - generic [ref=e124]:
+          - img [ref=e125]
+          - text: proc-silicon-materials
+          - generic [ref=e128]:
+            - img [ref=e129]
+            - text: Slack Connect
+          - generic "お気に入り" [ref=e136] [cursor=pointer]:
+            - img [ref=e137]
+          - img [ref=e139]
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - img [ref=e143]
+            - text: シリコンウェハ・テープ材料の発注運用（調達 × サプライヤー）
+          - generic [ref=e145]:
+            - img [ref=e146]
+            - text: 3件のピン留め
+      - generic [ref=e148]:
+        - button "Huddle" [ref=e149] [cursor=pointer]:
+          - img [ref=e150]
+          - text: Huddle
+        - button "Canvas" [ref=e152] [cursor=pointer]:
+          - img [ref=e153]
+          - text: Canvas
+        - button "6" [ref=e157] [cursor=pointer]:
+          - img [ref=e158]
+          - text: "6"
+        - button "その他" [ref=e163] [cursor=pointer]:
+          - img [ref=e164]
+    - generic [ref=e168]:
+      - img [ref=e169]
+      - generic [ref=e176]: "Slack Connect:"
+      - generic [ref=e177]: このチャンネルは外部組織と接続されています
+      - generic [ref=e178]:
+        - generic [ref=e179]:
+          - img [ref=e180]
+          - text: Acme Corp
+        - img [ref=e184]
+        - generic [ref=e187]:
+          - img [ref=e188]
+          - text: シリコンマテリアル株式会社
+    - generic [ref=e192]:
+      - img [ref=e193]
+      - generic [ref=e195]: "ピン留め:"
+      - generic [ref=e196]: 2026年Q3 基本契約書 v3 / 月次発注フォーマット / 緊急時連絡フロー
+    - generic [ref=e197]:
+      - generic [ref=e200]: 本日 — 2026年6月12日(金)
+      - generic [ref=e204]:
+        - generic [ref=e205]:
+          - generic [ref=e206]: 山本 健介
+          - generic [ref=e207]: 調達 / Acme Corp
+          - generic [ref=e208]: 9:18
+        - generic [ref=e209]:
+          - text: おはようございます @佐藤 拓海 @王 麗
+          - text: 社内の生産計画変更で PO-2026-0617（シリコンウェハ 12インチ / 高純度グレード） の数量増＋納期前倒しの打診をさせてください 🙏
+        - generic [ref=e210]:
+          - generic [ref=e211]: 📦 発注変更依頼 — PO-2026-0617
+          - generic [ref=e212]:
+            - term [ref=e213]: 品目
+            - definition [ref=e214]: シリコンウェハ 12インチ / Grade-A
+            - term [ref=e215]: 現行数量
+            - definition [ref=e216]: 500 枚
+            - term [ref=e217]: 変更後数量
+            - definition [ref=e218]: 800 枚（+300 / +60%）
+            - term [ref=e219]: 現行納期
+            - definition [ref=e220]: 2026/07/20
+            - term [ref=e221]: 希望納期
+            - definition [ref=e222]: 2026/07/05（15日 前倒し）
+            - term [ref=e223]: 背景
+            - definition [ref=e224]: 主要顧客の量産立ち上げ前倒しに伴う増産対応
+          - generic [ref=e225]:
+            - button "受諾できる" [ref=e226] [cursor=pointer]:
+              - img [ref=e227]
+              - text: 受諾できる
+            - button "条件付きで可" [ref=e229] [cursor=pointer]:
+              - img [ref=e230]
+              - text: 条件付きで可
+            - button "難しい" [ref=e233] [cursor=pointer]:
+              - img [ref=e234]
+              - text: 難しい
+        - generic [ref=e237]:
+          - button "👀 3" [ref=e238] [cursor=pointer]:
+            - text: 👀
+            - generic [ref=e239]: "3"
+          - button "🙏 1" [ref=e240] [cursor=pointer]:
+            - text: 🙏
+            - generic [ref=e241]: "1"
+          - button [ref=e242] [cursor=pointer]:
+            - img [ref=e243]
+        - generic [ref=e246] [cursor=pointer]:
+          - generic [ref=e252]: 7 件の返信
+          - generic [ref=e253]: 最終返信 たった今
+      - generic [ref=e254]:
+        - img [ref=e255]
+        - generic [ref=e257]: 山本 健介 が SAP S/4HANA で PO-2026-0617 R2 を起票しました
+      - generic [ref=e258]:
+        - img [ref=e260]
+        - generic [ref=e264]:
+          - generic [ref=e265]:
+            - generic [ref=e266]: SAP S/4HANA
+            - generic [ref=e267]: APP
+            - generic [ref=e268]: 14:21
+          - generic [ref=e269]: PO 改訂が承認・転送されました
+          - generic [ref=e270]:
+            - generic [ref=e271]: ✅ PO-2026-0617 R2 — 承認済み / EDI 送信完了
+            - generic [ref=e272]:
+              - term [ref=e273]: サプライヤー
+              - definition [ref=e274]: シリコンマテリアル株式会社
+              - term [ref=e275]: 品目
+              - definition [ref=e276]: シリコンウェハ 12インチ Grade-A
+              - term [ref=e277]: 数量合計
+              - definition [ref=e278]: 800 枚（500 → 800）
+              - term [ref=e279]: 分納 ①
+              - definition [ref=e280]: 2026/07/05 / 370 枚 / チャーター便
+              - term [ref=e281]: 分納 ②
+              - definition [ref=e282]: 2026/07/12 / 430 枚 / 通常便
+              - term [ref=e283]: 金額合計
+              - definition [ref=e284]: ¥38,485,000（単価据置 + チャーター便 ¥85,000）
+              - term [ref=e285]: 承認者
+              - definition [ref=e286]: 青山 昇（調達部長）
+          - generic [ref=e287]:
+            - button "📦 2" [ref=e288] [cursor=pointer]:
+              - text: 📦
+              - generic [ref=e289]: "2"
+            - button "🎉 1" [ref=e290] [cursor=pointer]:
+              - text: 🎉
+              - generic [ref=e291]: "1"
+      - generic [ref=e294]:
+        - generic [ref=e295]:
+          - generic [ref=e296]: Slackbot
+          - generic [ref=e297]: APP
+          - generic [ref=e298]: 14:22
+        - generic [ref=e299]:
+          - text: 🔔 リマインド予約を作成しました
+          - text: "・2026/07/04 17:00: 翌日出荷分（370枚）の現品票・検査成績書受領を確認 → @山本 健介 @佐藤 拓海"
+          - text: "・2026/07/11 17:00: 7/12 出荷分（430枚）出荷準備完了の確認 → @王 麗 @山本 健介"
+    - generic [ref=e301]:
+      - generic [ref=e302]:
+        - button "太字" [ref=e303] [cursor=pointer]:
+          - img [ref=e304]
+        - button "斜体" [ref=e306] [cursor=pointer]:
+          - img [ref=e307]
+        - button "取り消し線" [ref=e309] [cursor=pointer]:
+          - img [ref=e310]
+        - button "リンク" [ref=e314] [cursor=pointer]:
+          - img [ref=e315]
+        - button "リスト" [ref=e318] [cursor=pointer]:
+          - img [ref=e319]
+        - button "番号付きリスト" [ref=e320] [cursor=pointer]:
+          - img [ref=e321]
+        - button "引用" [ref=e325] [cursor=pointer]:
+          - img [ref=e326]
+        - button "コード" [ref=e329] [cursor=pointer]:
+          - img [ref=e330]
+        - button "コードブロック" [ref=e333] [cursor=pointer]:
+          - img [ref=e334]
+      - generic [ref=e338]: "#proc-silicon-materials にメッセージを送信（外部組織にも見えます）"
+      - generic [ref=e339]:
+        - generic [ref=e340]:
+          - button "添付" [ref=e341] [cursor=pointer]:
+            - img [ref=e342]
+          - button "メンション" [ref=e343] [cursor=pointer]:
+            - img [ref=e344]
+          - button "絵文字" [ref=e347] [cursor=pointer]:
+            - img [ref=e348]
+          - button "ビデオ" [ref=e351] [cursor=pointer]:
+            - img [ref=e352]
+          - button "音声" [ref=e355] [cursor=pointer]:
+            - img [ref=e356]
+        - button "送信" [ref=e359] [cursor=pointer]:
+          - img [ref=e360]

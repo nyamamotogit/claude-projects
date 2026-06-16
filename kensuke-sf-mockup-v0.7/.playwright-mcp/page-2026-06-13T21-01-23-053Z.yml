@@ -1,0 +1,145 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - searchbox "検索..." [ref=e9]
+      - list [ref=e10]:
+        - listitem [ref=e11]:
+          - button "Agentforce" [ref=e12] [cursor=pointer]:
+            - generic [ref=e13]: Agentforce
+        - listitem [ref=e14]:
+          - button "お気に入り" [ref=e15] [cursor=pointer]:
+            - generic [ref=e16]: お気に入り
+        - listitem [ref=e17]:
+          - button "設定" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]: 設定
+        - listitem [ref=e20]:
+          - img "User" [ref=e22]
+  - generic [ref=e23]:
+    - generic [ref=e24]:
+      - generic "アプリケーションランチャー" [ref=e25] [cursor=pointer]
+      - generic [ref=e37]: Sales
+    - navigation [ref=e38]:
+      - list [ref=e39]:
+        - listitem [ref=e40]:
+          - link "ホーム" [ref=e41] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e42] [cursor=pointer]:
+          - link "ダッシュボード" [ref=e43]:
+            - /url: "#"
+          - button "メニュー" [ref=e45]:
+            - generic [ref=e46]: メニュー
+        - listitem [ref=e47]:
+          - link "レポート" [ref=e48] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e49]:
+    - generic [ref=e51]:
+      - generic [ref=e56]:
+        - paragraph [ref=e57]: ダッシュボード
+        - 'heading "{ダッシュボードタイトル}" [level=1] [ref=e58]'
+        - paragraph [ref=e59]: "最終更新: {更新日時}"
+      - list [ref=e61]:
+        - listitem [ref=e62]:
+          - button "更新" [ref=e63] [cursor=pointer]
+        - listitem [ref=e64]:
+          - button "共有" [ref=e65] [cursor=pointer]
+        - listitem [ref=e66]:
+          - button "サブスクライブ" [ref=e67] [cursor=pointer]
+    - generic [ref=e68]:
+      - article [ref=e70]:
+        - paragraph [ref=e71]: パイプライン総額
+        - paragraph [ref=e72]: ¥58,500,000
+        - paragraph [ref=e73]: ↑ 前期比 +18%
+      - article [ref=e75]:
+        - paragraph [ref=e76]: 受注率
+        - paragraph [ref=e77]: 42%
+        - paragraph [ref=e78]: ↓ 前期比 -3%
+      - article [ref=e80]:
+        - paragraph [ref=e81]: 平均商談規模
+        - paragraph [ref=e82]: ¥4,875,000
+        - paragraph [ref=e83]: 12 商談
+    - generic [ref=e84]:
+      - article [ref=e86]:
+        - heading "ステージ別 パイプライン" [level=3] [ref=e87]
+        - generic [ref=e88]:
+          - generic [ref=e89]: 資格確認
+          - progressbar [ref=e90]:
+            - generic [ref=e92]: 20%
+          - generic [ref=e93]: ¥8,500,000
+        - generic [ref=e94]:
+          - generic [ref=e95]: ニーズ分析
+          - progressbar [ref=e96]:
+            - generic [ref=e98]: 15%
+          - generic [ref=e99]: ¥6,200,000
+        - generic [ref=e100]:
+          - generic [ref=e101]: 提案/見積
+          - progressbar [ref=e102]:
+            - generic [ref=e104]: 35%
+          - generic [ref=e105]: ¥12,000,000
+        - generic [ref=e106]:
+          - generic [ref=e107]: 交渉/レビュー
+          - progressbar [ref=e108]:
+            - generic [ref=e110]: 50%
+          - generic [ref=e111]: ¥18,000,000
+        - generic [ref=e112]:
+          - generic [ref=e113]: 受注
+          - progressbar [ref=e114]:
+            - generic [ref=e116]: 40%
+          - generic [ref=e117]: ¥13,800,000
+      - article [ref=e119]:
+        - heading "業種別比率" [level=3] [ref=e120]
+        - generic [ref=e125]:
+          - generic [ref=e126]: "12"
+          - generic [ref=e127]: 商談
+        - list [ref=e128]:
+          - listitem [ref=e129]: 製造 (45%)
+          - listitem [ref=e131]: 金融 (25%)
+          - listitem [ref=e133]: 小売 (18%)
+          - listitem [ref=e135]: その他 (12%)
+    - article [ref=e139]:
+      - heading "トップ5商談" [level=3] [ref=e141]
+      - table [ref=e142]:
+        - rowgroup [ref=e143]:
+          - row "商談名 取引先 ステージ 金額 所有者" [ref=e144]:
+            - columnheader "商談名" [ref=e145]
+            - columnheader "取引先" [ref=e146]
+            - columnheader "ステージ" [ref=e147]
+            - columnheader "金額" [ref=e148]
+            - columnheader "所有者" [ref=e149]
+        - rowgroup [ref=e150]:
+          - row "大型案件 取引先C 提案/見積 ¥12,000,000 担当者A" [ref=e151]:
+            - rowheader "大型案件" [ref=e152]:
+              - link "大型案件" [ref=e153] [cursor=pointer]:
+                - /url: "#"
+            - cell "取引先C" [ref=e154]
+            - cell "提案/見積" [ref=e155]
+            - cell "¥12,000,000" [ref=e156]:
+              - strong [ref=e157]: ¥12,000,000
+            - cell "担当者A" [ref=e158]
+          - row "新規案件A 取引先A 資格確認 ¥3,500,000 担当者A" [ref=e159]:
+            - rowheader "新規案件A" [ref=e160]:
+              - link "新規案件A" [ref=e161] [cursor=pointer]:
+                - /url: "#"
+            - cell "取引先A" [ref=e162]
+            - cell "資格確認" [ref=e163]
+            - cell "¥3,500,000" [ref=e164]:
+              - strong [ref=e165]: ¥3,500,000
+            - cell "担当者A" [ref=e166]
+          - row "新規案件B 取引先B ニーズ分析 ¥6,200,000 担当者B" [ref=e167]:
+            - rowheader "新規案件B" [ref=e168]:
+              - link "新規案件B" [ref=e169] [cursor=pointer]:
+                - /url: "#"
+            - cell "取引先B" [ref=e170]
+            - cell "ニーズ分析" [ref=e171]
+            - cell "¥6,200,000" [ref=e172]:
+              - strong [ref=e173]: ¥6,200,000
+            - cell "担当者B" [ref=e174]
+          - row "追加サポート契約 取引先D 受注 ¥4,800,000 担当者C" [ref=e175]:
+            - rowheader "追加サポート契約" [ref=e176]:
+              - link "追加サポート契約" [ref=e177] [cursor=pointer]:
+                - /url: "#"
+            - cell "取引先D" [ref=e178]
+            - cell "受注" [ref=e179]
+            - cell "¥4,800,000" [ref=e180]:
+              - strong [ref=e181]: ¥4,800,000
+            - cell "担当者C" [ref=e182]

@@ -1,0 +1,15 @@
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/AppDelegate.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/CanvasView.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/CanvasWindow.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/DrawingTool.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/HotKeyManager.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/KeyCombo.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/UI/MenuBarController.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/PermissionChecker.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/PresentationManager.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/Settings.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/SettingsStore.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/UI/SettingsView.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/UI/ShortcutRecorderView.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/Stroke.swift
+/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/main.swift

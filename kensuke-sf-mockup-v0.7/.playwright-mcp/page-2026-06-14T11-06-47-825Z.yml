@@ -1,0 +1,720 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - generic [ref=e7]:
+        - button "作業指示" [ref=e8] [cursor=pointer]:
+          - generic [ref=e9]: 作業指示
+        - searchbox "Salesforce を検索..." [ref=e12]
+      - list [ref=e13]:
+        - listitem [ref=e14]:
+          - button "Agentforce" [ref=e15] [cursor=pointer]:
+            - generic [ref=e16]: Agentforce
+        - listitem [ref=e17]:
+          - generic [ref=e18]:
+            - button "お気に入りに追加" [ref=e19] [cursor=pointer]:
+              - generic [ref=e20]: お気に入りに追加
+            - button "お気に入り一覧" [ref=e21] [cursor=pointer]:
+              - generic [ref=e22]: お気に入り一覧
+        - listitem [ref=e23]:
+          - button "新規作成" [ref=e24] [cursor=pointer]:
+            - generic [ref=e25]: 新規作成
+        - listitem [ref=e26]:
+          - button "ヘルプ" [ref=e27] [cursor=pointer]:
+            - generic [ref=e28]: ヘルプ
+        - listitem [ref=e29]:
+          - button "設定" [ref=e30] [cursor=pointer]:
+            - generic [ref=e31]: 設定
+        - listitem [ref=e32]:
+          - button "2 通知" [ref=e33] [cursor=pointer]:
+            - generic: "2"
+            - generic [ref=e34]: 通知
+        - listitem [ref=e35]:
+          - img "User" [ref=e37]
+  - generic [ref=e38]:
+    - generic [ref=e39]:
+      - generic "アプリケーションランチャー" [ref=e40] [cursor=pointer]
+      - generic [ref=e52]: Field Service
+    - navigation [ref=e53]:
+      - list [ref=e54]:
+        - listitem [ref=e55]:
+          - link "ホーム" [ref=e56] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e57]:
+          - link "ディスパッチャ" [ref=e58] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e59] [cursor=pointer]:
+          - link "作業指示" [ref=e60]:
+            - /url: "#"
+          - button "メニューを開く" [ref=e62]:
+            - generic [ref=e63]: メニューを開く
+        - listitem [ref=e64]:
+          - link "サービス予定" [ref=e65] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e66]:
+          - link "資産" [ref=e67] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e68]:
+          - link "ケース" [ref=e69] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e70]:
+          - link "部品在庫" [ref=e71] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e72]:
+          - link "レポート" [ref=e73] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e74]:
+    - generic [ref=e75]:
+      - generic [ref=e76]:
+        - generic [ref=e81]:
+          - paragraph [ref=e82]: 作業指示
+          - heading "WO-2026-00873 · ウェット洗浄装置 ベベル部洗浄不良の修理" [level=1] [ref=e84]:
+            - generic "WO-2026-00873" [ref=e85]: WO-2026-00873 · ウェット洗浄装置 ベベル部洗浄不良の修理
+          - paragraph [ref=e86]:
+            - generic [ref=e87]: "優先度: 緊急"
+            - generic [ref=e88]: 作業中
+            - generic [ref=e89]:
+              - text: "SLA まで:"
+              - strong [ref=e90]: 2時間 18分
+        - list [ref=e94]:
+          - listitem [ref=e95]:
+            - button "作業ログ" [ref=e96] [cursor=pointer]
+          - listitem [ref=e97]:
+            - button "部品請求" [ref=e98] [cursor=pointer]
+          - listitem [ref=e99]:
+            - button "編集" [ref=e100] [cursor=pointer]
+          - listitem [ref=e101]:
+            - button "作業完了として送信" [ref=e102] [cursor=pointer]
+          - listitem [ref=e103]:
+            - button "その他" [ref=e104] [cursor=pointer]:
+              - generic [ref=e105]: その他
+      - list [ref=e108]:
+        - listitem [ref=e109]:
+          - generic [ref=e110]: 作業指示番号
+          - paragraph [ref=e111]: WO-2026-00873
+        - listitem [ref=e112]:
+          - generic [ref=e113]: 対象資産
+          - paragraph [ref=e114]:
+            - link "CleanMaster CM-3200X (#A-04781)" [ref=e115] [cursor=pointer]:
+              - /url: "#"
+        - listitem [ref=e116]:
+          - generic [ref=e117]: 取引先
+          - paragraph [ref=e118]:
+            - link "日精セミコンダクター 熊本第3工場" [ref=e119] [cursor=pointer]:
+              - /url: "#"
+        - listitem [ref=e120]:
+          - generic [ref=e121]: サービス契約
+          - paragraph [ref=e122]: プレミアム 24/7 (残り 2.3年)
+        - listitem [ref=e123]:
+          - generic [ref=e124]: 作業予定
+          - paragraph [ref=e125]:
+            - strong [ref=e126]: 2026/06/14 13:00 - 18:00
+        - listitem [ref=e127]:
+          - generic [ref=e128]: 担当技術者
+          - paragraph [ref=e129]:
+            - link "山下 健司 (Lv.3)" [ref=e130] [cursor=pointer]:
+              - /url: "#"
+    - article [ref=e131]:
+      - generic [ref=e133]:
+        - listbox [ref=e137]:
+          - option "受付" [ref=e138] [cursor=pointer]:
+            - generic [ref=e140]: 受付
+          - option "割当" [ref=e141] [cursor=pointer]:
+            - generic [ref=e143]: 割当
+          - option "移動中" [ref=e144] [cursor=pointer]:
+            - generic [ref=e146]: 移動中
+          - option "作業中" [selected] [ref=e147] [cursor=pointer]:
+            - generic [ref=e149]: 作業中
+          - option "動作確認" [ref=e150] [cursor=pointer]:
+            - generic [ref=e152]: 動作確認
+          - option "顧客承認" [ref=e153] [cursor=pointer]:
+            - generic [ref=e155]: 顧客承認
+          - option "完了" [ref=e156] [cursor=pointer]:
+            - generic [ref=e158]: 完了
+        - button "ステータスを次へ" [ref=e160] [cursor=pointer]
+    - generic [ref=e161]:
+      - generic [ref=e162]:
+        - article [ref=e163]:
+          - generic [ref=e164]:
+            - tablist [ref=e165]:
+              - tab "詳細" [ref=e166] [cursor=pointer]
+              - tab "関連" [ref=e167] [cursor=pointer]
+              - tab "作業ログ" [ref=e168] [cursor=pointer]
+              - tab "添付" [ref=e169] [cursor=pointer]
+            - tabpanel [ref=e170]:
+              - heading "作業概要" [level=3] [ref=e171]:
+                - generic [ref=e172]: 作業概要
+              - generic [ref=e174]:
+                - generic [ref=e175]:
+                  - term [ref=e176]: 作業種別
+                  - definition [ref=e177]: 是正修理 (緊急対応)
+                - generic [ref=e178]:
+                  - term [ref=e179]: 関連ケース
+                  - definition [ref=e180]:
+                    - link "CS-00482 ベベル部の洗浄不良 (歩留まり 12% 低下)" [ref=e181] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e182]:
+                  - term [ref=e183]: 症状
+                  - definition [ref=e184]: 300mm ウェハ外周3mmの薬液到達不良。SC-1 槽の循環ポンプ流量が定格より低下。
+                - generic [ref=e185]:
+                  - term [ref=e186]: 想定原因
+                  - definition [ref=e187]: ベローズポンプ P-2 の劣化 / フィルタ目詰まり
+                - generic [ref=e188]:
+                  - term [ref=e189]: 予定工数
+                  - definition [ref=e190]: "5.0 時間 (実績: 2.4 時間)"
+                - generic [ref=e191]:
+                  - term [ref=e192]: 作業エリア
+                  - definition [ref=e193]: クリーンルーム CR-3 (Class 100)
+                - generic [ref=e194]:
+                  - term [ref=e195]: 特記事項
+                  - definition [ref=e196]: 薬液 (HF/H2O2) 接触作業あり。化学耐性手袋・防護面・SCBA 装着必須。装置停止中、ライン上流の枚葉装置3台がアイドル状態。
+              - heading "お客様情報" [level=3] [ref=e197]:
+                - generic [ref=e198]: お客様情報
+              - generic [ref=e200]:
+                - generic [ref=e201]:
+                  - term [ref=e202]: 取引先
+                  - definition [ref=e203]:
+                    - link "日精セミコンダクター株式会社" [ref=e204] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e205]:
+                  - term [ref=e206]: 事業所
+                  - definition [ref=e207]: 熊本第3工場 (300mm 量産Fab)
+                - generic [ref=e208]:
+                  - term [ref=e209]: 所在地
+                  - definition [ref=e210]: 〒861-1116 熊本県合志市須屋2-7-3
+                - generic [ref=e211]:
+                  - term [ref=e212]: 入退場手続き
+                  - definition [ref=e213]: ゲート3 → セキュリティ受付 → クリーンスーツ着替 (LV.B)
+                - generic [ref=e214]:
+                  - term [ref=e215]: 現場担当者
+                  - definition [ref=e216]:
+                    - link "設備技術課 課長 高木 智之" [ref=e217] [cursor=pointer]:
+                      - /url: "#"
+                    - text: · 090-1234-5678
+                - generic [ref=e218]:
+                  - term [ref=e219]: 立ち会い者
+                  - definition [ref=e220]:
+                    - link "プロセスEng 鈴木 花子" [ref=e221] [cursor=pointer]:
+                      - /url: "#"
+                    - text: · ext.4321
+                - generic [ref=e222]:
+                  - term [ref=e223]: 直近の重要案件
+                  - definition [ref=e224]: 2nm 試作ロット稼働中 (歩留まり影響大)
+                - generic [ref=e225]:
+                  - term [ref=e226]: SLA
+                  - definition [ref=e227]:
+                    - strong [ref=e228]: P1 / 4時間以内復旧
+              - heading "対象資産 (装置情報)" [level=3] [ref=e229]:
+                - generic [ref=e230]: 対象資産 (装置情報)
+              - generic [ref=e232]:
+                - img [ref=e235]
+                - generic [ref=e242]:
+                  - generic [ref=e243]:
+                    - term [ref=e244]: 装置名
+                    - definition [ref=e245]:
+                      - link "CleanMaster CM-3200X" [ref=e246] [cursor=pointer]:
+                        - /url: "#"
+                  - generic [ref=e247]:
+                    - term [ref=e248]: シリアル番号
+                    - definition [ref=e249]: CMX-2023-04781
+                  - generic [ref=e250]:
+                    - term [ref=e251]: 設置日
+                    - definition [ref=e252]: 2024/03/22 (経過 2.2年)
+                  - generic [ref=e253]:
+                    - term [ref=e254]: 累積稼働時間
+                    - definition [ref=e255]: 14,720 時間
+                  - generic [ref=e256]:
+                    - term [ref=e257]: FW バージョン
+                    - definition [ref=e258]: "v3.7.2 (最新: v3.8.1)"
+                  - generic [ref=e259]:
+                    - term [ref=e260]: 直近メンテ
+                    - definition [ref=e261]: 2026/03/15 (PM 12K)
+        - article [ref=e262]:
+          - generic [ref=e264]:
+            - heading "作業手順 (3 / 7 完了)" [level=2] [ref=e268]:
+              - generic [ref=e269]: 作業手順 (3 / 7 完了)
+            - generic [ref=e270]:
+              - button "PDF を開く" [ref=e271] [cursor=pointer]
+              - button "手順書 v3.8" [ref=e272] [cursor=pointer]
+          - generic [ref=e273]:
+            - progressbar [ref=e274]:
+              - generic [ref=e276]: 進捗 43%
+            - generic [ref=e278]:
+              - generic [ref=e279]:
+                - generic [ref=e280]: STEP 1 ✓ 完了
+                - generic [ref=e281]: 電源遮断・LOTO 処置 / 安全確認
+                - generic [ref=e282]: 主電源OFF (盤B-12) → 残圧抜き → LOTO タグ施錠 (山下) · 完了 13:18 · 所要 18分
+              - button "確認済み" [disabled] [ref=e283]
+            - generic [ref=e285]:
+              - generic [ref=e286]:
+                - generic [ref=e287]: STEP 2 ✓ 完了
+                - generic [ref=e288]: SC-1 槽の薬液排出と純水リンス
+                - generic [ref=e289]: "廃液は B-line で回収 (廃液記録 #WL-3318) · 完了 13:46 · 所要 28分"
+              - button "確認済み" [disabled] [ref=e290]
+            - generic [ref=e292]:
+              - generic [ref=e293]:
+                - generic [ref=e294]: STEP 3 ✓ 完了
+                - generic [ref=e295]: 前面パネル取り外し / 内部目視点検
+                - generic [ref=e296]:
+                  - text: P-2 ベローズに
+                  - strong [ref=e297]: 軽微な亀裂・薬液漏れ痕
+                  - text: を確認 (写真添付済 IMG-001) · 完了 14:22
+              - button "確認済み" [disabled] [ref=e298]
+            - generic [ref=e300]:
+              - generic [ref=e301]:
+                - generic [ref=e302]: STEP 4 ▸ 作業中
+                - generic [ref=e303]: ベローズポンプ P-2 の交換
+                - generic [ref=e304]: "トルク仕様: M6 → 8.5 N·m / オーバートルクで樹脂ハウジング破損リスクあり (★Agentforce 警告参照)"
+              - button "完了マーク" [ref=e305] [cursor=pointer]
+            - generic [ref=e307]:
+              - generic [ref=e308]:
+                - generic [ref=e309]: STEP 5
+                - generic [ref=e310]: フィルタ FL-12 / FL-13 の交換
+                - generic [ref=e311]: 予定 16:00 - 16:30 (30分) / 5μm PFA フィルタ × 2
+              - button "開始" [ref=e312] [cursor=pointer]
+            - generic [ref=e314]:
+              - generic [ref=e315]:
+                - generic [ref=e316]: STEP 6
+                - generic [ref=e317]: 薬液充填・流量校正 (40 L/min ± 2%)
+                - generic [ref=e318]: 予定 16:30 - 17:15 (45分) / 校正手順書 SOP-CLN-407
+              - button "開始" [ref=e319] [cursor=pointer]
+            - generic [ref=e321]:
+              - generic [ref=e322]:
+                - generic [ref=e323]: STEP 7
+                - generic [ref=e324]: ダミーウェハで動作確認 / 顧客承認サイン
+                - generic [ref=e325]: "予定 17:15 - 18:00 (45分) / 立ち会い: 鈴木 花子"
+              - button "開始" [ref=e326] [cursor=pointer]
+        - article [ref=e327]:
+          - generic [ref=e329]:
+            - heading "必要部品 (5件)" [level=2] [ref=e333]:
+              - generic [ref=e334]: 必要部品 (5件)
+            - generic [ref=e335]:
+              - button "在庫確認" [ref=e336] [cursor=pointer]
+              - button "追加発注" [ref=e337] [cursor=pointer]
+          - table [ref=e338]:
+            - rowgroup [ref=e339]:
+              - row "部品番号 部品名 数量 トラックトラック車両 在庫状況 単価" [ref=e340]:
+                - columnheader "部品番号" [ref=e341]
+                - columnheader "部品名" [ref=e342]
+                - columnheader "数量" [ref=e343]
+                - columnheader "トラックトラック車両" [ref=e344]
+                - columnheader "在庫状況" [ref=e345]
+                - columnheader "単価" [ref=e346]
+            - rowgroup [ref=e347]:
+              - 'row "PMP-BLW-220 ベローズポンプ ASSY (PFA / 40L/min) 1 サービスカー #14 車載 在庫 ¥248,000" [ref=e348]':
+                - rowheader "PMP-BLW-220" [ref=e349]:
+                  - link "PMP-BLW-220" [ref=e350] [cursor=pointer]:
+                    - /url: "#"
+                - cell "ベローズポンプ ASSY (PFA / 40L/min)" [ref=e351]
+                - cell "1" [ref=e352]:
+                  - strong [ref=e353]: "1"
+                - 'cell "サービスカー #14" [ref=e354]'
+                - cell "車載 在庫" [ref=e355]:
+                  - generic [ref=e356]: 車載 在庫
+                - cell "¥248,000" [ref=e357]
+              - 'row "FLT-PFA-05 5μm PFA フィルタカートリッジ 2 サービスカー #14 車載 在庫 ¥18,500" [ref=e358]':
+                - rowheader "FLT-PFA-05" [ref=e359]:
+                  - link "FLT-PFA-05" [ref=e360] [cursor=pointer]:
+                    - /url: "#"
+                - cell "5μm PFA フィルタカートリッジ" [ref=e361]
+                - cell "2" [ref=e362]:
+                  - strong [ref=e363]: "2"
+                - 'cell "サービスカー #14" [ref=e364]'
+                - cell "車載 在庫" [ref=e365]:
+                  - generic [ref=e366]: 車載 在庫
+                - cell "¥18,500" [ref=e367]
+              - 'row "ORG-FKM-32 O-リング FKM φ32 (薬液耐性) 4 サービスカー #14 車載 在庫 ¥980" [ref=e368]':
+                - rowheader "ORG-FKM-32" [ref=e369]:
+                  - link "ORG-FKM-32" [ref=e370] [cursor=pointer]:
+                    - /url: "#"
+                - cell "O-リング FKM φ32 (薬液耐性)" [ref=e371]
+                - cell "4" [ref=e372]:
+                  - strong [ref=e373]: "4"
+                - 'cell "サービスカー #14" [ref=e374]'
+                - cell "車載 在庫" [ref=e375]:
+                  - generic [ref=e376]: 車載 在庫
+                - cell "¥980" [ref=e377]
+              - row "SNS-FLW-08 流量センサ (Hall式 0-50 L/min) 1 九州サービス倉庫 手配中 ETA 17:30 ¥87,400" [ref=e378]:
+                - rowheader "SNS-FLW-08" [ref=e379]:
+                  - link "SNS-FLW-08" [ref=e380] [cursor=pointer]:
+                    - /url: "#"
+                - cell "流量センサ (Hall式 0-50 L/min)" [ref=e381]
+                - cell "1" [ref=e382]:
+                  - strong [ref=e383]: "1"
+                - cell "九州サービス倉庫" [ref=e384]
+                - cell "手配中 ETA 17:30" [ref=e385]:
+                  - generic [ref=e386]: 手配中 ETA 17:30
+                - cell "¥87,400" [ref=e387]
+              - row "CHM-DIW-20 純水 (DIW) 20L 3 顧客提供 顧客提供 —" [ref=e388]:
+                - rowheader "CHM-DIW-20" [ref=e389]:
+                  - link "CHM-DIW-20" [ref=e390] [cursor=pointer]:
+                    - /url: "#"
+                - cell "純水 (DIW) 20L" [ref=e391]
+                - cell "3" [ref=e392]:
+                  - strong [ref=e393]: "3"
+                - cell "顧客提供" [ref=e394]
+                - cell "顧客提供" [ref=e395]:
+                  - generic [ref=e396]: 顧客提供
+                - cell "—" [ref=e397]
+            - rowgroup [ref=e398]:
+              - row "部品合計 ¥360,820" [ref=e399]:
+                - cell "部品合計" [ref=e400]
+                - cell "¥360,820" [ref=e401]:
+                  - strong [ref=e402]: ¥360,820
+        - article [ref=e403]:
+          - generic [ref=e405]:
+            - heading "サービス BOM — CleanMaster CM-3200X" [level=2] [ref=e409]:
+              - generic [ref=e410]: サービス BOM — CleanMaster CM-3200X
+            - generic [ref=e411]:
+              - button "3D 図面" [ref=e412] [cursor=pointer]
+              - button "全展開" [ref=e413] [cursor=pointer]
+          - generic [ref=e414]:
+            - generic [ref=e415]:
+              - generic [ref=e416]: 構成品
+              - generic [ref=e417]: 部品番号
+              - generic [ref=e418]: 作業対象
+              - generic [ref=e419]: 交換周期
+            - generic [ref=e420]:
+              - generic [ref=e421]: ▾ ウェット洗浄ユニット (SC-1)
+              - generic [ref=e422]: UNIT-SC1-01
+              - generic [ref=e423]: —
+              - generic [ref=e424]: —
+            - generic [ref=e425]:
+              - generic [ref=e426]: ▾ 薬液循環アセンブリ
+              - generic [ref=e427]: ASSY-CIRC-7
+              - generic [ref=e428]: —
+              - generic [ref=e429]: —
+            - generic [ref=e430]:
+              - generic [ref=e431]:
+                - text: • ベローズポンプ P-2
+                - generic [ref=e432]: 交換対象
+              - link "PMP-BLW-220" [ref=e434] [cursor=pointer]:
+                - /url: "#"
+              - generic [ref=e435]: ★今回
+              - generic [ref=e436]: 15,000h
+            - generic [ref=e437]:
+              - generic [ref=e438]:
+                - text: • フィルタハウジング FL-12
+                - generic [ref=e439]: 交換対象
+              - link "FLT-PFA-05" [ref=e441] [cursor=pointer]:
+                - /url: "#"
+              - generic [ref=e442]: ★今回
+              - generic [ref=e443]: 6,000h
+            - generic [ref=e444]:
+              - generic [ref=e445]:
+                - text: • フィルタハウジング FL-13
+                - generic [ref=e446]: 交換対象
+              - link "FLT-PFA-05" [ref=e448] [cursor=pointer]:
+                - /url: "#"
+              - generic [ref=e449]: ★今回
+              - generic [ref=e450]: 6,000h
+            - generic [ref=e451]:
+              - generic [ref=e452]: • 流量センサ FS-01
+              - link "SNS-FLW-08" [ref=e454] [cursor=pointer]:
+                - /url: "#"
+              - generic [ref=e455]: 点検
+              - generic [ref=e456]: 校正 12K
+            - generic [ref=e457]:
+              - generic [ref=e458]: • 配管 O-リング セット
+              - link "ORG-FKM-32" [ref=e460] [cursor=pointer]:
+                - /url: "#"
+              - generic [ref=e461]: ★今回
+              - generic [ref=e462]: 5,000h
+            - generic [ref=e463]:
+              - generic [ref=e464]: ▸ 加熱・温調アセンブリ
+              - generic [ref=e465]: ASSY-HEAT-3
+              - generic [ref=e466]: —
+              - generic [ref=e467]: —
+            - generic [ref=e468]:
+              - generic [ref=e469]: ▸ ウェハ搬送ロボット
+              - generic [ref=e470]: ROBO-WFR-2
+              - generic [ref=e471]: —
+              - generic [ref=e472]: —
+            - generic [ref=e473]:
+              - generic [ref=e474]: ▸ ドライエッチユニット (DE-2)
+              - generic [ref=e475]: UNIT-DE2-01
+              - generic [ref=e476]: —
+              - generic [ref=e477]: —
+            - generic [ref=e478]:
+              - generic [ref=e479]: ▸ 制御コンソール / SECS インタフェース
+              - generic [ref=e480]: CTRL-CONS-12
+              - generic [ref=e481]: —
+              - generic [ref=e482]: —
+          - link "完全な BOM ツリーを見る" [ref=e484] [cursor=pointer]:
+            - /url: "#"
+      - generic [ref=e485]:
+        - article [ref=e486]:
+          - generic [ref=e491]:
+            - 'heading "Agentforce: 類似事例からのトラブル予測" [level=2] [ref=e492]'
+            - paragraph [ref=e493]: 過去 3 年 / 124 件の類似 WO を分析
+          - generic [ref=e494]:
+            - generic [ref=e495]:
+              - heading "ベローズハウジングのオーバートルク破損 確度 92%" [level=4] [ref=e496]:
+                - text: ベローズハウジングのオーバートルク破損
+                - generic [ref=e497]: 確度 92%
+              - paragraph [ref=e498]:
+                - text: P-2 交換時に M6 ボルトを
+                - strong [ref=e499]: 10 N·m 超
+                - text: で締め付けると、PFA 樹脂ハウジングにマイクロクラックが入り、48時間以内に薬液漏洩した事例が
+                - strong [ref=e500]: 過去 7件
+                - text: 発生しています。
+                - strong [ref=e501]: 必ず 8.5 N·m トルクレンチを使用
+                - text: してください。
+              - generic [ref=e503]:
+                - text: "類似事例:"
+                - link "WO-2025-04221" [ref=e504] [cursor=pointer]:
+                  - /url: "#"
+                - text: ","
+                - link "WO-2024-03811" [ref=e505] [cursor=pointer]:
+                  - /url: "#"
+                - text: 他5件
+            - generic [ref=e506]:
+              - heading "流量センサ FS-01 の同時不良の可能性 確度 68%" [level=4] [ref=e507]:
+                - text: 流量センサ FS-01 の同時不良の可能性
+                - generic [ref=e508]: 確度 68%
+              - paragraph [ref=e509]:
+                - text: このシリアル番号 (CMX-2023-04781) と同ロットの装置で、ポンプ劣化と
+                - strong [ref=e510]: 流量センサのドリフト
+                - text: が同時発生した事例が 4件あります。STEP 6 校正時に
+                - strong [ref=e511]: ± 5% 以上のズレ
+                - text: があれば SNS-FLW-08 (現在手配中) を予防交換することを推奨します。
+              - generic [ref=e513]:
+                - text: "類似事例:"
+                - link "WO-2025-07112" [ref=e514] [cursor=pointer]:
+                  - /url: "#"
+                - text: ","
+                - link "WO-2025-09433" [ref=e515] [cursor=pointer]:
+                  - /url: "#"
+            - generic [ref=e516]:
+              - heading "FW v3.8.1 へのアップデートを推奨 確度 81%" [level=4] [ref=e517]:
+                - text: FW v3.8.1 へのアップデートを推奨
+                - generic [ref=e518]: 確度 81%
+              - paragraph [ref=e519]:
+                - text: v3.7.2 → v3.8.1 で循環ポンプの異常検知ロジックが改善されています。今回のような兆候を
+                - strong [ref=e520]: 72時間早く検知
+                - text: できる事例が 11件報告されています。STEP 7 動作確認後にアップデート可。
+              - generic [ref=e522]:
+                - link "リリースノート v3.8.1" [ref=e523] [cursor=pointer]:
+                  - /url: "#"
+                - text: ·
+                - link "技術速報 TB-2026-018" [ref=e524] [cursor=pointer]:
+                  - /url: "#"
+            - generic [ref=e525]:
+              - paragraph [ref=e526]:
+                - strong [ref=e527]: Agentforce からの推奨
+              - button "▸ 類似事例 WO-2025-04221 の作業ログを開く" [ref=e528] [cursor=pointer]
+              - 'button "▸ トルクレンチ #T-08 の校正記録を確認" [ref=e529] [cursor=pointer]'
+              - button "▸ Agentforce に質問する" [ref=e530] [cursor=pointer]
+        - article [ref=e531]:
+          - generic [ref=e532]:
+            - tablist [ref=e533]:
+              - tab "活動" [ref=e534] [cursor=pointer]
+              - tab "フィード" [ref=e535] [cursor=pointer]
+              - tab "ナレッジ" [ref=e536] [cursor=pointer]
+            - tabpanel [ref=e537]:
+              - generic [ref=e538]:
+                - heading "本日 2026年6月14日 (3)" [level=3] [ref=e539]
+                - list [ref=e540]:
+                  - listitem [ref=e541]:
+                    - generic [ref=e542]:
+                      - generic [ref=e543]: call
+                      - generic [ref=e544]:
+                        - generic [ref=e545]:
+                          - button "詳細を切り替え" [expanded] [ref=e546] [cursor=pointer]:
+                            - generic [ref=e547]: 詳細を切り替え
+                          - generic "call" [ref=e548]
+                        - generic [ref=e549]:
+                          - generic [ref=e550]:
+                            - heading "到着連絡 / 現場立ち会い者と合流" [level=3] [ref=e551]:
+                              - link "到着連絡 / 現場立ち会い者と合流" [ref=e552] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e553]: 到着連絡 / 現場立ち会い者と合流
+                            - paragraph [ref=e555]: 12:48 | 6/14
+                          - paragraph [ref=e556]:
+                            - text: 山下 健司 が
+                            - link "高木 智之" [ref=e557] [cursor=pointer]:
+                              - /url: "#"
+                            - text: (日精セミコンダクター) に通話
+                          - article [ref=e558]:
+                            - list [ref=e559]:
+                              - listitem [ref=e560]:
+                                - generic [ref=e561]: 通話相手
+                                - generic [ref=e562]:
+                                  - link "高木 智之" [ref=e563] [cursor=pointer]:
+                                    - /url: "#"
+                                  - text: (設備技術課 課長)
+                              - listitem [ref=e564]:
+                                - generic [ref=e565]: 通話時間
+                                - generic [ref=e566]: 6 分 24 秒
+                            - generic [ref=e567]:
+                              - text: 概要
+                              - paragraph [ref=e568]:
+                                - text: ゲート3 到着、CR-3 入室手続きを依頼。立ち会いは鈴木プロセスEngが13:00 から対応可能。装置は本日早朝 04:20 から停止中で、上流の枚葉装置3台もアイドル状態。
+                                - strong [ref=e569]: 2nm 試作ロットの納期影響大
+                                - text: のため最優先での復旧を要請された。
+                  - listitem [ref=e570]:
+                    - generic [ref=e571]:
+                      - generic [ref=e572]: event
+                      - generic [ref=e573]:
+                        - generic [ref=e574]:
+                          - button "詳細を切り替え" [expanded] [ref=e575] [cursor=pointer]:
+                            - generic [ref=e576]: 詳細を切り替え
+                          - generic "event" [ref=e577]
+                        - generic [ref=e578]:
+                          - generic [ref=e579]:
+                            - heading "SC-1 内部点検 / 漏洩痕の確認" [level=3] [ref=e580]:
+                              - link "SC-1 内部点検 / 漏洩痕の確認" [ref=e581] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e582]: SC-1 内部点検 / 漏洩痕の確認
+                            - paragraph [ref=e584]: 14:08 - 14:22 | 6/14
+                          - paragraph [ref=e585]: "作業者: 山下 健司 / 立ち会い: 鈴木 花子"
+                          - article [ref=e586]:
+                            - list [ref=e587]:
+                              - listitem [ref=e588]:
+                                - generic [ref=e589]: 場所
+                                - generic [ref=e590]: CR-3 / SC-1 槽前面
+                              - listitem [ref=e591]:
+                                - generic [ref=e592]: 添付
+                                - generic [ref=e593]:
+                                  - link "IMG-001.jpg" [ref=e594] [cursor=pointer]:
+                                    - /url: "#"
+                                  - text: ·
+                                  - link "IMG-002.jpg" [ref=e595] [cursor=pointer]:
+                                    - /url: "#"
+                            - generic [ref=e596]:
+                              - text: 所見
+                              - paragraph [ref=e597]:
+                                - text: ベローズポンプ P-2 のハウジング下部に
+                                - strong [ref=e598]: 長さ 約3mm の亀裂
+                                - text: を確認。亀裂周辺に薬液結晶痕あり (HF/H2O2 由来)。
+                                - strong [ref=e599]: "原因確定: P-2 のハウジング劣化による薬液漏洩 → 循環流量低下 → ベベル部洗浄不良"
+                                - text: 。STEP 4 でポンプ ASSY 交換に着手。
+                  - listitem [ref=e600]:
+                    - generic [ref=e601]:
+                      - generic [ref=e602]: task
+                      - generic [ref=e603]:
+                        - generic [ref=e604]:
+                          - button "詳細を切り替え" [expanded] [ref=e605] [cursor=pointer]:
+                            - generic [ref=e606]: 詳細を切り替え
+                          - generic "task" [ref=e607]
+                        - generic [ref=e608]:
+                          - generic [ref=e609]:
+                            - heading "流量センサ SNS-FLW-08 を緊急手配" [level=3] [ref=e610]:
+                              - link "流量センサ SNS-FLW-08 を緊急手配" [ref=e611] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e612]: 流量センサ SNS-FLW-08 を緊急手配
+                            - paragraph [ref=e614]: 14:30 | 6/14
+                          - paragraph [ref=e615]: "担当: 九州サービス倉庫 / ETA: 17:30"
+                          - article [ref=e616]:
+                            - list [ref=e617]:
+                              - listitem [ref=e618]:
+                                - generic [ref=e619]: 部品
+                                - generic [ref=e620]:
+                                  - link "SNS-FLW-08" [ref=e621] [cursor=pointer]:
+                                    - /url: "#"
+                                  - text: 流量センサ × 1
+                              - listitem [ref=e622]:
+                                - generic [ref=e623]: 配送方法
+                                - generic [ref=e624]: 専用便 (熊本サテライト経由)
+                            - generic [ref=e625]:
+                              - text: 理由
+                              - paragraph [ref=e626]:
+                                - text: Agentforce の予測 (確度 68%) に基づく予防交換準備。STEP 6 校正で流量精度に異常があれば即座に交換できるよう、現場到着を 17:30 に設定。
+                                - strong [ref=e627]: 未使用なら倉庫返却
+                                - text: 。
+                - heading "過去 (2)" [level=3] [ref=e628]
+                - list [ref=e629]:
+                  - listitem [ref=e630]:
+                    - generic [ref=e631]:
+                      - generic [ref=e632]: email
+                      - generic [ref=e633]:
+                        - generic "email" [ref=e635]
+                        - generic [ref=e636]:
+                          - generic [ref=e637]:
+                            - heading "WO 受付通知 / 出動指示" [level=3] [ref=e638]:
+                              - link "WO 受付通知 / 出動指示" [ref=e639] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e640]: WO 受付通知 / 出動指示
+                            - paragraph [ref=e641]: 04:28 | 6/14
+                          - paragraph [ref=e642]: ディスパッチ → 山下 健司 (P1 エスカレーション)
+                  - listitem [ref=e643]:
+                    - generic [ref=e644]:
+                      - generic [ref=e645]: event
+                      - generic [ref=e646]:
+                        - generic "event" [ref=e648]
+                        - generic [ref=e649]:
+                          - generic [ref=e650]:
+                            - heading "定期メンテナンス PM 12K (前回)" [level=3] [ref=e651]:
+                              - link "定期メンテナンス PM 12K (前回)" [ref=e652] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e653]: 定期メンテナンス PM 12K (前回)
+                            - paragraph [ref=e654]: 2026/03/15
+                          - paragraph [ref=e655]: "担当: 田中 美咲 / 異常なし"
+        - article [ref=e656]:
+          - heading "関連ケース (1)" [level=2] [ref=e662]:
+            - generic [ref=e663]: 関連ケース (1)
+          - list [ref=e664]:
+            - listitem [ref=e665]:
+              - link "CS-00482" [ref=e666] [cursor=pointer]:
+                - /url: "#"
+                - strong [ref=e667]: CS-00482
+              - generic [ref=e668]: P1 対応中
+              - paragraph [ref=e669]: ベベル部の洗浄不良 / 歩留まり 12% 低下
+              - paragraph [ref=e670]: "起票: 2026/06/14 04:18 · 連絡: 高木 智之"
+        - article [ref=e671]:
+          - heading "マニュアル・添付 (4)" [level=2] [ref=e677]:
+            - generic [ref=e678]: マニュアル・添付 (4)
+          - list [ref=e679]:
+            - listitem [ref=e680]:
+              - link "CM-3200X 修理手順書 v3.8.pdf" [ref=e682] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e683]: 8.2 MB · 2026/05/18
+            - listitem [ref=e684]:
+              - link "SOP-CLN-407 流量校正手順.pdf" [ref=e686] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e687]: 1.4 MB · 2026/02/10
+            - listitem [ref=e688]:
+              - link "IMG-001.jpg (P-2 亀裂)" [ref=e690] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e691]: 3.1 MB · 14:18
+            - listitem [ref=e692]:
+              - link "IMG-002.jpg (薬液結晶痕)" [ref=e694] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e695]: 2.8 MB · 14:20
+  - complementary [ref=e696]:
+    - generic [ref=e697]:
+      - generic [ref=e698]: FieldServiceAgent
+      - generic [ref=e699]:
+        - button "情報" [ref=e700] [cursor=pointer]
+        - button "新規セッション" [ref=e701] [cursor=pointer]
+        - button "ピン留め" [ref=e702] [cursor=pointer]
+        - button "閉じる" [ref=e703] [cursor=pointer]
+    - generic [ref=e704]:
+      - paragraph [ref=e708]: 山下さん、お疲れさまです。WO-2026-00873 の作業内容を確認しました。何かお手伝いできますか？
+      - paragraph [ref=e712]: 類似事例で気をつけるべきトラブルを教えて
+      - generic [ref=e715]:
+        - paragraph [ref=e716]:
+          - text: 過去 124件の類似 WO を分析した結果、特に注意すべき点が
+          - strong [ref=e717]: 3つ
+          - text: あります。
+        - strong [ref=e718]: ① ベローズハウジングのオーバートルク破損 (確度 92%)
+        - paragraph [ref=e719]:
+          - text: P-2 ASSY 取付時に M6 ボルトを 10 N·m 超で締めると、48時間以内に薬液漏洩した事例が 7件あります。
+          - strong [ref=e720]: "必ず 8.5 N·m トルクレンチ #T-08"
+          - text: を使用してください。
+        - strong [ref=e721]: ② 流量センサ FS-01 の同時不良 (確度 68%)
+        - paragraph [ref=e722]: 同ロット装置でポンプとセンサが同時劣化した事例が 4件。STEP 6 で ±5% 以上の誤差が出れば SNS-FLW-08 を予防交換することを推奨します。既に九州サービス倉庫から手配済 (ETA 17:30)。
+        - strong [ref=e723]: ③ FW v3.7.2 → v3.8.1 の更新 (確度 81%)
+        - paragraph [ref=e724]: 新FW で異常検知ロジックが改善されており、今回のような兆候を 72時間早く検知できます。動作確認後にお試しください。
+      - paragraph [ref=e728]: WO-2025-04221 のときの作業者と同じトルクレンチ使ってない？
+      - paragraph [ref=e732]:
+        - text: 確認しました。WO-2025-04221 で使われたのは
+        - strong [ref=e733]: "トルクレンチ #T-12"
+        - text: "でした。今回山下さんが車載しているのは #T-08 で、最終校正日は 2026/05/02 (期限内)、誤差 ±0.3% で問題ありません。安心して使えます。"
+    - generic [ref=e734]:
+      - generic [ref=e735]: おすすめ
+      - generic [ref=e736] [cursor=pointer]: "▸ トルクレンチ #T-08 の校正記録を表示"
+      - generic [ref=e737] [cursor=pointer]: ▸ 類似事例 WO-2025-04221 の作業ログを開く
+      - generic [ref=e738] [cursor=pointer]: ▸ FW v3.8.1 のリリースノートを要約
+      - generic [ref=e739] [cursor=pointer]: ▸ 作業完了後の顧客報告書ドラフトを生成
+    - textbox "質問するか、作業について説明..." [ref=e741]

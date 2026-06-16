@@ -1,0 +1,113 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - img "Salesforce" [ref=e3]
+    - searchbox "検索..." [ref=e7]
+    - generic [ref=e8]:
+      - button "Agentforce" [ref=e9] [cursor=pointer]
+      - button "お気に入り" [ref=e10] [cursor=pointer]
+      - button "通知" [ref=e12] [cursor=pointer]
+      - img "User" [ref=e15]
+  - generic [ref=e16]:
+    - generic "アプリケーションランチャー" [ref=e17] [cursor=pointer]
+    - generic [ref=e28]: Sales
+    - navigation [ref=e29]:
+      - list [ref=e30]:
+        - listitem [ref=e31]:
+          - link "ホーム" [ref=e32] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e33]:
+          - link "取引先 ▾" [ref=e34] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e35]:
+          - link "商談 ▾" [ref=e36] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e37]:
+          - link "リード ▾" [ref=e38] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e39]:
+          - link "ダッシュボード ▾" [ref=e40] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e41]:
+    - generic [ref=e43]:
+      - generic [ref=e48]:
+        - heading "※次世代データセンター用 極低熱抵抗テープ商談" [level=1] [ref=e50]:
+          - generic [ref=e51]: ※次世代データセンター用 極低熱抵抗テープ商談
+        - paragraph [ref=e52]: 商談 · 提案/見積
+      - list [ref=e56]:
+        - listitem [ref=e57]:
+          - button "+ フォローする" [ref=e58] [cursor=pointer]
+        - listitem [ref=e59]:
+          - button "議事録作成" [ref=e60] [cursor=pointer]
+        - listitem [ref=e61]:
+          - button "開発テーマ申請" [ref=e62] [cursor=pointer]
+        - listitem [ref=e63]:
+          - button "活動の記録" [ref=e64] [cursor=pointer]
+    - generic [ref=e65]:
+      - article [ref=e67]:
+        - generic [ref=e68]:
+          - tablist [ref=e69]:
+            - tab "詳細" [ref=e70] [cursor=pointer]
+            - tab "見積/注文" [ref=e71] [cursor=pointer]
+            - tab "ニーズ" [ref=e72] [cursor=pointer]
+            - tab "開発テーマ" [ref=e73] [cursor=pointer]
+            - tab "活動情報" [ref=e74] [cursor=pointer]
+            - tab "部門間連携" [ref=e75] [cursor=pointer]
+          - tabpanel [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - generic [ref=e79]:
+                  - img "Slack" [ref=e80]
+                  - generic [ref=e81]: Slack チャンネル
+                - button "3" [ref=e82] [cursor=pointer]:
+                  - generic [ref=e83]: "3"
+              - generic [ref=e84]:
+                - generic [ref=e85]:
+                  - img "bot" [ref=e86]
+                  - img "user" [ref=e87]
+                - link "3 件の返信" [ref=e88] [cursor=pointer]:
+                  - /url: "#"
+                - generic [ref=e89]: "最終返信: 24 日前"
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]:
+                    - generic [ref=e93]: 田中 健二
+                    - generic [ref=e94]: 5月18日 11:54
+                  - generic [ref=e95]:
+                    - paragraph [ref=e96]:
+                      - link "@Tableau Next Agentforce in Slack" [ref=e97] [cursor=pointer]:
+                        - /url: "#"
+                    - paragraph [ref=e98]: 次のダッシュボードを参考にして失注理由を多い順に並べて
+                  - generic [ref=e99] [cursor=pointer]:
+                    - generic [ref=e100]: 1 件の返信
+                    - generic [ref=e101]: 24 日前
+                - generic [ref=e102]:
+                  - button "リアクション" [ref=e103] [cursor=pointer]
+                  - button "スレッドで返信" [ref=e104] [cursor=pointer]
+                  - button "その他" [ref=e105] [cursor=pointer]
+              - generic [ref=e107]:
+                - generic [ref=e108]:
+                  - generic [ref=e109]: 田中 健二
+                  - generic [ref=e110]: 5月18日 12:25
+                - generic [ref=e111]:
+                  - paragraph [ref=e112]:
+                    - link "@Tableau Next Agentforce in Slack" [ref=e113] [cursor=pointer]:
+                      - /url: "#"
+                  - paragraph [ref=e114]: 次のダッシュボードを参考にして失注理由を多い順に並べて
+                  - paragraph [ref=e115]:
+                    - link "営業ダッシュボード" [ref=e116] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e117]:
+                  - generic [ref=e118]: Tableau Next
+                  - generic [ref=e119]:
+                    - generic [ref=e120]: 営業ダッシュボード
+                    - generic [ref=e121]: Filter
+                    - generic [ref=e122]: Details as of 2026-05-18 12:25:14
+                    - generic [ref=e123]: 商談分析
+              - generic [ref=e131]:
+                - generic [ref=e132]: "2"
+                - strong [ref=e133]: 2 エージェント
+                - generic [ref=e134]: はこのチャンネルに含まれる - メンションされたときに返信します
+      - article [ref=e136]:
+        - heading "Agentforceからの示唆があります" [level=2] [ref=e142]
+        - status [ref=e144]:
+          - heading "商談発生元の問い合わせ情報を確認してください。" [level=2] [ref=e145]

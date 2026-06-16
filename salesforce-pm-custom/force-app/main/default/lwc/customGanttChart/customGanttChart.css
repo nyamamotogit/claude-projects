@@ -1,0 +1,32 @@
+.timeline-bar {
+    width: 150px;
+    height: 20px;
+    background-color: #e0e5ee;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.timeline-bar[data-status="Completed"] .timeline-progress {
+    width: 100%;
+    background-color: #4bca81;
+}
+
+.timeline-bar[data-status="In Progress"] .timeline-progress {
+    width: 50%;
+    background-color: #ffb75d;
+}
+
+.timeline-bar[data-status="Not Started"] .timeline-progress {
+    width: 0%;
+}
+
+.timeline-bar[data-status="Blocked"] .timeline-progress {
+    width: 25%;
+    background-color: #ea001e;
+}
+
+.timeline-progress {
+    height: 100%;
+    transition: width 0.3s ease;
+}

@@ -1,0 +1,65 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "f0fa4b36a599218f214fdcabb518306324f7563847de280f9aa01cc88764826d"
+    }
+  ],
+  "containerPath" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "arm64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "hostTargetedPlatform" : null,
+      "platform" : "macosx",
+      "sdk" : "macosx26.5",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "arm64e",
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "arm64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Products",
+      "derivedDataPath" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build",
+      "indexDataStoreFolderPath" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Release",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "YES",
+          "ONLY_ACTIVE_ARCH" : "YES"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

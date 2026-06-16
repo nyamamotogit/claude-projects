@@ -1,0 +1,182 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - img "Salesforce" [ref=e3]
+    - searchbox "検索..." [ref=e7]
+    - generic [ref=e8]:
+      - button "Agentforce" [ref=e9] [cursor=pointer]
+      - button "お気に入り" [ref=e10] [cursor=pointer]
+      - button "通知" [ref=e12] [cursor=pointer]
+      - img "User" [ref=e15]
+  - generic [ref=e16]:
+    - generic "アプリケーションランチャー" [ref=e17] [cursor=pointer]
+    - generic [ref=e28]: Sales
+    - navigation [ref=e29]:
+      - list [ref=e30]:
+        - listitem [ref=e31]:
+          - link "ホーム" [ref=e32] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e33]:
+          - link "取引先 ▾" [ref=e34] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e35]:
+          - link "商談 ▾" [ref=e36] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e37]:
+          - link "リード ▾" [ref=e38] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e39]:
+          - link "ダッシュボード ▾" [ref=e40] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e41]:
+    - generic [ref=e43]:
+      - generic [ref=e48]:
+        - heading "※次世代データセンター用 極低熱抵抗テープ商談" [level=1] [ref=e50]:
+          - generic [ref=e51]: ※次世代データセンター用 極低熱抵抗テープ商談
+        - paragraph [ref=e52]: 商談 · 提案/見積
+      - list [ref=e56]:
+        - listitem [ref=e57]:
+          - button "+ フォローする" [ref=e58] [cursor=pointer]
+        - listitem [ref=e59]:
+          - button "議事録作成" [ref=e60] [cursor=pointer]
+        - listitem [ref=e61]:
+          - button "開発テーマ申請" [ref=e62] [cursor=pointer]
+        - listitem [ref=e63]:
+          - button "活動の記録" [ref=e64] [cursor=pointer]
+    - generic [ref=e65]:
+      - article [ref=e67]:
+        - generic [ref=e68]:
+          - tablist [ref=e69]:
+            - tab "詳細" [ref=e70] [cursor=pointer]
+            - tab "見積/注文" [ref=e71] [cursor=pointer]
+            - tab "ニーズ" [ref=e72] [cursor=pointer]
+            - tab "開発テーマ" [ref=e73] [cursor=pointer]
+            - tab "活動情報" [ref=e74] [cursor=pointer]
+            - tab "会話" [ref=e75] [cursor=pointer]
+          - tabpanel [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - generic [ref=e79]:
+                  - img "Slack" [ref=e80]
+                  - generic [ref=e81]: Slack チャンネル
+                - button "3" [ref=e82] [cursor=pointer]:
+                  - generic [ref=e83]: "3"
+              - generic [ref=e84]:
+                - generic [ref=e85]:
+                  - generic [ref=e86]:
+                    - generic [ref=e87]: 田中 健二
+                    - generic [ref=e88]: 5月18日 11:54
+                  - generic [ref=e89]:
+                    - paragraph [ref=e90]:
+                      - link "@Tableau Next Agentforce in Slack" [ref=e91] [cursor=pointer]:
+                        - /url: "#"
+                    - paragraph [ref=e92]: 次のダッシュボードを参考にして失注理由を多い順に並べて
+                  - generic [ref=e93] [cursor=pointer]:
+                    - generic [ref=e95]: 3 件の会話
+                    - generic [ref=e96]: "最終返信: 24 日前"
+                - generic [ref=e97]:
+                  - button "リアクション" [ref=e98] [cursor=pointer]
+                  - button "スレッドで返信" [ref=e99] [cursor=pointer]
+                  - button "その他" [ref=e100] [cursor=pointer]
+              - generic [ref=e141]:
+                - generic [ref=e143]: 3 件の返信
+                - generic [ref=e145]:
+                  - generic [ref=e146]:
+                    - generic [ref=e147]: Tableau Next Agentforce in Slack
+                    - generic [ref=e148]: AGENTFORCE
+                    - generic [ref=e149]: 5月18日 14:19
+                  - generic [ref=e150]:
+                    - paragraph [ref=e151]: 失注理由を多い順に並べました。主要な要因と件数を一覧でご確認いただけます。
+                    - generic [ref=e152]:
+                      - paragraph [ref=e153]:
+                        - text: There are
+                        - strong [ref=e154]: 6 loss reasons
+                        - text: "sorted by frequency. The most common reasons are:"
+                      - list [ref=e155]:
+                        - listitem [ref=e156]:
+                          - strong [ref=e157]: 顧客側のプロジェクト中止
+                          - text: with
+                          - strong [ref=e158]: 10 cases
+                        - listitem [ref=e159]:
+                          - strong [ref=e160]: 価格競争力不足
+                          - text: with
+                          - strong [ref=e161]: 8 cases
+                        - listitem [ref=e162]:
+                          - strong [ref=e163]: 納期遅延/供給不安
+                          - text: with
+                          - strong [ref=e164]: 6 cases
+                        - listitem [ref=e165]:
+                          - strong [ref=e166]: 予算不足
+                          - text: and
+                          - strong [ref=e167]: 競合他社採用
+                          - text: ", each with"
+                          - strong [ref=e168]: 5 cases
+                        - listitem [ref=e169]:
+                          - strong [ref=e170]: スペックアンマッチ
+                          - text: with
+                          - strong [ref=e171]: 3 cases
+                    - paragraph [ref=e173]: This ranking highlights the key factors contributing to lost opportunities.
+                    - paragraph [ref=e174]:
+                      - strong [ref=e175]: Sources
+                      - text: 失注理由ごとに件数を集計し、多い順に並べました。失注理由フィールドを使い、全レコードを対象に集計・並び替えしています（制限なし）。
+                - generic [ref=e177]:
+                  - generic [ref=e178]:
+                    - generic [ref=e179]: 田中 健二
+                    - generic [ref=e180]: 5月18日 14:30
+                  - paragraph [ref=e182]: ありがとうございます。プロジェクト中止と価格競争力が上位に来ているので、提案資料の差別化ポイントを優先して見直します。
+                - generic [ref=e184]:
+                  - generic [ref=e185]:
+                    - generic [ref=e186]: 山田 太郎
+                    - generic [ref=e187]: 5月18日 16:00
+                  - paragraph [ref=e189]: 確認しました。次回の営業ミーティングでこの内容をもとに対策を議論しましょう。
+                - generic [ref=e190]:
+                  - generic [ref=e191]:
+                    - link "エージェントにメンションする" [ref=e192] [cursor=pointer]:
+                      - /url: "#"
+                    - generic [ref=e193]: 返信の取得用
+                  - generic [ref=e194]:
+                    - button "B" [ref=e195] [cursor=pointer]:
+                      - strong [ref=e196]: B
+                    - button "I" [ref=e197] [cursor=pointer]:
+                      - emphasis [ref=e198]: I
+                    - button "U" [ref=e199] [cursor=pointer]:
+                      - generic [ref=e200]: U
+                    - button "S" [ref=e201] [cursor=pointer]
+                    - button "リンク" [ref=e203] [cursor=pointer]
+                    - button "番号付きリスト" [ref=e204] [cursor=pointer]
+                    - button "箇条書き" [ref=e205] [cursor=pointer]
+                    - button "引用" [ref=e206] [cursor=pointer]
+                    - button "コード" [ref=e207] [cursor=pointer]
+                  - generic [ref=e208]: 返信...
+                  - generic [ref=e209]:
+                    - generic [ref=e210]:
+                      - button "追加" [ref=e211] [cursor=pointer]
+                      - button "絵文字" [ref=e212] [cursor=pointer]
+                      - button "メンション" [ref=e213] [cursor=pointer]
+                    - button "送信" [ref=e214] [cursor=pointer]
+              - generic [ref=e102]:
+                - generic [ref=e103]:
+                  - generic [ref=e104]: 田中 健二
+                  - generic [ref=e105]: 5月18日 12:25
+                - generic [ref=e106]:
+                  - paragraph [ref=e107]:
+                    - link "@Tableau Next Agentforce in Slack" [ref=e108] [cursor=pointer]:
+                      - /url: "#"
+                  - paragraph [ref=e109]: 次のダッシュボードを参考にして失注理由を多い順に並べて
+                  - paragraph [ref=e110]:
+                    - link "営業ダッシュボード" [ref=e111] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e112]:
+                  - generic [ref=e113]: Tableau Next
+                  - generic [ref=e114]:
+                    - generic [ref=e115]: 営業ダッシュボード
+                    - generic [ref=e116]: Filter
+                    - generic [ref=e117]: Details as of 2026-05-18 12:25:14
+                    - generic [ref=e118]: 商談分析
+              - generic [ref=e126]:
+                - generic [ref=e127]: "2"
+                - strong [ref=e128]: 2 エージェント
+                - generic [ref=e129]: はこのチャンネルに含まれる - メンションされたときに返信します
+      - article [ref=e131]:
+        - heading "Agentforceからの示唆があります" [level=2] [ref=e137]
+        - status [ref=e139]:
+          - heading "商談発生元の問い合わせ情報を確認してください。" [level=2] [ref=e140]

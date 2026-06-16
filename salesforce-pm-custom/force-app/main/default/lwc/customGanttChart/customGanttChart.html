@@ -1,0 +1,77 @@
+<template>
+    <lightning-card title="Project Timeline" icon-name="standard:dashboard">
+        <template if:true={hasNoTasks}>
+            <div class="slds-m-around_medium slds-text-align_center">
+                <lightning-icon icon-name="utility:info" size="small"></lightning-icon>
+                <p class="slds-m-top_small">このプロジェクトにはタスクがありません。</p>
+            </div>
+        </template>
+
+        <template if:false={hasNoTasks}>
+            <div class="slds-p-around_medium">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Task">タスク</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Status">ステータス</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Priority">優先度</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Due Date">期限</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Assigned To">担当者</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Timeline">タイムライン</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={tasks} for:item="task">
+                            <tr key={task.id} class="slds-hint-parent">
+                                <th scope="row">
+                                    <div class="slds-truncate" title={task.name}>
+                                        <a href={task.id}>{task.name}</a>
+                                    </div>
+                                </th>
+                                <td>
+                                    <span class={task.statusClass}>{task.status}</span>
+                                </td>
+                                <td>
+                                    <span class={task.priorityBadge}>{task.priority}</span>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate" title={task.dueDateFormatted}>
+                                        {task.dueDateFormatted}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate" title={task.assignedTo}>
+                                        {task.assignedTo}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="timeline-bar" data-status={task.status}>
+                                        <div class="timeline-progress"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="slds-m-around_medium">
+                <p class="slds-text-color_error">エラー: {error.body.message}</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>

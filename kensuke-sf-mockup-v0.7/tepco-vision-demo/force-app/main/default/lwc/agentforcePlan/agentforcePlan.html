@@ -1,0 +1,68 @@
+<template>
+    <div class="plan-card">
+        <div class="plan-header">
+            <span class="agent-icon">🤖</span>
+            <span class="plan-title">Agentforce 対応プラン</span>
+            <span class="conf">{confidenceLabel}</span>
+        </div>
+
+        <template lwc:if={notLaunched}>
+            <div class="pre-launch">
+                <p class="pre-text">
+                    IoT センサーが異常を検知しました。<br/>
+                    <strong>Agentforce</strong> を起動して、SAP・M365・Teams・AWS から関連情報を横断統合し、対応プランを生成します。
+                </p>
+                <button class="hero-btn" onclick={handleLaunch} disabled={busy}>
+                    🚀 Agentforce を起動して対応プランを生成
+                </button>
+            </div>
+        </template>
+
+        <template lwc:if={launched}>
+            <template lwc:if={reasoning}>
+                <div class="reasoning">
+                    <div class="reasoning-label">推論ログ</div>
+                    <div class="reasoning-body">{reasoning}</div>
+                </div>
+            </template>
+
+            <div class="steps-list">
+                <template for:each={steps} for:item="s">
+                    <div key={s.Id} class={s.rowClass}>
+                        <div class="step-num">{s.Sequence__c}</div>
+                        <div class="step-body">
+                            <div class="step-title">
+                                <span class="src-pill" style={s.badgeStyle}>{s.systemLabel}</span>
+                                {s.Title__c}
+                            </div>
+                            <div class="step-desc">{s.Description__c}</div>
+                            <div class="step-meta">{s.Meta_Info__c}</div>
+                        </div>
+                        <div class="step-action">
+                            <span class={s.pillClass}>{s.Status__c}</span>
+                            <template lwc:if={notApproved}>
+                                <button class="exec-btn" onclick={handleExecuteStep} data-id={s.Id} data-title={s.Title__c}>実行</button>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <template lwc:if={notApproved}>
+                <div class="approve-row">
+                    <div class="approve-label">承認1回で 5 システムが同時に動きます</div>
+                    <button class="hero-btn green" onclick={handleApprove} disabled={busy}>✓ 承認して実行</button>
+                </div>
+            </template>
+            <template lwc:if={approved}>
+                <div class="approved-banner">
+                    ✓ 承認完了 ・ 全システムが連動して稼働開始しました
+                </div>
+            </template>
+
+            <div class="reset-row">
+                <button class="reset-btn" onclick={handleReset}>⟳ デモをリセット</button>
+            </div>
+        </template>
+    </div>
+</template>

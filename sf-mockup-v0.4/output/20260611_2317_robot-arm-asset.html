@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RX-2400 #OM-RX2400-08172 | 納入商品 | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1024px; margin: 0; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .sf-col-2-3 { flex: 0 0 calc(66.666% - 0.375rem); }
+  .sf-col-1-3 { flex: 0 0 calc(33.333% - 0.375rem); }
+  .sf-header { background: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid #c9c9c9; position: sticky; top: 0; z-index: 50; }
+  .sf-header-search { width: 50%; max-width: 36rem; }
+  .sf-context-bar { background: white; border-bottom: 1px solid #dddbda; padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-context-bar nav ul { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .sf-context-bar nav ul li { display: flex; align-items: center; padding: 0 0.25rem; font-size: 0.875rem; }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid #1589ee; }
+  .sf-context-bar nav ul li.is-active a { color: #0070d2; font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn:hover { background: #f3f3f3; }
+  .sf-icon-btn img { width: 18px; height: 18px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-favorite-btn { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 2rem; background: #1b96ff; border-radius: 0.25rem; border: none; cursor: pointer; }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-notify-wrap { position: relative; display: inline-flex; }
+  .sf-notify-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ea001e; border-radius: 50%; border: 1.5px solid white; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+  .sf-app-name { font-size: 1.125rem; font-weight: 700; color: #181818; padding: 0.5rem 0; margin-right: 0.75rem; }
+  .sf-timeline { list-style: none; padding: 0; margin: 0; }
+  .sf-timeline-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; }
+  .sf-timeline-icon { flex: 0 0 2rem; height: 2rem; border-radius: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-timeline-icon-task { background: #04844b; }
+  .sf-timeline-icon-event { background: #cc6cdd; }
+  .sf-timeline-icon-call { background: #056764; }
+  .sf-timeline-icon img { width: 1.25rem; height: 1.25rem; filter: brightness(0) invert(1); }
+  .sf-timeline-body { flex: 1; min-width: 0; line-height: 1.4; }
+  .sf-timeline-body a { color: #0070d2; text-decoration: none; font-weight: 700; }
+  .sf-timeline-body a:hover { text-decoration: underline; }
+  .sf-timeline-body .meta { font-size: 0.8125rem; color: #444; margin-top: 0.25rem; }
+  .sf-timeline-body .meta-overdue { color: #ba0517; }
+
+  /* ==== LWC 風カードのバッジ ==== */
+  .lwc-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
+  .lwc-badge-lwc { background: #ecebea; color: #444; border: 1px solid #c9c9c9; margin-left: 0.5rem; }
+  .lwc-badge-stock-ok { background: #2e844a1a; color: #2e844a; }
+  .lwc-badge-stock-low { background: #fe9339; color: white; }
+  .lwc-badge-stock-out { background: #ba0517; color: white; }
+  .lwc-badge-eol { background: #444; color: white; }
+
+  /* ==== サービスBOM ツリー ==== */
+  .bom-toolbar { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #fafaf9; border-bottom: 1px solid #dddbda; }
+  .bom-toolbar input { flex: 1; height: 1.75rem; }
+  .bom-tree { padding: 0.25rem 0.5rem 0.75rem; font-size: 0.8125rem; }
+  .bom-row { display: grid; grid-template-columns: minmax(0, 1fr) 70px 80px 92px; gap: 0.5rem; align-items: center; padding: 0.375rem 0.5rem; border-radius: 4px; }
+  .bom-row:hover { background: #f3f9ff; }
+  .bom-row.is-head { font-size: 0.7rem; color: #706e6b; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 0.5rem 0.25rem; border-bottom: 1px solid #dddbda; }
+  .bom-row.is-head:hover { background: transparent; }
+  .bom-name { display: flex; align-items: center; min-width: 0; }
+  .bom-toggle { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; cursor: pointer; flex: 0 0 16px; }
+  .bom-toggle img { width: 10px; height: 10px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); transition: transform 0.15s; }
+  .bom-row.is-collapsed .bom-toggle img { transform: rotate(-90deg); }
+  .bom-row.is-leaf .bom-toggle { visibility: hidden; }
+  .bom-icon { display: inline-flex; align-items: center; justify-content: center; width: 1.25rem; height: 1.25rem; margin: 0 0.25rem 0 0.125rem; flex: 0 0 1.25rem; }
+  .bom-icon img { width: 14px; height: 14px; }
+  .bom-icon-asm { filter: brightness(0) saturate(100%) invert(33%) sepia(99%) saturate(1700%) hue-rotate(189deg) brightness(95%) contrast(95%); }
+  .bom-icon-part { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .bom-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bom-label a { color: #0070d2; font-weight: 600; text-decoration: none; }
+  .bom-label a:hover { text-decoration: underline; }
+  .bom-label .partno { font-size: 0.7rem; color: #706e6b; margin-left: 0.375rem; }
+  .bom-row.is-asm .bom-label a { color: #181818; font-weight: 700; }
+  .bom-qty { text-align: right; color: #444; }
+  .bom-life { font-size: 0.7rem; color: #444; }
+  .bom-life-bar { display: block; width: 100%; height: 5px; background: #ecebea; border-radius: 3px; overflow: hidden; margin-top: 2px; }
+  .bom-life-bar span { display: block; height: 100%; }
+  .bom-life-bar.green span { background: #2e844a; }
+  .bom-life-bar.amber span { background: #fe9339; }
+  .bom-life-bar.red span { background: #ba0517; }
+  .bom-row.lvl-1 { padding-left: 0.5rem; }
+  .bom-row.lvl-2 { padding-left: 1.75rem; }
+  .bom-row.lvl-3 { padding-left: 3rem; }
+  .bom-row.is-hidden { display: none; }
+  .bom-summary { display: flex; gap: 1rem; padding: 0.625rem 1rem; background: #fafaf9; border-top: 1px solid #dddbda; font-size: 0.75rem; color: #444; flex-wrap: wrap; }
+  .bom-summary strong { color: #181818; }
+  .bom-row.is-attention { background: #fff5e9; }
+  .bom-row.is-attention:hover { background: #ffead0; }
+</style>
+</head>
+<body class="slds-scope">
+
+<header class="sf-header">
+  <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+  <div class="sf-header-search">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+        <input type="search" placeholder="検索..." class="slds-input">
+      </div>
+    </div>
+  </div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn" title="Agentforce"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></button>
+    <button class="sf-favorite-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" /><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px; height:10px;" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup_assistant_guide.svg" alt="" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></button>
+    <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" /></button><span class="sf-notify-dot"></span></span>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:0.5rem;"><img src="https://ui-avatars.com/api/?name=Field+SE&background=1B96FF&color=fff" alt="User"></span>
+  </div>
+</header>
+
+<div class="sf-context-bar">
+  <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  <span class="sf-app-name">Service</span>
+  <nav>
+    <ul>
+      <li><a href="#">ホーム</a></li>
+      <li><a href="#">取引先 ▾</a></li>
+      <li><a href="#">ケース ▾</a></li>
+      <li class="is-active"><a href="#">納入商品 ▾</a></li>
+      <li><a href="#">作業指示 ▾</a></li>
+      <li><a href="#">保守契約 ▾</a></li>
+      <li><a href="#">部品在庫 ▾</a></li>
+    </ul>
+  </nav>
+  <button class="sf-icon-btn" style="margin-left:auto;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/edit.svg" alt="" /></button>
+</div>
+
+<main class="sf-main">
+
+  <!-- Page Header -->
+  <div class="slds-page-header slds-page-header_record-home slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-asset-object">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/asset_object.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title slds-line-height_reset">納入商品</p>
+            <div class="slds-page-header__name">
+              <h1>
+                <span class="slds-page-header__title" title="RX-2400 #OM-RX2400-08172">RX-2400 産業用6軸ロボットアーム</span>
+              </h1>
+            </div>
+            <p class="slds-page-header__name-meta">資産番号 OM-RX2400-08172 · 設置場所: トヨタ自動車 名古屋第二工場 第3ライン</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <div class="slds-page-header__controls">
+          <div class="slds-page-header__control">
+            <ul class="slds-button-group-list">
+              <li><button class="sf-icon-btn" title="アクセス権を共有" style="border:1px solid #dddbda; border-radius:9999px; width:2rem; height:2rem;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/groups.svg" alt="" /></button></li>
+              <li><button class="slds-button slds-button_neutral">+ フォロー</button></li>
+              <li><button class="slds-button slds-button_neutral">編集</button></li>
+              <li><button class="slds-button slds-button_neutral">作業指示を作成</button></li>
+              <li><button class="slds-button slds-button_brand">ケースを作成</button></li>
+              <li><button class="sf-icon-btn" title="その他" style="border:1px solid #dddbda; border-radius:0.25rem; width:2rem; height:2rem;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" /></button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slds-page-header__row slds-page-header__row_gutters">
+      <div class="slds-page-header__col-details">
+        <ul class="slds-page-header__detail-row">
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title">型式 / 製品コード</div>
+            <p class="slds-text-body_regular"><strong>RX-2400-6A</strong></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title">シリアル番号</div>
+            <p class="slds-text-body_regular">OM-RX2400-08172</p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title">設置日</div>
+            <p class="slds-text-body_regular">2024/08/15</p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title">保守契約</div>
+            <p class="slds-text-body_regular"><a href="#">プレミアム5年</a> <span class="slds-badge slds-theme_success">有効</span></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title">累計稼働時間</div>
+            <p class="slds-text-body_regular"><strong>12,450 hr</strong></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title">状態</div>
+            <p class="slds-text-body_regular"><span class="slds-badge slds-theme_success">稼働中</span></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title">担当FSE</div>
+            <p class="slds-text-body_regular"><a href="#">中村 徹</a></p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+
+    <!-- Left -->
+    <div class="sf-col-2-3">
+      <article class="slds-card">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav" role="tablist">
+            <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="0">詳細</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">関連</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">フィード</a></li>
+          </ul>
+          <div class="slds-tabs_default__content slds-show" role="tabpanel">
+
+            <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small"><span class="slds-p-horizontal_small">製品情報</span></h3>
+            <div class="slds-p-around_medium">
+              <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">納入商品名</dt><dd class="slds-item_detail">RX-2400 産業用6軸ロボットアーム</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">所有者</dt><dd class="slds-item_detail"><a href="#">中村 徹</a></dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">製品 (関連)</dt><dd class="slds-item_detail"><a href="#">RX-2400-6A</a></dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">アカウント</dt><dd class="slds-item_detail"><a href="#">トヨタ自動車株式会社</a></dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">シリアル番号</dt><dd class="slds-item_detail">OM-RX2400-08172</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">製造番号 (LOT)</dt><dd class="slds-item_detail">L24-0817-A</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">製造日</dt><dd class="slds-item_detail">2024/07/03</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">出荷日</dt><dd class="slds-item_detail">2024/08/01</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">設置日</dt><dd class="slds-item_detail">2024/08/15</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">保証期限</dt><dd class="slds-item_detail">2027/08/14</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">可搬重量</dt><dd class="slds-item_detail">12 kg</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">最大リーチ</dt><dd class="slds-item_detail">1,420 mm</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">繰り返し精度</dt><dd class="slds-item_detail">±0.03 mm</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">本体価格</dt><dd class="slds-item_detail">¥8,650,000</dd></div>
+              </dl>
+            </div>
+
+            <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small"><span class="slds-p-horizontal_small">設置・運用情報</span></h3>
+            <div class="slds-p-around_medium">
+              <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">設置場所</dt><dd class="slds-item_detail">名古屋第二工場 第3ライン Cell-12</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">用途</dt><dd class="slds-item_detail">ボディ溶接 (ドアパネル)</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">累計稼働時間</dt><dd class="slds-item_detail">12,450 hr</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">サイクル数</dt><dd class="slds-item_detail">8,943,200 cycles</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">前回点検日</dt><dd class="slds-item_detail">2026/01/18</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">次回点検予定</dt><dd class="slds-item_detail" style="color:#ba0517;"><strong>2026/07/20</strong> (39日後)</dd></div>
+              </dl>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+      <!-- 関連: 保守ケース -->
+      <article class="slds-card slds-m-top_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-case"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/case.svg" alt="" class="slds-icon slds-icon_small" /></span></div>
+            <div class="slds-media__body"><h2 class="slds-card__header-title"><a href="#" class="slds-card__header-link"><span>保守ケース (3)</span></a></h2></div>
+            <div class="slds-no-flex"><button class="slds-button slds-button_neutral">新規</button></div>
+          </header>
+        </div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead><tr><th>ケース番号</th><th>件名</th><th>優先度</th><th>状況</th><th>登録日</th></tr></thead>
+          <tbody>
+            <tr><th><a href="#">CS-04219</a></th><td>J3軸 異音とトルク低下</td><td><span class="slds-badge slds-theme_warning">高</span></td><td>対応中</td><td>2026/06/03</td></tr>
+            <tr><th><a href="#">CS-04015</a></th><td>制御盤温度警告</td><td>中</td><td><span class="slds-badge slds-theme_success">解決</span></td><td>2026/04/22</td></tr>
+            <tr><th><a href="#">CS-03788</a></th><td>定期点検 (12,000h)</td><td>低</td><td><span class="slds-badge slds-theme_success">解決</span></td><td>2026/01/18</td></tr>
+          </tbody>
+        </table>
+        <footer class="slds-card__footer"><a href="#" class="slds-card__footer-action">すべて表示</a></footer>
+      </article>
+
+      <!-- 関連: 部品交換履歴 -->
+      <article class="slds-card slds-m-top_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-product"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/product.svg" alt="" class="slds-icon slds-icon_small" /></span></div>
+            <div class="slds-media__body"><h2 class="slds-card__header-title"><a href="#" class="slds-card__header-link"><span>部品交換履歴 (4)</span></a></h2></div>
+          </header>
+        </div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead><tr><th>交換日</th><th>部品</th><th>品番</th><th>担当</th><th>備考</th></tr></thead>
+          <tbody>
+            <tr><td>2026/04/22</td><th><a href="#">サーボドライバ x1</a></th><td>SD-RX-J3</td><td>中村 徹</td><td>制御盤温度警告で予防交換</td></tr>
+            <tr><td>2026/01/18</td><th><a href="#">グリスパック ベース</a></th><td>GR-BASE-A</td><td>中村 徹</td><td>12,000h定期</td></tr>
+            <tr><td>2025/07/12</td><th><a href="#">エンコーダケーブル J5</a></th><td>EC-J5-2M</td><td>佐藤 健</td><td>外観劣化</td></tr>
+            <tr><td>2025/02/03</td><th><a href="#">ハーモニックドライブ J2</a></th><td>HD-J2-100</td><td>佐藤 健</td><td>異音発生</td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <!-- ファイル -->
+      <article class="slds-card slds-m-top_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-document"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/document.svg" alt="" class="slds-icon slds-icon_small" /></span></div>
+            <div class="slds-media__body"><h2 class="slds-card__header-title"><a href="#" class="slds-card__header-link"><span>ファイル (4)</span></a></h2></div>
+          </header>
+        </div>
+        <ul class="slds-has-dividers_top-space">
+          <li class="slds-item slds-p-around_x-small"><span class="slds-icon_container slds-icon-doctype-pdf slds-m-right_x-small"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/pdf.svg" alt="" class="slds-icon slds-icon_small" /></span><a href="#">RX-2400_取扱説明書_rev3.pdf</a><p class="slds-text-body_small slds-text-color_weak">8.6 MB · 2024/08/15</p></li>
+          <li class="slds-item slds-p-around_x-small"><span class="slds-icon_container slds-icon-doctype-pdf slds-m-right_x-small"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/pdf.svg" alt="" class="slds-icon slds-icon_small" /></span><a href="#">点検報告書_2026-01-18.pdf</a><p class="slds-text-body_small slds-text-color_weak">1.2 MB · 2026/01/18</p></li>
+          <li class="slds-item slds-p-around_x-small"><span class="slds-icon_container slds-icon-doctype-excel slds-m-right_x-small"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/excel.svg" alt="" class="slds-icon slds-icon_small" /></span><a href="#">サービスBOM_R12.xlsx</a><p class="slds-text-body_small slds-text-color_weak">540 KB · 2026/05/02</p></li>
+          <li class="slds-item slds-p-around_x-small"><span class="slds-icon_container slds-icon-doctype-image slds-m-right_x-small"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/image.svg" alt="" class="slds-icon slds-icon_small" /></span><a href="#">設置写真_Cell-12.jpg</a><p class="slds-text-body_small slds-text-color_weak">3.1 MB · 2024/08/15</p></li>
+        </ul>
+      </article>
+
+    </div>
+
+    <!-- Right -->
+    <div class="sf-col-1-3">
+
+      <!-- 活動 -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav" role="tablist">
+            <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="0">活動</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">フィード</a></li>
+          </ul>
+          <div class="slds-tabs_default__content slds-show" role="tabpanel">
+            <div class="slds-p-around_medium">
+              <h3 class="slds-text-title_caps slds-m-bottom_x-small">今後 &amp; 期限切れ (3)</h3>
+              <ul class="sf-timeline">
+                <li class="sf-timeline-item">
+                  <span class="sf-timeline-icon sf-timeline-icon-event"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" alt="" /></span>
+                  <div class="sf-timeline-body"><a href="#">定期点検 (15,000h)</a><div class="meta">期日 2026/07/20 09:00 · 中村 徹</div></div>
+                </li>
+                <li class="sf-timeline-item">
+                  <span class="sf-timeline-icon sf-timeline-icon-task"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" /></span>
+                  <div class="sf-timeline-body"><a href="#">CS-04219 J3軸 部品交換立ち会い</a><div class="meta">期日 2026/06/18 13:00 · 中村 徹</div></div>
+                </li>
+                <li class="sf-timeline-item">
+                  <span class="sf-timeline-icon sf-timeline-icon-call"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg" alt="" /></span>
+                  <div class="sf-timeline-body"><a href="#">顧客レポート提出</a><div class="meta meta-overdue">期日 2026/06/09 (期限切れ)</div></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Agentforce 故障予知 -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure"><span class="slds-icon_container"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" class="slds-icon slds-icon_small" /></span></div>
+            <div class="slds-media__body"><h2 class="slds-card__header-title">Agentforce 故障予知</h2></div>
+          </header>
+        </div>
+        <div class="slds-card__body slds-p-around_medium">
+          <div class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_x-small" role="status">
+            <span class="slds-icon_container slds-m-right_x-small"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" class="slds-icon slds-icon_x-small" /></span>
+            <h2><strong>J3 ハーモニックドライブ</strong> 故障確率 <strong>72%</strong> (向こう90日)</h2>
+          </div>
+          <p class="slds-text-body_small slds-m-bottom_x-small">振動センサ FFT解析と過去類似機の劣化パターンから、推奨アクション:</p>
+          <ul class="slds-list_dotted slds-text-body_small">
+            <li>HD-J3-100 を予防交換 (在庫: あり)</li>
+            <li>同時にエンコーダケーブル J3 も外観確認</li>
+            <li>次回点検 (07/20) で実施推奨 - ライン停止 1.5h</li>
+          </ul>
+          <div class="slds-m-top_small"><button class="slds-button slds-button_brand slds-button_stretch">作業指示を作成</button></div>
+        </div>
+      </article>
+
+      <!-- ★★★★ サービスBOM LWC ★★★★ -->
+      <article class="slds-card slds-m-bottom_x-small" style="border:1px solid #b8d4f0;">
+        <div class="slds-card__header slds-grid" style="background: linear-gradient(to right, #eef4fb, #ffffff);">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-product-item"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/product_item.svg" alt="" class="slds-icon slds-icon_small" /></span></div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title" style="display:flex; align-items:center;">
+                <span>サービスBOM (RX-2400)</span>
+                <span class="lwc-badge lwc-badge-lwc">LWC</span>
+              </h2>
+              <p class="slds-text-body_small slds-text-color_weak">c-service-bom-tree · BOMバージョン R12 (2026/05/02)</p>
+            </div>
+            <div class="slds-no-flex">
+              <button class="sf-icon-btn" title="更新"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" /></button>
+              <button class="sf-icon-btn" title="エクスポート"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/download.svg" alt="" /></button>
+              <button class="sf-icon-btn" title="設定"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/settings.svg" alt="" /></button>
+            </div>
+          </header>
+        </div>
+
+        <div class="bom-toolbar">
+          <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left" style="flex:1;">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+            <input type="search" placeholder="部品名・品番で検索..." class="slds-input">
+          </div>
+          <button class="slds-button slds-button_neutral slds-button_icon slds-button_icon-border" title="フィルター"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/filterList.svg" alt="" style="width:14px; height:14px;" /></button>
+        </div>
+
+        <div class="bom-tree">
+          <!-- ヘッダ行 -->
+          <div class="bom-row is-head">
+            <div class="bom-name">部品 / アセンブリ</div>
+            <div class="bom-qty">数量</div>
+            <div>在庫</div>
+            <div>残寿命</div>
+          </div>
+
+          <!-- レベル1: メインアセンブリ -->
+          <div class="bom-row lvl-1 is-asm">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-asm" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/builder.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">RX-2400 メインアセンブリ</a><span class="partno">RX-2400-6A</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div>—</div>
+            <div>—</div>
+          </div>
+
+          <!-- ベース部 -->
+          <div class="bom-row lvl-2 is-asm">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-asm" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/cubes.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">ベース部 (Base Unit)</a><span class="partno">ASM-BASE-A</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div>—</div>
+            <div>—</div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">サーボモーター J1</a><span class="partno">SM-J1-400</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">3</span></div>
+            <div><span class="bom-life">68%</span><span class="bom-life-bar green"><span style="width:68%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">ハーモニックドライブ J1</a><span class="partno">HD-J1-100</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">2</span></div>
+            <div><span class="bom-life">54%</span><span class="bom-life-bar amber"><span style="width:54%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">グリスパック ベース</a><span class="partno">GR-BASE-A</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">12</span></div>
+            <div><span class="bom-life">82%</span><span class="bom-life-bar green"><span style="width:82%"></span></span></div>
+          </div>
+
+          <!-- アーム部 -->
+          <div class="bom-row lvl-2 is-asm">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-asm" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/cubes.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">アーム部 (Arm Assembly)</a><span class="partno">ASM-ARM-A</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div>—</div>
+            <div>—</div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">サーボモーター J2</a><span class="partno">SM-J2-300</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">2</span></div>
+            <div><span class="bom-life">61%</span><span class="bom-life-bar green"><span style="width:61%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf is-attention">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">ハーモニックドライブ J3</a><span class="partno">HD-J3-100</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-low">1</span></div>
+            <div><span class="bom-life">12%</span><span class="bom-life-bar red"><span style="width:12%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">ケーブルパッケージ J2-J6</a><span class="partno">CP-ARM-2M</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">4</span></div>
+            <div><span class="bom-life">73%</span><span class="bom-life-bar green"><span style="width:73%"></span></span></div>
+          </div>
+
+          <!-- 手首部・エンドエフェクタ -->
+          <div class="bom-row lvl-2 is-asm">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-asm" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/cubes.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">エンドエフェクタ部</a><span class="partno">ASM-EOA-W1</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div>—</div>
+            <div>—</div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">サーボガン (溶接)</a><span class="partno">SG-W-150</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">2</span></div>
+            <div><span class="bom-life">58%</span><span class="bom-life-bar amber"><span style="width:58%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf is-attention">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">電極チップ (Cu)</a><span class="partno">EC-TIP-CU</span></span>
+            </div>
+            <div class="bom-qty">2</div>
+            <div><span class="lwc-badge lwc-badge-stock-out">0</span></div>
+            <div><span class="bom-life">8%</span><span class="bom-life-bar red"><span style="width:8%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">力覚センサー</a><span class="partno">FT-6A-200</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">1</span></div>
+            <div><span class="bom-life">79%</span><span class="bom-life-bar green"><span style="width:79%"></span></span></div>
+          </div>
+
+          <!-- 制御盤 -->
+          <div class="bom-row lvl-2 is-asm">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-asm" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/cubes.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">制御盤 (Controller)</a><span class="partno">CTL-RX24-A</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div>—</div>
+            <div>—</div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">メインCPUボード</a><span class="partno">CPU-RX-V3</span></span>
+            </div>
+            <div class="bom-qty">1</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">2</span></div>
+            <div><span class="bom-life">88%</span><span class="bom-life-bar green"><span style="width:88%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">サーボドライバ x6</a><span class="partno">SD-RX-J1-J6</span></span>
+            </div>
+            <div class="bom-qty">6</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">8</span></div>
+            <div><span class="bom-life">71%</span><span class="bom-life-bar green"><span style="width:71%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">安全リレーモジュール</a><span class="partno">SR-CAT4</span></span>
+            </div>
+            <div class="bom-qty">2</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">5</span></div>
+            <div><span class="bom-life">90%</span><span class="bom-life-bar green"><span style="width:90%"></span></span></div>
+          </div>
+          <div class="bom-row lvl-3 is-leaf">
+            <div class="bom-name">
+              <span class="bom-toggle"><img src="" alt="" /></span>
+              <span class="bom-icon"><img class="bom-icon-part" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></span>
+              <span class="bom-label"><a href="#">冷却ファン (制御盤)</a><span class="partno">FAN-CTL-92</span></span>
+            </div>
+            <div class="bom-qty">2</div>
+            <div><span class="lwc-badge lwc-badge-stock-ok">10</span></div>
+            <div><span class="bom-life">42%</span><span class="bom-life-bar amber"><span style="width:42%"></span></span></div>
+          </div>
+
+        </div>
+
+        <div class="bom-summary">
+          <span>総部品点数: <strong>14</strong></span>
+          <span>要交換 (寿命&lt;30%): <strong style="color:#ba0517;">2</strong></span>
+          <span>欠品: <strong style="color:#ba0517;">1</strong></span>
+          <span>BOM総額: <strong>¥4,820,000</strong></span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Expense_Date__c</fullName>
+    <label>費用発生日</label>
+    <description>費用が実際に発生した日付</description>
+    <inlineHelpText>費用が発生した日付を入力してください</inlineHelpText>
+    <type>Date</type>
+</CustomField>

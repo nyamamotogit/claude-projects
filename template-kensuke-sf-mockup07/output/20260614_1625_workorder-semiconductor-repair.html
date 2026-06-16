@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WO-2026-00873 | 作業指示 | Salesforce Field Service</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1024px; margin: 0; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .slds-global-header_container { position: sticky; top: 0; z-index: 50; background: white; border-bottom: 1px solid #c9c9c9; }
+  .slds-global-header { height: 3rem; padding: 0 1rem; }
+  .slds-global-header__item_search { width: 56%; max-width: 48rem; }
+  .slds-global-header .slds-button .slds-button__icon,
+  .slds-context-bar .slds-button_icon .slds-button__icon,
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); width: 14px; height: 14px; }
+  .slds-context-bar .slds-button_icon .slds-button__icon_small { width: 14px; height: 14px; }
+  .sf-search-combo { display: flex; height: 2rem; border: 1px solid #dddbda; border-radius: 0.25rem; background: white; overflow: hidden; }
+  .sf-search-combo .slds-form-element { flex: 1; }
+  .sf-search-combo .slds-input { border: none; height: 100%; box-shadow: none; background: white; }
+  .sf-search-combo .slds-input:focus { box-shadow: none; outline: none; }
+  .sf-scope-selector { flex: 0 0 9rem; border: none; border-right: 1px solid #dddbda; background: white; height: 2rem; padding: 0 0.5rem 0 0.75rem; display: inline-flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .sf-scope-selector .sf-scope-name { font-size: 0.8125rem; color: #181818; }
+  .sf-scope-selector .sf-scope-chev { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-global-header .slds-global-actions__favorites { margin-right: 0; }
+  .slds-global-header .slds-global-actions__favorites,
+  .slds-global-header .slds-global-actions__favorites-more { background: white; border: 1px solid #dddbda; height: 2rem; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+  .slds-global-header .slds-global-actions__favorites { border-right: none; border-radius: 0.25rem 0 0 0.25rem; width: 2rem; }
+  .slds-global-header .slds-global-actions__favorites-more { border-radius: 0 0.25rem 0.25rem 0; width: 1.5rem; margin-left: 0; }
+  .slds-global-header .slds-global-actions__favorites-more .slds-button__icon { width: 10px; height: 10px; }
+  .sf-action-add { width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #747474; display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; padding: 0; }
+  .sf-action-add img { filter: brightness(0) invert(1); width: 12px; height: 12px; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+
+  /* Step cards */
+  .sf-step-card { border-left: 4px solid #1589ee; padding: 0.75rem 1rem; background: #fafaf9; border-radius: 0.25rem; margin-bottom: 0.5rem; }
+  .sf-step-card.is-done { border-left-color: #2e844a; background: #effded; }
+  .sf-step-card.is-current { border-left-color: #fe9339; background: #fff7eb; }
+  .sf-step-num { font-weight: 700; color: #444; font-size: 0.6875rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .sf-step-title { font-weight: 700; color: #181818; margin-top: 0.125rem; font-size: 0.9375rem; }
+  .sf-step-meta { color: #706e6b; font-size: 0.75rem; margin-top: 0.25rem; }
+
+  /* BOM Tree */
+  .sf-bom { font-size: 0.8125rem; }
+  .sf-bom-row { display: grid; grid-template-columns: 1fr 6rem 5rem 5rem; gap: 0.5rem; padding: 0.375rem 0.5rem; border-bottom: 1px dashed #e5e5e5; align-items: center; }
+  .sf-bom-row.is-head { font-weight: 700; color: #444; background: #f3f3f3; border-bottom: 1px solid #c9c9c9; font-size: 0.6875rem; letter-spacing: 0.02em; text-transform: uppercase; }
+  .sf-bom-row .sf-bom-name { display: flex; align-items: center; gap: 0.25rem; }
+  .sf-bom-row .sf-bom-toggle { width: 10px; height: 10px; opacity: 0.6; }
+  .sf-bom-l1 { padding-left: 0.5rem; font-weight: 600; }
+  .sf-bom-l2 { padding-left: 1.75rem; }
+  .sf-bom-l3 { padding-left: 3rem; color: #444; }
+  .sf-bom-row .slds-badge { font-size: 0.625rem; padding: 0 0.375rem; }
+
+  /* Agentforce 警告カード */
+  .sf-af-alert { border-radius: 0.5rem; border: 1px solid #c9c9c9; padding: 0.75rem; margin-bottom: 0.5rem; background: white; }
+  .sf-af-alert.is-high { border-left: 4px solid #ba0517; background: #feeded; }
+  .sf-af-alert.is-mid  { border-left: 4px solid #fe9339; background: #fff7eb; }
+  .sf-af-alert.is-info { border-left: 4px solid #0070d2; background: #eef4fd; }
+  .sf-af-alert h4 { font-weight: 700; font-size: 0.875rem; margin: 0 0 0.25rem; color: #181818; display: flex; align-items: center; gap: 0.375rem; }
+  .sf-af-alert p { margin: 0; font-size: 0.8125rem; color: #2e2e2e; line-height: 1.45; }
+  .sf-af-meta { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; font-size: 0.6875rem; color: #706e6b; }
+  .sf-af-meta a { color: #0070d2; }
+  .sf-af-confidence { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0 0.5rem; border-radius: 9999px; background: white; border: 1px solid #c9c9c9; font-size: 0.6875rem; color: #2e2e2e; font-weight: 600; }
+
+  /* Highlight pills */
+  .sf-pill { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+  .sf-pill-status { background: #fff7eb; color: #8a4b08; border: 1px solid #fec574; }
+  .sf-pill-priority { background: #feeded; color: #8e030f; border: 1px solid #ea7980; }
+
+  /* Asset image */
+  .sf-asset-photo { width: 100%; aspect-ratio: 16 / 9; background: linear-gradient(135deg, #c9d3df 0%, #889bb3 100%); border-radius: 0.25rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; letter-spacing: 0.1em; position: relative; overflow: hidden; }
+  .sf-asset-photo::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 50%); }
+  .sf-asset-photo svg { width: 60%; height: 60%; opacity: 0.85; }
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- Global Header -->
+<header class="slds-global-header_container slds-no-print">
+  <div class="slds-global-header slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+    <div class="slds-global-header__item">
+      <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+    </div>
+    <div class="slds-global-header__item slds-global-header__item_search">
+      <div class="sf-search-combo">
+        <button class="sf-scope-selector" title="検索対象オブジェクトを選択">
+          <span class="sf-scope-name">作業指示</span>
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="sf-scope-chev" />
+        </button>
+        <div class="slds-form-element">
+          <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+            <input type="search" placeholder="Salesforce を検索..." class="slds-input">
+          </div>
+        </div>
+      </div>
+    </div>
+    <ul class="slds-global-actions slds-grid slds-grid_vertical-align-center" style="gap:0.25rem;">
+      <li class="slds-global-actions__item">
+        <button class="slds-button slds-button_icon" title="Agentforce" onclick="toggleAgentforce()">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" class="slds-button__icon" />
+          <span class="slds-assistive-text">Agentforce</span>
+        </button>
+      </li>
+      <li class="slds-global-actions__item">
+        <div class="slds-grid">
+          <button class="slds-button slds-button_icon slds-global-actions__favorites slds-global-actions__favorites_unselected" aria-pressed="false" title="お気に入りに追加">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" class="slds-button__icon" />
+            <span class="slds-assistive-text">お気に入りに追加</span>
+          </button>
+          <button class="slds-button slds-button_icon slds-global-actions__favorites-more" aria-haspopup="true" title="お気に入り一覧">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" />
+            <span class="slds-assistive-text">お気に入り一覧</span>
+          </button>
+        </div>
+      </li>
+      <li class="slds-global-actions__item">
+        <button class="sf-action-add" title="新規作成">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" />
+          <span class="slds-assistive-text">新規作成</span>
+        </button>
+      </li>
+      <li class="slds-global-actions__item">
+        <button class="slds-button slds-button_icon" title="ヘルプ">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" class="slds-button__icon" />
+          <span class="slds-assistive-text">ヘルプ</span>
+        </button>
+      </li>
+      <li class="slds-global-actions__item">
+        <button class="slds-button slds-button_icon" title="設定">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" class="slds-button__icon" />
+          <span class="slds-assistive-text">設定</span>
+        </button>
+      </li>
+      <li class="slds-global-actions__item">
+        <button class="slds-button slds-button_icon" title="通知" style="position:relative;">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" class="slds-button__icon" />
+          <span class="slds-notification-badge slds-incoming-notification slds-show-notification">2</span>
+          <span class="slds-assistive-text">通知</span>
+        </button>
+      </li>
+      <li class="slds-global-actions__item slds-m-left_x-small">
+        <span class="slds-avatar slds-avatar_circle slds-avatar_small">
+          <img src="https://i.pravatar.cc/64?img=33" alt="User">
+        </span>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<!-- Global Navigation -->
+<div class="slds-context-bar">
+  <div class="slds-context-bar__primary slds-context-bar__item_app">
+    <div class="sf-app-launcher" title="アプリケーションランチャー">
+      <div class="sf-app-launcher-grid">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <span class="slds-context-bar__label-action slds-context-bar__app-name"><span>Field Service</span></span>
+  </div>
+  <nav class="slds-context-bar__secondary" role="navigation">
+    <ul class="slds-grid">
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ホーム</a></li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ディスパッチャ</a></li>
+      <li class="slds-context-bar__item slds-is-active">
+        <a href="#" class="slds-context-bar__label-action" aria-haspopup="true">作業指示</a>
+        <div class="slds-context-bar__icon-action slds-p-left_none">
+          <button class="slds-button slds-button_icon" aria-haspopup="true" title="メニューを開く">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" class="slds-button__icon slds-button__icon_small" />
+            <span class="slds-assistive-text">メニューを開く</span>
+          </button>
+        </div>
+      </li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">サービス予定</a></li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">資産</a></li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ケース</a></li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">部品在庫</a></li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">レポート</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main class="sf-main">
+
+  <!-- Page Header -->
+  <div class="slds-page-header slds-page-header_record-home slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-work-order">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/work_order.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-body_small slds-line-height_reset slds-text-color_weak">作業指示</p>
+            <div class="slds-page-header__name">
+              <h1>
+                <span class="slds-page-header__title" title="WO-2026-00873">WO-2026-00873 · ウェット洗浄装置 ベベル部洗浄不良の修理</span>
+              </h1>
+            </div>
+            <p class="slds-page-header__name-meta">
+              <span class="sf-pill sf-pill-priority">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/priority.svg" alt="" style="width:10px;height:10px;filter:brightness(0) saturate(100%) invert(13%) sepia(63%) saturate(5827%) hue-rotate(351deg) brightness(82%) contrast(101%);">
+                優先度: 緊急
+              </span>
+              <span class="sf-pill sf-pill-status slds-m-left_x-small">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/clock.svg" alt="" style="width:10px;height:10px;filter:brightness(0) saturate(100%) invert(45%) sepia(98%) saturate(415%) hue-rotate(7deg) brightness(94%) contrast(91%);">
+                作業中
+              </span>
+              <span class="slds-m-left_small slds-text-color_weak">SLA まで: <strong style="color:#ba0517;">2時間 18分</strong></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <div class="slds-page-header__controls">
+          <div class="slds-page-header__control">
+            <ul class="slds-button-group-list">
+              <li><button class="slds-button slds-button_neutral">作業ログ</button></li>
+              <li><button class="slds-button slds-button_neutral">部品請求</button></li>
+              <li><button class="slds-button slds-button_neutral">編集</button></li>
+              <li><button class="slds-button slds-button_brand">作業完了として送信</button></li>
+              <li>
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="その他">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" />
+                  <span class="slds-assistive-text">その他</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slds-page-header__row slds-page-header__row_gutters">
+      <div class="slds-page-header__col-details">
+        <ul class="slds-page-header__detail-row">
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">作業指示番号</div>
+            <p class="slds-text-body_regular slds-truncate">WO-2026-00873</p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">対象資産</div>
+            <p class="slds-text-body_regular slds-truncate"><a href="#">CleanMaster CM-3200X (#A-04781)</a></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">取引先</div>
+            <p class="slds-text-body_regular slds-truncate"><a href="#">日精セミコンダクター 熊本第3工場</a></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">サービス契約</div>
+            <p class="slds-text-body_regular slds-truncate">プレミアム 24/7 (残り 2.3年)</p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">作業予定</div>
+            <p class="slds-text-body_regular slds-truncate"><strong>2026/06/14 13:00 - 18:00</strong></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">担当技術者</div>
+            <p class="slds-text-body_regular slds-truncate"><a href="#">山下 健司 (Lv.3)</a></p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Path (作業ステータス) -->
+  <article class="slds-card slds-m-bottom_small">
+    <div class="slds-path">
+      <div class="slds-grid slds-path__track">
+        <div class="slds-grid slds-path__scroller-container">
+          <div class="slds-path__scroller">
+            <div class="slds-path__scroller_inner">
+              <ul class="slds-path__nav" role="listbox">
+                <li class="slds-path__item slds-is-complete" role="presentation"><a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" style="width:12px;height:12px;filter:brightness(0) invert(1);"></span><span class="slds-path__title">受付</span></a></li>
+                <li class="slds-path__item slds-is-complete" role="presentation"><a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" style="width:12px;height:12px;filter:brightness(0) invert(1);"></span><span class="slds-path__title">割当</span></a></li>
+                <li class="slds-path__item slds-is-complete" role="presentation"><a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" style="width:12px;height:12px;filter:brightness(0) invert(1);"></span><span class="slds-path__title">移動中</span></a></li>
+                <li class="slds-path__item slds-is-current slds-is-active" role="presentation"><a aria-selected="true" class="slds-path__link" href="#" role="option" tabindex="0"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" style="width:12px;height:12px;filter:brightness(0) invert(1);"></span><span class="slds-path__title">作業中</span></a></li>
+                <li class="slds-path__item slds-is-incomplete" role="presentation"><a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" style="width:12px;height:12px;filter:brightness(0) invert(1);"></span><span class="slds-path__title">動作確認</span></a></li>
+                <li class="slds-path__item slds-is-incomplete" role="presentation"><a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" style="width:12px;height:12px;filter:brightness(0) invert(1);"></span><span class="slds-path__title">顧客承認</span></a></li>
+                <li class="slds-path__item slds-is-incomplete" role="presentation"><a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" style="width:12px;height:12px;filter:brightness(0) invert(1);"></span><span class="slds-path__title">完了</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="slds-grid slds-path__action">
+          <span class="slds-path__stage-name slds-text-body_regular slds-text-color_weak slds-m-right_small">現在のステータス: 作業中</span>
+          <button class="slds-button slds-button_brand slds-path__mark-complete">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" style="width:12px;height:12px;filter:brightness(0) invert(1);margin-right:0.25rem;">
+            ステータスを次へ
+          </button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2-Column -->
+  <div class="slds-grid slds-gutters_small slds-wrap">
+    <div class="slds-col slds-size_2-of-3">
+
+      <!-- Tabs (作業詳細 / お客様情報 / 資産・BOM) -->
+      <article class="slds-card">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav" role="tablist">
+            <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="0">詳細</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">関連</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">作業ログ</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">添付</a></li>
+          </ul>
+
+          <div class="slds-tabs_default__content slds-show" role="tabpanel">
+
+            <!-- 作業概要 -->
+            <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small">
+              <span class="slds-truncate slds-p-horizontal_small">作業概要</span>
+            </h3>
+            <div class="slds-p-around_medium">
+              <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                  <dt class="slds-item_label slds-text-color_weak">作業種別</dt>
+                  <dd class="slds-item_detail">是正修理 (緊急対応)</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                  <dt class="slds-item_label slds-text-color_weak">関連ケース</dt>
+                  <dd class="slds-item_detail"><a href="#">CS-00482 ベベル部の洗浄不良 (歩留まり 12% 低下)</a></dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">症状</dt>
+                  <dd class="slds-item_detail">300mm ウェハ外周3mmの薬液到達不良。SC-1 槽の循環ポンプ流量が定格より低下。</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">想定原因</dt>
+                  <dd class="slds-item_detail">ベローズポンプ P-2 の劣化 / フィルタ目詰まり</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">予定工数</dt>
+                  <dd class="slds-item_detail">5.0 時間 (実績: 2.4 時間)</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">作業エリア</dt>
+                  <dd class="slds-item_detail">クリーンルーム CR-3 (Class 100)</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">特記事項</dt>
+                  <dd class="slds-item_detail">薬液 (HF/H2O2) 接触作業あり。化学耐性手袋・防護面・SCBA 装着必須。装置停止中、ライン上流の枚葉装置3台がアイドル状態。</dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- お客様情報 -->
+            <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small">
+              <span class="slds-truncate slds-p-horizontal_small">お客様情報</span>
+            </h3>
+            <div class="slds-p-around_medium">
+              <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                  <dt class="slds-item_label slds-text-color_weak">取引先</dt>
+                  <dd class="slds-item_detail"><a href="#">日精セミコンダクター株式会社</a></dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                  <dt class="slds-item_label slds-text-color_weak">事業所</dt>
+                  <dd class="slds-item_detail">熊本第3工場 (300mm 量産Fab)</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">所在地</dt>
+                  <dd class="slds-item_detail">〒861-1116 熊本県合志市須屋2-7-3</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">入退場手続き</dt>
+                  <dd class="slds-item_detail">ゲート3 → セキュリティ受付 → クリーンスーツ着替 (LV.B)</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">現場担当者</dt>
+                  <dd class="slds-item_detail"><a href="#">設備技術課 課長 高木 智之</a> · 090-1234-5678</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">立ち会い者</dt>
+                  <dd class="slds-item_detail"><a href="#">プロセスEng 鈴木 花子</a> · ext.4321</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">直近の重要案件</dt>
+                  <dd class="slds-item_detail">2nm 試作ロット稼働中 (歩留まり影響大)</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">SLA</dt>
+                  <dd class="slds-item_detail"><strong style="color:#ba0517;">P1 / 4時間以内復旧</strong></dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- 資産情報 -->
+            <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small">
+              <span class="slds-truncate slds-p-horizontal_small">対象資産 (装置情報)</span>
+            </h3>
+            <div class="slds-p-around_medium">
+              <div class="slds-grid slds-gutters_x-small">
+                <div class="slds-col slds-size_1-of-3">
+                  <div class="sf-asset-photo">
+                    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="white" stroke-width="1.5">
+                      <rect x="10" y="10" width="80" height="40" rx="2"/>
+                      <rect x="15" y="15" width="30" height="20" fill="rgba(255,255,255,0.2)"/>
+                      <circle cx="65" cy="25" r="6"/>
+                      <circle cx="80" cy="25" r="3"/>
+                      <line x1="15" y1="42" x2="85" y2="42"/>
+                      <rect x="55" y="38" width="30" height="8" fill="rgba(255,255,255,0.15)"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="slds-col slds-size_2-of-3">
+                  <dl class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                      <dt class="slds-item_label slds-text-color_weak">装置名</dt>
+                      <dd class="slds-item_detail"><a href="#">CleanMaster CM-3200X</a></dd>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                      <dt class="slds-item_label slds-text-color_weak">シリアル番号</dt>
+                      <dd class="slds-item_detail">CMX-2023-04781</dd>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                      <dt class="slds-item_label slds-text-color_weak">設置日</dt>
+                      <dd class="slds-item_detail">2024/03/22 (経過 2.2年)</dd>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                      <dt class="slds-item_label slds-text-color_weak">累積稼働時間</dt>
+                      <dd class="slds-item_detail">14,720 時間</dd>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                      <dt class="slds-item_label slds-text-color_weak">FW バージョン</dt>
+                      <dd class="slds-item_detail">v3.7.2 (最新: v3.8.1)</dd>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                      <dt class="slds-item_label slds-text-color_weak">直近メンテ</dt>
+                      <dd class="slds-item_detail">2026/03/15 (PM 12K)</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 作業手順 -->
+      <article class="slds-card slds-m-top_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-task">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title"><span>作業手順 (3 / 7 完了)</span></h2>
+            </div>
+            <div class="slds-no-flex">
+              <button class="slds-button slds-button_neutral">PDF を開く</button>
+              <button class="slds-button slds-button_neutral">手順書 v3.8</button>
+            </div>
+          </header>
+        </div>
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+          <!-- 進捗バー -->
+          <div class="slds-progress-bar slds-progress-bar_circular slds-m-bottom_medium" aria-valuemin="0" aria-valuemax="100" aria-valuenow="43" role="progressbar">
+            <span class="slds-progress-bar__value" style="width:43%"><span class="slds-assistive-text">進捗 43%</span></span>
+          </div>
+
+          <!-- Step 1: 完了 -->
+          <div class="sf-step-card is-done">
+            <div class="slds-grid slds-grid_align-spread">
+              <div>
+                <div class="sf-step-num">STEP 1 ✓ 完了</div>
+                <div class="sf-step-title">電源遮断・LOTO 処置 / 安全確認</div>
+                <div class="sf-step-meta">主電源OFF (盤B-12) → 残圧抜き → LOTO タグ施錠 (山下) · 完了 13:18 · 所要 18分</div>
+              </div>
+              <button class="slds-button slds-button_neutral slds-button_small" disabled>確認済み</button>
+            </div>
+          </div>
+
+          <!-- Step 2: 完了 -->
+          <div class="sf-step-card is-done">
+            <div class="slds-grid slds-grid_align-spread">
+              <div>
+                <div class="sf-step-num">STEP 2 ✓ 完了</div>
+                <div class="sf-step-title">SC-1 槽の薬液排出と純水リンス</div>
+                <div class="sf-step-meta">廃液は B-line で回収 (廃液記録 #WL-3318) · 完了 13:46 · 所要 28分</div>
+              </div>
+              <button class="slds-button slds-button_neutral slds-button_small" disabled>確認済み</button>
+            </div>
+          </div>
+
+          <!-- Step 3: 完了 -->
+          <div class="sf-step-card is-done">
+            <div class="slds-grid slds-grid_align-spread">
+              <div>
+                <div class="sf-step-num">STEP 3 ✓ 完了</div>
+                <div class="sf-step-title">前面パネル取り外し / 内部目視点検</div>
+                <div class="sf-step-meta">P-2 ベローズに <strong>軽微な亀裂・薬液漏れ痕</strong> を確認 (写真添付済 IMG-001) · 完了 14:22</div>
+              </div>
+              <button class="slds-button slds-button_neutral slds-button_small" disabled>確認済み</button>
+            </div>
+          </div>
+
+          <!-- Step 4: 進行中 -->
+          <div class="sf-step-card is-current">
+            <div class="slds-grid slds-grid_align-spread">
+              <div>
+                <div class="sf-step-num" style="color:#a45f0c;">STEP 4 ▸ 作業中</div>
+                <div class="sf-step-title">ベローズポンプ P-2 の交換</div>
+                <div class="sf-step-meta">トルク仕様: M6 → 8.5 N·m / オーバートルクで樹脂ハウジング破損リスクあり (★Agentforce 警告参照)</div>
+              </div>
+              <button class="slds-button slds-button_brand slds-button_small">完了マーク</button>
+            </div>
+          </div>
+
+          <!-- Step 5-7: 未着手 -->
+          <div class="sf-step-card">
+            <div class="slds-grid slds-grid_align-spread">
+              <div>
+                <div class="sf-step-num">STEP 5</div>
+                <div class="sf-step-title">フィルタ FL-12 / FL-13 の交換</div>
+                <div class="sf-step-meta">予定 16:00 - 16:30 (30分) / 5μm PFA フィルタ × 2</div>
+              </div>
+              <button class="slds-button slds-button_neutral slds-button_small">開始</button>
+            </div>
+          </div>
+          <div class="sf-step-card">
+            <div class="slds-grid slds-grid_align-spread">
+              <div>
+                <div class="sf-step-num">STEP 6</div>
+                <div class="sf-step-title">薬液充填・流量校正 (40 L/min ± 2%)</div>
+                <div class="sf-step-meta">予定 16:30 - 17:15 (45分) / 校正手順書 SOP-CLN-407</div>
+              </div>
+              <button class="slds-button slds-button_neutral slds-button_small">開始</button>
+            </div>
+          </div>
+          <div class="sf-step-card">
+            <div class="slds-grid slds-grid_align-spread">
+              <div>
+                <div class="sf-step-num">STEP 7</div>
+                <div class="sf-step-title">ダミーウェハで動作確認 / 顧客承認サイン</div>
+                <div class="sf-step-meta">予定 17:15 - 18:00 (45分) / 立ち会い: 鈴木 花子</div>
+              </div>
+              <button class="slds-button slds-button_neutral slds-button_small">開始</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 必要部品 -->
+      <article class="slds-card slds-m-top_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-product">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/product.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title"><span>必要部品 (5件)</span></h2>
+            </div>
+            <div class="slds-no-flex">
+              <button class="slds-button slds-button_neutral">在庫確認</button>
+              <button class="slds-button slds-button_neutral">追加発注</button>
+            </div>
+          </header>
+        </div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+          <thead>
+            <tr>
+              <th style="width:9rem;">部品番号</th>
+              <th>部品名</th>
+              <th class="slds-text-align_center" style="width:4rem;">数量</th>
+              <th style="width:8rem;">トラックトラック車両</th>
+              <th style="width:7rem;">在庫状況</th>
+              <th class="slds-text-align_right" style="width:7rem;">単価</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><a href="#">PMP-BLW-220</a></th>
+              <td>ベローズポンプ ASSY (PFA / 40L/min)</td>
+              <td class="slds-text-align_center"><strong>1</strong></td>
+              <td>サービスカー #14</td>
+              <td><span class="slds-badge slds-theme_success">車載 在庫</span></td>
+              <td class="slds-text-align_right">¥248,000</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#">FLT-PFA-05</a></th>
+              <td>5μm PFA フィルタカートリッジ</td>
+              <td class="slds-text-align_center"><strong>2</strong></td>
+              <td>サービスカー #14</td>
+              <td><span class="slds-badge slds-theme_success">車載 在庫</span></td>
+              <td class="slds-text-align_right">¥18,500</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#">ORG-FKM-32</a></th>
+              <td>O-リング FKM φ32 (薬液耐性)</td>
+              <td class="slds-text-align_center"><strong>4</strong></td>
+              <td>サービスカー #14</td>
+              <td><span class="slds-badge slds-theme_success">車載 在庫</span></td>
+              <td class="slds-text-align_right">¥980</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#">SNS-FLW-08</a></th>
+              <td>流量センサ (Hall式 0-50 L/min)</td>
+              <td class="slds-text-align_center"><strong>1</strong></td>
+              <td>九州サービス倉庫</td>
+              <td><span class="slds-badge slds-theme_warning">手配中 ETA 17:30</span></td>
+              <td class="slds-text-align_right">¥87,400</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#">CHM-DIW-20</a></th>
+              <td>純水 (DIW) 20L</td>
+              <td class="slds-text-align_center"><strong>3</strong></td>
+              <td>顧客提供</td>
+              <td><span class="slds-badge">顧客提供</span></td>
+              <td class="slds-text-align_right">—</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5" class="slds-text-align_right slds-text-color_weak">部品合計</td>
+              <td class="slds-text-align_right"><strong>¥360,820</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </article>
+
+      <!-- サービス BOM -->
+      <article class="slds-card slds-m-top_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-hierarchy">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/hierarchy.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title"><span>サービス BOM — CleanMaster CM-3200X</span></h2>
+            </div>
+            <div class="slds-no-flex">
+              <button class="slds-button slds-button_neutral">3D 図面</button>
+              <button class="slds-button slds-button_neutral">全展開</button>
+            </div>
+          </header>
+        </div>
+        <div class="slds-p-around_medium sf-bom">
+          <div class="sf-bom-row is-head">
+            <div class="sf-bom-name">構成品</div>
+            <div>部品番号</div>
+            <div class="slds-text-align_center">作業対象</div>
+            <div class="slds-text-align_center">交換周期</div>
+          </div>
+
+          <div class="sf-bom-row sf-bom-l1">
+            <div class="sf-bom-name"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" class="sf-bom-toggle">▾ ウェット洗浄ユニット (SC-1)</div>
+            <div>UNIT-SC1-01</div>
+            <div class="slds-text-align_center">—</div>
+            <div class="slds-text-align_center">—</div>
+          </div>
+          <div class="sf-bom-row sf-bom-l2">
+            <div class="sf-bom-name"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" class="sf-bom-toggle">▾ 薬液循環アセンブリ</div>
+            <div>ASSY-CIRC-7</div>
+            <div class="slds-text-align_center">—</div>
+            <div class="slds-text-align_center">—</div>
+          </div>
+          <div class="sf-bom-row sf-bom-l3">
+            <div class="sf-bom-name">• ベローズポンプ P-2 <span class="slds-badge slds-theme_warning slds-m-left_x-small">交換対象</span></div>
+            <div><a href="#">PMP-BLW-220</a></div>
+            <div class="slds-text-align_center">★今回</div>
+            <div class="slds-text-align_center">15,000h</div>
+          </div>
+          <div class="sf-bom-row sf-bom-l3">
+            <div class="sf-bom-name">• フィルタハウジング FL-12 <span class="slds-badge slds-theme_warning slds-m-left_x-small">交換対象</span></div>
+            <div><a href="#">FLT-PFA-05</a></div>
+            <div class="slds-text-align_center">★今回</div>
+            <div class="slds-text-align_center">6,000h</div>
+          </div>
+          <div class="sf-bom-row sf-bom-l3">
+            <div class="sf-bom-name">• フィルタハウジング FL-13 <span class="slds-badge slds-theme_warning slds-m-left_x-small">交換対象</span></div>
+            <div><a href="#">FLT-PFA-05</a></div>
+            <div class="slds-text-align_center">★今回</div>
+            <div class="slds-text-align_center">6,000h</div>
+          </div>
+          <div class="sf-bom-row sf-bom-l3">
+            <div class="sf-bom-name">• 流量センサ FS-01</div>
+            <div><a href="#">SNS-FLW-08</a></div>
+            <div class="slds-text-align_center">点検</div>
+            <div class="slds-text-align_center">校正 12K</div>
+          </div>
+          <div class="sf-bom-row sf-bom-l3">
+            <div class="sf-bom-name">• 配管 O-リング セット</div>
+            <div><a href="#">ORG-FKM-32</a></div>
+            <div class="slds-text-align_center">★今回</div>
+            <div class="slds-text-align_center">5,000h</div>
+          </div>
+
+          <div class="sf-bom-row sf-bom-l2">
+            <div class="sf-bom-name"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevronright.svg" alt="" class="sf-bom-toggle">▸ 加熱・温調アセンブリ</div>
+            <div>ASSY-HEAT-3</div>
+            <div class="slds-text-align_center">—</div>
+            <div class="slds-text-align_center">—</div>
+          </div>
+          <div class="sf-bom-row sf-bom-l2">
+            <div class="sf-bom-name"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevronright.svg" alt="" class="sf-bom-toggle">▸ ウェハ搬送ロボット</div>
+            <div>ROBO-WFR-2</div>
+            <div class="slds-text-align_center">—</div>
+            <div class="slds-text-align_center">—</div>
+          </div>
+
+          <div class="sf-bom-row sf-bom-l1">
+            <div class="sf-bom-name"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevronright.svg" alt="" class="sf-bom-toggle">▸ ドライエッチユニット (DE-2)</div>
+            <div>UNIT-DE2-01</div>
+            <div class="slds-text-align_center">—</div>
+            <div class="slds-text-align_center">—</div>
+          </div>
+          <div class="sf-bom-row sf-bom-l1">
+            <div class="sf-bom-name"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevronright.svg" alt="" class="sf-bom-toggle">▸ 制御コンソール / SECS インタフェース</div>
+            <div>CTRL-CONS-12</div>
+            <div class="slds-text-align_center">—</div>
+            <div class="slds-text-align_center">—</div>
+          </div>
+        </div>
+        <footer class="slds-card__footer">
+          <a href="#" class="slds-card__footer-action">完全な BOM ツリーを見る</a>
+        </footer>
+      </article>
+
+    </div>
+
+    <!-- Right Column -->
+    <div class="slds-col slds-size_1-of-3">
+
+      <!-- Agentforce 類似事例から学ぶトラブル予測 -->
+      <article class="slds-card slds-m-bottom_x-small" style="border:1px solid #b9d6ff;">
+        <div class="slds-card__header slds-grid" style="background:linear-gradient(90deg,#eef4fd 0%,#fafaf9 100%);">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container" style="background:#0070d2;border-radius:50%;width:1.75rem;height:1.75rem;display:inline-flex;align-items:center;justify-content:center;">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:18px;height:18px;filter:brightness(0) invert(1);" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title" style="font-weight:700;">Agentforce: 類似事例からのトラブル予測</h2>
+              <p class="slds-text-body_small slds-text-color_weak">過去 3 年 / 124 件の類似 WO を分析</p>
+            </div>
+          </header>
+        </div>
+        <div class="slds-card__body slds-p-around_medium">
+
+          <!-- 高リスク -->
+          <div class="sf-af-alert is-high">
+            <h4>
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" style="width:14px;height:14px;filter:brightness(0) saturate(100%) invert(13%) sepia(63%) saturate(5827%) hue-rotate(351deg) brightness(82%) contrast(101%);">
+              ベローズハウジングのオーバートルク破損
+              <span class="sf-af-confidence slds-m-left_x-small">確度 92%</span>
+            </h4>
+            <p>P-2 交換時に M6 ボルトを <strong>10 N·m 超</strong> で締め付けると、PFA 樹脂ハウジングにマイクロクラックが入り、48時間以内に薬液漏洩した事例が <strong>過去 7件</strong> 発生しています。<strong>必ず 8.5 N·m トルクレンチを使用</strong>してください。</p>
+            <div class="sf-af-meta">
+              <span>類似事例: <a href="#">WO-2025-04221</a>, <a href="#">WO-2024-03811</a> 他5件</span>
+            </div>
+          </div>
+
+          <!-- 中リスク -->
+          <div class="sf-af-alert is-mid">
+            <h4>
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" style="width:14px;height:14px;filter:brightness(0) saturate(100%) invert(56%) sepia(76%) saturate(587%) hue-rotate(348deg) brightness(99%) contrast(98%);">
+              流量センサ FS-01 の同時不良の可能性
+              <span class="sf-af-confidence slds-m-left_x-small">確度 68%</span>
+            </h4>
+            <p>このシリアル番号 (CMX-2023-04781) と同ロットの装置で、ポンプ劣化と <strong>流量センサのドリフト</strong> が同時発生した事例が 4件あります。STEP 6 校正時に <strong>± 5% 以上のズレ</strong> があれば SNS-FLW-08 (現在手配中) を予防交換することを推奨します。</p>
+            <div class="sf-af-meta">
+              <span>類似事例: <a href="#">WO-2025-07112</a>, <a href="#">WO-2025-09433</a></span>
+            </div>
+          </div>
+
+          <!-- 情報 -->
+          <div class="sf-af-alert is-info">
+            <h4>
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/knowledge_base.svg" alt="" style="width:14px;height:14px;filter:brightness(0) saturate(100%) invert(31%) sepia(94%) saturate(2476%) hue-rotate(195deg) brightness(95%) contrast(101%);">
+              FW v3.8.1 へのアップデートを推奨
+              <span class="sf-af-confidence slds-m-left_x-small">確度 81%</span>
+            </h4>
+            <p>v3.7.2 → v3.8.1 で循環ポンプの異常検知ロジックが改善されています。今回のような兆候を <strong>72時間早く検知</strong> できる事例が 11件報告されています。STEP 7 動作確認後にアップデート可。</p>
+            <div class="sf-af-meta">
+              <span><a href="#">リリースノート v3.8.1</a> · <a href="#">技術速報 TB-2026-018</a></span>
+            </div>
+          </div>
+
+          <!-- 推奨アクション -->
+          <div class="slds-box slds-theme_default slds-p-around_x-small slds-m-top_small" style="background:#fafaf9;">
+            <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small"><strong>Agentforce からの推奨</strong></p>
+            <button class="slds-button slds-button_neutral slds-button_small slds-m-bottom_xx-small" style="display:block;width:100%;text-align:left;">▸ 類似事例 WO-2025-04221 の作業ログを開く</button>
+            <button class="slds-button slds-button_neutral slds-button_small slds-m-bottom_xx-small" style="display:block;width:100%;text-align:left;">▸ トルクレンチ #T-08 の校正記録を確認</button>
+            <button class="slds-button slds-button_neutral slds-button_small" style="display:block;width:100%;text-align:left;" onclick="toggleAgentforce()">▸ Agentforce に質問する</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Activity Timeline -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav" role="tablist">
+            <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="0">活動</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">フィード</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">ナレッジ</a></li>
+          </ul>
+          <div class="slds-tabs_default__content slds-show" role="tabpanel">
+            <div class="slds-p-around_medium">
+
+              <h3 class="slds-timeline__title slds-text-align_center slds-m-vertical_medium">
+                <span class="slds-timeline__title-content slds-text-heading_label">本日 2026年6月14日 (3)</span>
+              </h3>
+              <ul class="slds-timeline">
+
+                <!-- 顧客への到着連絡 (Call - 詳細展開) -->
+                <li>
+                  <div class="slds-timeline__item_expandable slds-timeline__item_call slds-is-open">
+                    <span class="slds-assistive-text">call</span>
+                    <div class="slds-media">
+                      <div class="slds-media__figure">
+                        <button class="slds-button slds-button_icon" aria-expanded="true" title="詳細を切り替え" data-timeline-toggle style="position: relative; z-index: 1;">
+                          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/switch.svg" alt="" class="slds-button__icon slds-timeline__details-action-icon" style="filter: invert(38%);" />
+                          <span class="slds-assistive-text">詳細を切り替え</span>
+                        </button>
+                        <div class="slds-icon_container slds-icon-standard-log-a-call slds-timeline__icon" title="call">
+                          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg" alt="" class="slds-icon slds-icon_small" />
+                        </div>
+                      </div>
+                      <div class="slds-media__body">
+                        <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                          <h3><a href="#"><strong>到着連絡 / 現場立ち会い者と合流</strong></a></h3>
+                          <div class="slds-timeline__actions slds-timeline__actions_inline">
+                            <p class="slds-timeline__date">12:48 | 6/14</p>
+                          </div>
+                        </div>
+                        <p class="slds-m-horizontal_xx-small">山下 健司 が <a href="#">高木 智之</a> (日精セミコンダクター) に通話</p>
+                        <article class="slds-box slds-timeline__item_details slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                          <ul class="slds-list_horizontal slds-wrap">
+                            <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                              <span class="slds-text-title slds-p-bottom_x-small">通話相手</span>
+                              <span class="slds-text-body_medium"><a href="#">高木 智之</a> (設備技術課 課長)</span>
+                            </li>
+                            <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                              <span class="slds-text-title slds-p-bottom_x-small">通話時間</span>
+                              <span class="slds-text-body_medium">6 分 24 秒</span>
+                            </li>
+                          </ul>
+                          <div>
+                            <span class="slds-text-title">概要</span>
+                            <p class="slds-p-top_x-small">ゲート3 到着、CR-3 入室手続きを依頼。立ち会いは鈴木プロセスEngが13:00 から対応可能。装置は本日早朝 04:20 から停止中で、上流の枚葉装置3台もアイドル状態。<strong>2nm 試作ロットの納期影響大</strong>のため最優先での復旧を要請された。</p>
+                          </div>
+                        </article>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <!-- 装置内部点検 (Event - 詳細展開) -->
+                <li>
+                  <div class="slds-timeline__item_expandable slds-timeline__item_event slds-is-open">
+                    <span class="slds-assistive-text">event</span>
+                    <div class="slds-media">
+                      <div class="slds-media__figure">
+                        <button class="slds-button slds-button_icon" aria-expanded="true" title="詳細を切り替え" data-timeline-toggle style="position: relative; z-index: 1;">
+                          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/switch.svg" alt="" class="slds-button__icon slds-timeline__details-action-icon" style="filter: invert(38%);" />
+                          <span class="slds-assistive-text">詳細を切り替え</span>
+                        </button>
+                        <div class="slds-icon_container slds-icon-standard-event slds-timeline__icon" title="event">
+                          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" alt="" class="slds-icon slds-icon_small" />
+                        </div>
+                      </div>
+                      <div class="slds-media__body">
+                        <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                          <h3><a href="#"><strong>SC-1 内部点検 / 漏洩痕の確認</strong></a></h3>
+                          <div class="slds-timeline__actions slds-timeline__actions_inline">
+                            <p class="slds-timeline__date">14:08 - 14:22 | 6/14</p>
+                          </div>
+                        </div>
+                        <p class="slds-m-horizontal_xx-small">作業者: 山下 健司 / 立ち会い: 鈴木 花子</p>
+                        <article class="slds-box slds-timeline__item_details slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                          <ul class="slds-list_horizontal slds-wrap">
+                            <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                              <span class="slds-text-title slds-p-bottom_x-small">場所</span>
+                              <span class="slds-text-body_medium">CR-3 / SC-1 槽前面</span>
+                            </li>
+                            <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                              <span class="slds-text-title slds-p-bottom_x-small">添付</span>
+                              <span class="slds-text-body_medium"><a href="#">IMG-001.jpg</a> · <a href="#">IMG-002.jpg</a></span>
+                            </li>
+                          </ul>
+                          <div>
+                            <span class="slds-text-title">所見</span>
+                            <p class="slds-p-top_x-small">ベローズポンプ P-2 のハウジング下部に <strong>長さ 約3mm の亀裂</strong> を確認。亀裂周辺に薬液結晶痕あり (HF/H2O2 由来)。<strong>原因確定: P-2 のハウジング劣化による薬液漏洩 → 循環流量低下 → ベベル部洗浄不良</strong>。STEP 4 でポンプ ASSY 交換に着手。</p>
+                          </div>
+                        </article>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <!-- 部品請求 (Task - 詳細展開) -->
+                <li>
+                  <div class="slds-timeline__item_expandable slds-timeline__item_task slds-is-open">
+                    <span class="slds-assistive-text">task</span>
+                    <div class="slds-media">
+                      <div class="slds-media__figure">
+                        <button class="slds-button slds-button_icon" aria-expanded="true" title="詳細を切り替え" data-timeline-toggle style="position: relative; z-index: 1;">
+                          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/switch.svg" alt="" class="slds-button__icon slds-timeline__details-action-icon" style="filter: invert(38%);" />
+                          <span class="slds-assistive-text">詳細を切り替え</span>
+                        </button>
+                        <div class="slds-icon_container slds-icon-standard-task slds-timeline__icon" title="task">
+                          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" class="slds-icon slds-icon_small" />
+                        </div>
+                      </div>
+                      <div class="slds-media__body">
+                        <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                          <h3><a href="#"><strong>流量センサ SNS-FLW-08 を緊急手配</strong></a></h3>
+                          <div class="slds-timeline__actions slds-timeline__actions_inline">
+                            <p class="slds-timeline__date">14:30 | 6/14</p>
+                          </div>
+                        </div>
+                        <p class="slds-m-horizontal_xx-small">担当: 九州サービス倉庫 / ETA: 17:30</p>
+                        <article class="slds-box slds-timeline__item_details slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium">
+                          <ul class="slds-list_horizontal slds-wrap">
+                            <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                              <span class="slds-text-title slds-p-bottom_x-small">部品</span>
+                              <span class="slds-text-body_medium"><a href="#">SNS-FLW-08</a> 流量センサ × 1</span>
+                            </li>
+                            <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                              <span class="slds-text-title slds-p-bottom_x-small">配送方法</span>
+                              <span class="slds-text-body_medium">専用便 (熊本サテライト経由)</span>
+                            </li>
+                          </ul>
+                          <div>
+                            <span class="slds-text-title">理由</span>
+                            <p class="slds-p-top_x-small">Agentforce の予測 (確度 68%) に基づく予防交換準備。STEP 6 校正で流量精度に異常があれば即座に交換できるよう、現場到着を 17:30 に設定。<strong>未使用なら倉庫返却</strong>。</p>
+                          </div>
+                        </article>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+              </ul>
+
+              <h3 class="slds-timeline__title slds-text-align_center slds-m-vertical_medium">
+                <span class="slds-timeline__title-content slds-text-heading_label">過去 (2)</span>
+              </h3>
+              <ul class="slds-timeline">
+
+                <!-- 過去のメンテ (Email - 折りたたみ) -->
+                <li>
+                  <div class="slds-timeline__item_expandable slds-timeline__item_email">
+                    <span class="slds-assistive-text">email</span>
+                    <div class="slds-media">
+                      <div class="slds-media__figure">
+                        <div class="slds-icon_container slds-icon-standard-email slds-timeline__icon" title="email">
+                          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/email.svg" alt="" class="slds-icon slds-icon_small" />
+                        </div>
+                      </div>
+                      <div class="slds-media__body">
+                        <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                          <h3><a href="#"><strong>WO 受付通知 / 出動指示</strong></a></h3>
+                          <p class="slds-timeline__date">04:28 | 6/14</p>
+                        </div>
+                        <p class="slds-m-horizontal_xx-small slds-text-body_small">ディスパッチ → 山下 健司 (P1 エスカレーション)</p>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div class="slds-timeline__item_expandable slds-timeline__item_event">
+                    <span class="slds-assistive-text">event</span>
+                    <div class="slds-media">
+                      <div class="slds-media__figure">
+                        <div class="slds-icon_container slds-icon-standard-event slds-timeline__icon" title="event">
+                          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" alt="" class="slds-icon slds-icon_small" />
+                        </div>
+                      </div>
+                      <div class="slds-media__body">
+                        <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                          <h3><a href="#"><strong>定期メンテナンス PM 12K (前回)</strong></a></h3>
+                          <p class="slds-timeline__date">2026/03/15</p>
+                        </div>
+                        <p class="slds-m-horizontal_xx-small slds-text-body_small">担当: 田中 美咲 / 異常なし</p>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 関連ケース -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-case">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/case.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title"><span>関連ケース (1)</span></h2>
+            </div>
+          </header>
+        </div>
+        <ul class="slds-has-dividers_top-space">
+          <li class="slds-item slds-p-around_x-small">
+            <a href="#"><strong>CS-00482</strong></a>
+            <span class="slds-badge slds-theme_warning slds-m-left_small">P1 対応中</span>
+            <p class="slds-text-body_small">ベベル部の洗浄不良 / 歩留まり 12% 低下</p>
+            <p class="slds-text-body_small slds-text-color_weak">起票: 2026/06/14 04:18 · 連絡: 高木 智之</p>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 添付・マニュアル -->
+      <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-document">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/document.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title"><span>マニュアル・添付 (4)</span></h2>
+            </div>
+          </header>
+        </div>
+        <ul class="slds-has-dividers_top-space">
+          <li class="slds-item slds-p-around_x-small">
+            <span class="slds-icon_container slds-m-right_x-small">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/pdf.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+            <a href="#">CM-3200X 修理手順書 v3.8.pdf</a>
+            <p class="slds-text-body_small slds-text-color_weak">8.2 MB · 2026/05/18</p>
+          </li>
+          <li class="slds-item slds-p-around_x-small">
+            <span class="slds-icon_container slds-m-right_x-small">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/pdf.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+            <a href="#">SOP-CLN-407 流量校正手順.pdf</a>
+            <p class="slds-text-body_small slds-text-color_weak">1.4 MB · 2026/02/10</p>
+          </li>
+          <li class="slds-item slds-p-around_x-small">
+            <span class="slds-icon_container slds-m-right_x-small">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/image.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+            <a href="#">IMG-001.jpg (P-2 亀裂)</a>
+            <p class="slds-text-body_small slds-text-color_weak">3.1 MB · 14:18</p>
+          </li>
+          <li class="slds-item slds-p-around_x-small">
+            <span class="slds-icon_container slds-m-right_x-small">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/image.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+            <a href="#">IMG-002.jpg (薬液結晶痕)</a>
+            <p class="slds-text-body_small slds-text-color_weak">2.8 MB · 14:20</p>
+          </li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</main>
+
+<!-- Agentforce 会話パネル -->
+<style>
+  .sf-af-panel { position: fixed; top: 3rem; right: 0; bottom: 0; width: 380px; background: white; border-left: 1px solid #c9c9c9; box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08); z-index: 100; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.3s ease-out; }
+  .sf-af-panel.is-open { transform: translateX(0); }
+  .sf-af-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid #dddbda; flex-shrink: 0; }
+  .sf-af-title { font-size: 1rem; font-weight: 700; color: #181818; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-af-title::before { content: ""; display: inline-block; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: #0070d2 url('https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg') center/14px no-repeat; filter: invert(0); }
+  .sf-af-header-actions { display: flex; gap: 0.25rem; }
+  .sf-af-header-actions button { width: 1.75rem; height: 1.75rem; background: transparent; border: none; cursor: pointer; border-radius: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-af-header-actions button:hover { background: #f3f3f3; }
+  .sf-af-header-actions img { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-af-conversation { flex: 1; overflow-y: auto; padding: 1rem; }
+  .sf-af-msg { display: flex; gap: 0.75rem; margin-bottom: 1rem; opacity: 0; transform: translateY(12px); animation: sf-af-msg-in 0.4s ease-out forwards; }
+  .sf-af-msg:nth-child(1) { animation-delay: 0.1s; }
+  .sf-af-msg:nth-child(2) { animation-delay: 0.6s; }
+  .sf-af-msg:nth-child(3) { animation-delay: 1.2s; }
+  .sf-af-msg:nth-child(4) { animation-delay: 1.8s; }
+  .sf-af-msg:nth-child(5) { animation-delay: 2.4s; }
+  @keyframes sf-af-msg-in { to { opacity: 1; transform: translateY(0); } }
+  .sf-af-avatar { flex: 0 0 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-af-avatar-bot { background: #0070d2; }
+  .sf-af-avatar-bot img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+  .sf-af-avatar-user { background: #b8b8b8; }
+  .sf-af-avatar-user img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+  .sf-af-bubble { flex: 1; font-size: 0.875rem; line-height: 1.5; color: #181818; word-break: break-word; }
+  .sf-af-bubble strong { display: block; margin-top: 0.5rem; }
+  .sf-af-bubble p { margin: 0; }
+  .sf-af-bubble ul { margin: 0.25rem 0 0 1rem; padding: 0; }
+  .sf-af-bubble li { margin-bottom: 0.125rem; }
+  .sf-af-suggestions { border-top: 1px solid #dddbda; padding: 0.75rem 1rem; flex-shrink: 0; background: #fafaf9; }
+  .sf-af-suggestions-title { font-size: 0.75rem; font-weight: 700; color: #444; margin-bottom: 0.5rem; }
+  .sf-af-suggestion { display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0; font-size: 0.8125rem; color: #0070d2; cursor: pointer; }
+  .sf-af-suggestion:hover { text-decoration: underline; }
+  .sf-af-suggestion::before { content: "▸"; color: #0070d2; font-size: 0.75rem; }
+  .sf-af-input-wrap { border-top: 1px solid #dddbda; padding: 0.75rem 1rem; flex-shrink: 0; }
+  .sf-af-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #dddbda; border-radius: 0.25rem; font-size: 0.875rem; box-sizing: border-box; }
+  .sf-af-input:focus { outline: none; border-color: #1589ee; box-shadow: 0 0 3px #0070d2; }
+</style>
+
+<aside class="sf-af-panel" id="sf-af-panel">
+  <header class="sf-af-header">
+    <div class="sf-af-title">FieldServiceAgent</div>
+    <div class="sf-af-header-actions">
+      <button title="情報"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" /></button>
+      <button title="新規セッション"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" /></button>
+      <button title="ピン留め"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/pinned.svg" alt="" /></button>
+      <button title="閉じる" onclick="toggleAgentforce()"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" /></button>
+    </div>
+  </header>
+  <div class="sf-af-conversation" id="sf-af-conversation">
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>
+      <div class="sf-af-bubble"><p>山下さん、お疲れさまです。WO-2026-00873 の作業内容を確認しました。何かお手伝いできますか？</p></div>
+    </div>
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-user"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" /></span>
+      <div class="sf-af-bubble"><p>類似事例で気をつけるべきトラブルを教えて</p></div>
+    </div>
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>
+      <div class="sf-af-bubble">
+        <p>過去 124件の類似 WO を分析した結果、特に注意すべき点が <strong>3つ</strong> あります。</p>
+        <strong>① ベローズハウジングのオーバートルク破損 (確度 92%)</strong>
+        <p>P-2 ASSY 取付時に M6 ボルトを 10 N·m 超で締めると、48時間以内に薬液漏洩した事例が 7件あります。<strong>必ず 8.5 N·m トルクレンチ #T-08</strong> を使用してください。</p>
+        <strong>② 流量センサ FS-01 の同時不良 (確度 68%)</strong>
+        <p>同ロット装置でポンプとセンサが同時劣化した事例が 4件。STEP 6 で ±5% 以上の誤差が出れば SNS-FLW-08 を予防交換することを推奨します。既に九州サービス倉庫から手配済 (ETA 17:30)。</p>
+        <strong>③ FW v3.7.2 → v3.8.1 の更新 (確度 81%)</strong>
+        <p>新FW で異常検知ロジックが改善されており、今回のような兆候を 72時間早く検知できます。動作確認後にお試しください。</p>
+      </div>
+    </div>
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-user"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" /></span>
+      <div class="sf-af-bubble"><p>WO-2025-04221 のときの作業者と同じトルクレンチ使ってない？</p></div>
+    </div>
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>
+      <div class="sf-af-bubble">
+        <p>確認しました。WO-2025-04221 で使われたのは <strong>トルクレンチ #T-12</strong> でした。今回山下さんが車載しているのは #T-08 で、最終校正日は 2026/05/02 (期限内)、誤差 ±0.3% で問題ありません。安心して使えます。</p>
+      </div>
+    </div>
+  </div>
+  <div class="sf-af-suggestions">
+    <div class="sf-af-suggestions-title">おすすめ</div>
+    <div class="sf-af-suggestion">トルクレンチ #T-08 の校正記録を表示</div>
+    <div class="sf-af-suggestion">類似事例 WO-2025-04221 の作業ログを開く</div>
+    <div class="sf-af-suggestion">FW v3.8.1 のリリースノートを要約</div>
+    <div class="sf-af-suggestion">作業完了後の顧客報告書ドラフトを生成</div>
+  </div>
+  <div class="sf-af-input-wrap">
+    <input type="text" class="sf-af-input" placeholder="質問するか、作業について説明..." id="sf-af-input" />
+  </div>
+</aside>
+
+<script>
+  function toggleAgentforce() {
+    const panel = document.getElementById('sf-af-panel');
+    panel.classList.toggle('is-open');
+    if (panel.classList.contains('is-open')) {
+      const conv = document.getElementById('sf-af-conversation');
+      const messages = conv.innerHTML;
+      conv.innerHTML = '';
+      void conv.offsetWidth;
+      conv.innerHTML = messages;
+    }
+  }
+</script>
+
+<!-- Activity Timeline トグル: switch ボタン (data-timeline-toggle) クリックで slds-is-open を toggle -->
+<script>
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-timeline-toggle]');
+    if (!btn) return;
+    var item = btn.closest('.slds-timeline__item_expandable');
+    if (!item) return;
+    var open = item.classList.toggle('slds-is-open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+</script>
+
+</body>
+</html>

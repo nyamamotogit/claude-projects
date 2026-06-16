@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEPCO Vision Demo — 自律型インフラ保全と系統・経営連動</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { background: #f3f3f3; min-width: 1024px; margin: 0; font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
+  .sf-main { max-width: 1480px; margin: 0 auto; padding: 1rem; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .sf-col-2-3 { flex: 0 0 calc(66.666% - 0.375rem); min-width: 0; }
+  .sf-col-1-3 { flex: 0 0 calc(33.333% - 0.375rem); min-width: 0; }
+
+  /* Scene navigation */
+  .scene-nav { background: linear-gradient(135deg, #032d60 0%, #0070d2 50%, #6264a7 100%); color: white; padding: 0.5rem 1rem; position: sticky; top: 0; z-index: 200; display: flex; align-items: center; gap: 1rem; }
+  .scene-nav-title { font-weight: 700; font-size: 0.875rem; }
+  .scene-nav-tabs { display: flex; gap: 0.25rem; flex: 1; }
+  .scene-nav-tab { padding: 0.4rem 0.75rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; border-radius: 4px; font-size: 0.75rem; transition: all 0.2s; }
+  .scene-nav-tab:hover { background: rgba(255,255,255,0.22); }
+  .scene-nav-tab.is-active { background: white; color: #032d60; font-weight: 700; }
+  .scene-nav-step { display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,0.25); text-align: center; line-height: 18px; margin-right: 6px; font-size: 0.6875rem; font-weight: 700; }
+  .scene-nav-tab.is-active .scene-nav-step { background: #032d60; color: white; }
+  .scene-nav-time { font-size: 0.6875rem; opacity: 0.85; }
+  .scene-nav-controls { display: flex; gap: 0.25rem; }
+  .scene-nav-controls button { background: rgba(255,255,255,0.18); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 0.3rem 0.6rem; font-size: 0.75rem; cursor: pointer; }
+  .scene-nav-controls button:hover { background: rgba(255,255,255,0.3); }
+
+  /* Scene panels - only one visible at a time */
+  .scene { display: none; }
+  .scene.is-active { display: block; }
+
+  /* Salesforce Global Header */
+  .sf-header { background: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid #c9c9c9; }
+  .sf-header-search { width: 50%; max-width: 36rem; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-cloud-logo { width: 36px; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn:hover { background: #f3f3f3; }
+  .sf-icon-btn img { width: 18px; height: 18px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-favorite-btn { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 2rem; background: #1b96ff; border-radius: 0.25rem; border: none; cursor: pointer; }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-notify-wrap { position: relative; display: inline-flex; }
+  .sf-notify-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ea001e; border-radius: 50%; border: 1.5px solid white; }
+  .sf-context-bar { background: white; border-bottom: 1px solid #dddbda; padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-context-bar nav ul { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .sf-context-bar nav ul li { display: flex; align-items: center; padding: 0 0.25rem; font-size: 0.875rem; }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid #1589ee; }
+  .sf-context-bar nav ul li.is-active a { color: #0070d2; font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-app-name { font-size: 1.125rem; font-weight: 700; color: #181818; padding: 0.5rem 0; margin-right: 0.75rem; }
+
+  /* Highlights */
+  .sf-highlights { background: white; border-radius: 0.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.07); padding: 0.75rem 1rem; margin-bottom: 0.75rem; }
+  .sf-highlights-row { display: flex; align-items: center; gap: 1rem; }
+  .sf-highlights-icon { width: 2.5rem; height: 2.5rem; flex-shrink: 0; }
+  .sf-highlights-title { font-size: 0.75rem; color: #444; }
+  .sf-highlights-name { font-size: 1.25rem; font-weight: 700; color: #181818; }
+  .sf-highlights-fields { display: flex; gap: 2rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #ecebea; flex-wrap: wrap; }
+  .sf-highlights-field-label { font-size: 0.75rem; color: #444; }
+  .sf-highlights-field-value { font-size: 0.875rem; color: #181818; font-weight: 600; }
+
+  /* Path */
+  .sf-path { display: flex; background: #ecebea; border-radius: 0.25rem; overflow: hidden; margin-bottom: 0.75rem; }
+  .sf-path-step { flex: 1; padding: 0.5rem 0.75rem; font-size: 0.8125rem; color: #444; text-align: center; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%); background: #ecebea; margin-right: -8px; }
+  .sf-path-step.is-complete { background: #04844b; color: white; }
+  .sf-path-step.is-current { background: #1589ee; color: white; font-weight: 700; }
+  .sf-path-step.is-warning { background: #fe9339; color: white; font-weight: 700; }
+  .sf-path-step:first-child { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); }
+  .sf-path-step:last-child { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 12px 50%); margin-right: 0; }
+
+  /* Cards */
+  .sf-card { background: white; border-radius: 0.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.07); margin-bottom: 0.75rem; }
+  .sf-card-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-bottom: 1px solid #ecebea; }
+  .sf-card-title { font-size: 0.875rem; font-weight: 700; color: #181818; flex: 1; }
+  .sf-card-body { padding: 0.75rem; }
+
+  /* Field grid */
+  .sf-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; }
+  .sf-field-label { font-size: 0.75rem; color: #444; }
+  .sf-field-value { font-size: 0.875rem; color: #181818; padding-bottom: 0.25rem; border-bottom: 1px dashed #ecebea; }
+
+  /* Pills */
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; }
+  .pill-blue { background: #e0f0ff; color: #014486; }
+  .pill-green { background: #def6e6; color: #04844b; }
+  .pill-orange { background: #fff3d6; color: #936800; }
+  .pill-red { background: #fde4e4; color: #ba0517; }
+  .pill-purple { background: #efe5fe; color: #5e3aa6; }
+
+  /* Source badges */
+  .src-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.6875rem; padding: 2px 7px; border-radius: 10px; color: white; font-weight: 600; margin-right: 4px; }
+  .src-sap { background: #0073e6; }
+  .src-aws { background: #ff9900; }
+  .src-m365 { background: #d83b01; }
+  .src-teams { background: #6264a7; }
+  .src-tableau { background: #1f447e; }
+  .src-dc { background: #032d60; }
+  .src-slack { background: #4a154b; }
+  .src-iot { background: #1abc9c; }
+
+  /* Agentforce insight */
+  .af-insight { background: linear-gradient(135deg, #f0f4ff 0%, #fdf2ff 100%); border: 1px solid #c9d8ff; border-radius: 6px; padding: 0.75rem; margin-bottom: 0.5rem; }
+  .af-insight-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .af-insight-header img { width: 16px; height: 16px; }
+  .af-insight-header strong { font-size: 0.8125rem; color: #181818; }
+  .af-insight-body { font-size: 0.8125rem; color: #181818; line-height: 1.55; }
+
+  /* Action plan card */
+  .action-plan { background: white; border: 2px solid #1589ee; border-radius: 8px; padding: 0; margin-bottom: 0.75rem; box-shadow: 0 4px 12px rgba(21,137,238,0.18); overflow: hidden; }
+  .action-plan-header { background: linear-gradient(135deg, #032d60, #0070d2); color: white; padding: 0.625rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .action-plan-header img { width: 20px; height: 20px; filter: brightness(0) invert(1); }
+  .action-plan-title { font-size: 0.9375rem; font-weight: 700; }
+  .action-plan-body { padding: 0.75rem 1rem; }
+  .action-step { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.625rem 0; border-bottom: 1px dashed #ecebea; }
+  .action-step:last-child { border-bottom: none; }
+  .action-step-num { flex: 0 0 24px; height: 24px; border-radius: 50%; background: #04844b; color: white; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+  .action-step-num.pending { background: #ecebea; color: #444; }
+  .action-step-num.running { background: #fe9339; }
+  .action-step-body { flex: 1; min-width: 0; }
+  .action-step-title { font-size: 0.8125rem; font-weight: 700; color: #181818; }
+  .action-step-desc { font-size: 0.75rem; color: #444; margin-top: 2px; line-height: 1.45; }
+  .action-step-meta { font-size: 0.6875rem; color: #6b6b6b; margin-top: 4px; }
+  .action-cta { background: linear-gradient(135deg, #04844b, #2eb67d); color: white; padding: 0.875rem 1rem; text-align: center; cursor: pointer; font-weight: 700; transition: all 0.2s; }
+  .action-cta:hover { filter: brightness(1.1); }
+  .action-cta-sub { font-size: 0.75rem; opacity: 0.9; font-weight: 400; margin-top: 2px; }
+
+  /* Map / IoT */
+  .iot-panel { background: #001627; border-radius: 6px; padding: 0; overflow: hidden; margin-bottom: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+  .iot-header { background: linear-gradient(90deg, #001627, #003459); color: white; padding: 0.625rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .iot-header-title { font-size: 0.875rem; font-weight: 700; flex: 1; }
+  .iot-pulse { width: 10px; height: 10px; background: #ea001e; border-radius: 50%; animation: pulse 1.4s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+  .iot-body { padding: 0.875rem 1rem; color: #cbd5e1; }
+  .iot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.625rem; margin-bottom: 0.875rem; }
+  .iot-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 0.5rem 0.625rem; }
+  .iot-stat-label { font-size: 0.6875rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.04em; }
+  .iot-stat-value { font-size: 1.125rem; font-weight: 700; color: white; margin-top: 2px; }
+  .iot-stat-trend { font-size: 0.6875rem; margin-top: 2px; }
+  .iot-stat.alert { border-color: #ea001e; background: rgba(234,0,30,0.12); }
+  .iot-stat.alert .iot-stat-value { color: #ff6b6b; }
+  .iot-stat.alert .iot-stat-trend { color: #ff6b6b; }
+  .iot-chart { background: rgba(255,255,255,0.04); border-radius: 4px; padding: 0.5rem; }
+  .iot-chart-title { font-size: 0.75rem; color: #94a3b8; margin-bottom: 0.25rem; }
+
+  /* Timeline */
+  .sf-timeline { list-style: none; padding: 0; margin: 0; }
+  .sf-timeline-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px dashed #ecebea; }
+  .sf-timeline-icon { flex: 0 0 2rem; height: 2rem; border-radius: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-timeline-icon-call { background: #056764; }
+  .sf-timeline-icon-email { background: #b0adab; }
+  .sf-timeline-icon-task { background: #04844b; }
+  .sf-timeline-icon-event { background: #cc6cdd; }
+  .sf-timeline-icon-agent { background: #0070d2; }
+  .sf-timeline-icon-iot { background: #1abc9c; }
+  .sf-timeline-icon-sap { background: #0073e6; }
+  .sf-timeline-icon img { width: 1.25rem; height: 1.25rem; filter: brightness(0) invert(1); }
+  .sf-timeline-body { flex: 1; min-width: 0; line-height: 1.4; }
+  .sf-timeline-body a { color: #0070d2; text-decoration: none; font-weight: 700; }
+  .sf-timeline-body a:hover { text-decoration: underline; }
+  .sf-timeline-body .meta { font-size: 0.8125rem; color: #444; margin-top: 0.25rem; }
+  .sf-timeline-body .meta-overdue { color: #ba0517; }
+
+  /* Vision banner */
+  .vision-banner { background: linear-gradient(135deg, #032d60 0%, #0070d2 50%, #6264a7 100%); color: white; padding: 0.5rem 1rem; font-size: 0.75rem; display: flex; align-items: center; gap: 1rem; }
+  .vision-banner strong { font-size: 0.8125rem; }
+  .vision-banner .badge { background: rgba(255,255,255,0.18); padding: 2px 8px; border-radius: 10px; font-size: 0.6875rem; }
+</style>
+<style>
+  /* Slack scope */
+  .slack-shell { background: #1a1d29; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.18); margin-bottom: 0.75rem; display: flex; height: 600px; }
+  .slack-sidebar { width: 230px; background: #19171d; color: #c9c9cd; flex-shrink: 0; padding: 0.75rem 0; }
+  .slack-workspace { padding: 0 0.875rem 0.625rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 0.5rem; }
+  .slack-workspace-name { font-size: 0.9375rem; font-weight: 700; color: white; }
+  .slack-channel-list { padding: 0.5rem 0; }
+  .slack-section-title { padding: 0.25rem 0.875rem; font-size: 0.75rem; color: #888993; text-transform: uppercase; letter-spacing: 0.04em; }
+  .slack-channel-item { padding: 0.25rem 0.875rem; font-size: 0.8125rem; color: #b9babc; cursor: pointer; display: flex; align-items: center; gap: 0.375rem; }
+  .slack-channel-item.is-active { background: #1164a3; color: white; font-weight: 600; }
+  .slack-channel-item:hover:not(.is-active) { background: rgba(255,255,255,0.04); }
+  .slack-channel-hash { color: #888993; }
+  .slack-channel-item.is-active .slack-channel-hash { color: white; }
+  .slack-main { flex: 1; background: white; display: flex; flex-direction: column; min-width: 0; }
+  .slack-main-header { padding: 0.625rem 1rem; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 0.5rem; }
+  .slack-main-channel { font-size: 1rem; font-weight: 700; color: #1d1c1d; }
+  .slack-main-meta { font-size: 0.75rem; color: #696969; }
+  .slack-msgs { flex: 1; overflow-y: auto; padding: 0.5rem 1rem; }
+  .slack-msg { display: flex; gap: 0.625rem; padding: 0.5rem 0; }
+  .slack-msg:hover { background: #f8f8f8; }
+  .slack-avatar { flex: 0 0 36px; height: 36px; border-radius: 4px; }
+  .slack-body { flex: 1; min-width: 0; font-size: 0.8125rem; line-height: 1.5; color: #1d1c1d; }
+  .slack-name { font-weight: 700; color: #1d1c1d; }
+  .slack-time { color: #696969; font-size: 0.6875rem; margin-left: 6px; }
+  .slack-mention { display: inline-block; background: #e8f0fe; color: #1264a3; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+  .slack-attach { margin-top: 6px; border-left: 3px solid #1264a3; padding: 8px 12px; background: #f8fafc; border-radius: 0 4px 4px 0; }
+  .slack-attach-title { font-weight: 700; color: #1264a3; font-size: 0.8125rem; }
+  .slack-attach-meta { font-size: 0.6875rem; color: #696969; margin-top: 2px; }
+  .slack-attach-body { font-size: 0.8125rem; color: #1d1c1d; margin-top: 6px; line-height: 1.5; }
+  .slack-app-tag { background: #e0f0ff; color: #014486; font-size: 0.625rem; padding: 1px 4px; border-radius: 2px; font-weight: 700; margin-left: 4px; }
+
+  /* Mobile (Slack on phone) */
+  .mobile-frame { width: 360px; margin: 0 auto; background: #000; border-radius: 32px; padding: 14px 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .mobile-screen { background: white; border-radius: 22px; overflow: hidden; height: 720px; display: flex; flex-direction: column; }
+  .mobile-statusbar { background: white; padding: 0.5rem 1rem 0.25rem; display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; color: #1d1c1d; }
+  .mobile-slack-header { background: #4a154b; color: white; padding: 0.625rem 1rem; display: flex; align-items: center; gap: 0.625rem; }
+  .mobile-slack-channel { font-size: 0.9375rem; font-weight: 700; }
+  .mobile-slack-meta { font-size: 0.6875rem; opacity: 0.85; }
+  .mobile-msgs { flex: 1; overflow-y: auto; padding: 0.5rem 0.75rem; background: #f8f8f8; }
+  .mobile-msg { background: white; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+  .mobile-msg-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+  .mobile-msg-avatar { width: 24px; height: 24px; border-radius: 4px; }
+  .mobile-msg-name { font-size: 0.8125rem; font-weight: 700; color: #1d1c1d; }
+  .mobile-msg-time { font-size: 0.6875rem; color: #696969; margin-left: auto; }
+  .mobile-msg-body { font-size: 0.8125rem; color: #1d1c1d; line-height: 1.45; }
+  .mobile-cta { background: linear-gradient(135deg, #04844b, #2eb67d); color: white; text-align: center; padding: 0.625rem; font-weight: 700; border-radius: 6px; margin-top: 0.5rem; cursor: pointer; font-size: 0.875rem; }
+  .mobile-cta-warn { background: linear-gradient(135deg, #ba0517, #ea001e); }
+
+  /* Tableau */
+  .tab-embed { background: white; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.07); padding: 1rem; margin-bottom: 0.75rem; }
+  .tab-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+  .tab-title { font-size: 0.9375rem; font-weight: 700; color: #181818; }
+  .tab-sub { font-size: 0.75rem; color: #6b6b6b; }
+  .tab-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 0.75rem; }
+  .tab-kpi { padding: 0.625rem; border-left: 4px solid #1f447e; background: #f7f9fc; }
+  .tab-kpi-label { font-size: 0.6875rem; color: #6b6b6b; text-transform: uppercase; letter-spacing: 0.04em; }
+  .tab-kpi-value { font-size: 1.25rem; font-weight: 700; color: #181818; margin-top: 2px; }
+  .tab-kpi-delta { font-size: 0.75rem; margin-top: 2px; }
+  .tab-kpi-delta.up { color: #04844b; }
+  .tab-kpi-delta.down { color: #ba0517; }
+  .tab-kpi.warn { border-left-color: #fe9339; }
+  .tab-kpi.bad { border-left-color: #ba0517; }
+  .tab-kpi.good { border-left-color: #04844b; }
+
+  /* Heatmap */
+  .heatmap-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .heatmap-box { background: linear-gradient(135deg, #001627, #003459); border-radius: 6px; padding: 0.875rem; color: white; }
+  .heatmap-title { font-size: 0.8125rem; font-weight: 700; margin-bottom: 0.5rem; color: white; }
+  .heatmap-sub { font-size: 0.6875rem; color: #94a3b8; margin-bottom: 0.5rem; }
+  .heatmap-svg { background: rgba(255,255,255,0.04); border-radius: 4px; padding: 0.5rem; }
+  .heatmap-legend { display: flex; gap: 0.625rem; margin-top: 0.5rem; font-size: 0.6875rem; color: #cbd5e1; }
+  .heatmap-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+
+  /* Approve big button (VIP mobile) */
+  .vip-approve { display: block; width: 100%; padding: 1rem; background: linear-gradient(135deg, #ba0517, #ea001e); color: white; font-size: 1.125rem; font-weight: 700; border-radius: 8px; cursor: pointer; border: none; box-shadow: 0 4px 12px rgba(186,5,23,0.3); margin: 0.75rem 0; }
+  .vip-approve:hover { filter: brightness(1.08); }
+
+  /* Toast */
+  .toast { position: fixed; top: 80px; right: 20px; background: #04844b; color: white; padding: 0.875rem 1.25rem; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 300; display: none; align-items: center; gap: 0.625rem; max-width: 420px; }
+  .toast.is-show { display: flex; animation: toast-in 0.3s ease-out; }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+  .toast img { width: 20px; height: 20px; filter: brightness(0) invert(1); }
+
+  /* Scene description box (narrator) */
+  .scene-narrator { background: #fffbe6; border-left: 4px solid #fe9339; padding: 0.625rem 1rem; margin-bottom: 0.75rem; font-size: 0.8125rem; color: #181818; line-height: 1.5; border-radius: 4px; }
+  .scene-narrator strong { color: #ba0517; }
+
+  /* Loading spinner used during transitions */
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #ecebea; border-top-color: #1589ee; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 4px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/success.svg" alt=""/>
+  <span id="toast-msg">承認が完了しました</span>
+</div>
+
+<!-- Scene Nav -->
+<div class="scene-nav">
+  <span class="scene-nav-title">⚡ TEPCO Vision Demo</span>
+  <div class="scene-nav-tabs">
+    <button class="scene-nav-tab is-active" data-scene="1"><span class="scene-nav-step">1</span>予兆検知<span class="scene-nav-time"> · 0–2min</span></button>
+    <button class="scene-nav-tab" data-scene="2"><span class="scene-nav-step">2</span>ゼロ・クリック手配<span class="scene-nav-time"> · 2–5min</span></button>
+    <button class="scene-nav-tab" data-scene="3"><span class="scene-nav-step">3</span>部門横断スウォーミング<span class="scene-nav-time"> · 5–7min</span></button>
+    <button class="scene-nav-tab" data-scene="4"><span class="scene-nav-step">4</span>関常務 経営決断<span class="scene-nav-time"> · 7–10min</span></button>
+  </div>
+  <div class="scene-nav-controls">
+    <button onclick="prevScene()">◀ 前</button>
+    <button onclick="nextScene()">次 ▶</button>
+  </div>
+</div>
+
+<div class="vision-banner">
+  <strong>Vision Demo</strong>
+  <span>現場の入口は Salesforce のまま、AI が SAP・Teams・M365・AWS を束ねて働く</span>
+  <span class="badge">TEPCO HD 様向け</span>
+  <span class="badge">関 常務 ご面談用</span>
+  <span style="margin-left:auto; opacity:0.85;">2026-06-15 13:42 JST</span>
+</div>
+
+
+<!-- ===================== SCENE 1: 予兆検知 ===================== -->
+<div class="scene is-active" id="scene-1">
+
+  <header class="sf-header">
+    <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce"/>
+    <div class="sf-header-search">
+      <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small"/>
+        <input type="search" placeholder="設備、案件、稟議を検索..." class="slds-input"/>
+      </div></div>
+    </div>
+    <div class="sf-header-actions">
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/></button>
+      <button class="sf-favorite-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt=""/><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;"/></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt=""/></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt=""/></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt=""/></button>
+      <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt=""/></button><span class="sf-notify-dot"></span></span>
+      <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:0.5rem;"><img src="https://ui-avatars.com/api/?name=佐々木+雅也&background=1B96FF&color=fff" alt=""/></span>
+    </div>
+  </header>
+  <div class="sf-context-bar">
+    <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+    <span class="sf-app-name">系統設備保全</span>
+    <nav><ul>
+      <li><a href="#">ホーム</a></li>
+      <li><a href="#">設備 ▾</a></li>
+      <li class="is-active"><a href="#">アラート ▾</a></li>
+      <li><a href="#">作業指示 ▾</a></li>
+      <li><a href="#">稟議 ▾</a></li>
+      <li><a href="#">Tableau ▾</a></li>
+    </ul></nav>
+  </div>
+
+  <main class="sf-main">
+
+    <div class="scene-narrator">
+      <strong>🎬 Scene 1 (0–2 min) ・ 現場担当者の Salesforce 画面</strong> — 13:42 JST、AWS IoT が「新豊洲変電所」地下275kV・1号機トランスの<strong>絶縁油中ガス（水素・アセチレン）の微小異常</strong>を検知。アラートが鳴った瞬間、Agentforce が裏側で SAP・過去事例DB・天気・系統運用を一気に照合し、画面には<strong>「対応策」が最初から提示される</strong>。
+    </div>
+
+    <!-- Highlights -->
+    <div class="sf-highlights">
+      <div class="sf-highlights-row">
+        <span class="slds-icon_container" style="background:#ba0517; width:2.5rem; height:2.5rem; border-radius:6px; display:inline-flex; align-items:center; justify-content:center;">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" style="width:1.5rem; height:1.5rem; filter:brightness(0) invert(1);"/>
+        </span>
+        <div style="flex:1;">
+          <div class="sf-highlights-title">設備アラート ・ ALT-2026-0615-1342</div>
+          <div class="sf-highlights-name">新豊洲変電所 1号トランス ・ 絶縁油中ガス異常上昇</div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <span class="pill pill-red" style="font-size:0.8125rem; padding:6px 14px;">⚠ Critical</span>
+          <button class="slds-button slds-button_neutral">設備カルテ</button>
+          <button class="slds-button slds-button_neutral">過去事例</button>
+        </div>
+      </div>
+      <div class="sf-highlights-fields">
+        <div><div class="sf-highlights-field-label">設備</div><div class="sf-highlights-field-value">新豊洲変電所 (地下式超高圧 275kV/154kV)</div></div>
+        <div><div class="sf-highlights-field-label">対象機器</div><div class="sf-highlights-field-value">1号主変圧器 / 容量 300MVA / 2018年運開</div></div>
+        <div><div class="sf-highlights-field-label">検知</div><div class="sf-highlights-field-value">水素 +218ppm / アセチレン 検出</div></div>
+        <div><div class="sf-highlights-field-label">影響範囲</div><div class="sf-highlights-field-value">中央区・港区・江東区の一部 (約24万世帯)</div></div>
+        <div><div class="sf-highlights-field-label">担当</div><div class="sf-highlights-field-value">佐々木 雅也 (東京ネットワークセンター)</div></div>
+        <div><div class="sf-highlights-field-label">Agentforce 予測</div><div class="sf-highlights-field-value"><span class="pill pill-red">3日以内ショート可能性 87%</span></div></div>
+      </div>
+    </div>
+
+    <!-- Path -->
+    <div class="sf-path">
+      <div class="sf-path-step is-complete">IoT検知</div>
+      <div class="sf-path-step is-warning">AI診断</div>
+      <div class="sf-path-step">部品手配</div>
+      <div class="sf-path-step">作業班手配</div>
+      <div class="sf-path-step">メーカー召集</div>
+      <div class="sf-path-step">対応実施</div>
+      <div class="sf-path-step">復旧確認</div>
+    </div>
+
+    <div class="sf-row">
+      <!-- LEFT 2/3 -->
+      <div class="sf-col-2-3">
+
+        <!-- IoT panel -->
+        <div class="iot-panel">
+          <div class="iot-header">
+            <span class="iot-pulse"></span>
+            <span class="iot-header-title">AWS IoT Core ・ 油中ガス分析センサー (DGA-MON-1F-A) ライブストリーム</span>
+            <span class="src-badge src-aws">AWS</span>
+            <span class="src-badge src-iot">IoT</span>
+          </div>
+          <div class="iot-body">
+            <div class="iot-grid">
+              <div class="iot-stat alert">
+                <div class="iot-stat-label">水素 H₂</div>
+                <div class="iot-stat-value">218 ppm</div>
+                <div class="iot-stat-trend">▲ +186% vs ベース (32ppm)</div>
+              </div>
+              <div class="iot-stat alert">
+                <div class="iot-stat-label">アセチレン C₂H₂</div>
+                <div class="iot-stat-value">12 ppm</div>
+                <div class="iot-stat-trend">▲ 通常検出されない</div>
+              </div>
+              <div class="iot-stat">
+                <div class="iot-stat-label">油温</div>
+                <div class="iot-stat-value">68.4 ℃</div>
+                <div class="iot-stat-trend" style="color:#fbbf24;">▲ +4.2 ℃ vs 平常</div>
+              </div>
+              <div class="iot-stat">
+                <div class="iot-stat-label">負荷率</div>
+                <div class="iot-stat-value">62%</div>
+                <div class="iot-stat-trend" style="color:#94a3b8;">平常範囲</div>
+              </div>
+            </div>
+            <div class="iot-chart">
+              <div class="iot-chart-title">水素濃度推移 (過去72時間 ・ 5分間隔)</div>
+              <svg viewBox="0 0 600 110" width="100%" height="110" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="redGrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#ea001e" stop-opacity="0.5"/>
+                    <stop offset="100%" stop-color="#ea001e" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <g stroke="rgba(255,255,255,0.06)" stroke-width="1">
+                  <line x1="0" y1="20" x2="600" y2="20"/>
+                  <line x1="0" y1="55" x2="600" y2="55"/>
+                  <line x1="0" y1="90" x2="600" y2="90"/>
+                </g>
+                <line x1="0" y1="78" x2="600" y2="78" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,3"/>
+                <text x="6" y="76" font-size="9" fill="#fbbf24">警報閾値 80ppm</text>
+                <!-- baseline -->
+                <polyline fill="none" stroke="#22d3ee" stroke-width="1.5" points="0,90 60,89 120,90 180,88 240,89 300,87 360,86 420,82 480,68 520,42 560,22 600,15"/>
+                <!-- area -->
+                <path d="M 0,90 L 60,89 L 120,90 L 180,88 L 240,89 L 300,87 L 360,86 L 420,82 L 480,68 L 520,42 L 560,22 L 600,15 L 600,100 L 0,100 Z" fill="url(#redGrad)"/>
+                <!-- spike marker -->
+                <circle cx="600" cy="15" r="4" fill="#ea001e"/>
+                <text x="540" y="12" font-size="10" fill="#ff6b6b" font-weight="700">218ppm ⚠</text>
+                <g font-size="9" fill="#94a3b8">
+                  <text x="0" y="108">3日前</text>
+                  <text x="290" y="108">36h前</text>
+                  <text x="560" y="108">現在</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Plan card (the killer "data → actions" moment) -->
+        <div class="action-plan">
+          <div class="action-plan-header">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/>
+            <span class="action-plan-title">Agentforce が組み立てた対応プラン (画面表示まで 3.4秒)</span>
+            <span style="margin-left:auto; font-size:0.75rem;">信頼度 94%</span>
+          </div>
+          <div class="action-plan-body">
+            <div style="font-size:0.8125rem; color:#444; margin-bottom:0.5rem; line-height:1.5;">
+              過去 12年・国内変電所のトランス事故 47件と照合した結果、<strong>このガス組成パターンは「巻線層間絶縁劣化」の典型</strong>。さらに以下を裏で確認済み:
+            </div>
+            <div class="action-step">
+              <div class="action-step-num">✓</div>
+              <div class="action-step-body">
+                <div class="action-step-title">SAP S/4HANA から予備部品を仮引当</div>
+                <div class="action-step-desc">冷却ファンモーター + 絶縁紙キット (P/N: TR-CF-300-IK) を <strong>千葉資材センター</strong>で1セット確認、仮押え済。第二候補は鶴見資材センター。</div>
+                <div class="action-step-meta"><span class="src-badge src-sap">SAP</span>13:42:08 完了 ・ 1.1秒</div>
+              </div>
+              <span class="pill pill-green">完了</span>
+            </div>
+            <div class="action-step">
+              <div class="action-step-num">✓</div>
+              <div class="action-step-body">
+                <div class="action-step-title">中央給電指令所の系統運用影響を予測</div>
+                <div class="action-step-desc">本機停止時、新豊洲下流 154kV 母線の供給は<strong>新京葉線経由で迂回可能</strong>。富津火力 +30万kW焚き増しが必要 (詳細は Scene 3)。</div>
+                <div class="action-step-meta"><span class="src-badge src-dc">Data Cloud</span><span class="src-badge src-aws">系統シミュレータ</span>13:42:09 完了</div>
+              </div>
+              <span class="pill pill-green">完了</span>
+            </div>
+            <div class="action-step">
+              <div class="action-step-num">✓</div>
+              <div class="action-step-body">
+                <div class="action-step-title">気象 API + AWS で実施可能ウィンドウを抽出</div>
+                <div class="action-step-desc">明日 6/16 02:00–06:00、低負荷帯かつ降雨なし。地下立会作業に最適。</div>
+                <div class="action-step-meta"><span class="src-badge src-aws">AWS</span>13:42:10 完了</div>
+              </div>
+              <span class="pill pill-green">完了</span>
+            </div>
+            <div class="action-step">
+              <div class="action-step-num running">▶</div>
+              <div class="action-step-body">
+                <div class="action-step-title">作業班・メーカー・部品発注の三位一体手配を準備中</div>
+                <div class="action-step-desc">M365 と Teams のリソース確認まで完了。<strong>Scene 2 で営業/保全担当のワンクリック承認</strong>を待っています。</div>
+                <div class="action-step-meta"><span class="spinner"></span>準備完了 ・ ワンクリック待機</div>
+              </div>
+              <span class="pill pill-orange">待機</span>
+            </div>
+          </div>
+          <div class="action-cta" onclick="goScene(2)">
+            ▶ プランを確認・実行 → Scene 2 へ
+            <div class="action-cta-sub">担当: 佐々木 雅也 (保全) ・ 1クリックで保全班・メーカー・部品が同時に動き出す</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT 1/3 -->
+      <div class="sf-col-1-3">
+
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="slds-icon_container" style="background:linear-gradient(135deg,#032d60,#0070d2); width:24px; height:24px; border-radius:4px; display:inline-flex; align-items:center; justify-content:center;">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:14px; height:14px; filter:brightness(0) invert(1);"/>
+            </span>
+            <span class="sf-card-title">Agentforce の推論ログ (公開可)</span>
+          </div>
+          <div class="sf-card-body">
+
+            <div class="af-insight">
+              <div class="af-insight-header"><strong>🔍 過去類似事例から学習</strong></div>
+              <div class="af-insight-body">
+                2020 大阪・南港変電所 (関電 / 公開IR)、2017 川崎・南渡田変電所 (当社) の<strong>類似ガス組成事故</strong>と一致度 89%。両事例とも放置で<strong>72–96時間以内に部分ショート</strong>に至った。
+                <div style="margin-top:6px;"><span class="src-badge src-dc">Data Cloud</span><span class="src-badge src-iot">IoT履歴</span></div>
+              </div>
+            </div>
+
+            <div class="af-insight">
+              <div class="af-insight-header"><strong>🌡️ 物理パラメータ照合</strong></div>
+              <div class="af-insight-body">
+                油温 +4.2℃の上昇は負荷率では説明不可 (現負荷62%)。<strong>内部局所放電による発熱の可能性大</strong>。アセチレン検出が裏付け。
+              </div>
+            </div>
+
+            <div class="af-insight">
+              <div class="af-insight-header"><strong>📊 影響シミュレーション (中央区・港区)</strong></div>
+              <div class="af-insight-body">
+                本機停止 → 24万世帯リスク。ただし系統迂回で実停電は回避可能 (Scene 3 で詳述)。<strong>放置の場合: 内部短絡 → 連鎖停止 → 都心約62万世帯停電</strong>。
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="slds-icon_container slds-icon-standard-asset-state">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/asset_object.svg" alt="" class="slds-icon slds-icon_x-small"/>
+            </span>
+            <span class="sf-card-title">関連設備</span>
+          </div>
+          <div class="sf-card-body">
+            <div class="sf-field-grid" style="grid-template-columns:1fr; gap:0.625rem;">
+              <div><div class="sf-field-label">変電所</div><div class="sf-field-value">新豊洲変電所 (地下式 / 江東区豊洲)</div></div>
+              <div><div class="sf-field-label">建設</div><div class="sf-field-value">2017年運開 ・ 設計寿命 40年</div></div>
+              <div><div class="sf-field-label">系統</div><div class="sf-field-value">京葉幹線 → 新豊洲 → 都心ループ</div></div>
+              <div><div class="sf-field-label">過去保全</div><div class="sf-field-value">直近1年で6件 ・ 重大事故0件</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===================== SCENE 2: ゼロ・クリック手配 ===================== -->
+<div class="scene" id="scene-2">
+
+  <header class="sf-header">
+    <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce"/>
+    <div class="sf-header-search">
+      <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small"/>
+        <input type="search" class="slds-input"/>
+      </div></div>
+    </div>
+    <div class="sf-header-actions">
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/></button>
+      <button class="sf-favorite-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt=""/><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;"/></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt=""/></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt=""/></button>
+      <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt=""/></button><span class="sf-notify-dot"></span></span>
+      <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:0.5rem;"><img src="https://ui-avatars.com/api/?name=佐々木+雅也&background=1B96FF&color=fff" alt=""/></span>
+    </div>
+  </header>
+  <div class="sf-context-bar">
+    <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+    <span class="sf-app-name">系統設備保全</span>
+    <nav><ul>
+      <li><a href="#">ホーム</a></li>
+      <li><a href="#">設備 ▾</a></li>
+      <li class="is-active"><a href="#">アラート ▾</a></li>
+      <li><a href="#">作業指示 ▾</a></li>
+      <li><a href="#">稟議 ▾</a></li>
+    </ul></nav>
+  </div>
+
+  <main class="sf-main">
+
+    <div class="scene-narrator">
+      <strong>🎬 Scene 2 (2–5 min) ・ Salesforce 上で「ワンクリック」</strong> — Agentforce が裏側で <strong>M365 Exchange のスケジュール</strong>を確認、東京ネットワークセンター保全第2班の午後を<strong>仮ブロック済み</strong>。同時に <strong>SAP の予備品発注書ドラフト</strong>、メーカー（東芝）の技術担当との <strong>Teams 緊急会議</strong>もすでに準備完了。佐々木氏は「承認」を1回押すだけで全システムに確定指示が走る。
+    </div>
+
+    <!-- Highlights (compact) -->
+    <div class="sf-highlights">
+      <div class="sf-highlights-row">
+        <span class="slds-icon_container" style="background:#fe9339; width:2.5rem; height:2.5rem; border-radius:6px; display:inline-flex; align-items:center; justify-content:center;">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/forward.svg" alt="" style="width:1.5rem; height:1.5rem; filter:brightness(0) invert(1);"/>
+        </span>
+        <div style="flex:1;">
+          <div class="sf-highlights-title">作業オーダー (ドラフト) ・ WO-2026-0615-001</div>
+          <div class="sf-highlights-name">新豊洲 1号トランス ・ 緊急保全 + 予備品交換</div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <span class="pill pill-orange" style="font-size:0.8125rem; padding:6px 14px;">承認待ち</span>
+          <button class="slds-button slds-button_neutral">編集</button>
+          <button class="slds-button slds-button_neutral">関連設備</button>
+        </div>
+      </div>
+      <div class="sf-highlights-fields">
+        <div><div class="sf-highlights-field-label">作業実施</div><div class="sf-highlights-field-value">2026/06/16 02:00–06:00 (低負荷帯)</div></div>
+        <div><div class="sf-highlights-field-label">担当班</div><div class="sf-highlights-field-value">保全第2班 (5名 / 仮押え済)</div></div>
+        <div><div class="sf-highlights-field-label">メーカー</div><div class="sf-highlights-field-value">東芝エネルギーシステムズ (技術立会)</div></div>
+        <div><div class="sf-highlights-field-label">予算インパクト</div><div class="sf-highlights-field-value">¥ 1,840万 (緊急保全予算枠内)</div></div>
+        <div><div class="sf-highlights-field-label">所要</div><div class="sf-highlights-field-value">想定 4時間 (停電なし・系統迂回)</div></div>
+        <div><div class="sf-highlights-field-label">承認者</div><div class="sf-highlights-field-value">東京NWセンター長 (Slackで自動通知)</div></div>
+      </div>
+    </div>
+
+    <div class="sf-row">
+      <!-- LEFT 2/3 -->
+      <div class="sf-col-2-3">
+
+        <!-- Approval Card -->
+        <div class="action-plan">
+          <div class="action-plan-header">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/>
+            <span class="action-plan-title">Salesforce 上のワンクリック承認 ・ 確定すると 5 システムが同時に動きます</span>
+            <span style="margin-left:auto; font-size:0.75rem;">準備完了 100%</span>
+          </div>
+          <div class="action-plan-body">
+
+            <div class="action-step">
+              <div class="action-step-num pending">1</div>
+              <div class="action-step-body">
+                <div class="action-step-title"><span class="src-badge src-sap">SAP</span> S/4HANA に予備品発注書を登録</div>
+                <div class="action-step-desc">P/N: TR-CF-300-IK ・ 千葉資材センター → 新豊洲 ・ 緊急便 (受領 6/15 22:00 想定)</div>
+                <div class="action-step-meta">PR 5800-2026-0615-091 (ドラフト確認済) / 与信枠OK</div>
+              </div>
+            </div>
+
+            <div class="action-step">
+              <div class="action-step-num pending">2</div>
+              <div class="action-step-body">
+                <div class="action-step-title"><span class="src-badge src-m365">M365</span> Exchange で保全第2班のスケジュールを確定</div>
+                <div class="action-step-desc">5名: 大山班長 / 田中 / 佐藤 / 川村 / 林 ・ 全員 6/16 02:00–06:00 空き確認済 (仮ブロック中)</div>
+                <div class="action-step-meta">招待メール送信 + 会議室「新豊洲SS-1F-現場詰所」自動予約</div>
+              </div>
+            </div>
+
+            <div class="action-step">
+              <div class="action-step-num pending">3</div>
+              <div class="action-step-body">
+                <div class="action-step-title"><span class="src-badge src-teams">Teams</span> 東芝エネルギーシステムズとの緊急会議を発行</div>
+                <div class="action-step-desc">技術担当 中村氏宛 ・ 本日 16:00 (60分) ・ チャットには Agentforce 生成の「油中ガス分析サマリー」が事前投稿済</div>
+                <div class="action-step-meta">Teams Meeting + 同時通訳 (英語担当者参加に備え)</div>
+              </div>
+            </div>
+
+            <div class="action-step">
+              <div class="action-step-num pending">4</div>
+              <div class="action-step-body">
+                <div class="action-step-title"><span class="src-badge src-dc">中央給電指令所</span> に系統迂回プランを通知</div>
+                <div class="action-step-desc">富津火力 +30万kW / 新京葉線経由ループ ・ 詳細プランは Scene 3 で確定操作</div>
+                <div class="action-step-meta">給電員のオペレーション画面に「予告」として表示</div>
+              </div>
+            </div>
+
+            <div class="action-step">
+              <div class="action-step-num pending">5</div>
+              <div class="action-step-body">
+                <div class="action-step-title"><span class="src-badge src-slack">Slack</span> 緊急対応チャンネルを自動起動</div>
+                <div class="action-step-desc"><strong>#緊急-新豊洲トランス保全-対策室</strong> ・ 関係者14名を自動招待 (現場・系統運用・経営企画・広報)</div>
+                <div class="action-step-meta">チャンネルピン: 油中ガス分析、SAP発注書、Teams招待リンク</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="action-cta" onclick="confirmApproval(); goScene(3);">
+            ✓ 承認して 5 システムを同時実行 → Scene 3 へ
+            <div class="action-cta-sub">承認1回 ・ 約3秒で全アクション完了 ・ 監査ログは Salesforce に自動記録</div>
+          </div>
+        </div>
+
+        <!-- Teams Meeting Preview -->
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="src-badge src-teams" style="font-size:0.75rem; padding:4px 10px;">Teams</span>
+            <span class="sf-card-title">Microsoft Teams 緊急会議 (Agentforce 自動発行)</span>
+            <span class="pill pill-blue">招待送信済</span>
+          </div>
+          <div class="sf-card-body" style="background:#f5f5f5;">
+            <div style="background:white; border-radius:6px; padding:0.875rem; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+              <div style="display:flex; align-items:center; gap:0.625rem; margin-bottom:0.5rem;">
+                <div style="width:36px; height:36px; background:#6264a7; border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-weight:700;">T</div>
+                <div style="flex:1;">
+                  <div style="font-weight:700; font-size:0.875rem;">緊急: 新豊洲1号トランス 油中ガス異常 ・ 技術立会</div>
+                  <div style="font-size:0.75rem; color:#696969;">本日 16:00 – 17:00 (60分) ・ Teams Meeting</div>
+                </div>
+              </div>
+              <div style="font-size:0.8125rem; color:#444; padding:0.5rem; background:#f7f9fc; border-radius:4px; margin-bottom:0.5rem;">
+                <strong style="color:#0070d2;">📋 Agentforce が事前投稿:</strong><br/>
+                「6/15 13:42 検知 ・ 水素 218ppm / アセチレン 12ppm ・ 油温 68.4℃。Duval三角形では <strong>D1 (low energy discharge)</strong> 領域。過去2件の南港・南渡田事例と一致度89%。技術仕様書 (PDF / 142P)、油中ガス分析履歴 (CSV)、3Dモデル (IFC) を会議チャットに添付済。」
+              </div>
+              <div style="display:flex; gap:0.375rem; flex-wrap:wrap;">
+                <span class="pill pill-blue">参加: 中村 (東芝)</span>
+                <span class="pill pill-blue">佐々木 (TEPCO 保全)</span>
+                <span class="pill pill-blue">大山班長</span>
+                <span class="pill pill-blue">渡辺 (系統運用)</span>
+                <span class="pill pill-purple">Agentforce (副操縦士)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT 1/3 -->
+      <div class="sf-col-1-3">
+
+        <!-- M365 Exchange schedule preview -->
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="src-badge src-m365" style="font-size:0.75rem; padding:4px 10px;">M365</span>
+            <span class="sf-card-title">Exchange ・ 保全第2班スケジュール</span>
+          </div>
+          <div class="sf-card-body" style="padding:0;">
+            <table style="width:100%; font-size:0.75rem; border-collapse:collapse;">
+              <thead style="background:#f7f9fc; color:#444;">
+                <tr><th style="padding:6px 8px; text-align:left;">メンバー</th><th style="padding:6px 8px;">6/15 PM</th><th style="padding:6px 8px;">6/16 02–06</th></tr>
+              </thead>
+              <tbody>
+                <tr style="border-top:1px solid #ecebea;"><td style="padding:6px 8px;">大山班長</td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-green">空</span></td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-orange">仮押</span></td></tr>
+                <tr style="border-top:1px solid #ecebea;"><td style="padding:6px 8px;">田中</td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-green">空</span></td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-orange">仮押</span></td></tr>
+                <tr style="border-top:1px solid #ecebea;"><td style="padding:6px 8px;">佐藤</td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-green">空</span></td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-orange">仮押</span></td></tr>
+                <tr style="border-top:1px solid #ecebea;"><td style="padding:6px 8px;">川村</td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-green">空</span></td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-orange">仮押</span></td></tr>
+                <tr style="border-top:1px solid #ecebea;"><td style="padding:6px 8px;">林</td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-orange">会議</span></td><td style="padding:6px 8px; text-align:center;"><span class="pill pill-orange">仮押</span></td></tr>
+              </tbody>
+            </table>
+            <div style="padding:0.5rem 0.75rem; font-size:0.6875rem; color:#444; background:#f7f9fc;">林氏の 14:00 会議は Agentforce が代理回答候補を作成済 (本人が承認すれば自動延期)</div>
+          </div>
+        </div>
+
+        <!-- SAP Order Draft -->
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="src-badge src-sap" style="font-size:0.75rem; padding:4px 10px;">SAP</span>
+            <span class="sf-card-title">S/4HANA ・ 予備品発注ドラフト</span>
+          </div>
+          <div class="sf-card-body" style="font-size:0.75rem;">
+            <div style="display:grid; grid-template-columns:auto 1fr; gap:4px 12px;">
+              <div style="color:#696969;">PR番号</div><div style="font-weight:600;">5800-2026-0615-091</div>
+              <div style="color:#696969;">品目</div><div style="font-weight:600;">TR-CF-300-IK (絶縁紙キット同梱)</div>
+              <div style="color:#696969;">数量</div><div style="font-weight:600;">1セット</div>
+              <div style="color:#696969;">出庫元</div><div style="font-weight:600;">千葉資材センター</div>
+              <div style="color:#696969;">配送</div><div style="font-weight:600;">緊急便 (本日22:00着)</div>
+              <div style="color:#696969;">金額</div><div style="font-weight:600;">¥ 1,840万</div>
+              <div style="color:#696969;">勘定</div><div style="font-weight:600;">緊急保全予算枠 (枠内)</div>
+              <div style="color:#696969;">承認</div><div><span class="pill pill-orange">Salesforce 承認待ち</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity timeline -->
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="slds-icon_container slds-icon-standard-task">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" class="slds-icon slds-icon_x-small"/>
+            </span>
+            <span class="sf-card-title">これまでの動き (Agentforce オーケストレーション)</span>
+          </div>
+          <div class="sf-card-body">
+            <ul class="sf-timeline">
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-iot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup_modal.svg" alt=""/></span>
+                <div class="sf-timeline-body"><a href="#">AWS IoT が異常検知</a><div class="meta">13:42:04 ・ ガス組成異常</div></div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-agent"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/></span>
+                <div class="sf-timeline-body"><a href="#">Agentforce が SAP / Data Cloud 横断照合</a><div class="meta">13:42:08 ・ 4.2秒で対応プラン提示</div></div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-sap"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/like.svg" alt=""/></span>
+                <div class="sf-timeline-body"><a href="#">SAP で予備品仮引当 (千葉)</a><div class="meta">13:42:09 ・ 在庫1セット確認</div></div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-event"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" alt=""/></span>
+                <div class="sf-timeline-body"><a href="#">M365 で保全班スケジュール仮ブロック</a><div class="meta">13:42:11 ・ 5名分</div></div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-task"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt=""/></span>
+                <div class="sf-timeline-body"><a href="#">Teams 緊急会議発行 (東芝技術)</a><div class="meta">13:42:13 ・ 16:00枠</div></div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-call" style="background:#ba0517;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/touch_action.svg" alt=""/></span>
+                <div class="sf-timeline-body"><a href="#">▶ 佐々木氏: ワンクリック承認待ち</a><div class="meta meta-overdue">⏱ Now ・ 推奨5分以内</div></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===================== SCENE 3: 部門横断スウォーミング (Slack) ===================== -->
+<div class="scene" id="scene-3">
+
+  <header class="sf-header">
+    <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce"/>
+    <div class="sf-header-search">
+      <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small"/>
+        <input type="search" class="slds-input"/>
+      </div></div>
+    </div>
+    <div class="sf-header-actions">
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/></button>
+      <button class="sf-favorite-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt=""/><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;"/></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt=""/></button>
+      <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt=""/></button><span class="sf-notify-dot"></span></span>
+      <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:0.5rem;"><img src="https://ui-avatars.com/api/?name=佐々木+雅也&background=1B96FF&color=fff" alt=""/></span>
+    </div>
+  </header>
+  <div class="sf-context-bar">
+    <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+    <span class="sf-app-name">系統設備保全</span>
+    <nav><ul>
+      <li><a href="#">ホーム</a></li>
+      <li><a href="#">設備 ▾</a></li>
+      <li class="is-active"><a href="#">アラート ▾</a></li>
+      <li><a href="#">作業指示 ▾</a></li>
+      <li><a href="#">部門間連携 ▾</a></li>
+    </ul></nav>
+  </div>
+
+  <main class="sf-main">
+
+    <div class="scene-narrator">
+      <strong>🎬 Scene 3 (5–7 min) ・ Slack で全社スウォーミング</strong> — 承認1クリックで <strong>#緊急-新豊洲トランス保全-対策室</strong> が自動起動。現場・<strong>中央給電指令所</strong>・経営企画・広報がリアルタイムに集結。Agentforce が「富津火力 +30万kW・新京葉線経由迂回プラン」を Slack 上で提示し、潮流シミュレーション結果も添付済み。Salesforce レコードと Slack は完全同期。
+    </div>
+
+    <div class="sf-row">
+      <div class="sf-col-2-3">
+
+        <!-- Slack channel main view -->
+        <div class="slack-shell">
+          <!-- Sidebar -->
+          <div class="slack-sidebar">
+            <div class="slack-workspace">
+              <div style="width:32px; height:32px; background:#4a154b; border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-weight:700;">T</div>
+              <div>
+                <div class="slack-workspace-name">TEPCO HD</div>
+                <div style="font-size:0.6875rem; color:#888993;">11,420名</div>
+              </div>
+            </div>
+            <div class="slack-channel-list">
+              <div class="slack-section-title">▾ チャンネル</div>
+              <div class="slack-channel-item"><span class="slack-channel-hash">#</span> general</div>
+              <div class="slack-channel-item"><span class="slack-channel-hash">#</span> 系統運用-中給</div>
+              <div class="slack-channel-item is-active"><span class="slack-channel-hash">#</span> 緊急-新豊洲トランス保全-対策室</div>
+              <div class="slack-channel-item"><span class="slack-channel-hash">#</span> 設備保全-東京nw</div>
+              <div class="slack-channel-item"><span class="slack-channel-hash">#</span> 経営企画-リスク</div>
+              <div class="slack-channel-item"><span class="slack-channel-hash">#</span> 広報-プレス対応</div>
+              <div class="slack-section-title" style="margin-top:0.75rem;">▾ Apps</div>
+              <div class="slack-channel-item">⚡ Agentforce</div>
+              <div class="slack-channel-item">📊 Tableau Next</div>
+              <div class="slack-channel-item">🟦 Salesforce</div>
+            </div>
+          </div>
+
+          <!-- Main -->
+          <div class="slack-main">
+            <div class="slack-main-header">
+              <div>
+                <div class="slack-main-channel"># 緊急-新豊洲トランス保全-対策室</div>
+                <div class="slack-main-meta">14名 ・ 自動作成 13:42 ・ Salesforce レコード ALT-2026-0615-1342 連携中</div>
+              </div>
+              <div style="margin-left:auto; display:flex; gap:0.5rem;">
+                <span class="pill pill-red">🔴 LIVE</span>
+                <span class="pill pill-blue">SF同期</span>
+              </div>
+            </div>
+
+            <div class="slack-msgs">
+              <div style="text-align:center; font-size:0.6875rem; color:#696969; padding:0.5rem 0; border-bottom:1px solid #ecebea;">— 13:42 自動メッセージ —</div>
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=Agentforce&background=0070d2&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">Agentforce</span><span class="slack-app-tag">APP</span><span class="slack-time">13:42</span></div>
+                  <div>このチャンネルを自動作成しました。新豊洲変電所 1号トランスの油中ガス異常検知を受け、<strong>関係者14名を自動招待</strong>しました。Salesforce レコード <a href="#">ALT-2026-0615-1342</a> と双方向同期しています。</div>
+                  <div class="slack-attach">
+                    <div class="slack-attach-title">📌 ピン留め</div>
+                    <div class="slack-attach-meta">油中ガス分析結果 ・ SAP 発注書 #5800-2026-0615-091 ・ Teams 招待 ・ 過去類似事例レポート</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=渡辺+健&background=2eb67d&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">渡辺 健</span> <span style="color:#696969; font-size:0.75rem;">中央給電指令所・主任給電員</span><span class="slack-time">13:43</span></div>
+                  <div>来ました。<span class="slack-mention">@Agentforce</span> 1号機停止の場合、都心ループに与える影響を最新潮流で計算してくれる？富津火力の余力含めて。</div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=Agentforce&background=0070d2&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">Agentforce</span><span class="slack-app-tag">APP</span><span class="slack-time">13:43</span></div>
+                  <div>渡辺さん、計算しました。<strong>1号機停止で 154kV 母線の供給力が -240MW</strong>。中央区・港区への直接供給は不可ですが、以下の系統切替で<strong>停電を回避できます</strong>:</div>
+                  <div class="slack-attach">
+                    <div class="slack-attach-title">⚡ 系統切替プラン (Agentforce 推奨)</div>
+                    <div class="slack-attach-meta">AWS 系統シミュレータ ・ 信頼度 96% ・ 中給オペレーション画面に予告投入済</div>
+                    <div class="slack-attach-body">
+                      <strong>Step 1.</strong> 富津火力 #2号機の出力を <strong>+30万kW</strong> 増強 (現在 78万kW → 108万kW、定格余力内)<br/>
+                      <strong>Step 2.</strong> 新京葉線経由で 154kV を新豊洲下流へ迂回 (損失 +1.2%)<br/>
+                      <strong>Step 3.</strong> 都心ループ南側 (港北・芝) から 80MW 逆潮で補強<br/>
+                      <strong>Step 4.</strong> 1号機解列 → 保全作業 (4時間) → 復旧
+                      <div style="margin-top:8px; padding:8px; background:#001627; color:#cbd5e1; border-radius:4px;">
+                        <div style="font-size:0.6875rem; color:#94a3b8; margin-bottom:4px;">潮流シミュレーション (kV ・ 平常→切替後)</div>
+                        <svg viewBox="0 0 460 80" width="100%" height="80">
+                          <defs><marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#22d3ee"/></marker></defs>
+                          <!-- 富津 -->
+                          <rect x="10" y="30" width="60" height="20" fill="#04844b" rx="3"/><text x="40" y="44" font-size="9" fill="white" text-anchor="middle" font-weight="700">富津 +30万</text>
+                          <!-- 新京葉線 -->
+                          <line x1="70" y1="40" x2="160" y2="40" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrow)"/>
+                          <text x="115" y="35" font-size="8" fill="#22d3ee" text-anchor="middle">新京葉線</text>
+                          <!-- 新豊洲 -->
+                          <rect x="160" y="20" width="80" height="40" fill="#fe9339" rx="3"/><text x="200" y="36" font-size="9" fill="white" text-anchor="middle" font-weight="700">新豊洲SS</text><text x="200" y="50" font-size="8" fill="white" text-anchor="middle">1号機停止</text>
+                          <!-- 都心ループ -->
+                          <line x1="240" y1="40" x2="340" y2="40" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrow)"/>
+                          <rect x="340" y="20" width="100" height="40" fill="#0070d2" rx="3"/><text x="390" y="36" font-size="9" fill="white" text-anchor="middle" font-weight="700">都心ループ</text><text x="390" y="50" font-size="8" fill="white" text-anchor="middle">中央区/港区/江東区</text>
+                          <!-- 逆潮 -->
+                          <path d="M 390 60 Q 300 75 200 60" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+                          <text x="295" y="78" font-size="8" fill="#fbbf24" text-anchor="middle">逆潮 +80MW (港北・芝)</text>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=渡辺+健&background=2eb67d&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">渡辺 健</span><span class="slack-time">13:46</span></div>
+                  <div>OK、これでいけそう。富津#2の燃料費の追加コストは？<span class="slack-mention">@Agentforce</span></div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=Agentforce&background=0070d2&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">Agentforce</span><span class="slack-app-tag">APP</span><span class="slack-time">13:46</span></div>
+                  <div>SAP 燃料管理から計算: <strong>LNG 追加消費 320トン ・ 約 ¥4,200万 (4時間)</strong>。<strong>合計コスト ¥5.2億規模</strong>になる可能性 (緊急保全費 + メーカー対応 + 燃料増 + 復旧諸費)。<strong>緊急予算枠 ¥3億超過のため経営層承認が必要</strong>です。<span class="slack-mention">@関 常務</span> に Slack DM で承認依頼を送りますか？</div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=松本+真理&background=ecb22e&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">松本 真理</span> <span style="color:#696969; font-size:0.75rem;">経営企画・リスク管理</span><span class="slack-time">13:47</span></div>
+                  <div>停電させた場合の社会的損失と比較した数字、Tableau で先に作って。常務に上げる前に判断材料を整えたい。</div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=Tableau&background=1f447e&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">Tableau Next Agentforce</span><span class="slack-app-tag">APP</span><span class="slack-time">13:47</span></div>
+                  <div>松本さん、作成しました。<strong>停電シナリオ vs 系統迂回シナリオ</strong>の比較ダッシュボードです。</div>
+                  <div class="slack-attach">
+                    <div class="slack-attach-title">📊 ROI比較: 停電 vs 緊急対応 (新豊洲事案)</div>
+                    <div class="slack-attach-meta">Data Cloud × SAP × 過去停電損害DB ・ 自動更新</div>
+                    <div class="slack-attach-body">
+                      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <div style="padding:8px; background:#fde4e4; border-radius:4px;">
+                          <div style="font-weight:700; color:#ba0517;">▶ 停電許容シナリオ</div>
+                          <div style="font-size:0.75rem; margin-top:4px;">想定損害 <strong>¥84〜120億</strong><br/>(供給支障補償 + 顧客賠償 + 信頼毀損)</div>
+                        </div>
+                        <div style="padding:8px; background:#def6e6; border-radius:4px;">
+                          <div style="font-weight:700; color:#04844b;">▶ 緊急対応シナリオ (推奨)</div>
+                          <div style="font-size:0.75rem; margin-top:4px;">追加コスト <strong>¥5.2億</strong><br/>(燃料 + 部品 + 班員残業 + メーカー)</div>
+                        </div>
+                      </div>
+                      <div style="margin-top:8px; padding:8px; background:#f7f9fc; border-radius:4px; font-size:0.75rem;">
+                        <strong>ROI:</strong> 緊急対応で 16〜23倍の損失回避。社会的影響 (24万世帯の停電) は数値化困難ですが Critical Infrastructure Protection の観点で許容不可。
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=松本+真理&background=ecb22e&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">松本 真理</span><span class="slack-time">13:48</span></div>
+                  <div>これなら関常務の判断は明確。<span class="slack-mention">@Agentforce</span> 関常務にエスカレーション送って。Tableau のダッシュボード URL も同梱で。</div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <img class="slack-avatar" src="https://ui-avatars.com/api/?name=Agentforce&background=0070d2&color=fff" alt=""/>
+                <div class="slack-body">
+                  <div><span class="slack-name">Agentforce</span><span class="slack-app-tag">APP</span><span class="slack-time">13:48</span></div>
+                  <div>承知しました。関 常務のモバイル Slack に DM 送信中... <span class="spinner"></span></div>
+                  <div style="margin-top:6px; padding:6px 10px; background:#e0f0ff; border-radius:4px; font-size:0.75rem;">
+                    ✓ 関 常務に通知送信 (13:48:22)<br/>
+                    ✓ 経営企画 部長 / 広報部長にも CC<br/>
+                    ✓ Tableau ダッシュボード URL 同梱 (シングルサインオン済)<br/>
+                    ✓ 想定回答時間: 7〜12分 (常務の応答実績ベース)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding:0.5rem 1rem; border-top:1px solid #ddd; background:#f8f8f8;">
+              <div style="background:white; border:1px solid #c9c9cd; border-radius:6px; padding:0.5rem 0.625rem; font-size:0.8125rem; color:#696969;">
+                <span class="slack-mention">@Agentforce</span> 関常務の応答待ちの間、現場保全班に油中ガス再採取の指示を出して...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="action-cta" style="display:inline-block; padding: 0.75rem 2rem; border-radius: 6px;" onclick="goScene(4)">
+            関 常務に通知が届いた瞬間 → Scene 4 へ ▶
+          </button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT 1/3 -->
+      <div class="sf-col-1-3">
+
+        <!-- Channel members -->
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="src-badge src-slack" style="font-size:0.75rem; padding:4px 10px;">Slack</span>
+            <span class="sf-card-title">参加メンバー (14名)</span>
+          </div>
+          <div class="sf-card-body" style="padding:0.5rem 0.75rem;">
+            <div style="font-size:0.75rem; font-weight:700; color:#444; margin:0.375rem 0 0.25rem 0;">現場・保全</div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=佐々木+雅也&background=2eb67d&color=fff" style="width:24px; height:24px; border-radius:50%;"/><span style="font-size:0.8125rem;">佐々木 雅也 (担当)</span></div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=大山+剛&background=2eb67d&color=fff" style="width:24px; height:24px; border-radius:50%;"/><span style="font-size:0.8125rem;">大山 剛 (保全2班長)</span></div>
+            <div style="font-size:0.75rem; font-weight:700; color:#444; margin:0.5rem 0 0.25rem 0;">系統運用 (中央給電指令所)</div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=渡辺+健&background=2eb67d&color=fff" style="width:24px; height:24px; border-radius:50%;"/><span style="font-size:0.8125rem;">渡辺 健 (主任給電員) <span class="pill pill-red" style="font-size:0.625rem;">LIVE</span></span></div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=山口+貴志&background=2eb67d&color=fff" style="width:24px; height:24px; border-radius:50%;"/><span style="font-size:0.8125rem;">山口 貴志 (給電課長)</span></div>
+            <div style="font-size:0.75rem; font-weight:700; color:#444; margin:0.5rem 0 0.25rem 0;">経営企画 / 広報</div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=松本+真理&background=ecb22e&color=fff" style="width:24px; height:24px; border-radius:50%;"/><span style="font-size:0.8125rem;">松本 真理 (経企・リスク)</span></div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=吉田+悟&background=ecb22e&color=fff" style="width:24px; height:24px; border-radius:50%;"/><span style="font-size:0.8125rem;">吉田 悟 (広報部長)</span></div>
+            <div style="font-size:0.75rem; font-weight:700; color:#444; margin:0.5rem 0 0.25rem 0;">経営層</div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=関+常務&background=ba0517&color=fff" style="width:24px; height:24px; border-radius:50%;"/><span style="font-size:0.8125rem;"><strong>関 常務</strong> <span class="pill pill-orange" style="font-size:0.625rem;">通知中</span></span></div>
+            <div style="font-size:0.75rem; font-weight:700; color:#444; margin:0.5rem 0 0.25rem 0;">外部</div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=東芝&background=611f69&color=fff" style="width:24px; height:24px; border-radius:50%;"/><span style="font-size:0.8125rem;">中村 (東芝エネルギー)</span></div>
+            <div style="font-size:0.75rem; font-weight:700; color:#444; margin:0.5rem 0 0.25rem 0;">Apps</div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=AF&background=0070d2&color=fff" style="width:24px; height:24px; border-radius:4px;"/><span style="font-size:0.8125rem;">Agentforce <span class="slack-app-tag">APP</span></span></div>
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;"><img src="https://ui-avatars.com/api/?name=TB&background=1f447e&color=fff" style="width:24px; height:24px; border-radius:4px;"/><span style="font-size:0.8125rem;">Tableau Next <span class="slack-app-tag">APP</span></span></div>
+          </div>
+        </div>
+
+        <!-- System status -->
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="slds-icon_container slds-icon-standard-process">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/process.svg" alt="" class="slds-icon slds-icon_x-small"/>
+            </span>
+            <span class="sf-card-title">同時並行で動く 5 システム</span>
+          </div>
+          <div class="sf-card-body">
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem;"><span class="src-badge src-sap">SAP</span><span style="flex:1;">予備品発注確定</span><span class="pill pill-green">完了 13:43</span></div>
+              <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem;"><span class="src-badge src-m365">M365</span><span style="flex:1;">保全班スケジュール確定</span><span class="pill pill-green">完了 13:43</span></div>
+              <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem;"><span class="src-badge src-teams">Teams</span><span style="flex:1;">東芝技術会議 16:00 確定</span><span class="pill pill-green">完了 13:43</span></div>
+              <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem;"><span class="src-badge src-aws">AWS</span><span style="flex:1;">系統迂回シミュレーション</span><span class="pill pill-green">完了 13:46</span></div>
+              <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8125rem;"><span class="src-badge src-slack">Slack</span><span style="flex:1;">関 常務へ DM 通知</span><span class="pill pill-orange">送信中...</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risk metric -->
+        <div class="sf-card">
+          <div class="sf-card-header">
+            <span class="src-badge src-tableau" style="font-size:0.75rem; padding:4px 10px;">Tableau</span>
+            <span class="sf-card-title">リスク指標 (リアルタイム)</span>
+          </div>
+          <div class="sf-card-body">
+            <div style="font-size:0.75rem; color:#444; margin-bottom:0.5rem;">残時間ごとのショート確率 (現時点)</div>
+            <svg viewBox="0 0 300 100" width="100%" height="100">
+              <g stroke="#ecebea" stroke-width="1">
+                <line x1="30" y1="20" x2="290" y2="20"/>
+                <line x1="30" y1="50" x2="290" y2="50"/>
+                <line x1="30" y1="80" x2="290" y2="80"/>
+              </g>
+              <text x="2" y="24" font-size="9" fill="#444">100%</text>
+              <text x="2" y="54" font-size="9" fill="#444">50%</text>
+              <text x="2" y="84" font-size="9" fill="#444">0%</text>
+              <polyline fill="none" stroke="#ba0517" stroke-width="2.5" points="30,75 70,68 110,55 150,38 190,22 230,12 270,8"/>
+              <circle cx="30" cy="75" r="3" fill="#04844b"/><text x="36" y="74" font-size="9" fill="#04844b" font-weight="700">今</text>
+              <circle cx="270" cy="8" r="3" fill="#ba0517"/><text x="220" y="6" font-size="9" fill="#ba0517" font-weight="700">放置72h で 87%</text>
+              <line x1="30" y1="80" x2="290" y2="80" stroke="#444"/>
+              <g font-size="8" fill="#696969"><text x="30" y="95">0h</text><text x="150" y="95">36h</text><text x="270" y="95">72h</text></g>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===================== SCENE 4: 関 常務 経営決断 ===================== -->
+<div class="scene" id="scene-4">
+
+  <main class="sf-main" style="padding-top:0.75rem;">
+
+    <div class="scene-narrator">
+      <strong>🎬 Scene 4 (7–10 min) ・ 関 常務のモバイル → Tableau → SAP</strong> — 関 常務のスマホ Slack に Agentforce から DM 着信。ワンタップで <strong>VIP 向け Tableau リッチダッシュボード</strong>（都心3D停電影響ヒートマップ + コストインパクト）が開く。「<strong>緊急予算執行・対応承認</strong>」ボタンを<strong>1タップ</strong>すると、Salesforce 経由で <strong>SAP S/4HANA の稟議が「承認済」</strong>に変わり、現場 Slack に「常務承認 → 作業開始」が自動投稿される。
+    </div>
+
+    <div class="sf-row">
+
+      <!-- LEFT: VIP Mobile -->
+      <div style="flex: 0 0 380px;">
+        <div class="mobile-frame">
+          <div class="mobile-screen">
+            <div class="mobile-statusbar">
+              <span>13:48</span>
+              <span style="display:flex; gap:6px; align-items:center;">📶 5G 🔋 84%</span>
+            </div>
+            <div class="mobile-slack-header">
+              <div style="width:32px; height:32px; background:white; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#4a154b; font-weight:700;">T</div>
+              <div style="flex:1;">
+                <div class="mobile-slack-channel">Agentforce</div>
+                <div class="mobile-slack-meta">DM ・ TEPCO HD</div>
+              </div>
+              <span class="pill pill-red" style="background:white; color:#ba0517;">緊急</span>
+            </div>
+            <div class="mobile-msgs">
+              <div class="mobile-msg">
+                <div class="mobile-msg-header">
+                  <img class="mobile-msg-avatar" src="https://ui-avatars.com/api/?name=AF&background=0070d2&color=fff" alt=""/>
+                  <span class="mobile-msg-name">Agentforce</span>
+                  <span class="mobile-msg-time">13:48</span>
+                </div>
+                <div class="mobile-msg-body">
+                  <strong style="color:#ba0517;">⚠ 経営判断要件:</strong> 新豊洲変電所 1号トランスの油中ガス異常を AWS IoT が検知。<strong>放置で 72時間以内に都心約62万世帯が停電するリスク</strong>。
+                </div>
+                <div class="mobile-msg-body" style="margin-top:8px;">
+                  系統迂回 + 緊急保全で停電は回避できますが、<strong>追加コスト ¥5.2億 (緊急予算枠 ¥3億超過)</strong> のため経営承認が必要です。
+                </div>
+                <div class="mobile-msg-body" style="margin-top:8px;">
+                  停電許容シナリオの想定損害は <strong>¥84〜120億</strong>。Tableau に詳細データを準備済です。
+                </div>
+                <div class="mobile-cta" onclick="goScene4Detail()">📊 詳細データを確認</div>
+              </div>
+
+              <div class="mobile-msg">
+                <div class="mobile-msg-header">
+                  <img class="mobile-msg-avatar" src="https://ui-avatars.com/api/?name=松本+真理&background=ecb22e&color=fff" alt=""/>
+                  <span class="mobile-msg-name">松本 真理 (経企)</span>
+                  <span class="mobile-msg-time">13:48</span>
+                </div>
+                <div class="mobile-msg-body">
+                  常務、補足です。中央給電指令所と現場保全は既に系統切替プランで合意済み。Agentforce が SAP・M365・Teams・AWS の準備を全て完了させています。<strong>ご判断のみで作業開始できます</strong>。
+                </div>
+              </div>
+
+              <div class="mobile-msg" style="background:#fffbe6; border:1px solid #fbbf24;">
+                <div class="mobile-msg-header">
+                  <img class="mobile-msg-avatar" src="https://ui-avatars.com/api/?name=AF&background=0070d2&color=fff" alt=""/>
+                  <span class="mobile-msg-name">Agentforce</span>
+                  <span class="mobile-msg-time">13:49</span>
+                </div>
+                <div class="mobile-msg-body">
+                  📌 タップで実行される処理:<br/>
+                  • SAP 緊急稟議 RNG-2026-0615-EM01 → <strong>承認済</strong><br/>
+                  • 現場 Slack に「作業開始指示」自動投稿<br/>
+                  • 監査ログを Salesforce に永続記録<br/>
+                  • 広報部に対外コミュ準備指示
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; font-size:0.75rem; color:#444; margin-top:0.5rem;">関 常務 私用 iPhone (Slack アプリ)</div>
+      </div>
+
+      <!-- RIGHT: Tableau VIP dashboard + SAP outcome -->
+      <div style="flex:1; min-width:0;">
+
+        <!-- Tableau VIP Dashboard -->
+        <div class="tab-embed" style="background:linear-gradient(135deg, #fafafa 0%, #f0f4ff 100%); border:1px solid #c9d8ff;">
+          <div class="tab-header">
+            <div>
+              <div class="tab-title" style="font-size:1.0625rem;">📊 関 常務 VIP ビュー: 新豊洲事案 経営判断ダッシュボード</div>
+              <div class="tab-sub">Tableau Next ・ Data Cloud × SAP × 系統運用 × 過去停電損害DB ・ リアルタイム</div>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <span class="pill pill-red">🔴 LIVE</span>
+              <span class="pill pill-blue">VIP</span>
+            </div>
+          </div>
+
+          <div class="tab-kpis">
+            <div class="tab-kpi bad">
+              <div class="tab-kpi-label">停電許容時の損害</div>
+              <div class="tab-kpi-value" style="color:#ba0517;">¥84〜120億</div>
+              <div class="tab-kpi-delta down">+ 信頼毀損 (数値化困難)</div>
+            </div>
+            <div class="tab-kpi good">
+              <div class="tab-kpi-label">緊急対応コスト</div>
+              <div class="tab-kpi-value" style="color:#04844b;">¥5.2億</div>
+              <div class="tab-kpi-delta up">緊急枠超過 ¥2.2億</div>
+            </div>
+            <div class="tab-kpi good">
+              <div class="tab-kpi-label">回避ROI</div>
+              <div class="tab-kpi-value" style="color:#04844b;">16〜23倍</div>
+              <div class="tab-kpi-delta up">単純回避効果のみ</div>
+            </div>
+            <div class="tab-kpi warn">
+              <div class="tab-kpi-label">影響世帯</div>
+              <div class="tab-kpi-value">24万世帯</div>
+              <div class="tab-kpi-delta">中央/港/江東区</div>
+            </div>
+          </div>
+
+          <div class="heatmap-container">
+
+            <!-- 都心 3D heatmap (SVG abstraction) -->
+            <div class="heatmap-box">
+              <div class="heatmap-title">🗺️ 都心3Dヒートマップ ・ 停電許容時の影響範囲</div>
+              <div class="heatmap-sub">経度139.6–139.9 / 緯度35.5–35.8 ・ Critical Infrastructure: 病院7・指定避難所14・地下鉄駅32</div>
+              <div class="heatmap-svg">
+                <svg viewBox="0 0 500 200" width="100%" height="200">
+                  <!-- Tokyo Bay -->
+                  <path d="M 0 130 Q 100 150 250 140 Q 350 135 500 145 L 500 200 L 0 200 Z" fill="#0c2d5e" opacity="0.6"/>
+                  <text x="380" y="180" font-size="10" fill="#94a3b8" font-style="italic">東京湾</text>
+                  <!-- Districts (rectangles abstract) -->
+                  <!-- 中央区 -->
+                  <rect x="180" y="80" width="60" height="50" fill="#ea001e" opacity="0.7"/><text x="210" y="108" font-size="10" fill="white" text-anchor="middle" font-weight="700">中央区</text>
+                  <!-- 港区 -->
+                  <rect x="120" y="100" width="60" height="50" fill="#ea001e" opacity="0.7"/><text x="150" y="128" font-size="10" fill="white" text-anchor="middle" font-weight="700">港区</text>
+                  <!-- 江東区 -->
+                  <rect x="240" y="80" width="80" height="60" fill="#fe9339" opacity="0.7"/><text x="280" y="112" font-size="10" fill="white" text-anchor="middle" font-weight="700">江東区</text>
+                  <!-- 豊洲: 新豊洲SS -->
+                  <circle cx="280" cy="130" r="8" fill="#fbbf24" stroke="white" stroke-width="2"/>
+                  <text x="295" y="134" font-size="10" fill="#fbbf24" font-weight="700">新豊洲SS ⚠</text>
+                  <!-- 千代田 -->
+                  <rect x="180" y="40" width="60" height="40" fill="#fe9339" opacity="0.5"/><text x="210" y="62" font-size="9" fill="white" text-anchor="middle">千代田区</text>
+                  <!-- Other districts -->
+                  <rect x="60" y="40" width="60" height="40" fill="#fbbf24" opacity="0.4"/><text x="90" y="62" font-size="9" fill="white" text-anchor="middle">新宿区</text>
+                  <rect x="60" y="80" width="60" height="50" fill="#fbbf24" opacity="0.4"/><text x="90" y="108" font-size="9" fill="white" text-anchor="middle">渋谷区</text>
+                  <!-- key facilities -->
+                  <g font-size="9">
+                    <text x="200" y="78" fill="white">🏥</text>
+                    <text x="135" y="120" fill="white">🏥</text>
+                    <text x="265" y="105" fill="white">🚇</text>
+                    <text x="220" y="95" fill="white">🚇</text>
+                  </g>
+                  <!-- Legend -->
+                  <g transform="translate(10,10)">
+                    <rect x="0" y="0" width="14" height="10" fill="#ea001e" opacity="0.7"/><text x="20" y="9" font-size="9" fill="white">最大影響</text>
+                    <rect x="0" y="14" width="14" height="10" fill="#fe9339" opacity="0.7"/><text x="20" y="23" font-size="9" fill="white">中影響</text>
+                    <rect x="0" y="28" width="14" height="10" fill="#fbbf24" opacity="0.4"/><text x="20" y="37" font-size="9" fill="white">迂回で回避</text>
+                  </g>
+                </svg>
+              </div>
+              <div class="heatmap-legend">
+                <span><span class="heatmap-legend-dot" style="background:#ea001e;"></span>停電影響: 最大</span>
+                <span><span class="heatmap-legend-dot" style="background:#fe9339;"></span>影響: 中</span>
+                <span><span class="heatmap-legend-dot" style="background:#fbbf24;"></span>迂回で軽減</span>
+              </div>
+            </div>
+
+            <!-- Cost impact -->
+            <div class="heatmap-box" style="background:linear-gradient(135deg, #1a1d29, #2d3142);">
+              <div class="heatmap-title">💰 期初予算へのインパクト</div>
+              <div class="heatmap-sub">緊急保全費 + LNG追加燃料 + メーカー対応</div>
+              <div class="heatmap-svg">
+                <svg viewBox="0 0 460 200" width="100%" height="200">
+                  <!-- Budget bar -->
+                  <text x="6" y="20" font-size="11" fill="#94a3b8" font-weight="700">緊急保全予算 期首枠 ¥30億</text>
+                  <rect x="6" y="28" width="430" height="22" fill="rgba(255,255,255,0.08)" rx="3"/>
+                  <rect x="6" y="28" width="280" height="22" fill="#04844b" rx="3"/>
+                  <rect x="286" y="28" width="80" height="22" fill="#fbbf24"/>
+                  <rect x="366" y="28" width="40" height="22" fill="#ba0517"/>
+                  <text x="146" y="44" font-size="10" fill="white" text-anchor="middle" font-weight="700">執行済 ¥18.6億</text>
+                  <text x="326" y="44" font-size="10" fill="white" text-anchor="middle" font-weight="700">残 ¥8.2億</text>
+                  <text x="386" y="44" font-size="10" fill="white" text-anchor="middle" font-weight="700">超過要</text>
+
+                  <!-- Today's case bar -->
+                  <text x="6" y="80" font-size="11" fill="#94a3b8" font-weight="700">本案件 ¥5.2億 (内訳)</text>
+                  <rect x="6" y="88" width="160" height="20" fill="#0073e6" rx="3"/>
+                  <rect x="166" y="88" width="160" height="20" fill="#ff9900"/>
+                  <rect x="326" y="88" width="60" height="20" fill="#6264a7"/>
+                  <rect x="386" y="88" width="40" height="20" fill="#04844b" rx="3"/>
+                  <text x="86" y="103" font-size="9" fill="white" text-anchor="middle">部品 ¥1.84億</text>
+                  <text x="246" y="103" font-size="9" fill="white" text-anchor="middle">LNG追加 ¥1.65億</text>
+                  <text x="356" y="103" font-size="9" fill="white" text-anchor="middle">メーカー</text>
+                  <text x="406" y="103" font-size="9" fill="white" text-anchor="middle">人件</text>
+
+                  <!-- Comparison: vs 停電損害 -->
+                  <text x="6" y="140" font-size="11" fill="#94a3b8" font-weight="700">停電許容時の想定損害との比較</text>
+                  <rect x="6" y="150" width="20" height="30" fill="#04844b" rx="3"/>
+                  <text x="34" y="170" font-size="10" fill="white" font-weight="700">¥5.2億 (本案件対応)</text>
+
+                  <rect x="6" y="180" width="430" height="14" fill="#ba0517" rx="3"/>
+                  <text x="220" y="192" font-size="10" fill="white" text-anchor="middle" font-weight="700">¥84〜120億 (停電許容シナリオ・社会的損失含めず)</text>
+                </svg>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="af-insight" style="margin-top:1rem;">
+            <div class="af-insight-header">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="filter: brightness(0) saturate(100%) invert(20%) sepia(80%) saturate(2200%) hue-rotate(195deg) brightness(95%);"/>
+              <strong>Agentforce サマリー: 経営判断ポイント (10秒)</strong>
+            </div>
+            <div class="af-insight-body">
+              「中央区・港区・江東区を含む<strong>都心約24万世帯への供給リスク</strong>。系統迂回 + 緊急保全で<strong>停電は回避可能</strong>。コスト ¥5.2億は予算超過 ¥2.2億ですが、停電シナリオの ¥84〜120億 と比較して<strong>16〜23倍の損失回避</strong>。広報・系統運用・現場の準備は完了しています。<strong>常務のワンタップで作業開始できます。</strong>」
+            </div>
+          </div>
+
+          <!-- The big VIP approve button -->
+          <button class="vip-approve" onclick="vipApprove()">
+            ✓ 緊急予算執行・対応承認 (¥5.2億)
+            <div style="font-size:0.8125rem; opacity:0.95; font-weight:400; margin-top:4px;">タップで Salesforce → SAP S/4HANA 稟議「承認済」 / Slack 自動通知 / 監査ログ記録</div>
+          </button>
+          <div style="text-align:center; font-size:0.75rem; color:#444;">承認権限: 関 常務 (¥10億までの緊急対応決裁権) ・ 監査ログは 7年保管</div>
+
+        </div>
+
+        <!-- Outcome panel: shown after click -->
+        <div class="sf-card" id="outcome-card" style="display:none; border:2px solid #04844b;">
+          <div class="sf-card-header" style="background:linear-gradient(135deg, #04844b, #2eb67d); color:white;">
+            <span style="font-weight:700;">✓ 承認完了 ・ 全システムが連動して稼働開始</span>
+          </div>
+          <div class="sf-card-body">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+              <div style="padding:0.625rem; background:#f0fff4; border-radius:6px; border:1px solid #04844b;">
+                <div style="font-weight:700; font-size:0.875rem; color:#04844b; margin-bottom:4px;"><span class="src-badge src-sap">SAP</span> S/4HANA</div>
+                <div style="font-size:0.8125rem;">稟議 RNG-2026-0615-EM01 → <strong>承認済 (リリース)</strong><br/>仕訳・予算消化・部品出庫オーダー自動連動</div>
+              </div>
+              <div style="padding:0.625rem; background:#f0fff4; border-radius:6px; border:1px solid #04844b;">
+                <div style="font-weight:700; font-size:0.875rem; color:#04844b; margin-bottom:4px;"><span class="src-badge src-slack">Slack</span> 現場通知</div>
+                <div style="font-size:0.8125rem;"><strong>「常務承認 → 作業開始」</strong>を #緊急-新豊洲 に投稿。保全2班 + 中給に @here</div>
+              </div>
+              <div style="padding:0.625rem; background:#f0fff4; border-radius:6px; border:1px solid #04844b;">
+                <div style="font-weight:700; font-size:0.875rem; color:#04844b; margin-bottom:4px;"><span class="src-badge src-dc">中給指令所</span></div>
+                <div style="font-size:0.8125rem;">系統切替プラン → <strong>実行待機モード</strong>。02:00 自動起動</div>
+              </div>
+              <div style="padding:0.625rem; background:#f0fff4; border-radius:6px; border:1px solid #04844b;">
+                <div style="font-weight:700; font-size:0.875rem; color:#04844b; margin-bottom:4px;"><span class="src-badge src-m365">M365</span> 広報草案</div>
+                <div style="font-size:0.8125rem;">Copilot がプレスリリース・対外Q&A 草案生成 → 広報部レビュー回付</div>
+              </div>
+            </div>
+            <div style="margin-top:0.75rem; padding:0.625rem; background:#fffbe6; border-left:4px solid #fbbf24; font-size:0.8125rem;">
+              <strong>所要時間: 6分間</strong> (検知 13:42 → 承認 13:48)。従来は<strong>同等の意思決定に 2〜4時間</strong>かかっていました (人手による情報収集・関係者調整・SAP起票)。
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Final summary -->
+    <div class="sf-card" style="margin-top:1rem;">
+      <div class="sf-card-header" style="background:linear-gradient(135deg, #032d60, #0070d2); color:white;">
+        <span class="sf-card-title" style="color:white; font-size:1rem;">🎯 関 常務に体感していただいた4幕の意味</span>
+      </div>
+      <div class="sf-card-body">
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.75rem;">
+          <div style="padding:0.75rem; background:#f7f9fc; border-radius:6px; border-left:4px solid #1abc9c;">
+            <div style="font-size:0.75rem; color:#444;">Scene 1</div>
+            <div style="font-weight:700; font-size:0.9375rem; margin:4px 0;">予兆 → 対応策</div>
+            <div style="font-size:0.75rem; color:#444; line-height:1.5;"><strong>AWS IoT</strong> で異常検知した瞬間、Agentforce が <strong>SAP・Data Cloud・気象・系統</strong>を横断照合し「対応策」を提示。データが手段に変わる。</div>
+          </div>
+          <div style="padding:0.75rem; background:#f7f9fc; border-radius:6px; border-left:4px solid #fe9339;">
+            <div style="font-size:0.75rem; color:#444;">Scene 2</div>
+            <div style="font-weight:700; font-size:0.9375rem; margin:4px 0;">ゼロ・クリック手配</div>
+            <div style="font-size:0.75rem; color:#444; line-height:1.5;"><strong>M365 / Teams / SAP</strong> の準備が完了した状態で Salesforce に提示。担当者は<strong>1クリックで5システムが同時稼働</strong>。</div>
+          </div>
+          <div style="padding:0.75rem; background:#f7f9fc; border-radius:6px; border-left:4px solid #4a154b;">
+            <div style="font-size:0.75rem; color:#444;">Scene 3</div>
+            <div style="font-weight:700; font-size:0.9375rem; margin:4px 0;">部門横断スウォーミング</div>
+            <div style="font-size:0.75rem; color:#444; line-height:1.5;"><strong>Slack</strong> で現場・<strong>中央給電指令所</strong>・経企・広報が瞬時に集結。Agentforce が系統迂回プランと損益試算を提示。</div>
+          </div>
+          <div style="padding:0.75rem; background:#f7f9fc; border-radius:6px; border-left:4px solid #ba0517;">
+            <div style="font-size:0.75rem; color:#444;">Scene 4</div>
+            <div style="font-weight:700; font-size:0.9375rem; margin:4px 0;">経営層のワンタップ決断</div>
+            <div style="font-size:0.75rem; color:#444; line-height:1.5;">関 常務のスマホで <strong>Tableau VIP ダッシュボード</strong>。1タップで <strong>SAP 稟議「承認済」+ 現場 Slack 通知</strong>。意思決定が現場から経営まで切れ目なく。</div>
+          </div>
+        </div>
+        <div style="margin-top:1rem; padding:0.75rem; background:linear-gradient(135deg, #f0f4ff, #fdf2ff); border-radius:6px; font-size:0.875rem; line-height:1.6;">
+          <strong>関 常務が体感されたこと:</strong> 「現場の入口は Salesforce のまま」だが、裏側では SAP・Teams・M365・AWS・Slack・Tableau が <strong>Agentforce のオーケストレーションで一体稼働</strong>。経営層には<strong>判断に必要な情報だけ</strong>が VIP UI で届き、<strong>1タップで現場まで指示が到達</strong>する。これがTEPCO HD全社で実装されると、設備保全だけでなく、需給調整・電源開発・カーボンニュートラル投資判断など、すべてのオペレーションで「<strong>経営の解像度</strong>」と「<strong>現場の応答速度</strong>」が同時に上がる。
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Scene navigation
+  function showScene(n) {
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('is-active'));
+    document.getElementById('scene-' + n).classList.add('is-active');
+    document.querySelectorAll('.scene-nav-tab').forEach(t => t.classList.remove('is-active'));
+    document.querySelector('.scene-nav-tab[data-scene="' + n + '"]').classList.add('is-active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.currentScene = n;
+  }
+  function goScene(n) { showScene(n); }
+  function nextScene() { showScene(Math.min(4, (window.currentScene || 1) + 1)); }
+  function prevScene() { showScene(Math.max(1, (window.currentScene || 1) - 1)); }
+  window.currentScene = 1;
+  document.querySelectorAll('.scene-nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => showScene(parseInt(tab.dataset.scene)));
+  });
+
+  // Toast helper
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('is-show');
+    setTimeout(() => t.classList.remove('is-show'), 3000);
+  }
+
+  function confirmApproval() { showToast('✓ 承認完了 ・ 5システムへ確定指示を送信中...'); }
+  function goScene4Detail() { showToast('Tableau ダッシュボード読込中...'); }
+  function vipApprove() {
+    showToast('✓ 関 常務の承認を受信 ・ SAP 稟議が「承認済」に更新されました');
+    document.getElementById('outcome-card').style.display = 'block';
+    document.getElementById('outcome-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Keyboard nav
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') nextScene();
+    if (e.key === 'ArrowLeft') prevScene();
+  });
+</script>
+
+</body>
+</html>

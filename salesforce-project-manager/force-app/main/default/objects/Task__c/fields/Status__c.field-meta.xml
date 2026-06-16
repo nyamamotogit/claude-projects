@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <label>ステータス</label>
+    <description>タスクの現在の作業状態を示す</description>
+    <inlineHelpText>タスクの作業状態を選択してください（未着手→進行中→レビュー中→完了）</inlineHelpText>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>未着手</fullName>
+                <default>true</default>
+                <label>未着手</label>
+            </value>
+            <value>
+                <fullName>進行中</fullName>
+                <default>false</default>
+                <label>進行中</label>
+            </value>
+            <value>
+                <fullName>レビュー中</fullName>
+                <default>false</default>
+                <label>レビュー中</label>
+            </value>
+            <value>
+                <fullName>完了</fullName>
+                <default>false</default>
+                <label>完了</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

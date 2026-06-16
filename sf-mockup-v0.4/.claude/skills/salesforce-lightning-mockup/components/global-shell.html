@@ -1,0 +1,125 @@
+<!--
+  Global Shell - 全画面共通の枠（SLDS Global Header + App Nav + Utility Bar）
+  ===========================================================================
+  使用箇所: 全ページ共通。<body> の最外側に配置
+-->
+
+<!-- ============ SLDS Global Header ============ -->
+<header class="slds-global-header_container slds-no-print">
+  <div class="slds-global-header slds-grid slds-grid_align-spread bg-white border-b border-slate-300 shadow-sm sticky top-0 z-50 px-4 h-12">
+
+    <!-- Logo -->
+    <div class="slds-global-header__item">
+      <span class="slds-icon_container">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" class="slds-icon slds-icon_medium" style="fill:#0070d2;" />
+      </span>
+    </div>
+
+    <!-- Search -->
+    <div class="slds-global-header__item slds-global-header__item_search slds-grow-none w-1/2 max-w-xl">
+      <div class="slds-form-element">
+        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+          <input type="search" placeholder="検索..." class="slds-input">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Actions -->
+    <ul class="slds-global-actions slds-grid slds-grid_vertical-align-center">
+      <li class="slds-global-actions__item">
+        <button class="slds-button slds-button_icon slds-global-actions__favorites" title="お気に入り">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" class="slds-button__icon" />
+        </button>
+      </li>
+      <li class="slds-global-actions__item">
+        <button class="slds-button slds-button_icon" title="ヘルプ">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" class="slds-button__icon" />
+        </button>
+      </li>
+      <li class="slds-global-actions__item">
+        <button class="slds-button slds-button_icon" title="設定">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" class="slds-button__icon" />
+        </button>
+      </li>
+      <li class="slds-global-actions__item relative">
+        <button class="slds-button slds-button_icon" title="通知">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" class="slds-button__icon" />
+        </button>
+        <span class="absolute top-0 right-0 w-2 h-2 bg-red-600 rounded-full border-2 border-white"></span>
+      </li>
+      <li class="slds-global-actions__item slds-m-left_small">
+        <span class="slds-avatar slds-avatar_circle slds-avatar_small">
+          <img src="https://ui-avatars.com/api/?name=Aoshima+Tetsuya&background=1B96FF&color=fff" alt="User">
+        </span>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<!-- ============ App Navigation Bar ============ -->
+<div class="slds-context-bar bg-white border-b border-slate-200 px-4 z-40 relative">
+  <div class="slds-context-bar__primary slds-context-bar__item_app">
+    <span class="slds-icon_container slds-context-bar__icon-action">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/apps.svg" alt="" class="slds-icon slds-icon_small" style="fill:#54698d" />
+    </span>
+    <span class="slds-context-bar__label-action slds-context-bar__app-name">
+      <span class="slds-truncate" title="Sales">Sales</span>
+    </span>
+  </div>
+
+  <nav class="slds-context-bar__secondary">
+    <ul class="slds-grid">
+      <li class="slds-context-bar__item">
+        <a href="#" class="slds-context-bar__label-action">ホーム</a>
+      </li>
+      <li class="slds-context-bar__item slds-is-active">
+        <a href="#" class="slds-context-bar__label-action" aria-haspopup="true">取引先</a>
+        <div class="slds-context-bar__icon-action slds-p-left_none">
+          <button class="slds-button slds-button_icon slds-button_icon" aria-haspopup="true">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" class="slds-button__icon slds-button__icon_small" />
+          </button>
+        </div>
+      </li>
+      <li class="slds-context-bar__item">
+        <a href="#" class="slds-context-bar__label-action">取引先責任者</a>
+      </li>
+      <li class="slds-context-bar__item">
+        <a href="#" class="slds-context-bar__label-action">リード</a>
+      </li>
+      <li class="slds-context-bar__item">
+        <a href="#" class="slds-context-bar__label-action">商談</a>
+      </li>
+      <li class="slds-context-bar__item">
+        <a href="#" class="slds-context-bar__label-action">ダッシュボード</a>
+      </li>
+      <li class="slds-context-bar__item">
+        <a href="#" class="slds-context-bar__label-action">レポート</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- ============ Utility Bar (画面下部固定) ============ -->
+<footer class="slds-utility-bar_container fixed bottom-0 left-0 right-0 bg-white border-t border-slate-300 h-10 z-50 shadow-[0_-2px_4px_rgba(0,0,0,0.05)]">
+  <ul class="slds-utility-bar slds-grid h-full">
+    <li class="slds-utility-bar__item border-r border-slate-200">
+      <button class="slds-button slds-utility-bar__action h-full px-4 text-sm">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/task.svg" alt="" class="slds-button__icon slds-button__icon_left" />
+        <span>To Do List</span>
+      </button>
+    </li>
+    <li class="slds-utility-bar__item border-r border-slate-200">
+      <button class="slds-button slds-utility-bar__action h-full px-4 text-sm">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/call.svg" alt="" class="slds-button__icon slds-button__icon_left" />
+        <span>通話履歴</span>
+      </button>
+    </li>
+    <li class="slds-utility-bar__item">
+      <button class="slds-button slds-utility-bar__action h-full px-4 text-sm">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chat.svg" alt="" class="slds-button__icon slds-button__icon_left" />
+        <span>チャット</span>
+      </button>
+    </li>
+  </ul>
+</footer>

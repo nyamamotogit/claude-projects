@@ -1,0 +1,367 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - generic [ref=e7]:
+        - button "リード" [ref=e8] [cursor=pointer]:
+          - generic [ref=e9]: リード
+        - searchbox "Salesforce を検索..." [ref=e12]
+      - list [ref=e13]:
+        - listitem [ref=e14]:
+          - button [ref=e15] [cursor=pointer]
+        - listitem [ref=e16]:
+          - generic [ref=e17]:
+            - button [ref=e18] [cursor=pointer]
+            - button [ref=e19] [cursor=pointer]
+        - listitem [ref=e20]:
+          - button [ref=e21] [cursor=pointer]
+        - listitem [ref=e22]:
+          - button [ref=e23] [cursor=pointer]
+        - listitem [ref=e24]:
+          - button [ref=e25] [cursor=pointer]
+        - listitem [ref=e26]:
+          - button "5" [ref=e27] [cursor=pointer]:
+            - generic: "5"
+        - listitem [ref=e28]:
+          - img "User" [ref=e30]
+  - generic [ref=e31]:
+    - generic [ref=e45]: 自動車部品 Sales
+    - navigation [ref=e46]:
+      - list [ref=e47]:
+        - listitem [ref=e48]:
+          - link "ホーム" [ref=e49] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e50]:
+          - link "取引先" [ref=e51] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e52]:
+          - link "取引先責任者" [ref=e53] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e54] [cursor=pointer]:
+          - link "リード" [ref=e55]:
+            - /url: "#"
+        - listitem [ref=e56]:
+          - link "商談" [ref=e57] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e58]:
+          - link "ケース" [ref=e59] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e60]:
+          - link "部品マスタ" [ref=e61] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e62]:
+          - link "ダッシュボード" [ref=e63] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e71]:
+          - paragraph [ref=e72]: リード · 新規引合 (展示会経由)
+          - heading "本田 武 / 本田技研工業 — EV電池液冷モジュール 新規開発" [level=1] [ref=e74]:
+            - generic [ref=e75]: 本田 武 / 本田技研工業 — EV電池液冷モジュール 新規開発
+          - paragraph [ref=e76]: "引合元: 人とくるまのテクノロジー展 2026 (5/22) · 担当 アバター名刺スキャン"
+        - list [ref=e80]:
+          - listitem [ref=e81]:
+            - button "編集" [ref=e82] [cursor=pointer]
+          - listitem [ref=e83]:
+            - button "活動の記録" [ref=e84] [cursor=pointer]
+          - listitem [ref=e85]:
+            - button "取引開始" [ref=e86] [cursor=pointer]
+      - list [ref=e89]:
+        - listitem [ref=e90]:
+          - generic [ref=e91]: リード番号
+          - paragraph [ref=e92]: L-2026-00834
+        - listitem [ref=e93]:
+          - generic [ref=e94]: Agentforce スコア
+          - paragraph [ref=e95]:
+            - generic [ref=e96]: 🔥 87 / 100 (Hot)
+        - listitem [ref=e97]:
+          - generic [ref=e98]: 想定金額
+          - paragraph [ref=e99]:
+            - strong [ref=e100]: ¥220,000,000
+        - listitem [ref=e101]:
+          - generic [ref=e102]: 想定SOP
+          - paragraph [ref=e103]: 2028/Q2
+        - listitem [ref=e104]:
+          - generic [ref=e105]: 所有者
+          - paragraph [ref=e106]:
+            - link "藤田 直樹" [ref=e107] [cursor=pointer]:
+              - /url: "#"
+    - article [ref=e108]:
+      - generic [ref=e110]:
+        - list [ref=e114]:
+          - listitem [ref=e115]:
+            - link "新規" [ref=e116] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e118]: 新規
+          - listitem [ref=e119]:
+            - link "連絡完了" [ref=e120] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e122]: 連絡完了
+          - listitem [ref=e123]:
+            - link "引合精査" [ref=e124] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e125]: 引合精査
+          - listitem [ref=e126]:
+            - link "技術ヒアリング" [ref=e127] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e128]: 技術ヒアリング
+          - listitem [ref=e129]:
+            - link "商談化" [ref=e130] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e131]: 商談化
+        - button "現ステージとしてマーク" [ref=e133] [cursor=pointer]
+    - generic [ref=e134]:
+      - generic [ref=e135]:
+        - article [ref=e136]:
+          - generic [ref=e137]:
+            - list [ref=e138]:
+              - listitem [ref=e139]:
+                - link "詳細" [ref=e140] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e141]:
+                - link "関連" [ref=e142] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e143]:
+                - link "活動履歴" [ref=e144] [cursor=pointer]:
+                  - /url: "#"
+            - generic [ref=e145]:
+              - heading "担当者情報" [level=3] [ref=e146]:
+                - generic [ref=e147]: 担当者情報
+              - generic [ref=e149]:
+                - generic [ref=e150]:
+                  - term [ref=e151]: 姓 / 名
+                  - definition [ref=e152]: 本田 武
+                - generic [ref=e153]:
+                  - term [ref=e154]: 役職
+                  - definition [ref=e155]: 電動化開発センター 主任研究員
+                - generic [ref=e156]:
+                  - term [ref=e157]: 会社名
+                  - definition [ref=e158]: 本田技研工業株式会社
+                - generic [ref=e159]:
+                  - term [ref=e160]: 部署
+                  - definition [ref=e161]: EVバッテリー開発部 熱マネG
+                - generic [ref=e162]:
+                  - term [ref=e163]: 電話
+                  - definition [ref=e164]: 048-462-XXXX
+                - generic [ref=e165]:
+                  - term [ref=e166]: メール
+                  - definition [ref=e167]:
+                    - link "t.honda@honda.co.jp" [ref=e168] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e169]:
+                  - term [ref=e170]: 勤務地
+                  - definition [ref=e171]: 埼玉県和光市 和光本社
+                - generic [ref=e172]:
+                  - term [ref=e173]: LinkedIn
+                  - definition [ref=e174]:
+                    - link "linkedin.com/in/t-honda" [ref=e175] [cursor=pointer]:
+                      - /url: "#"
+              - heading "引合内容 (Agentforce 要約)" [level=3] [ref=e176]:
+                - generic [ref=e177]: 引合内容 (Agentforce 要約)
+              - generic [ref=e179]:
+                - paragraph [ref=e180]:
+                  - strong [ref=e181]: 📌 案件サマリ
+                - paragraph [ref=e182]:
+                  - text: 2027年型 EV (中型SUV) のバッテリーパック向け
+                  - strong [ref=e183]: 液冷モジュール
+                  - text: を新規開発したい。現行サプライヤーは A 社だが、軽量化と冷却効率に課題があり
+                  - strong [ref=e184]: セカンドソース
+                  - text: を探索中。当社の Φ80 ピストンリングで実績ある
+                  - strong [ref=e185]: 精密加工技術
+                  - text: に注目。
+                - paragraph [ref=e186]:
+                  - strong [ref=e187]: 🎯 要求仕様
+                - list [ref=e188]:
+                  - listitem [ref=e189]: セル温度均一化 (ΔT < 3℃)、最大放熱 18kW
+                  - listitem [ref=e190]: "軽量化目標: 現行比 -22% (アルミ製ハーフチャネル → 樹脂複合化)"
+                  - listitem [ref=e191]: SOP 2028/Q2、量産規模 240,000 台/年
+                  - listitem [ref=e192]: UN R100、ISO 26262 ASIL-C 対応
+                - paragraph [ref=e193]:
+                  - strong [ref=e194]: 💰 想定規模
+                  - text: ¥220,000,000 (初年度) / 5年累計 ¥9.8億
+              - heading "追加情報" [level=3] [ref=e195]:
+                - generic [ref=e196]: 追加情報
+              - generic [ref=e198]:
+                - generic [ref=e199]:
+                  - term [ref=e200]: 引合元
+                  - definition [ref=e201]: 人とくるまのテクノロジー展 2026 (パシフィコ横浜)
+                - generic [ref=e202]:
+                  - term [ref=e203]: 接触日
+                  - definition [ref=e204]: 2026年5月22日 14:30
+                - generic [ref=e205]:
+                  - term [ref=e206]: 業種
+                  - definition [ref=e207]: 自動車製造 (OEM)
+                - generic [ref=e208]:
+                  - term [ref=e209]: 既存サプライヤー
+                  - definition [ref=e210]: "A 社 (推定: デンソー)"
+                - generic [ref=e211]:
+                  - term [ref=e212]: 予算ステータス
+                  - definition [ref=e213]: 中期計画に組込済
+                - generic [ref=e214]:
+                  - term [ref=e215]: 意思決定者
+                  - definition [ref=e216]: 先方 EV事業本部 部長 (未接触)
+        - article [ref=e217]:
+          - heading "本田技研 過去取引履歴 (4)" [level=2] [ref=e223]
+          - table [ref=e224]:
+            - rowgroup [ref=e225]:
+              - row "商談 / 部品 結果 金額 SOP年" [ref=e226]:
+                - columnheader "商談 / 部品" [ref=e227]
+                - columnheader "結果" [ref=e228]
+                - columnheader "金額" [ref=e229]
+                - columnheader "SOP年" [ref=e230]
+            - rowgroup [ref=e231]:
+              - row "N-BOX HEV用 ピストンリング 受注 ¥58M 2023" [ref=e232]:
+                - rowheader "N-BOX HEV用 ピストンリング" [ref=e233]:
+                  - link "N-BOX HEV用 ピストンリング" [ref=e234] [cursor=pointer]:
+                    - /url: "#"
+                - cell "受注" [ref=e235]:
+                  - generic [ref=e236]: 受注
+                - cell "¥58M" [ref=e237]
+                - cell "2023" [ref=e238]
+              - row "Civic e:HEV用 ECUハーネス 受注 ¥84M 2024" [ref=e239]:
+                - rowheader "Civic e:HEV用 ECUハーネス" [ref=e240]:
+                  - link "Civic e:HEV用 ECUハーネス" [ref=e241] [cursor=pointer]:
+                    - /url: "#"
+                - cell "受注" [ref=e242]:
+                  - generic [ref=e243]: 受注
+                - cell "¥84M" [ref=e244]
+                - cell "2024" [ref=e245]
+              - row "Vezel 用 O2センサー 失注 ¥32M 2024" [ref=e246]:
+                - rowheader "Vezel 用 O2センサー" [ref=e247]:
+                  - link "Vezel 用 O2センサー" [ref=e248] [cursor=pointer]:
+                    - /url: "#"
+                - cell "失注" [ref=e249]:
+                  - generic [ref=e250]: 失注
+                - cell "¥32M" [ref=e251]
+                - cell "2024" [ref=e252]
+              - row "CR-V e:FCEV 高耐熱ハーネス 受注 ¥112M 2025" [ref=e253]:
+                - rowheader "CR-V e:FCEV 高耐熱ハーネス" [ref=e254]:
+                  - link "CR-V e:FCEV 高耐熱ハーネス" [ref=e255] [cursor=pointer]:
+                    - /url: "#"
+                - cell "受注" [ref=e256]:
+                  - generic [ref=e257]: 受注
+                - cell "¥112M" [ref=e258]
+                - cell "2025" [ref=e259]
+      - generic [ref=e260]:
+        - article [ref=e261]:
+          - heading "Agentforce リードスコア 87" [level=2] [ref=e267]
+          - generic [ref=e268]:
+            - generic [ref=e269]:
+              - generic [ref=e270]: 過去取引実績 (受注3/4)
+              - generic [ref=e271]: 27/30
+            - generic [ref=e273]:
+              - generic [ref=e274]: 技術適合度 (精密加工)
+              - generic [ref=e275]: 16/20
+            - generic [ref=e277]:
+              - generic [ref=e278]: 予算明確度
+              - generic [ref=e279]: 15/20
+            - generic [ref=e281]:
+              - generic [ref=e282]: 金額規模
+              - generic [ref=e283]: 17/20
+            - generic [ref=e285]:
+              - generic [ref=e286]: 意思決定者接触
+              - generic [ref=e287]: 12/20
+            - paragraph [ref=e289]: 同社過去案件75%受注実績 + 業界平均-3%価格優位 + 軽量化技術ニーズ整合により Hot 評価
+        - article [ref=e290]:
+          - heading "活動 (3)" [level=2] [ref=e292]
+          - list [ref=e294]:
+            - listitem [ref=e295]:
+              - generic [ref=e297]:
+                - button "詳細を切り替え" [expanded] [ref=e299] [cursor=pointer]:
+                  - generic [ref=e300]: 詳細を切り替え
+                - generic [ref=e302]:
+                  - generic [ref=e303]:
+                    - heading "初回オンライン技術ミーティング" [level=3] [ref=e304]:
+                      - link "初回オンライン技術ミーティング" [ref=e305] [cursor=pointer]:
+                        - /url: "#"
+                        - strong [ref=e306]: 初回オンライン技術ミーティング
+                    - paragraph [ref=e307]: 6月21日 15:00
+                  - paragraph [ref=e308]: Zoom · 当社設計2課 + 本田氏
+                  - article [ref=e309]:
+                    - list [ref=e310]:
+                      - listitem [ref=e311]:
+                        - generic [ref=e312]: 参加者
+                        - generic [ref=e313]:
+                          - link "本田 雅彦" [ref=e314] [cursor=pointer]:
+                            - /url: "#"
+                          - text: / 当社設計2課 3名
+                      - listitem [ref=e315]:
+                        - generic [ref=e316]: 場所
+                        - generic [ref=e317]: Zoom (リンクは別途送信)
+                    - generic [ref=e318]:
+                      - text: 議題
+                      - paragraph [ref=e319]:
+                        - text: EV バッテリーモジュールの軽量化要件と当社 NMP プロセスの優位性。
+                        - strong [ref=e320]: CR-V e:FCEV 案件の流用可否
+                        - text: と、6月内の技術差別化資料提出スケジュールを協議する。
+            - listitem [ref=e321]:
+              - generic [ref=e323]:
+                - button "詳細を切り替え" [expanded] [ref=e325] [cursor=pointer]:
+                  - generic [ref=e326]: 詳細を切り替え
+                - generic [ref=e328]:
+                  - generic [ref=e329]:
+                    - heading "事前資料 (技術概要 v0.3) 送付" [level=3] [ref=e330]:
+                      - link "事前資料 (技術概要 v0.3) 送付" [ref=e331] [cursor=pointer]:
+                        - /url: "#"
+                        - strong [ref=e332]: 事前資料 (技術概要 v0.3) 送付
+                    - paragraph [ref=e333]: 6月13日
+                  - paragraph [ref=e334]: "宛先: 本田 雅彦 (本田技研)"
+                  - article [ref=e335]:
+                    - list [ref=e336]:
+                      - listitem [ref=e337]:
+                        - generic [ref=e338]: 宛先
+                        - generic [ref=e339]: honda.m@honda.example.co.jp
+                      - listitem [ref=e340]:
+                        - generic [ref=e341]: 添付
+                        - link "EV_Battery_Tech_Overview_v0.3.pdf" [ref=e343] [cursor=pointer]:
+                          - /url: "#"
+                    - generic [ref=e344]:
+                      - text: 本文
+                      - paragraph [ref=e345]:
+                        - text: 6/21 のミーティング向けに技術概要 v0.3 をお送りします。
+                        - strong [ref=e346]: NMP プロセスでのセル軽量化 (-12%) とサイクル寿命 (1500cyc 以上)
+                        - text: の試算根拠を 8〜12 ページに記載。事前にご確認のうえ論点をご共有ください。
+            - listitem [ref=e347]:
+              - generic [ref=e349]:
+                - button "詳細を切り替え" [expanded] [ref=e351] [cursor=pointer]:
+                  - generic [ref=e352]: 詳細を切り替え
+                - generic [ref=e354]:
+                  - generic [ref=e355]:
+                    - heading "展示会フォロー電話 (15分)" [level=3] [ref=e356]:
+                      - link "展示会フォロー電話 (15分)" [ref=e357] [cursor=pointer]:
+                        - /url: "#"
+                        - strong [ref=e358]: 展示会フォロー電話 (15分)
+                    - paragraph [ref=e359]: 5月28日
+                  - paragraph [ref=e360]:
+                    - text: 青島 哲也 が
+                    - link "本田 雅彦" [ref=e361] [cursor=pointer]:
+                      - /url: "#"
+                    - text: と通話
+                  - article [ref=e362]:
+                    - list [ref=e363]:
+                      - listitem [ref=e364]:
+                        - generic [ref=e365]: 通話相手
+                        - generic [ref=e366]:
+                          - link "本田 雅彦" [ref=e367] [cursor=pointer]:
+                            - /url: "#"
+                          - text: (EV事業本部 主任)
+                      - listitem [ref=e368]:
+                        - generic [ref=e369]: 通話時間
+                        - generic [ref=e370]: 15 分
+                    - generic [ref=e371]:
+                      - text: 概要
+                      - paragraph [ref=e372]:
+                        - text: 人とくるまのテクノロジー展2026 でブース来訪のお礼。
+                        - strong [ref=e373]: 2027年モデル向け EV バッテリーの軽量化に関心あり
+                        - text: 。来週中に事前資料を送り、6/21 にオンライン技術ミーティングをセットすることで合意。
+        - article [ref=e374]:
+          - heading "次のアクション提案" [level=2] [ref=e380]
+          - generic [ref=e381]:
+            - heading "👉 軽量化提案資料を作成 (CR-V e:FCEV 提案v3.2 を流用可)" [level=2] [ref=e383]
+            - heading "👉 EV事業本部 部長へのアクセス経路を 中島(トヨタ)経由 で打診" [level=2] [ref=e385]:
+              - text: 👉 EV事業本部 部長へのアクセス経路を
+              - link "中島(トヨタ)経由" [ref=e386] [cursor=pointer]:
+                - /url: "#"
+              - text: で打診
+            - heading "⚠️ デンソー社が同案件で6/8に提案済 — 6月内に技術差別化資料の提出推奨" [level=2] [ref=e388]

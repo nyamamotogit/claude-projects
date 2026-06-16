@@ -1,0 +1,46 @@
+<template>
+    <div class="iot-panel">
+        <div class="iot-header">
+            <span class="iot-pulse"></span>
+            <span class="iot-title">AWS IoT Core ・ 油中ガス分析センサー (DGA-MON-1F-A) ライブストリーム</span>
+            <span class="src src-aws">AWS</span>
+            <span class="src src-iot">IoT</span>
+        </div>
+        <div class="iot-body">
+            <div class="iot-grid">
+                <div class={h2Class} data-metric="h2" onclick={selectMetric}>
+                    <div class="lbl">水素 H₂</div>
+                    <div class="val">{h2} ppm</div>
+                    <div class="trend">▲ +186% vs ベース</div>
+                </div>
+                <div class={c2h2Class} data-metric="c2h2" onclick={selectMetric}>
+                    <div class="lbl">アセチレン C₂H₂</div>
+                    <div class="val">{c2h2} ppm</div>
+                    <div class="trend">▲ 通常検出されない</div>
+                </div>
+                <div class={tempClass} data-metric="temp" onclick={selectMetric}>
+                    <div class="lbl">油温</div>
+                    <div class="val">{temp} ℃</div>
+                    <div class="trend yellow">▲ +4.2℃</div>
+                </div>
+                <div class={loadClass} data-metric="load" onclick={selectMetric}>
+                    <div class="lbl">負荷率</div>
+                    <div class="val">{load} %</div>
+                    <div class="trend gray">平常範囲</div>
+                </div>
+            </div>
+            <div class="iot-chart">
+                <div class="iot-chart-title">{chartName}</div>
+                <svg viewBox="0 0 600 110" width="100%" height="110" preserveAspectRatio="none" class="iot-chart-svg">
+                    <line x1="0" y1="20" x2="600" y2="20" stroke="rgba(255,255,255,0.06)"/>
+                    <line x1="0" y1="55" x2="600" y2="55" stroke="rgba(255,255,255,0.06)"/>
+                    <line x1="0" y1="90" x2="600" y2="90" stroke="rgba(255,255,255,0.06)"/>
+                    <polyline fill="none" stroke={chartColor} stroke-width="2" points={chartPoints}></polyline>
+                    <path d={areaPath} fill="rgba(34,211,238,0.18)"></path>
+                    <circle cx="600" cy={popY} r="4" fill="#ea001e"></circle>
+                    <text x={popTextX} y={popY} font-size="10" fill="#ff6b6b" font-weight="700">{popText}</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+</template>

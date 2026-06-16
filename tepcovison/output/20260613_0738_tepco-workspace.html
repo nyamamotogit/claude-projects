@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEPCO Workspace | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --tepco-blue:#003F8C; --tepco-blue2:#1B5297; --tepco-red:#E60012;
+  }
+  * { box-sizing: border-box; }
+  body { background:#f3f3f3; min-width:1280px; margin:0;
+    font-family:'Salesforce Sans','Hiragino Sans','Yu Gothic UI',sans-serif; color:#181818; }
+
+  /* === Global Header (TEPCO ブルー) === */
+  .sf-header { background:var(--tepco-blue); height:48px; display:flex;
+    align-items:center; justify-content:space-between; padding:0 1rem;
+    position:sticky; top:0; z-index:60; color:#fff; }
+  .sf-logo { display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+  .sf-logo-text { font-weight:800; font-size:18px; letter-spacing:1px; }
+  .sf-logo-sub { font-size:10px; opacity:.85; margin-left:4px; }
+  .sf-cloud-logo { width:24px; height:auto; filter:brightness(0) invert(1); }
+  .sf-header-search { width:46%; max-width:36rem; }
+  .sf-header-search .slds-input { background:rgba(255,255,255,.96); border:none; height:32px; }
+  .slds-input__icon { filter:brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-header-actions { display:flex; align-items:center; gap:.4rem; }
+  .sf-icon-btn { display:inline-flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border-radius:.25rem; cursor:pointer;
+    background:transparent; border:none; padding:0; }
+  .sf-icon-btn:hover { background:rgba(255,255,255,.15); }
+  .sf-icon-btn img { width:18px; height:18px; filter:brightness(0) invert(1); }
+  .sf-notify-wrap { position:relative; display:inline-flex; }
+  .sf-notify-dot { position:absolute; top:4px; right:4px; width:8px; height:8px;
+    background:var(--tepco-red); border-radius:50%; border:1.5px solid var(--tepco-blue); }
+
+  /* === App Nav === */
+  .sf-context-bar { background:#fff; border-bottom:1px solid #dddbda;
+    padding:0 1rem; display:flex; align-items:center; gap:.5rem; height:42px; position:sticky; top:48px; z-index:55; }
+  .sf-context-bar nav ul { display:flex; gap:.25rem; list-style:none; padding:0; margin:0; }
+  .sf-context-bar nav ul li { display:flex; align-items:center; padding:0 .5rem; font-size:13px; cursor:pointer;
+    border-bottom:3px solid transparent; height:42px; }
+  .sf-context-bar nav ul li:hover { background:#f3f3f3; }
+  .sf-context-bar nav ul li.is-active { border-bottom-color:#1589ee; }
+  .sf-context-bar nav ul li.is-active a { color:#0070d2; font-weight:700; }
+  .sf-context-bar nav ul li a { color:#444; text-decoration:none; }
+  .sf-app-launcher { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; cursor:pointer; }
+  .sf-app-launcher-grid { display:grid; grid-template-columns:repeat(3,4px); grid-template-rows:repeat(3,4px); gap:3px; }
+  .sf-app-launcher-grid span { width:4px; height:4px; background:#54698d; border-radius:1px; }
+  .sf-app-name { font-size:16px; font-weight:700; color:var(--tepco-blue); margin-right:.5rem; }
+
+  /* === Layout === */
+  #scene-host { display:flex; min-height:calc(100vh - 90px); }
+  .scene-main { flex:1; padding:14px; overflow-x:hidden; max-width:calc(100% - 400px); }
+  .scene { display:none; }
+  .scene.active { display:block; }
+
+  /* === Cards === */
+  .card { background:#fff; border:1px solid #dddbda; border-radius:6px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04); margin-bottom:12px; }
+  .card-h { padding:10px 14px; border-bottom:1px solid #ecebea; display:flex;
+    align-items:center; gap:8px; font-weight:700; font-size:14px; }
+  .card-b { padding:14px; }
+  .card-h .count { color:#706e6b; font-weight:400; font-size:12px; }
+
+  /* === Highlights Panel === */
+  .highlights { background:linear-gradient(135deg,var(--tepco-blue) 0%,var(--tepco-blue2) 100%);
+    color:#fff; padding:14px 18px; border-radius:6px; margin-bottom:12px;
+    display:flex; align-items:center; gap:18px; }
+  .hl-icon { width:48px; height:48px; background:rgba(255,255,255,.15); border-radius:8px;
+    display:inline-flex; align-items:center; justify-content:center; }
+  .hl-icon img { width:28px; height:28px; filter:brightness(0) invert(1); }
+  .hl-info h2 { margin:0 0 4px; font-size:20px; font-weight:700; }
+  .hl-meta { display:flex; gap:18px; font-size:12px; opacity:.9; }
+  .hl-meta div b { display:block; opacity:.7; font-weight:400; font-size:10px; text-transform:uppercase; }
+  .hl-actions { margin-left:auto; display:flex; gap:6px; }
+  .hl-actions button { background:#fff; color:var(--tepco-blue); border:none; padding:6px 14px;
+    border-radius:4px; font-size:13px; cursor:pointer; font-weight:600; }
+  .hl-critical { background:linear-gradient(135deg,#9C0E1A 0%,#BA0517 100%); }
+
+  /* === Path === */
+  .sf-path { display:flex; gap:0; margin:8px 0 14px; }
+  .path-step { flex:1; padding:8px 12px; background:#f3f3f3; color:#444; font-size:12px;
+    position:relative; clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%);
+    margin-right:-10px; text-align:center; }
+  .path-step:first-child { clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%); }
+  .path-step:last-child { clip-path:polygon(0 0,100% 0,100% 100%,0 100%,12px 50%); margin-right:0; }
+  .path-step.done { background:#04844b; color:#fff; }
+  .path-step.current { background:var(--tepco-blue); color:#fff; font-weight:700; }
+
+  /* === Source Badges === */
+  .src { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700;
+    padding:2px 8px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+  .s-sap { background:#0070F2; color:#fff; }
+  .s-teams { background:#4B53BC; color:#fff; }
+  .s-m365 { background:#D83B01; color:#fff; }
+  .s-slack { background:#4A154B; color:#fff; }
+  .s-aws { background:#FF9900; color:#232F3E; }
+  .s-tableau { background:#1F4F95; color:#fff; }
+  .s-datacloud { background:#032D60; color:#fff; }
+  .s-sharepoint { background:#0078D4; color:#fff; }
+  .s-sf { background:#0176D3; color:#fff; }
+  .s-hr { background:#7C4DFF; color:#fff; }
+
+  /* === Home === */
+  .home-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:12px; }
+  .home-greeting h1 { font-size:24px; margin:0; color:var(--tepco-blue); }
+  .home-greeting p { margin:0; color:#3E3E3C; font-size:13px; }
+  .schedule-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid #f3f3f3; }
+  .schedule-item:last-child { border-bottom:none; }
+  .schedule-time { width:64px; font-weight:700; color:var(--tepco-blue); font-size:13px; }
+  .schedule-body { flex:1; font-size:13px; }
+  .schedule-body small { color:#706e6b; font-size:11px; display:block; margin-top:2px; }
+  .news-item { padding:8px 0; font-size:13px; border-bottom:1px solid #f3f3f3; display:flex; align-items:center; gap:8px; }
+  .news-item:last-child { border-bottom:none; }
+  .news-tag { background:#f3f3f3; padding:2px 6px; border-radius:3px; font-size:10px; color:#444; }
+
+  /* === Summary table for Coworker card === */
+  .summary-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed #ecebea;
+    font-size:12px; }
+  .summary-row:last-child { border-bottom:none; }
+  .summary-row b { color:var(--tepco-blue); }
+
+  /* === Tables === */
+  .mini-tbl { width:100%; border-collapse:collapse; font-size:12px; }
+  .mini-tbl th { text-align:left; background:#f3f3f3; color:#3E3E3C; padding:6px 8px; font-weight:600; border-bottom:1px solid #dddbda; }
+  .mini-tbl td { padding:6px 8px; border-bottom:1px solid #f3f3f3; }
+  .mini-tbl tr.hot td { background:#FEF5F5; }
+  .badge-pill { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:700; }
+  .pill-green { background:#E5F5EC; color:#0B7A3E; }
+  .pill-red { background:#FCE8EB; color:#BA0517; }
+  .pill-amber { background:#FFF3E0; color:#A0560B; }
+  .pill-gray { background:#f3f3f3; color:#444; }
+
+  /* === Tile (Tableau) === */
+  .tile-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .tile { background:#fff; border:1px solid #dddbda; border-radius:6px; padding:10px; min-height:240px; display:flex; flex-direction:column; }
+  .tile-h { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .tile-title { font-size:13px; font-weight:700; }
+  .tile canvas { flex:1; max-height:170px; }
+  .tile-foot { font-size:10px; color:#706e6b; margin-top:6px; display:flex; gap:6px; align-items:center; }
+
+  /* === Coworker (Agentforce) Panel === */
+  .af-panel { width:400px; flex:0 0 400px; background:#fff; border-left:1px solid #c9c9c9;
+    display:flex; flex-direction:column; height:calc(100vh - 90px); position:sticky; top:90px; }
+  .af-h { display:flex; align-items:center; justify-content:space-between;
+    padding:10px 14px; border-bottom:1px solid #dddbda; }
+  .af-h-l { display:flex; align-items:center; gap:8px; }
+  .af-avatar { width:28px; height:28px; border-radius:50%; background:var(--tepco-blue);
+    display:inline-flex; align-items:center; justify-content:center; }
+  .af-avatar img { width:18px; height:18px; filter:brightness(0) invert(1); }
+  .af-title { font-weight:700; font-size:14px; }
+  .af-status { display:inline-block; width:8px; height:8px; border-radius:50%; background:#04844b; }
+  .af-conv { flex:1; overflow-y:auto; padding:14px; }
+  .af-msg { display:flex; gap:8px; margin-bottom:14px; opacity:0; transform:translateY(8px);
+    animation:fade .35s ease-out forwards; }
+  @keyframes fade { to { opacity:1; transform:translateY(0); } }
+  .af-msg.user { flex-direction:row-reverse; }
+  .af-msg.user .af-bubble { background:var(--tepco-blue); color:#fff; border-radius:14px 14px 4px 14px; }
+  .af-msg .av { width:28px; height:28px; flex:0 0 28px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center; }
+  .af-msg.bot .av { background:var(--tepco-blue); }
+  .af-msg.bot .av img { width:16px; height:16px; filter:brightness(0) invert(1); }
+  .af-msg.user .av { background:#aaa; color:#fff; font-size:11px; font-weight:700; }
+  .af-bubble { background:#f6f7f9; padding:9px 12px; border-radius:14px 14px 14px 4px;
+    font-size:13px; line-height:1.55; max-width:300px; }
+  .af-card { background:#fff; border:1px solid #dddbda; border-radius:8px;
+    padding:10px; max-width:330px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .af-card h4 { margin:0 0 6px; font-size:13px; color:var(--tepco-blue); display:flex; align-items:center; gap:6px; }
+  .af-card .actions { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .af-card .actions button { background:#fff; border:1px solid #1589ee; color:#0070d2;
+    padding:5px 10px; border-radius:4px; font-size:11px; cursor:pointer; }
+  .af-card .actions button.primary { background:var(--tepco-red); border-color:var(--tepco-red); color:#fff; }
+  .af-suggest { padding:8px 14px; border-top:1px solid #dddbda; background:#fafaf9; }
+  .af-suggest-title { font-size:10px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; }
+  .af-chip { display:inline-block; background:#fff; border:1px solid #dddbda; padding:5px 10px;
+    margin:3px 4px 3px 0; font-size:12px; cursor:pointer; border-radius:14px; color:#0070d2; }
+  .af-chip:hover { background:#f3f9ff; border-color:#0070d2; }
+  .af-input { padding:10px 14px; border-top:1px solid #dddbda; }
+  .af-input input { width:100%; padding:8px 10px; border:1px solid #dddbda;
+    border-radius:18px; font-size:13px; outline:none; }
+  .af-input input:focus { border-color:var(--tepco-blue); }
+
+  /* === A2A Orchestration === */
+  .a2a { background:linear-gradient(135deg,#0c1f3d,#1e3a6b); color:#fff;
+    border-radius:8px; padding:12px; max-width:330px; }
+  .a2a-h { font-size:12px; font-weight:700; margin-bottom:10px; opacity:.95; }
+  .a2a-row { display:flex; align-items:center; gap:8px; padding:6px 0;
+    font-size:12px; opacity:.5; transition:opacity .35s; }
+  .a2a-row.done { opacity:1; }
+  .a2a-row .ic { width:18px; display:inline-block; }
+  .a2a-row .lt { margin-left:auto; opacity:.7; font-size:10px; }
+  .a2a-summary { margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,.2);
+    font-size:11px; opacity:0; transition:opacity .35s; }
+  .a2a-summary.show { opacity:1; }
+
+  /* === Layer Indicator === */
+  #layer { position:fixed; left:14px; bottom:14px; background:rgba(255,255,255,.96);
+    border:1px solid #dddbda; border-radius:8px; padding:10px 12px; z-index:80;
+    box-shadow:0 2px 8px rgba(0,0,0,.08); font-size:11px; min-width:170px; }
+  #layer h5 { margin:0 0 6px; font-size:10px; color:#706e6b; text-transform:uppercase; letter-spacing:.5px; }
+  .layer-row { display:flex; align-items:center; gap:8px; padding:3px 0; color:#aaa; }
+  .layer-row .dot { width:8px; height:8px; border-radius:50%; background:#dddbda; }
+  .layer-row.active { color:var(--tepco-blue); font-weight:700; }
+  .layer-row.active .dot { background:var(--tepco-blue); animation:pulse 1.4s infinite; box-shadow:0 0 0 0 rgba(0,63,140,.5); }
+  .layer-row.dim { color:#555; }
+  .layer-row.dim .dot { background:#9CB3D4; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(0,63,140,.5);} 70%{box-shadow:0 0 0 8px rgba(0,63,140,0);} }
+
+  /* === Scene Nav === */
+  #scene-nav { position:fixed; right:14px; bottom:14px; z-index:80; display:flex; gap:6px;
+    background:#fff; border:1px solid #dddbda; border-radius:24px; padding:6px 10px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  #scene-nav button { background:transparent; border:none; cursor:pointer; padding:4px 10px;
+    border-radius:14px; font-size:12px; color:#444; }
+  #scene-nav button.next { background:var(--tepco-blue); color:#fff; font-weight:700; }
+  #scene-nav .ind { font-size:11px; color:#706e6b; padding:4px 8px; }
+
+  /* === Toasts === */
+  #toasts { position:fixed; top:60px; right:14px; z-index:90; display:flex; flex-direction:column; gap:8px; }
+  .toast { background:#04844b; color:#fff; padding:10px 14px; border-radius:6px; font-size:13px;
+    display:flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(0,0,0,.15);
+    min-width:280px; animation:slidein .3s ease-out; }
+  @keyframes slidein { from { transform:translateX(120%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+  .toast.info { background:#0070d2; }
+  .toast img { width:16px; height:16px; filter:brightness(0) invert(1); }
+
+  /* === Critical pulse === */
+  .crit-badge { background:var(--tepco-red); color:#fff; padding:3px 10px; border-radius:12px;
+    font-size:11px; font-weight:700; animation:critpulse 1.2s infinite; }
+  @keyframes critpulse { 0%,100% { box-shadow:0 0 0 0 rgba(230,0,18,.6); } 50% { box-shadow:0 0 0 8px rgba(230,0,18,0); } }
+
+  /* === KPI tile === */
+  .kpi-row { display:flex; gap:10px; flex-wrap:wrap; }
+  .kpi { flex:1; min-width:120px; background:#f8fafd; border:1px solid #e6ecf3; border-radius:6px; padding:10px; }
+  .kpi b { display:block; font-size:11px; color:#706e6b; }
+  .kpi .v { font-size:20px; font-weight:700; color:var(--tepco-blue); }
+  .kpi .d { font-size:11px; color:#04844b; }
+  .kpi .d.down { color:#ba0517; }
+
+  /* === Map (scene 3) === */
+  .map { background:linear-gradient(135deg,#e8f0f7,#f5f9ff); height:200px; border-radius:6px;
+    position:relative; border:1px solid #cdd9e8; overflow:hidden; }
+  .map::before { content:""; position:absolute; inset:0;
+    background-image:linear-gradient(rgba(0,63,140,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,63,140,.08) 1px,transparent 1px);
+    background-size:30px 30px; }
+  .pin { position:absolute; width:14px; height:14px; border-radius:50%; border:2px solid #fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.3); }
+  .pin.target { background:var(--tepco-red); width:18px; height:18px; animation:critpulse 1.5s infinite; }
+  .pin.eng-on { background:#04844b; }
+  .pin.eng-busy { background:#FE9339; }
+  .pin-label { position:absolute; font-size:10px; background:rgba(255,255,255,.95); padding:1px 5px; border-radius:3px;
+    border:1px solid #cdd9e8; white-space:nowrap; }
+
+  /* === Sensor mini === */
+  .sensor-row { display:flex; gap:10px; }
+  .sensor-row .sensor { flex:1; }
+  .sensor b { font-size:10px; color:#706e6b; display:block; }
+  .sensor .v { font-size:18px; font-weight:700; }
+  .sensor .v.warn { color:var(--tepco-red); }
+
+  /* === Helpers === */
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .row3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .muted { color:#706e6b; font-size:12px; }
+  .lh-tight { line-height:1.5; }
+  hr.divider { border:none; border-top:1px dashed #ecebea; margin:8px 0; }
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- ============== Global Header ============== -->
+<header class="sf-header">
+  <div class="sf-logo">
+    <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+    <span class="sf-logo-text">TEPCO HD</span>
+    <span class="sf-logo-sub">Powered by Salesforce</span>
+  </div>
+  <div class="sf-header-search">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+        <input type="search" placeholder="検索..." class="slds-input">
+      </div>
+    </div>
+  </div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn" title="Agentforce"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""></button>
+    <button class="sf-icon-btn" title="新規"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt=""></button>
+    <button class="sf-icon-btn" title="ヘルプ"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt=""></button>
+    <button class="sf-icon-btn" title="設定"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt=""></button>
+    <span class="sf-notify-wrap">
+      <button class="sf-icon-btn" title="通知"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt=""></button>
+      <span class="sf-notify-dot"></span>
+    </span>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:.4rem;">
+      <img src="https://ui-avatars.com/api/?name=Kenichi+Tanaka&background=ffffff&color=003F8C&bold=true" alt="User">
+    </span>
+  </div>
+</header>
+
+<!-- ============== App Nav ============== -->
+<div class="sf-context-bar">
+  <div class="sf-app-launcher" title="App Launcher"><div class="sf-app-launcher-grid">
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  </div></div>
+  <span class="sf-app-name">TEPCO Workspace</span>
+  <nav>
+    <ul id="nav-tabs">
+      <li class="is-active" data-scene="1"><a href="#">ホーム</a></li>
+      <li data-scene="2"><a href="#">取引先 ▾</a></li>
+      <li data-scene="3"><a href="#">ケース ▾</a></li>
+      <li data-scene="4"><a href="#">経営ダッシュボード</a></li>
+      <li><a href="#">設備</a></li>
+      <li><a href="#">申請</a></li>
+      <li><a href="#">レポート ▾</a></li>
+    </ul>
+  </nav>
+</div>
+
+<!-- ============== Scene Host (Main + Coworker) ============== -->
+<div id="scene-host">
+  <div class="scene-main">
+
+    <!-- === SCENE 1: Home === -->
+    <section class="scene active" id="s1">
+      <div class="home-greeting" style="margin-bottom:14px;">
+        <p>2026年6月13日（土） おはようございます</p>
+        <h1>田中 健一 さん</h1>
+      </div>
+
+      <div class="row3">
+        <div class="kpi"><b>今期売上達成率</b><div class="v">102%</div><div class="d">前期比 +6%</div></div>
+        <div class="kpi"><b>担当パイプライン</b><div class="v">¥2.1B</div><div class="d">前年比 +8%</div></div>
+        <div class="kpi"><b>承認待ち</b><div class="v">3件</div><div class="d down">SAP 経費・購買</div></div>
+        <div class="kpi"><b>未読メンション</b><div class="v">5件</div><div class="d">Teams 3 / Slack 2</div></div>
+      </div>
+
+      <div class="home-grid" style="margin-top:12px;">
+        <div>
+          <div class="card">
+            <div class="card-h">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" style="width:18px;height:18px;">
+              今日の予定 <span class="count">4件</span>
+            </div>
+            <div class="card-b">
+              <div class="schedule-item">
+                <div class="schedule-time">09:00</div>
+                <div class="schedule-body">部内朝会
+                  <small>📍 オンライン (Teams) · 30分</small></div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-time" style="color:var(--tepco-red);">11:00</div>
+                <div class="schedule-body"><b>関電力 役員定例</b>
+                  <small>📍 関電力本社 · 山田部長 ほか3名</small></div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-time">14:00</div>
+                <div class="schedule-body">PPA 提案レビュー
+                  <small>📍 オンライン · 提案部 + 法務</small></div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-time">16:30</div>
+                <div class="schedule-body">月次パイプラインレビュー
+                  <small>📍 本社11F · マネージャー会議</small></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/dashboard.svg" style="width:18px;height:18px;">
+              担当パイプライン推移
+              <span class="src s-tableau">📊 Tableau Cloud</span>
+              <span class="count" style="margin-left:auto;">過去6ヶ月</span>
+            </div>
+            <div class="card-b" style="height:140px;"><canvas id="kpiChart"></canvas></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-h">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/announcement.svg" style="width:18px;height:18px;">
+              お知らせ
+            </div>
+            <div class="card-b">
+              <div class="news-item"><span class="news-tag">人事</span><span>夏季賞与の支給日について</span></div>
+              <div class="news-item"><span class="news-tag">情シス</span><span>SAP定期メンテナンス（6/15 22:00〜）</span></div>
+              <div class="news-item"><span class="news-tag">広報</span><span>再エネメニュー資料 v3.2 を公開</span></div>
+              <div class="news-item"><span class="news-tag">安全</span><span>夏季の熱中症対策の徹底</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/work_order.svg" style="width:18px;height:18px;">
+              連携システム <span class="count">8システム</span>
+            </div>
+            <div class="card-b">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="src s-sf">Salesforce</span>
+                <span class="src s-sap">SAP S/4HANA</span>
+                <span class="src s-teams">Teams</span>
+                <span class="src s-m365">M365</span>
+                <span class="src s-sharepoint">SharePoint</span>
+                <span class="src s-slack">Slack</span>
+                <span class="src s-aws">AWS IoT</span>
+                <span class="src s-tableau">Tableau</span>
+                <span class="src s-datacloud">Data Cloud</span>
+                <span class="src s-hr">HR DB</span>
+              </div>
+              <hr class="divider">
+              <div class="muted">Coworker（Agentforce）が右パネルから横断問い合わせを受け付けます。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === SCENE 2: Account Record (関電力) === -->
+    <section class="scene" id="s2">
+      <div class="muted" style="margin-bottom:6px;">取引先 &gt; <a href="#" style="color:#0070d2;">関電力 株式会社</a></div>
+      <div class="highlights">
+        <div class="hl-icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt=""></div>
+        <div class="hl-info">
+          <h2>関電力 株式会社</h2>
+          <div class="hl-meta">
+            <div><b>業種</b>電力・エネルギー</div>
+            <div><b>年商</b>¥85B</div>
+            <div><b>担当</b>田中 健一</div>
+            <div><b>取引区分</b>特高</div>
+            <div><b>ステータス</b>Active</div>
+          </div>
+        </div>
+        <div class="hl-actions">
+          <button onclick="showToast('Word に下書きを作成しました','m365')">📝 提案ドラフト</button>
+          <button onclick="showToast('Teams で関係者を招集しました','teams')">📅 関係者招集</button>
+        </div>
+      </div>
+
+      <div class="sf-path">
+        <div class="path-step done">見込み</div>
+        <div class="path-step done">提案中</div>
+        <div class="path-step current">交渉中</div>
+        <div class="path-step">クローズ間近</div>
+        <div class="path-step">クローズ</div>
+      </div>
+
+      <div class="row2">
+        <div class="card">
+          <div class="card-h">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" style="width:18px;height:18px;">
+            詳細情報
+          </div>
+          <div class="card-b">
+            <div class="row2" style="font-size:12px;">
+              <div><b style="color:#706e6b;">本社所在地</b><br>東京都千代田区内幸町1-1</div>
+              <div><b style="color:#706e6b;">代表者</b><br>山田 太郎（代表取締役社長）</div>
+              <div><b style="color:#706e6b;">資本金</b><br>¥6,750億</div>
+              <div><b style="color:#706e6b;">従業員数</b><br>約32,000名</div>
+              <div><b style="color:#706e6b;">主要拠点</b><br>東京・神奈川・千葉</div>
+              <div><b style="color:#706e6b;">取引開始</b><br>1985年</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="border-left:4px solid #0070F2;">
+          <div class="card-h">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/currency.svg" style="width:18px;height:18px;">
+            財務サマリー
+            <span class="src s-sap">⚡ Live from S/4HANA</span>
+          </div>
+          <div class="card-b">
+            <div class="kpi-row" style="margin-bottom:8px;">
+              <div class="kpi"><b>直近12ヶ月売上</b><div class="v">¥2.85B</div><div class="d">前年比 +6%</div></div>
+              <div class="kpi"><b>未収金</b><div class="v">¥0</div><div class="d">遅延ゼロ</div></div>
+              <div class="kpi"><b>与信枠残</b><div class="v">¥1.2B</div><div class="d">余裕あり</div></div>
+            </div>
+            <div style="height:90px;"><canvas id="finChart"></canvas></div>
+            <div class="muted" style="margin-top:6px;">月次売上推移 <span class="src s-tableau">📊 Tableau Cloud</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/opportunity.svg" style="width:18px;height:18px;">
+          関連商談 <span class="count">5件</span>
+        </div>
+        <div class="card-b" style="padding:0;">
+          <table class="mini-tbl">
+            <thead><tr><th>商談名</th><th>金額</th><th>確度</th><th>フェーズ</th><th>クローズ</th></tr></thead>
+            <tbody>
+              <tr class="hot"><td><b>🔥 特高契約更改 2026</b></td><td>¥320M</td><td>75%</td><td>提案中</td><td><b style="color:var(--tepco-red);">本日 17:00</b></td></tr>
+              <tr><td>PPA 併用提案</td><td>¥150M</td><td>40%</td><td>検討中</td><td>2026-09-30</td></tr>
+              <tr><td>EV 充電インフラ POC</td><td>¥45M</td><td>60%</td><td>提案中</td><td>2026-08-15</td></tr>
+              <tr><td>需要家向けエネマネ</td><td>¥80M</td><td>30%</td><td>初回接触</td><td>2026-12-31</td></tr>
+              <tr><td>カーボン会計支援</td><td>¥25M</td><td>20%</td><td>調査中</td><td>2027-03-31</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="card">
+          <div class="card-h">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/case.svg" style="width:18px;height:18px;">
+            関連ケース <span class="count">6件</span>
+          </div>
+          <div class="card-b" style="font-size:12px;">
+            <div class="muted">過去24ヶ月の問合せ・サービスケース。すべて Closed。</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/document.svg" style="width:18px;height:18px;">
+            関連ファイル
+            <span class="src s-sharepoint">SharePoint</span>
+          </div>
+          <div class="card-b" style="font-size:12px;">
+            📄 特高契約書ドラフト v3.2.docx<br>
+            📊 関電力_PPA提案テンプレ.pptx<br>
+            📑 与信判定結果_2026Q1.pdf
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === SCENE 3: Case (A2A) === -->
+    <section class="scene" id="s3">
+      <div class="muted" style="margin-bottom:6px;">ケース &gt; <a href="#" style="color:#0070d2;">#00012345 川崎変電所A 温度異常</a></div>
+      <div class="highlights hl-critical">
+        <div class="hl-icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/case.svg" alt=""></div>
+        <div class="hl-info">
+          <h2>#00012345 川崎変電所A 温度異常</h2>
+          <div class="hl-meta">
+            <div><b>優先度</b><span class="crit-badge">CRITICAL</span></div>
+            <div><b>発生</b>2026-06-13 09:42</div>
+            <div><b>場所</b>神奈川・川崎変電所A</div>
+            <div><b>設備</b>TR-KWS-A-03</div>
+            <div><b>ステータス</b>New</div>
+          </div>
+        </div>
+        <div class="hl-actions">
+          <button onclick="dispatchEngineer()">🚨 出動依頼</button>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="card">
+          <div class="card-h">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/timesheet.svg" style="width:18px;height:18px;">
+            アラート詳細
+            <span class="src s-aws">AWS IoT Core</span>
+          </div>
+          <div class="card-b">
+            <div class="sensor-row">
+              <div class="sensor"><b>巻線温度</b><div class="v warn">112℃</div><span class="muted">閾値 95℃</span></div>
+              <div class="sensor"><b>油温</b><div class="v warn">88℃</div><span class="muted">閾値 80℃</span></div>
+              <div class="sensor"><b>負荷率</b><div class="v">87%</div><span class="muted">通常</span></div>
+            </div>
+            <div style="height:90px; margin-top:10px;"><canvas id="tempChart"></canvas></div>
+            <div class="muted" style="margin-top:4px;">過去2時間の温度推移</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/asset_object.svg" style="width:18px;height:18px;">
+            設備マスタ
+            <span class="src s-sap">SAP PM</span>
+          </div>
+          <div class="card-b">
+            <div class="row2" style="font-size:12px;">
+              <div><b style="color:#706e6b;">設備ID</b><br>TR-KWS-A-03</div>
+              <div><b style="color:#706e6b;">種別</b><br>3φ油入トランス 66kV</div>
+              <div><b style="color:#706e6b;">設置年月</b><br>2014-03</div>
+              <div><b style="color:#706e6b;">直近点検</b><br>2026-04-18</div>
+              <div><b style="color:#706e6b;">メーカー</b><br>X電機</div>
+              <div><b style="color:#706e6b;">推定残存寿命</b><br>11年</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/location.svg" style="width:18px;height:18px;">
+          現場マップ <span class="muted">半径20km の対応可能技術者</span>
+        </div>
+        <div class="card-b" style="padding:8px;">
+          <div class="map">
+            <div class="pin target" style="left:48%;top:50%;"></div>
+            <div class="pin-label" style="left:51%;top:46%;">🏭 変電所A</div>
+            <div class="pin eng-on" style="left:38%;top:42%;"></div>
+            <div class="pin-label" style="left:24%;top:36%;">佐藤 健一 (8km)</div>
+            <div class="pin eng-busy" style="left:60%;top:60%;"></div>
+            <div class="pin-label" style="left:62%;top:64%;">鈴木 隆 (12km)</div>
+            <div class="pin eng-on" style="left:30%;top:70%;"></div>
+            <div class="pin-label" style="left:14%;top:74%;">高橋 美咲 (18km)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === SCENE 4: Executive Dashboard === -->
+    <section class="scene" id="s4">
+      <div class="muted" style="margin-bottom:6px;">経営ダッシュボード &gt; サマリー（2026 Q2）</div>
+      <div class="highlights" style="background:linear-gradient(135deg,#032D60,#0070D2);">
+        <div class="hl-icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/dashboard.svg" alt=""></div>
+        <div class="hl-info">
+          <h2>Executive Cockpit</h2>
+          <div class="hl-meta">
+            <div><b>更新</b>2026-06-13 07:30</div>
+            <div><b>データソース</b>Salesforce / SAP BW / AWS / Data Cloud</div>
+            <div><b>対象</b>2026 Q2</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:6px;margin-bottom:10px;border-bottom:1px solid #dddbda;">
+        <div style="padding:8px 14px;border-bottom:3px solid var(--tepco-blue);font-weight:700;color:var(--tepco-blue);">サマリー</div>
+        <div style="padding:8px 14px;color:#444;">法人営業</div>
+        <div style="padding:8px 14px;color:#444;">小売</div>
+        <div style="padding:8px 14px;color:#444;">設備</div>
+        <div style="padding:8px 14px;color:#444;">人材</div>
+      </div>
+
+      <div class="tile-grid">
+        <div class="tile">
+          <div class="tile-h"><div class="tile-title">売上 vs 計画</div><span class="src s-tableau">📊 Tableau</span></div>
+          <canvas id="t1"></canvas>
+          <div class="tile-foot"><span class="src s-sap">SAP BW</span> 月次集計</div>
+        </div>
+        <div class="tile">
+          <div class="tile-h"><div class="tile-title">法人パイプライン</div><span class="src s-tableau">📊 Tableau</span></div>
+          <canvas id="t2"></canvas>
+          <div class="tile-foot"><span class="src s-sf">Salesforce</span> + <span class="src s-datacloud">Data Cloud</span></div>
+        </div>
+        <div class="tile">
+          <div class="tile-h"><div class="tile-title">解約予兆スコア Top5</div><span class="src s-tableau">📊 Tableau</span></div>
+          <canvas id="t3"></canvas>
+          <div class="tile-foot"><span class="src s-datacloud">Data Cloud</span> ML スコア</div>
+        </div>
+        <div class="tile">
+          <div class="tile-h"><div class="tile-title">設備リスク件数</div><span class="src s-tableau">📊 Tableau</span></div>
+          <canvas id="t4"></canvas>
+          <div class="tile-foot"><span class="src s-aws">AWS IoT</span> + <span class="src s-sap">SAP PM</span></div>
+        </div>
+        <div class="tile">
+          <div class="tile-h"><div class="tile-title">現場の声トピック</div><span class="src s-tableau">📊 Tableau</span></div>
+          <canvas id="t5"></canvas>
+          <div class="tile-foot"><span class="src s-teams">Teams</span> + <span class="src s-slack">Slack</span> → Data Cloud</div>
+        </div>
+        <div class="tile">
+          <div class="tile-h"><div class="tile-title">再エネ供給比率</div><span class="src s-tableau">📊 Tableau</span></div>
+          <canvas id="t6"></canvas>
+          <div class="tile-foot"><span class="src s-aws">AWS Data Lake</span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============== Coworker / Agentforce Panel ============== -->
+  <aside class="af-panel">
+    <div class="af-h">
+      <div class="af-h-l">
+        <span class="af-avatar"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""></span>
+        <div>
+          <div class="af-title">TEPCO Coworker</div>
+          <div style="font-size:11px;color:#706e6b;"><span class="af-status"></span> Online · Agentforce</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px;">
+        <button class="sf-icon-btn" style="width:24px;height:24px;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" style="filter:brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%);"></button>
+        <button class="sf-icon-btn" style="width:24px;height:24px;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" style="filter:brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%);"></button>
+      </div>
+    </div>
+    <div class="af-conv" id="af-conv"><!-- メッセージは JS で挿入 --></div>
+    <div class="af-suggest" id="af-suggest"></div>
+    <div class="af-input">
+      <input type="text" placeholder="質問する… / Ask Anything" id="af-input">
+    </div>
+  </aside>
+</div>
+
+<!-- ============== Layer Indicator ============== -->
+<div id="layer">
+  <h5>To-Be 4層</h5>
+  <div class="layer-row" data-layer="engagement"><span class="dot"></span>Engagement</div>
+  <div class="layer-row" data-layer="agency"><span class="dot"></span>Agency</div>
+  <div class="layer-row" data-layer="work"><span class="dot"></span>Work</div>
+  <div class="layer-row" data-layer="context"><span class="dot"></span>Context</div>
+</div>
+
+<!-- ============== Scene Nav ============== -->
+<div id="scene-nav">
+  <button onclick="goScene(currentScene-1)">◀ 前</button>
+  <span class="ind"><span id="sc-cur">1</span>/4</span>
+  <button class="next" onclick="goScene(currentScene+1)">次のシーンへ ▶</button>
+</div>
+
+<!-- ============== Toasts ============== -->
+<div id="toasts"></div>
+
+<script>
+/* =========================
+   Scene Configuration
+   ========================= */
+const SCENES = {
+  1: {
+    layers:['engagement'],
+    suggestions:['今日のタスクを教えて','急ぎの承認待ちは？','11時の会議の準備状況'],
+    messages:[
+      {type:'user', text:'おはよう。今日のタスクと、急ぎ対応すべきものを教えて'},
+      {type:'bot', text:'おはようございます、田中さん。Salesforce・SAP・Teams・Slack を横断確認しました。'},
+      {type:'card', body:`
+        <h4>📋 今日のサマリー</h4>
+        <div class="summary-row"><span>🔴 期限超過</span><b>1件</b></div>
+        <div class="summary-row"><span>🟠 SAP 承認待ち <span class="src s-sap">SAP</span></span><b>2件 ¥1.25M</b></div>
+        <div class="summary-row"><span>💬 重要メンション <span class="src s-teams">Teams</span><span class="src s-slack">Slack</span></span><b>3件</b></div>
+        <div class="summary-row"><span>📅 今日の会議 <span class="src s-m365">M365</span></span><b>4件</b></div>
+      `},
+      {type:'card', body:`
+        <h4>🔥 最優先アクション</h4>
+        <div style="font-size:12px; line-height:1.7;">
+          <b>関電力「特高契約更改 2026」が本日17時期限</b><br>
+          • 契約書ドラフト: <span class="src s-sharepoint">SharePoint</span> に最新版あり<br>
+          • SAP 与信チェック: <span style="color:var(--tepco-red);">未実施</span><br>
+          • 先方議事録: <span class="src s-teams">Teams 5/28</span>
+        </div>
+        <div class="actions">
+          <button class="primary" onclick="goScene(2)">📋 まとめて準備する</button>
+          <button>📅 関係者を招集</button>
+        </div>
+      `}
+    ]
+  },
+  2: {
+    layers:['work','context'],
+    suggestions:['特高契約更改の状況をまとめて','過去のPPA提案事例は？','会議資料を作って'],
+    messages:[
+      {type:'user', text:'特高契約更改の状況を整理して。SAPの取引と先方の最新ニーズも込みで'},
+      {type:'bot', text:'関電力の特高契約更改について、Salesforce・SAP・Teams のデータを Coworker が統合しました。'},
+      {type:'card', body:`
+        <h4>📊 商談ステータス <span class="src s-sf">Salesforce</span></h4>
+        <div style="font-size:12px;line-height:1.6;">
+          特高契約更改 2026 / <b>¥320M</b> / 確度 <b>75%</b> / 期限 <b style="color:var(--tepco-red);">本日17:00</b><br>
+          フェーズ: <b>提案中 → 交渉中</b>
+        </div>
+      `},
+      {type:'card', body:`
+        <h4>💰 SAP 取引健全性 <span class="src s-sap">SAP S/4HANA</span></h4>
+        <div style="font-size:12px;line-height:1.7;">
+          ✓ 売上トレンド: 前年比 <b style="color:#04844b;">+6%</b><br>
+          ✓ 与信: 余裕あり / 未収金 ¥0<br>
+          ✓ 取引リスク: <b style="color:#04844b;">低</b>
+        </div>
+      `},
+      {type:'card', body:`
+        <h4>💬 先方の最新ニーズ <span class="src s-teams">Teams</span><span class="src s-slack">Slack</span></h4>
+        <div style="font-size:12px;line-height:1.6;">
+          ・「省エネ提案を歓迎、PPA 併用検討したい」（山田部長 5/28）<br>
+          ・競合 A 社が同枠で動いている兆し（Slack #営業-関東 6/3）<br>
+          → <b>PPA 併用提案テンプレ</b>が活用できそうです
+        </div>
+      `},
+      {type:'card', body:`
+        <h4>✨ 推奨アクション</h4>
+        <div class="actions">
+          <button class="primary" onclick="showToast('M365 Word に下書きを作成しました','m365')">📝 提案ドラフト</button>
+          <button onclick="showToast('PowerPoint で経営会議資料を作成しました','m365')">📊 経営会議資料</button>
+          <button onclick="showToast('Teams で関係者3名に招集を送りました','teams')">📨 Teams 招集</button>
+        </div>
+      `}
+    ]
+  },
+  3: {
+    layers:['agency','engagement','work','context'],
+    suggestions:['類似事例と対応手順は？','いま動ける技術者は？','必要な部品の在庫は？'],
+    messages:[
+      {type:'user', text:'変電所Aの異常、過去の類似事例、出動可能な技術者、必要部品の在庫を一気に教えて'},
+      {type:'bot', text:'4つの専門エージェントに並行問い合わせします。'},
+      {type:'a2a'},
+      {type:'card', body:`
+        <h4>📚 類似事例 <span class="src s-sharepoint">SharePoint</span><span class="src s-datacloud">Data Cloud</span></h4>
+        <div style="font-size:12px;line-height:1.6;">
+          2024/11 変電所C 同型トランス過熱（復旧 3.2h）<br>
+          📄 復旧手順書 v2.3 [SharePoint]<br>
+          当時担当: <b>佐藤 健一</b>（→ 今回も推奨）
+        </div>
+      `},
+      {type:'card', body:`
+        <h4>👷 出動可能技術者 <span class="src s-teams">Teams在席</span><span class="src s-hr">HR DB</span></h4>
+        <table class="mini-tbl" style="margin-top:4px;">
+          <tr><th>氏名</th><th>距離</th><th>状態</th></tr>
+          <tr><td><b>佐藤 健一</b><br><span class="muted">高圧 ★★★ 経験あり</span></td><td>8km</td><td><span class="badge-pill pill-green">対応可</span></td></tr>
+          <tr><td>鈴木 隆<br><span class="muted">中圧 ★★</span></td><td>12km</td><td><span class="badge-pill pill-amber">会議中</span></td></tr>
+          <tr><td>高橋 美咲<br><span class="muted">高圧 ★★</span></td><td>18km</td><td><span class="badge-pill pill-green">対応可</span></td></tr>
+        </table>
+      `},
+      {type:'card', body:`
+        <h4>📦 部品在庫 <span class="src s-sap">SAP MM</span></h4>
+        <table class="mini-tbl">
+          <tr><th>部品</th><th>倉庫</th><th>在庫</th></tr>
+          <tr><td>油圧センサー TYPE-3</td><td>川崎</td><td><span class="badge-pill pill-green">6個</span></td></tr>
+          <tr><td>冷却ファンユニット</td><td>横浜</td><td><span class="badge-pill pill-amber">2個</span></td></tr>
+        </table>
+      `},
+      {type:'card', body:`
+        <h4>⚠️ 安全注意事項</h4>
+        <div style="font-size:12px;line-height:1.6;">
+          高圧活線作業: <b>二人作業必須</b> / 絶縁手袋点検期限内<br>
+          📋 KY書テンプレ最新版あり
+        </div>
+      `},
+      {type:'card', body:`
+        <h4>🚨 推奨アクション</h4>
+        <div class="actions">
+          <button class="primary" onclick="dispatchEngineer()">🚨 佐藤健一さんに出動依頼</button>
+          <button onclick="showToast('SAP に作業オーダー WO-2026-0613-003 を起票しました','sap')">📦 部品ピッキング指示</button>
+          <button onclick="showToast('KY書ドラフトを SharePoint に作成しました','sharepoint')">📋 KY書ドラフト</button>
+        </div>
+      `}
+    ]
+  },
+  4: {
+    layers:['context','agency'],
+    suggestions:['今期の進捗とリスクを3つ','現場で何が話されてる？','解約予兆の上位顧客と理由'],
+    messages:[
+      {type:'user', text:'今期の法人営業の進捗とリスク、現場の声を3行でまとめて'},
+      {type:'bot', text:'Data Cloud・SAP BW・Slack を横断分析しました。'},
+      {type:'card', body:`
+        <h4>📈 経営サマリー（3行）</h4>
+        <div style="font-size:12px;line-height:1.7;">
+          <b style="color:#04844b;">✅ 進捗:</b> 売上 計画比 102%, パイプライン前年比 +8%。Q2 着地はプラス見込み。<br>
+          <b style="color:#A0560B;">⚠ リスク:</b> 製造業セグメント使用量 ▲5% / 関電力 PPA に競合A社接近 / 大口10社中2社 解約予兆 0.78↑<br>
+          <b style="color:var(--tepco-blue);">💬 現場の声:</b> 「再エネメニュー資料が古い」(42回) / 「与信回答が遅い」(28回) / 「PPA テンプレ整備希望」(19回)
+        </div>
+      `},
+      {type:'card', body:`
+        <h4>🎯 推奨アクション</h4>
+        <div class="actions">
+          <button class="primary" onclick="showToast('製造業セグメント緊急レビュー会議を設定しました','m365')">📅 緊急レビュー会議</button>
+          <button onclick="showToast('広報部に資料更新を依頼しました（Slack）','slack')">📝 広報部に依頼</button>
+        </div>
+      `}
+    ]
+  }
+};
+
+/* =========================
+   State + Render
+   ========================= */
+let currentScene = 1;
+
+function renderScene(n) {
+  // 画面切替
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+  document.getElementById('sc-cur').textContent = n;
+  // ナビ active
+  document.querySelectorAll('#nav-tabs li').forEach(li => {
+    li.classList.toggle('is-active', li.dataset.scene == n);
+  });
+  // Layer
+  const layers = SCENES[n].layers;
+  document.querySelectorAll('#layer .layer-row').forEach(r => {
+    r.classList.remove('active','dim');
+    if (layers[0] === r.dataset.layer) r.classList.add('active');
+    else if (layers.includes(r.dataset.layer)) r.classList.add('dim');
+  });
+  // Coworker
+  renderConv(n);
+  // Suggest
+  const sg = document.getElementById('af-suggest');
+  sg.innerHTML = '<div class="af-suggest-title">おすすめ</div>' +
+    SCENES[n].suggestions.map(s => `<span class="af-chip" onclick="askChip('${s}')">${s}</span>`).join('');
+  // Charts
+  if (n === 1) renderHomeCharts();
+  if (n === 2) renderAccountCharts();
+  if (n === 3) renderTempChart();
+  if (n === 4) renderTiles();
+}
+
+function renderConv(n) {
+  const conv = document.getElementById('af-conv');
+  conv.innerHTML = '';
+  let delay = 100;
+  SCENES[n].messages.forEach((m, i) => {
+    setTimeout(() => {
+      if (m.type === 'a2a') {
+        conv.insertAdjacentHTML('beforeend', a2aHtml());
+        runA2A();
+      } else if (m.type === 'card') {
+        conv.insertAdjacentHTML('beforeend', `
+          <div class="af-msg bot">
+            <span class="av"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""></span>
+            <div class="af-card">${m.body}</div>
+          </div>`);
+      } else if (m.type === 'user') {
+        conv.insertAdjacentHTML('beforeend', `
+          <div class="af-msg user">
+            <span class="av">田</span>
+            <div class="af-bubble">${m.text}</div>
+          </div>`);
+      } else {
+        conv.insertAdjacentHTML('beforeend', `
+          <div class="af-msg bot">
+            <span class="av"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""></span>
+            <div class="af-bubble">${m.text}</div>
+          </div>`);
+      }
+      conv.scrollTop = conv.scrollHeight;
+    }, delay);
+    delay += 600;
+  });
+}
+
+function a2aHtml() {
+  return `
+    <div class="af-msg bot">
+      <span class="av"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""></span>
+      <div class="a2a" id="a2a-box">
+        <div class="a2a-h">🤖 A2A: 関連エージェントに並行問い合わせ中...</div>
+        <div class="a2a-row" data-i="0"><span class="ic">⏳</span>設備保全 Agent<span class="lt">SharePoint+Data Cloud</span></div>
+        <div class="a2a-row" data-i="1"><span class="ic">⏳</span>人事 Agent<span class="lt">M365 Teams + HR DB</span></div>
+        <div class="a2a-row" data-i="2"><span class="ic">⏳</span>調達 Agent<span class="lt">SAP MM</span></div>
+        <div class="a2a-row" data-i="3"><span class="ic">⏳</span>安全管理 Agent<span class="lt">社内規程DB</span></div>
+        <div class="a2a-summary" id="a2a-sum">✅ 4 エージェントから回答を統合しました（合計 1.8s）</div>
+      </div>
+    </div>`;
+}
+
+function runA2A() {
+  const rows = document.querySelectorAll('#a2a-box .a2a-row');
+  rows.forEach((r, i) => {
+    setTimeout(() => {
+      r.classList.add('done');
+      r.querySelector('.ic').textContent = '✅';
+    }, 400 + i*500);
+  });
+  setTimeout(() => {
+    const s = document.getElementById('a2a-sum');
+    if (s) s.classList.add('show');
+  }, 400 + rows.length*500);
+}
+
+/* =========================
+   Charts
+   ========================= */
+let chartRefs = {};
+function destroyChart(id) { if (chartRefs[id]) { chartRefs[id].destroy(); delete chartRefs[id]; } }
+
+function renderHomeCharts() {
+  destroyChart('kpiChart');
+  const ctx = document.getElementById('kpiChart');
+  if (!ctx) return;
+  chartRefs.kpiChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:['1月','2月','3月','4月','5月','6月'],
+      datasets:[{
+        label:'パイプライン (¥M)',
+        data:[1450,1620,1700,1850,1980,2100],
+        borderColor:'#003F8C',
+        backgroundColor:'rgba(0,63,140,.1)',
+        tension:.3, fill:true, borderWidth:2, pointRadius:3
+      }]
+    },
+    options:{ plugins:{legend:{display:false}}, scales:{y:{beginAtZero:false}}, maintainAspectRatio:false }
+  });
+}
+
+function renderAccountCharts() {
+  destroyChart('finChart');
+  const ctx = document.getElementById('finChart');
+  if (!ctx) return;
+  chartRefs.finChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:['7','8','9','10','11','12','1','2','3','4','5','6'],
+      datasets:[{
+        label:'月次売上',
+        data:[210,225,240,255,260,275,250,260,245,255,265,270],
+        borderColor:'#0070F2', backgroundColor:'rgba(0,112,242,.1)',
+        tension:.3, fill:true, borderWidth:2, pointRadius:0
+      }]
+    },
+    options:{plugins:{legend:{display:false}}, maintainAspectRatio:false}
+  });
+}
+
+function renderTempChart() {
+  destroyChart('tempChart');
+  const ctx = document.getElementById('tempChart');
+  if (!ctx) return;
+  chartRefs.tempChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:['7:42','8:00','8:20','8:40','9:00','9:20','9:42'],
+      datasets:[
+        {label:'巻線温度', data:[78,82,88,95,102,108,112], borderColor:'#E60012', tension:.3, borderWidth:2, pointRadius:0},
+        {label:'閾値', data:[95,95,95,95,95,95,95], borderColor:'#aaa', borderDash:[4,4], borderWidth:1, pointRadius:0}
+      ]
+    },
+    options:{plugins:{legend:{display:true, labels:{boxWidth:10, font:{size:10}}}}, maintainAspectRatio:false}
+  });
+}
+
+function renderTiles() {
+  // T1 売上 vs 計画
+  destroyChart('t1');
+  chartRefs.t1 = new Chart(document.getElementById('t1'), {
+    type:'line',
+    data:{labels:['Apr','May','Jun','Jul','Aug','Sep'],
+      datasets:[
+        {label:'計画',data:[800,820,840,860,880,900],borderColor:'#aaa',borderDash:[4,4],borderWidth:1,pointRadius:0},
+        {label:'実績',data:[815,835,860,895,910,920],borderColor:'#003F8C',backgroundColor:'rgba(0,63,140,.1)',fill:true,tension:.3,borderWidth:2,pointRadius:0}
+      ]},
+    options:{plugins:{legend:{labels:{boxWidth:10,font:{size:9}}}},maintainAspectRatio:false}
+  });
+  // T2 法人パイプライン
+  destroyChart('t2');
+  chartRefs.t2 = new Chart(document.getElementById('t2'), {
+    type:'bar',
+    data:{labels:['初回','提案','交渉','受注'],
+      datasets:[
+        {label:'特高',data:[400,320,180,150],backgroundColor:'#003F8C'},
+        {label:'PPA',data:[200,150,120,90],backgroundColor:'#0070D2'},
+        {label:'EV',data:[150,90,60,30],backgroundColor:'#1B96FF'}
+      ]},
+    options:{plugins:{legend:{labels:{boxWidth:10,font:{size:9}}}},scales:{x:{stacked:true},y:{stacked:true}},maintainAspectRatio:false}
+  });
+  // T3 解約予兆
+  destroyChart('t3');
+  chartRefs.t3 = new Chart(document.getElementById('t3'), {
+    type:'bar',
+    data:{labels:['A製造','B商社','C食品','D化学','E鉄道'],
+      datasets:[{label:'スコア',data:[0.82,0.78,0.65,0.58,0.51],
+        backgroundColor:['#E60012','#FE9339','#FE9339','#FECB34','#FECB34']}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{max:1}},maintainAspectRatio:false}
+  });
+  // T4 設備リスク
+  destroyChart('t4');
+  chartRefs.t4 = new Chart(document.getElementById('t4'), {
+    type:'line',
+    data:{labels:['1','2','3','4','5','6'],
+      datasets:[{label:'件数',data:[12,15,11,18,22,19],borderColor:'#FF9900',backgroundColor:'rgba(255,153,0,.15)',fill:true,tension:.3,borderWidth:2,pointRadius:3}]},
+    options:{plugins:{legend:{display:false}},maintainAspectRatio:false}
+  });
+  // T5 現場の声
+  destroyChart('t5');
+  chartRefs.t5 = new Chart(document.getElementById('t5'), {
+    type:'bar',
+    data:{labels:['再エネ資料','与信遅い','PPA テンプレ','新製品情報','研修不足'],
+      datasets:[{label:'出現回数',data:[42,28,19,15,11],backgroundColor:'#4B53BC'}]},
+    options:{plugins:{legend:{display:false}},maintainAspectRatio:false}
+  });
+  // T6 再エネ
+  destroyChart('t6');
+  chartRefs.t6 = new Chart(document.getElementById('t6'), {
+    type:'doughnut',
+    data:{labels:['太陽光','風力','水力','その他','火力'],
+      datasets:[{data:[28,15,12,5,40],
+        backgroundColor:['#FECB34','#1B96FF','#0070D2','#04844b','#706e6b']}]},
+    options:{plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:9}}}},maintainAspectRatio:false}
+  });
+}
+
+/* =========================
+   Interactions
+   ========================= */
+function goScene(n) {
+  if (n < 1) n = 1;
+  if (n > 4) n = 4;
+  currentScene = n;
+  renderScene(n);
+}
+
+function askChip(t) {
+  document.getElementById('af-input').value = t;
+  document.getElementById('af-input').focus();
+}
+
+function showToast(text, kind) {
+  const map = {sap:'SAP S/4HANA', m365:'Microsoft 365', teams:'Microsoft Teams',
+    slack:'Slack', sharepoint:'SharePoint', salesforce:'Salesforce'};
+  const t = document.createElement('div');
+  t.className = 'toast' + (kind === 'sap' ? ' info' : '');
+  t.innerHTML = `<img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/success.svg" alt="">
+    <div><b>${map[kind]||'システム'}</b><br><span style="opacity:.95;font-size:12px;">${text}</span></div>`;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(() => t.style.opacity='0', 4500);
+  setTimeout(() => t.remove(), 5000);
+}
+
+function dispatchEngineer() {
+  showToast('佐藤健一さんに通知しました','teams');
+  setTimeout(()=>showToast('SAP に作業オーダー WO-2026-0613-003 を起票しました','sap'), 700);
+}
+
+/* Nav clicks */
+document.querySelectorAll('#nav-tabs li[data-scene]').forEach(li => {
+  li.addEventListener('click', () => goScene(parseInt(li.dataset.scene)));
+});
+
+/* Keyboard */
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === ' ') goScene(currentScene+1);
+  else if (e.key === 'ArrowLeft') goScene(currentScene-1);
+  else if (e.key >= '1' && e.key <= '4') goScene(parseInt(e.key));
+  else if (e.key.toLowerCase() === 'r') renderScene(currentScene);
+});
+
+/* Init */
+window.addEventListener('load', () => {
+  const m = location.hash.match(/scene=(\d)/);
+  if (m) currentScene = parseInt(m[1]);
+  renderScene(currentScene);
+});
+</script>
+</body>
+</html>

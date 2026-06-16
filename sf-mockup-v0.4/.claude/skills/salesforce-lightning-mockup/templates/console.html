@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Console | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background-color: #f3f3f3; min-width: 1280px; margin: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  .sf-app { height: 100vh; display: flex; flex-direction: column; }
+  .sf-console-header { background: #16325c; color: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; flex-shrink: 0; }
+  .sf-console-header img.logo { width: 28px; height: auto; filter: brightness(0) invert(1); }
+  .sf-console-search { width: 33%; }
+  .sf-console-search input { background: #0d1f3c; border-color: #355081; color: white; }
+  .sf-console-search input::placeholder { color: #a8b9d0; }
+  .sf-console-tabs { background: white; border-bottom: 1px solid #c9c9c9; display: flex; height: 2.5rem; flex-shrink: 0; }
+  .sf-console-tab { display: flex; align-items: center; padding: 0 1rem; border-right: 1px solid #dddbda; cursor: pointer; font-size: 0.875rem; gap: 0.5rem; }
+  .sf-console-tab.active { background: #f3f9fe; border-bottom: 3px solid #0176d3; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn img { width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-three-pane { display: flex; flex: 1; overflow: hidden; }
+  .sf-left-pane { width: 18rem; border-right: 1px solid #dddbda; background: white; display: flex; flex-direction: column; flex-shrink: 0; }
+  .sf-center-pane { flex: 1; overflow-y: auto; background: #f3f3f3; padding: 1rem; }
+  .sf-case-list { overflow-y: auto; flex: 1; }
+  .sf-case-item { padding: 0.5rem; border-bottom: 1px solid #dddbda; cursor: pointer; }
+  .sf-case-item:hover { background: #fafaf9; }
+  .sf-case-item.is-selected { background: #e3f1fc; border-left: 4px solid #0070d2; }
+  .sf-utility-bar { background: white; border-top: 1px solid #c9c9c9; height: 2rem; display: flex; padding: 0 0.5rem; align-items: center; flex-shrink: 0; gap: 0.5rem; font-size: 0.75rem; }
+</style>
+</head>
+<body class="slds-scope">
+<div class="sf-app">
+
+  <!-- Console Header (ダーク) -->
+  <header class="sf-console-header">
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <img class="logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="" />
+      <strong>Service Console</strong>
+    </div>
+    <div class="sf-console-search">
+      <div class="slds-form-element"><div class="slds-form-element__control"><input type="search" placeholder="検索..." class="slds-input"></div></div>
+    </div>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small"><img src="https://ui-avatars.com/api/?name=User&background=1B96FF&color=fff" alt=""></span>
+  </header>
+
+  <!-- Console Tabs (複数レコードを開ける) -->
+  <div class="sf-console-tabs">
+    <div class="sf-console-tab active">
+      <span class="slds-icon_container slds-icon-standard-case">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/case.svg" alt="" class="slds-icon slds-icon_x-small" />
+      </span>
+      <span>ケース 00001234</span>
+    </div>
+    <div class="sf-console-tab">
+      <span class="slds-icon_container slds-icon-standard-contact">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/contact.svg" alt="" class="slds-icon slds-icon_x-small" />
+      </span>
+      <span>担当者A</span>
+    </div>
+    <button class="sf-icon-btn" style="margin-left:0.5rem;">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" />
+    </button>
+  </div>
+
+  <!-- 3-pane Layout -->
+  <div class="sf-three-pane">
+
+    <!-- 左ペイン: ケースリスト -->
+    <aside class="sf-left-pane">
+      <div style="padding:0.5rem; border-bottom: 1px solid #dddbda;">
+        <p class="slds-text-title slds-text-color_weak">マイケース</p>
+        <h2 class="slds-text-heading_small">オープンケース (8)</h2>
+      </div>
+      <ul class="sf-case-list">
+        <li class="sf-case-item is-selected">
+          <div class="slds-grid slds-grid_align-spread">
+            <a href="#" class="slds-text-link slds-text-body_small"><strong>00001234</strong></a>
+            <span class="slds-badge slds-theme_error">高</span>
+          </div>
+          <p class="slds-text-body_small slds-m-top_xx-small">ログインできない</p>
+          <p class="slds-text-body_small slds-text-color_weak">担当者A · 2時間前</p>
+        </li>
+        <li class="sf-case-item">
+          <div class="slds-grid slds-grid_align-spread">
+            <a href="#" class="slds-text-link slds-text-body_small"><strong>00001235</strong></a>
+            <span class="slds-badge slds-theme_warning">中</span>
+          </div>
+          <p class="slds-text-body_small slds-m-top_xx-small">レポートが表示されない</p>
+          <p class="slds-text-body_small slds-text-color_weak">担当者B · 5時間前</p>
+        </li>
+        <li class="sf-case-item">
+          <div class="slds-grid slds-grid_align-spread">
+            <a href="#" class="slds-text-link slds-text-body_small"><strong>00001236</strong></a>
+            <span class="slds-badge">低</span>
+          </div>
+          <p class="slds-text-body_small slds-m-top_xx-small">パスワードリセット依頼</p>
+          <p class="slds-text-body_small slds-text-color_weak">担当者C · 昨日</p>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 中央ペイン: ケース詳細 -->
+    <section class="sf-center-pane">
+
+      <div class="slds-page-header slds-page-header_record-home slds-m-bottom_small">
+        <div class="slds-page-header__row">
+          <div class="slds-page-header__col-title">
+            <div class="slds-media">
+              <div class="slds-media__figure">
+                <span class="slds-icon_container slds-icon-standard-case">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/case.svg" alt="" class="slds-icon slds-icon_medium" />
+                </span>
+              </div>
+              <div class="slds-media__body">
+                <p class="slds-text-title">ケース</p>
+                <h1 class="slds-page-header__title">00001234 - ログインできない</h1>
+              </div>
+            </div>
+          </div>
+          <div class="slds-page-header__col-actions">
+            <ul class="slds-button-group-list">
+              <li><button class="slds-button slds-button_neutral">編集</button></li>
+              <li><button class="slds-button slds-button_brand">解決済みにする</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Path -->
+        <div class="slds-page-header__row">
+          <div class="slds-col">
+            <article class="slds-path">
+              <div class="slds-grid slds-path__track">
+                <div class="slds-grid slds-path__scroller-container">
+                  <div class="slds-path__scroller">
+                    <div class="slds-path__scroller_inner">
+                      <ul class="slds-path__nav" role="listbox">
+                        <li class="slds-path__item slds-is-complete" role="presentation">
+                          <a class="slds-path__link" href="#"><span class="slds-path__stage"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-icon slds-icon_x-small" /></span><span class="slds-path__title">新規</span></a>
+                        </li>
+                        <li class="slds-path__item slds-is-current slds-is-active" role="presentation">
+                          <a class="slds-path__link" href="#"><span class="slds-path__stage"></span><span class="slds-path__title">作業中</span></a>
+                        </li>
+                        <li class="slds-path__item slds-is-incomplete" role="presentation">
+                          <a class="slds-path__link" href="#"><span class="slds-path__stage"></span><span class="slds-path__title">エスカレート</span></a>
+                        </li>
+                        <li class="slds-path__item slds-is-incomplete" role="presentation">
+                          <a class="slds-path__link" href="#"><span class="slds-path__stage"></span><span class="slds-path__title">解決</span></a>
+                        </li>
+                        <li class="slds-path__item slds-is-incomplete" role="presentation">
+                          <a class="slds-path__link" href="#"><span class="slds-path__stage"></span><span class="slds-path__title">クローズ</span></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- 詳細 + Knowledge -->
+      <div style="display:flex; gap:0.75rem;">
+        <div style="flex: 0 0 calc(66.666% - 0.375rem);">
+          <article class="slds-card">
+            <div class="slds-card__header"><h2 class="slds-card__header-title">ケース詳細</h2></div>
+            <div class="slds-card__body slds-p-around_medium">
+              <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                  <dt class="slds-item_label slds-text-color_weak">ケース番号</dt>
+                  <dd class="slds-item_detail">00001234</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                  <dt class="slds-item_label slds-text-color_weak">優先度</dt>
+                  <dd class="slds-item_detail slds-text-color_destructive"><strong>高</strong></dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">取引先責任者</dt>
+                  <dd class="slds-item_detail"><a href="#">担当者A</a></dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">発生源</dt>
+                  <dd class="slds-item_detail">Web</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">説明</dt>
+                  <dd class="slds-item_detail">ログイン画面でID/パスワード入力後、エラーが表示される。</dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+        </div>
+
+        <div style="flex: 0 0 calc(33.333% - 0.375rem);">
+          <article class="slds-card">
+            <div class="slds-card__header"><h2 class="slds-card__header-title">推奨記事 (Agentforce)</h2></div>
+            <div class="slds-card__body slds-p-around_medium">
+              <ul style="list-style:none; padding:0;">
+                <li class="slds-p-around_x-small slds-border_left slds-border_left_brand">
+                  <a href="#" class="slds-text-link"><strong>ログインできない場合の対処法</strong></a>
+                  <p class="slds-text-body_small slds-text-color_weak">関連度: 92%</p>
+                </li>
+                <li class="slds-p-around_x-small slds-m-top_x-small slds-border_left">
+                  <a href="#" class="slds-text-link">パスワードリセット手順</a>
+                  <p class="slds-text-body_small slds-text-color_weak">関連度: 78%</p>
+                </li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer Utility Bar -->
+  <footer class="sf-utility-bar">
+    <button class="sf-icon-btn" title="通話"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/call.svg" alt="" /></button>
+    <span>通話</span>
+    <span style="border-left:1px solid #dddbda; height:1rem; margin:0 0.5rem;"></span>
+    <button class="sf-icon-btn" title="チャット"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chat.svg" alt="" /></button>
+    <span>チャット</span>
+  </footer>
+
+</div>
+</body>
+</html>

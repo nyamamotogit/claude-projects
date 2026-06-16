@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>TEPCO Vision — Ending</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Helvetica Neue', 'Hiragino Sans', sans-serif; color: white; }
+  .stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+  /* Slides */
+  .slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.7s ease-out; background: radial-gradient(ellipse at top, #0a1a3a 0%, #000510 60%, #000 100%); }
+  .slide.is-active { opacity: 1; pointer-events: auto; }
+
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%); pointer-events: none; }
+
+  /* Brand top */
+  .brand { position: absolute; top: 28px; left: 32px; display: flex; align-items: center; gap: 0.625rem; z-index: 10; }
+  .brand-mark { width: 28px; height: 28px; border-radius: 6px; background: linear-gradient(135deg, #22d3ee, #a855f7); display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; font-size: 0.875rem; }
+  .brand-text { font-size: 0.6875rem; letter-spacing: 0.28em; color: #94a3b8; }
+  .brand-r { position: absolute; top: 28px; right: 32px; font-size: 0.6875rem; letter-spacing: 0.28em; color: #94a3b8; z-index: 10; }
+
+  /* Slide nav */
+  .slide-dots { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 20; }
+  .slide-dot { width: 32px; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; transition: all 0.3s; }
+  .slide-dot.is-active { background: linear-gradient(90deg, #22d3ee, #a855f7); width: 64px; }
+  .nav-hint { position: absolute; bottom: 28px; right: 32px; font-size: 0.6875rem; letter-spacing: 0.18em; color: #6b7280; z-index: 20; }
+  .nav-hint kbd { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); padding: 2px 7px; border-radius: 4px; font-family: inherit; margin: 0 2px; }
+
+  /* Glow orbs */
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3; pointer-events: none; }
+  .orb.cyan { background: #22d3ee; } .orb.purple { background: #a855f7; } .orb.gold { background: #fbbf24; }
+
+  /* Particles */
+  .particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .particle { position: absolute; bottom: -20px; width: 4px; height: 4px; border-radius: 50%; opacity: 0; animation: rise linear infinite; box-shadow: 0 0 8px currentColor; }
+  @keyframes rise { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-110vh); opacity: 0; } }
+
+  /* Common gradient text */
+  .grad-cy { background-image: linear-gradient(135deg, #22d3ee, #fbbf24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; padding: 0 0.1em; }
+  .grad-pc { background-image: linear-gradient(135deg, #a855f7, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; padding: 0 0.1em; }
+  .grad-gp { background-image: linear-gradient(135deg, #fbbf24, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; padding: 0 0.1em; }
+
+  /* ====================================================
+     Slide 1: Outcome / Numbers
+     ==================================================== */
+  .rays { position: absolute; top: -50%; left: 50%; width: 200%; height: 200%; transform: translateX(-50%); pointer-events: none; opacity: 0.3; animation: raysSpin 60s linear infinite; }
+  @keyframes raysSpin { to { transform: translateX(-50%) rotate(360deg); } }
+  .rays::before { content: ""; position: absolute; inset: 0; background: conic-gradient(from 0deg, transparent 0deg, rgba(34,211,238,0.4) 6deg, transparent 12deg, transparent 60deg, rgba(168,85,247,0.3) 66deg, transparent 72deg, transparent 120deg, rgba(251,191,36,0.3) 126deg, transparent 132deg, transparent 180deg, rgba(34,211,238,0.3) 186deg, transparent 192deg, transparent 240deg, rgba(168,85,247,0.3) 246deg, transparent 252deg, transparent 300deg, rgba(251,191,36,0.3) 306deg, transparent 312deg, transparent 360deg); }
+
+  .s1-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem 6rem; z-index: 5; }
+  .s1-pretitle { font-size: 0.875rem; letter-spacing: 0.36em; color: #fbbf24; margin-bottom: 1rem; opacity: 0; }
+  .slide.is-active .s1-pretitle { animation: fadeDown 1s ease-out 0.3s forwards; }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .s1-heading { font-size: clamp(2rem, 5vw, 4.25rem); font-weight: 800; line-height: 1.2; text-align: center; max-width: 1280px; margin-bottom: 2rem; }
+  .s1-heading .line { display: block; opacity: 0; transform: translateY(20px); filter: blur(8px); }
+  .slide.is-active .s1-heading .line { animation: lineIn 1s ease-out forwards; }
+  .slide.is-active .s1-heading .line:nth-child(1) { animation-delay: 0.6s; }
+  .slide.is-active .s1-heading .line:nth-child(2) { animation-delay: 0.9s; }
+  @keyframes lineIn { to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+
+  .stats { display: flex; gap: 2.5rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; opacity: 0; }
+  .slide.is-active .stats { animation: fadeIn 1s ease-out 1.6s forwards; }
+  @keyframes fadeIn { to { opacity: 1; } }
+  .stat { text-align: center; }
+  .stat-value { font-size: clamp(2.25rem, 4.4vw, 3.75rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+  .stat-value .unit { font-size: 0.5em; color: white; -webkit-text-fill-color: white; margin-left: 6px; opacity: 0.85; }
+  .stat-label { font-size: 0.75rem; letter-spacing: 0.18em; color: #94a3b8; margin-top: 0.5rem; text-transform: uppercase; }
+  .stat-arrow { font-size: 0.6875rem; color: #2eb67d; margin-top: 0.25rem; letter-spacing: 0.08em; }
+  .stat:nth-child(1) .stat-value { background-image: linear-gradient(135deg, #22d3ee, #fbbf24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+  .stat:nth-child(2) .stat-value { background-image: linear-gradient(135deg, #a855f7, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+  .stat:nth-child(3) .stat-value { background-image: linear-gradient(135deg, #fbbf24, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+  .stat:nth-child(4) .stat-value { background-image: linear-gradient(135deg, #2eb67d, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+
+  .pillars { display: flex; gap: 1rem; max-width: 1200px; width: 100%; margin-top: 2.5rem; }
+  .pillar { flex: 1; padding: 1.25rem 1.25rem; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; backdrop-filter: blur(12px); transform: translateY(20px); opacity: 0; position: relative; overflow: hidden; }
+  .slide.is-active .pillar { animation: pillarIn 0.8s ease-out forwards; }
+  .slide.is-active .pillar:nth-child(1) { animation-delay: 2.4s; --c: #22d3ee; }
+  .slide.is-active .pillar:nth-child(2) { animation-delay: 2.6s; --c: #a855f7; }
+  .slide.is-active .pillar:nth-child(3) { animation-delay: 2.8s; --c: #fbbf24; }
+  @keyframes pillarIn { to { opacity: 1; transform: translateY(0); } }
+  .pillar { color: var(--c); }
+  .pillar::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, currentColor, transparent); opacity: 0.6; }
+  .pillar-num { font-size: 0.6875rem; letter-spacing: 0.32em; opacity: 0.9; }
+  .pillar-title { font-size: 1.25rem; font-weight: 700; color: white; margin: 0.5rem 0 0.5rem; }
+  .pillar-desc { font-size: 0.875rem; color: #cbd5e1; line-height: 1.6; }
+
+  /* ====================================================
+     Slide 2: Architecture (what stays / what binds)
+     ==================================================== */
+  .s2-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 3rem 6rem; z-index: 5; }
+  .s2-pretitle { font-size: 0.875rem; letter-spacing: 0.36em; color: #22d3ee; margin-bottom: 1rem; opacity: 0; }
+  .slide.is-active .s2-pretitle { animation: fadeIn 1s ease-out 0.3s forwards; }
+  .s2-heading { font-size: clamp(1.75rem, 3.6vw, 3rem); font-weight: 800; line-height: 1.3; text-align: center; max-width: 1100px; margin-bottom: 2.5rem; opacity: 0; transform: translateY(16px); }
+  .slide.is-active .s2-heading { animation: lineIn 1s ease-out 0.6s forwards; }
+
+  .arch { position: relative; width: 100%; max-width: 1100px; height: 380px; opacity: 0; }
+  .slide.is-active .arch { animation: fadeIn 1s ease-out 1.2s forwards; }
+  .arch-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 220px; padding: 1rem 1.25rem; background: linear-gradient(135deg, #032d60, #0070d2); border-radius: 16px; border: 1px solid rgba(34,211,238,0.5); box-shadow: 0 0 40px rgba(34,211,238,0.4); text-align: center; z-index: 5; }
+  .arch-center-label { font-size: 0.625rem; letter-spacing: 0.32em; color: rgba(255,255,255,0.7); }
+  .arch-center-name { font-size: 1.125rem; font-weight: 800; margin: 0.25rem 0; }
+  .arch-center-sub { font-size: 0.75rem; color: rgba(255,255,255,0.85); }
+  .arch-spoke { position: absolute; padding: 0.625rem 0.875rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 0.5rem; min-width: 130px; }
+  .arch-spoke .icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.625rem; color: white; flex-shrink: 0; }
+  .arch-spoke .lbl { font-size: 0.75rem; font-weight: 700; }
+  .arch-spoke .role { font-size: 0.625rem; color: #94a3b8; }
+  /* spoke positions */
+  .arch-spoke.s-sap   { top: 10%; left: 8%; }
+  .arch-spoke.s-aws   { top: 10%; right: 8%; }
+  .arch-spoke.s-m365  { top: 50%; left: 0; transform: translateY(-50%); }
+  .arch-spoke.s-teams { top: 50%; right: 0; transform: translateY(-50%); }
+  .arch-spoke.s-slack { bottom: 10%; left: 8%; }
+  .arch-spoke.s-tab   { bottom: 10%; right: 8%; }
+  .arch-spoke.s-iot   { bottom: 50%; left: 50%; transform: translate(-50%, 0); top: 0; }
+  .arch-spoke.s-dc    { top: 50%; left: 50%; transform: translate(-50%, 0); bottom: 0; top: auto; }
+
+  /* connecting lines */
+  .arch-svg { position: absolute; inset: 0; pointer-events: none; }
+  .arch-svg path { stroke: rgba(34,211,238,0.4); stroke-width: 1.5; fill: none; stroke-dasharray: 4 6; animation: dash 8s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -100; } }
+
+  .arch-bottom { margin-top: 1.5rem; font-size: 1rem; color: #cbd5e1; text-align: center; max-width: 900px; line-height: 1.6; opacity: 0; }
+  .slide.is-active .arch-bottom { animation: fadeIn 1s ease-out 2s forwards; }
+  .arch-bottom strong { color: white; }
+
+  /* ====================================================
+     Slide 3: Roadmap (3 phases)
+     ==================================================== */
+  .s3-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 3rem 6rem; z-index: 5; }
+  .s3-pretitle { font-size: 0.875rem; letter-spacing: 0.36em; color: #2eb67d; margin-bottom: 1rem; opacity: 0; }
+  .slide.is-active .s3-pretitle { animation: fadeIn 1s ease-out 0.3s forwards; }
+  .s3-heading { font-size: clamp(1.75rem, 3.6vw, 3rem); font-weight: 800; line-height: 1.3; text-align: center; max-width: 1100px; margin-bottom: 2rem; opacity: 0; transform: translateY(16px); }
+  .slide.is-active .s3-heading { animation: lineIn 1s ease-out 0.6s forwards; }
+
+  .roadmap { display: flex; gap: 1.25rem; max-width: 1280px; width: 100%; align-items: stretch; }
+  .phase { flex: 1; padding: 1.5rem 1.25rem; background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; position: relative; opacity: 0; transform: translateY(20px); }
+  .slide.is-active .phase:nth-child(1) { animation: pillarIn 0.8s ease-out 1.0s forwards; --c: #22d3ee; }
+  .slide.is-active .phase:nth-child(2) { animation: pillarIn 0.8s ease-out 1.3s forwards; --c: #a855f7; }
+  .slide.is-active .phase:nth-child(3) { animation: pillarIn 0.8s ease-out 1.6s forwards; --c: #fbbf24; }
+  .phase { border-color: var(--c); }
+  .phase::before { content: ""; position: absolute; inset: 0; border-radius: 14px; box-shadow: 0 0 30px var(--c); opacity: 0.1; }
+  .phase-tag { display: inline-block; font-size: 0.625rem; letter-spacing: 0.24em; color: var(--c); font-weight: 700; padding: 4px 10px; background: color-mix(in srgb, var(--c) 14%, transparent); border-radius: 999px; }
+  .phase-time { font-size: 0.75rem; color: #94a3b8; margin-top: 0.625rem; }
+  .phase-name { font-size: 1.375rem; font-weight: 800; margin-top: 0.375rem; }
+  .phase-desc { font-size: 0.875rem; color: #cbd5e1; line-height: 1.6; margin-top: 0.625rem; }
+  .phase-list { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.75rem; }
+  .phase-list-title { font-size: 0.625rem; letter-spacing: 0.2em; color: #94a3b8; margin-bottom: 0.5rem; }
+  .phase-list ul { list-style: none; padding: 0; }
+  .phase-list li { padding: 4px 0; color: #cbd5e1; display: flex; align-items: flex-start; gap: 6px; }
+  .phase-list li::before { content: "▸"; color: var(--c); font-weight: 700; }
+
+  .s3-bottom { margin-top: 2.25rem; font-size: clamp(0.875rem, 1.4vw, 1.125rem); color: #fbbf24; letter-spacing: 0.16em; opacity: 0; text-align: center; }
+  .slide.is-active .s3-bottom { animation: fadeIn 1s ease-out 2.4s forwards; }
+
+  /* ====================================================
+     Slide 4: Thank You
+     ==================================================== */
+  .s4-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem 6rem; z-index: 5; }
+  .s4-pretitle { font-size: 0.875rem; letter-spacing: 0.36em; color: #fbbf24; margin-bottom: 1.5rem; opacity: 0; }
+  .slide.is-active .s4-pretitle { animation: fadeIn 1s ease-out 0.3s forwards; }
+  .closing-line1 { font-size: 0.875rem; letter-spacing: 0.32em; color: #94a3b8; opacity: 0; }
+  .slide.is-active .closing-line1 { animation: fadeIn 1s ease-out 0.7s forwards; }
+  .closing-line2 { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; margin-top: 0.625rem; opacity: 0; transform: translateY(12px); }
+  .slide.is-active .closing-line2 { animation: lineIn 1s ease-out 1s forwards; }
+
+  .thanks { font-size: clamp(3.5rem, 7.5vw, 6.5rem); font-weight: 800; letter-spacing: 0.04em; opacity: 0; margin-top: 2rem; }
+  .slide.is-active .thanks { animation: thanksPop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 1.8s forwards; background-image: linear-gradient(135deg, #ffffff, #fbbf24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+  @keyframes thanksPop { 0% { opacity: 0; transform: scale(0.85); } 70% { opacity: 1; transform: scale(1.04); } 100% { opacity: 1; transform: scale(1); } }
+
+  .systems-row { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; opacity: 0; max-width: 900px; margin-top: 2.25rem; }
+  .slide.is-active .systems-row { animation: fadeIn 1.2s ease-out 2.8s forwards; }
+  .sys-tag { padding: 0.4rem 0.75rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 999px; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; color: white; backdrop-filter: blur(8px); display: inline-flex; align-items: center; gap: 6px; }
+  .sys-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .s4-footer { position: absolute; bottom: 80px; left: 0; width: 100%; text-align: center; font-size: 0.75rem; letter-spacing: 0.32em; color: #6b7280; opacity: 0; }
+  .slide.is-active .s4-footer { animation: fadeIn 1s ease-out 3.4s forwards; }
+  .s4-footer .accent { color: #fbbf24; }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="brand">
+    <div class="brand-mark">⚡</div>
+    <div class="brand-text">SALESFORCE × TEPCO HD</div>
+  </div>
+  <div class="brand-r">VISION DEMO 2026</div>
+
+  <!-- ====== SLIDE 1: OUTCOME ====== -->
+  <div class="slide is-active" id="slide-1">
+    <div class="rays"></div>
+    <div class="vignette"></div>
+    <div class="orb cyan" style="width:480px; height:480px; top:-120px; left:-120px;"></div>
+    <div class="orb purple" style="width:420px; height:420px; bottom:-100px; right:-100px;"></div>
+    <div class="particles" id="parts1"></div>
+
+    <div class="s1-content">
+      <div class="s1-pretitle">FROM PREDICTION TO DECISION ・ IN MINUTES</div>
+      <h1 class="s1-heading">
+        <span class="line">予兆から経営判断まで、</span>
+        <span class="line">わずか<span class="grad-cy">数分</span>で繋がる。</span>
+      </h1>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-value" id="stat1">0<span class="unit">分</span></div><div class="stat-label">DETECTION → DECISION</div><div class="stat-arrow">▼ 従来 2〜4 時間</div></div>
+        <div class="stat"><div class="stat-value" id="stat2">0<span class="unit">系統</span></div><div class="stat-label">SYSTEMS ORCHESTRATED</div><div class="stat-arrow">SAP × AWS × M365 × Teams × Slack</div></div>
+        <div class="stat"><div class="stat-value" id="stat3">0<span class="unit">億円</span></div><div class="stat-label">LOSS AVOIDED</div><div class="stat-arrow">vs 停電許容シナリオ</div></div>
+        <div class="stat"><div class="stat-value" id="stat4">0<span class="unit">×</span></div><div class="stat-label">ROI MULTIPLIER</div><div class="stat-arrow">回避効果 16〜23倍</div></div>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar"><div class="pillar-num">PROMISE 01</div><div class="pillar-title">⚡ 経営の解像度</div><div class="pillar-desc">数字とリスクが、経営層に<strong style="color:white;">現場と同じ粒度</strong>で届く。</div></div>
+        <div class="pillar"><div class="pillar-num">PROMISE 02</div><div class="pillar-title">🔧 現場の応答速度</div><div class="pillar-desc">アラートが対応プランに<strong style="color:white;">3.4秒で変わる</strong>。</div></div>
+        <div class="pillar"><div class="pillar-num">PROMISE 03</div><div class="pillar-title">🌐 1つのワークスペース</div><div class="pillar-desc">Salesforce が <strong style="color:white;">SAP・Teams・M365・AWS</strong> を束ねる。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: ARCHITECTURE ====== -->
+  <div class="slide" id="slide-2">
+    <div class="vignette"></div>
+    <div class="orb cyan" style="width:380px; height:380px; top:10%; left:-100px;"></div>
+    <div class="orb gold" style="width:380px; height:380px; bottom:10%; right:-100px;"></div>
+
+    <div class="s2-content">
+      <div class="s2-pretitle">ARCHITECTURE ・ 何が変わり、何は変わらないのか</div>
+      <h2 class="s2-heading">既存資産は<span class="grad-cy">そのまま</span>。<br/>Agentforce が<span class="grad-pc">束ねて働く</span>。</h2>
+
+      <div class="arch">
+        <svg class="arch-svg" viewBox="0 0 1100 380" preserveAspectRatio="none">
+          <path d="M 550 190 L 130 60"/>
+          <path d="M 550 190 L 970 60"/>
+          <path d="M 550 190 L 70 190"/>
+          <path d="M 550 190 L 1030 190"/>
+          <path d="M 550 190 L 130 320"/>
+          <path d="M 550 190 L 970 320"/>
+          <path d="M 550 190 L 550 30"/>
+          <path d="M 550 190 L 550 350"/>
+        </svg>
+        <div class="arch-center">
+          <div class="arch-center-label">⚡ AI ORCHESTRATOR</div>
+          <div class="arch-center-name">Agentforce</div>
+          <div class="arch-center-sub">on Salesforce + Data Cloud</div>
+        </div>
+        <div class="arch-spoke s-sap"><div class="icon" style="background:#0073e6;">SAP</div><div><div class="lbl">SAP S/4HANA</div><div class="role">基幹・与信・稟議</div></div></div>
+        <div class="arch-spoke s-aws"><div class="icon" style="background:#ff9900;">AWS</div><div><div class="lbl">AWS</div><div class="role">IoT・Bedrock・系統</div></div></div>
+        <div class="arch-spoke s-m365"><div class="icon" style="background:#d83b01;">M3</div><div><div class="lbl">Microsoft 365</div><div class="role">Exchange・Copilot</div></div></div>
+        <div class="arch-spoke s-teams"><div class="icon" style="background:#6264a7;">TM</div><div><div class="lbl">Teams</div><div class="role">招集・録画・通訳</div></div></div>
+        <div class="arch-spoke s-slack"><div class="icon" style="background:#4a154b;">SL</div><div><div class="lbl">Slack</div><div class="role">対策室スウォーム</div></div></div>
+        <div class="arch-spoke s-tab"><div class="icon" style="background:#1f447e;">TB</div><div><div class="lbl">Tableau Next</div><div class="role">VIP ダッシュボード</div></div></div>
+        <div class="arch-spoke s-iot"><div class="icon" style="background:#1abc9c;">IoT</div><div><div class="lbl">設備 IoT</div><div class="role">変電所・送配電</div></div></div>
+        <div class="arch-spoke s-dc"><div class="icon" style="background:#032d60;">DC</div><div><div class="lbl">中央給電指令所</div><div class="role">系統運用</div></div></div>
+      </div>
+
+      <div class="arch-bottom">
+        既存の SCADA・SAP・M365・AWS は<strong>そのまま継続</strong>。<br/>Agentforce が API・MCP・Data Cloud を介して<strong>束ねるレイヤー</strong>として機能します。
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: ROADMAP ====== -->
+  <div class="slide" id="slide-3">
+    <div class="vignette"></div>
+    <div class="orb cyan" style="width:380px; height:380px; top:10%; left:-100px;"></div>
+    <div class="orb gold" style="width:380px; height:380px; bottom:10%; right:-100px;"></div>
+
+    <div class="s3-content">
+      <div class="s3-pretitle">ROADMAP ・ 段階的に始められる</div>
+      <h2 class="s3-heading">最短<span class="grad-cy">3ヶ月</span>で MVP。<br/>OT領域は<span class="grad-pc">慎重に・着実に</span>。</h2>
+
+      <div class="roadmap">
+        <div class="phase">
+          <span class="phase-tag">PHASE 01</span>
+          <div class="phase-time">3 〜 4ヶ月 / Quick Win</div>
+          <div class="phase-name">⚡ 体感MVP</div>
+          <div class="phase-desc">Salesforce + Slack + Agentforce で「現場の応答速度」MVP。経営層に Vision を体感いただく最初のステップ。</div>
+          <div class="phase-list">
+            <div class="phase-list-title">SCOPE</div>
+            <ul>
+              <li>設備カスタムオブジェクト + アラート機能</li>
+              <li>Slack 自動チャンネル + Agentforce Topic</li>
+              <li>Tableau 標準ダッシュボード</li>
+              <li>VIP モバイル UI (Salesforce Mobile)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase">
+          <span class="phase-tag">PHASE 02</span>
+          <div class="phase-time">6 〜 9ヶ月 / Scale</div>
+          <div class="phase-name">🔗 既存資産連携</div>
+          <div class="phase-desc">SAP / M365 / Teams External Action 本実装。AWS IoT は<strong style="color:white;">読取専用で先行接続</strong>。Tableau Next で VIP ビュー昇格。</div>
+          <div class="phase-list">
+            <div class="phase-list-title">SCOPE</div>
+            <ul>
+              <li>SAP S/4 与信・稟議 双方向</li>
+              <li>M365 Graph API / Copilot 連携</li>
+              <li>Teams 自動会議発行・録画要約</li>
+              <li>Data Cloud DMO 設計</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase">
+          <span class="phase-tag">PHASE 03</span>
+          <div class="phase-time">12ヶ月+ / Enterprise</div>
+          <div class="phase-name">🛡️ OT-IT 境界</div>
+          <div class="phase-desc">中央給電指令所との安全な相互運用、3D停電影響予測、OT 領域の規制対応とゼロトラスト・セキュリティ設計。</div>
+          <div class="phase-list">
+            <div class="phase-list-title">SCOPE</div>
+            <ul>
+              <li>SCADA 読取専用ゲートウェイ</li>
+              <li>IEC 61850/61968 マッピング</li>
+              <li>都心 GIS × 配電網 3Dヒートマップ</li>
+              <li>電気事業法準拠監査ログ</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="s3-bottom">⚡ 小さく始め、確実に広げる ⚡</div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 4: THANK YOU ====== -->
+  <div class="slide" id="slide-4">
+    <div class="rays"></div>
+    <div class="vignette"></div>
+    <div class="orb cyan" style="width:480px; height:480px; top:-120px; left:-120px;"></div>
+    <div class="orb purple" style="width:420px; height:420px; bottom:-100px; right:-100px;"></div>
+    <div class="orb gold" style="width:380px; height:380px; top:40%; left:60%; opacity:0.2;"></div>
+    <div class="particles" id="parts4"></div>
+
+    <div class="s4-content">
+      <div class="s4-pretitle">FINAL MESSAGE</div>
+      <div class="closing-line1">THIS IS NOT THE FUTURE.</div>
+      <div class="closing-line2">これは、<span class="grad-pc">今日から始められる</span>未来です。</div>
+
+      <div class="thanks">THANK YOU.</div>
+
+      <div class="systems-row">
+        <span class="sys-tag"><span class="sys-dot" style="background:#0073e6;"></span>SAP S/4HANA</span>
+        <span class="sys-tag"><span class="sys-dot" style="background:#ff9900;"></span>AWS</span>
+        <span class="sys-tag"><span class="sys-dot" style="background:#d83b01;"></span>Microsoft 365</span>
+        <span class="sys-tag"><span class="sys-dot" style="background:#6264a7;"></span>Teams</span>
+        <span class="sys-tag"><span class="sys-dot" style="background:#4a154b;"></span>Slack</span>
+        <span class="sys-tag"><span class="sys-dot" style="background:#1f447e;"></span>Tableau Next</span>
+        <span class="sys-tag"><span class="sys-dot" style="background:#1abc9c;"></span>IoT</span>
+        <span class="sys-tag"><span class="sys-dot" style="background:#0070d2;"></span>Data Cloud</span>
+        <span class="sys-tag" style="background:linear-gradient(135deg,#032d60,#0070d2); border-color:#22d3ee;"><span class="sys-dot" style="background:white;"></span>Agentforce</span>
+      </div>
+    </div>
+
+    <div class="s4-footer">SALESFORCE JAPAN ・ <span class="accent">TEPCO HD</span> 様 ご面談用 ・ 2026.06</div>
+  </div>
+
+  <!-- Slide indicator -->
+  <div class="slide-dots">
+    <div class="slide-dot is-active" data-slide="1"></div>
+    <div class="slide-dot" data-slide="2"></div>
+    <div class="slide-dot" data-slide="3"></div>
+    <div class="slide-dot" data-slide="4"></div>
+  </div>
+  <div class="nav-hint"><kbd>←</kbd> <kbd>→</kbd> でスライド切替</div>
+
+</div>
+
+<script>
+  // Particles
+  function makeParticles(id) {
+    const c = document.getElementById(id);
+    if (!c) return;
+    for (let i = 0; i < 50; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      const dur = 8 + Math.random() * 12;
+      p.style.animationDuration = dur + 's';
+      p.style.animationDelay = Math.random() * dur + 's';
+      p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+      const colors = ['#22d3ee', '#a855f7', '#fbbf24', '#ffffff'];
+      p.style.color = p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.appendChild(p);
+    }
+  }
+  makeParticles('parts1');
+  makeParticles('parts4');
+
+  // Animated counter
+  function countTo(el, target, durationMs) {
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min(1, (now - start) / durationMs);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.firstChild.nodeValue = Math.round(target * eased);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  let countersStarted = false;
+  function startCounters() {
+    if (countersStarted) return;
+    countersStarted = true;
+    setTimeout(() => {
+      countTo(document.getElementById('stat1'), 6, 1400);
+      countTo(document.getElementById('stat2'), 5, 1400);
+      countTo(document.getElementById('stat3'), 84, 1800);
+      countTo(document.getElementById('stat4'), 23, 1600);
+    }, 1800);
+  }
+  startCounters();
+
+  // Slide nav
+  let currentSlide = 1;
+  const TOTAL_SLIDES = 4;
+  function showSlide(n) {
+    if (n < 1 || n > TOTAL_SLIDES) return;
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('is-active'));
+    document.querySelectorAll('.slide-dot').forEach(d => d.classList.remove('is-active'));
+    document.getElementById('slide-' + n).classList.add('is-active');
+    document.querySelector(`.slide-dot[data-slide="${n}"]`).classList.add('is-active');
+    currentSlide = n;
+  }
+  document.querySelectorAll('.slide-dot').forEach(d => d.addEventListener('click', () => showSlide(parseInt(d.dataset.slide))));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); showSlide(currentSlide + 1); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); showSlide(currentSlide - 1); }
+    if (e.key === 'r' || e.key === 'R') location.reload();
+  });
+</script>
+</body>
+</html>

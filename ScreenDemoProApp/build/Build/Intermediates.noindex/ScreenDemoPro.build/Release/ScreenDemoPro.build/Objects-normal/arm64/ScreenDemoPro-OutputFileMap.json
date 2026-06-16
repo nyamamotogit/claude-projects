@@ -1,0 +1,86 @@
+{
+  "" : {
+    "const-values" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary.swiftconstvalues",
+    "dependencies" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary.d",
+    "diagnostics" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary.dia",
+    "emit-module-dependencies" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary-emit-module.dia",
+    "pch" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary.swiftdeps"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/AppDelegate.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/AppDelegate.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/AppDelegate.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/AppDelegate.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/CanvasView.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/CanvasView.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/CanvasView.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/CanvasView.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/CanvasWindow.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/CanvasWindow.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/CanvasWindow.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/CanvasWindow.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/HotKeyManager.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/HotKeyManager.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/HotKeyManager.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/HotKeyManager.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/PermissionChecker.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/PermissionChecker.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/PermissionChecker.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/PermissionChecker.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Core/PresentationManager.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/PresentationManager.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/PresentationManager.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/PresentationManager.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/DrawingTool.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/DrawingTool.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/DrawingTool.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/DrawingTool.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/KeyCombo.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/KeyCombo.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/KeyCombo.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/KeyCombo.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/Settings.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/Settings.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/Settings.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/Settings.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/SettingsStore.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/SettingsStore.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/SettingsStore.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/SettingsStore.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/Model/Stroke.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/Stroke.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/Stroke.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/Stroke.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/UI/MenuBarController.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/MenuBarController.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/MenuBarController.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/MenuBarController.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/UI/SettingsView.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/SettingsView.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/SettingsView.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/SettingsView.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/UI/ShortcutRecorderView.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ShortcutRecorderView.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ShortcutRecorderView.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ShortcutRecorderView.o"
+  },
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/main.swift" : {
+    "index-unit-output-path" : "/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/main.o",
+    "llvm-bc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/main.bc",
+    "object" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/main.o"
+  }
+}

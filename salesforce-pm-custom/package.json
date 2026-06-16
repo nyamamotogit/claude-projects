@@ -1,0 +1,13 @@
+{
+  "name": "salesforce-pm-custom",
+  "version": "1.0.0",
+  "description": "Custom Project Management System",
+  "scripts": {
+    "deploy": "sf project deploy start -d force-app -o myDevOrg",
+    "insert:data": "node scripts/insertDemoData.js"
+  },
+  "dependencies": {
+    "jsforce": "^2.0.0",
+    "dotenv": "^16.0.3"
+  }
+}

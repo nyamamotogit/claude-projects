@@ -1,0 +1,152 @@
+<!--
+  Path - 商談ステージ・ケースステータスのフロー表示
+  ===========================================
+  使用箇所: 商談「ステージ」進捗、ケース「ステータス」進捗
+
+  ポイント:
+    - SLDS の slds-path はインタラクション部分が JS 駆動。モックでは静的に
+      slds-is-complete / slds-is-current にあわせて見た目を出す。
+    - style-tokens.html の補助 CSS (.is-complete-static / .is-current-static) は
+      使わず、SLDS 標準クラスで完結する書き方にしている。
+
+  ⚠️ 絶対やらない:
+    - clip-path: polygon(...) で自前のシェブロンを作らない。SLDS 公式の
+      slds-path が CDN CSS に含まれており、本物のシェブロン形状を
+      ::before/::after + skew(28deg/-30deg) で正しく作ってくれる。
+      自作するとV字の角度や縦中央が崩れて「本物に見えない」状態になる。
+-->
+
+<!-- ============ 商談ステージ ============ -->
+<div class="slds-card">
+  <article class="slds-path">
+
+    <!-- ヘッダー (現ステージ表示 + アクション) -->
+    <div class="slds-grid slds-path__track">
+      <div class="slds-grid slds-path__scroller-container">
+        <div class="slds-path__scroller" role="application">
+          <div class="slds-path__scroller_inner">
+            <ul class="slds-path__nav" role="listbox">
+              <li class="slds-path__item slds-is-complete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage">
+                    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-icon slds-icon_x-small" />
+                  </span>
+                  <span class="slds-path__title">資格確認</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-complete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage">
+                    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-icon slds-icon_x-small" />
+                  </span>
+                  <span class="slds-path__title">ニーズ分析</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-current slds-is-active" role="presentation">
+                <a aria-selected="true" class="slds-path__link" href="#" role="option" tabindex="0">
+                  <span class="slds-path__stage">
+                    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-icon slds-icon_x-small" />
+                    <span class="slds-assistive-text">現在のステージ:</span>
+                  </span>
+                  <span class="slds-path__title">提案/見積</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-incomplete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage"></span>
+                  <span class="slds-path__title">交渉/レビュー</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-incomplete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage"></span>
+                  <span class="slds-path__title">受注</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-incomplete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage"></span>
+                  <span class="slds-path__title">案件成立</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slds-grid slds-path__action">
+        <span class="slds-path__stage-name">ステージ: 提案/見積</span>
+        <button class="slds-button slds-button_brand slds-path__mark-complete">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-button__icon slds-button__icon_left" />
+          現ステージとしてマーク
+        </button>
+      </div>
+    </div>
+
+    <!-- ガイダンスエリア -->
+    <div class="slds-path__content slds-grid slds-wrap slds-grid_pull-padded slds-p-around_medium">
+      <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+        <h2 class="slds-text-title_caps slds-m-bottom_x-small">主要な項目</h2>
+        <dl class="slds-list_horizontal slds-wrap">
+          <dt class="slds-item_label slds-truncate">金額:</dt>
+          <dd class="slds-item_detail slds-truncate">¥12,000,000</dd>
+          <dt class="slds-item_label slds-truncate">完了予定日:</dt>
+          <dd class="slds-item_detail slds-truncate">2026/06/30</dd>
+          <dt class="slds-item_label slds-truncate">確度:</dt>
+          <dd class="slds-item_detail slds-truncate">60%</dd>
+        </dl>
+      </div>
+      <div class="slds-col slds-size_1-of-2 slds-p-horizontal_small">
+        <h2 class="slds-text-title_caps slds-m-bottom_x-small">このステージのガイダンス</h2>
+        <p class="slds-text-body_small">提案書を顧客にレビューしてもらい、フィードバックを記録してください。</p>
+      </div>
+    </div>
+  </article>
+</div>
+
+<!-- ============ ケースステータス（短縮版） ============ -->
+<div class="slds-card slds-m-top_medium">
+  <article class="slds-path">
+    <div class="slds-grid slds-path__track">
+      <div class="slds-grid slds-path__scroller-container">
+        <div class="slds-path__scroller" role="application">
+          <div class="slds-path__scroller_inner">
+            <ul class="slds-path__nav" role="listbox">
+              <li class="slds-path__item slds-is-complete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage">
+                    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-icon slds-icon_x-small" />
+                  </span>
+                  <span class="slds-path__title">新規</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-current slds-is-active" role="presentation">
+                <a aria-selected="true" class="slds-path__link" href="#" role="option" tabindex="0">
+                  <span class="slds-path__stage"></span>
+                  <span class="slds-path__title">作業中</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-incomplete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage"></span>
+                  <span class="slds-path__title">エスカレート</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-incomplete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage"></span>
+                  <span class="slds-path__title">解決</span>
+                </a>
+              </li>
+              <li class="slds-path__item slds-is-incomplete" role="presentation">
+                <a aria-selected="false" class="slds-path__link" href="#" role="option" tabindex="-1">
+                  <span class="slds-path__stage"></span>
+                  <span class="slds-path__title">クローズ</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>

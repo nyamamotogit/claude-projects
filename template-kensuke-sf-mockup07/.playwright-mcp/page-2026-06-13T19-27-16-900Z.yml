@@ -1,0 +1,247 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - searchbox "検索..." [ref=e9]
+      - list [ref=e10]:
+        - listitem [ref=e11]:
+          - button "Agentforce" [ref=e12] [cursor=pointer]:
+            - generic [ref=e13]: Agentforce
+        - listitem [ref=e14]:
+          - button "お気に入り" [ref=e15] [cursor=pointer]:
+            - generic [ref=e16]: お気に入り
+        - listitem [ref=e17]:
+          - button "新規作成" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]: 新規作成
+        - listitem [ref=e20]:
+          - button "ヘルプ" [ref=e21] [cursor=pointer]:
+            - generic [ref=e22]: ヘルプ
+        - listitem [ref=e23]:
+          - button "設定" [ref=e24] [cursor=pointer]:
+            - generic [ref=e25]: 設定
+        - listitem [ref=e26]:
+          - button "3 通知" [ref=e27] [cursor=pointer]:
+            - generic: "3"
+            - generic [ref=e28]: 通知
+        - listitem [ref=e29]:
+          - img "User" [ref=e31]
+  - generic [ref=e32]:
+    - generic [ref=e33]:
+      - generic "アプリケーションランチャー" [ref=e34] [cursor=pointer]
+      - generic [ref=e46]: Sales
+    - navigation [ref=e47]:
+      - list [ref=e48]:
+        - listitem [ref=e49]:
+          - link "ホーム" [ref=e50] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e51]:
+          - link "取引先" [ref=e52] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e53]:
+          - link "取引先責任者" [ref=e54] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e55]:
+          - link "リード" [ref=e56] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e57] [cursor=pointer]:
+          - link "商談" [ref=e58]:
+            - /url: "#"
+          - button "メニュー" [ref=e60]:
+            - generic [ref=e61]: メニュー
+        - listitem [ref=e62]:
+          - link "ダッシュボード" [ref=e63] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e64]:
+          - link "レポート" [ref=e65] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e66]:
+    - generic [ref=e68]:
+      - generic [ref=e73]:
+        - paragraph [ref=e74]: 商談
+        - generic [ref=e75]:
+          - generic [ref=e76]: 最近参照したデータ
+          - button "リストビューを切替" [ref=e77] [cursor=pointer]
+          - generic "このリストビューを固定" [ref=e78] [cursor=pointer]
+        - paragraph [ref=e79]: "12 件 · 並び替え順: ステージ · 数秒前に更新 · フィルタリング条件: 自分の商談"
+      - generic [ref=e81]:
+        - button "新規" [ref=e82] [cursor=pointer]
+        - button "インポート" [ref=e83] [cursor=pointer]
+        - button "変更所有者" [ref=e84] [cursor=pointer]
+        - button "グラフを表示" [ref=e85] [cursor=pointer]
+        - button "フィルタ" [ref=e86] [cursor=pointer]
+        - button "更新" [ref=e87] [cursor=pointer]
+        - button "リスト編集" [ref=e88] [cursor=pointer]
+        - button "その他" [ref=e89] [cursor=pointer]
+        - group "ビュー切替" [ref=e90]:
+          - button "テーブル" [ref=e91] [cursor=pointer]
+          - button "カンバン" [pressed] [ref=e92] [cursor=pointer]
+          - button "スプリットビュー" [ref=e93] [cursor=pointer]
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - generic [ref=e97]: 資格確認 (2)
+          - generic [ref=e98]: ¥5,500,000
+        - generic [ref=e99]:
+          - article [ref=e100]:
+            - generic [ref=e101]:
+              - link "SaaS基盤更新 - 初期評価" [ref=e102] [cursor=pointer]:
+                - /url: "#"
+              - button "アクション" [ref=e103] [cursor=pointer]
+            - generic [ref=e104]:
+              - term [ref=e105]: 金額
+              - definition [ref=e106]: ¥3,500,000
+              - term [ref=e107]: 完了予定日
+              - definition [ref=e108]: 2026/09/15
+              - term [ref=e109]: 取引先
+              - definition [ref=e110]:
+                - link "株式会社 アルファテック" [ref=e111] [cursor=pointer]:
+                  - /url: "#"
+          - article [ref=e114]:
+            - generic [ref=e115]:
+              - link "物流DX 提案" [ref=e116] [cursor=pointer]:
+                - /url: "#"
+              - button "アクション" [ref=e117] [cursor=pointer]
+            - generic [ref=e118]:
+              - term [ref=e119]: 金額
+              - definition [ref=e120]: ¥2,000,000
+              - term [ref=e121]: 完了予定日
+              - definition [ref=e122]: 2026/08/30
+              - term [ref=e123]: 取引先
+              - definition [ref=e124]:
+                - link "株式会社 マルモト商事" [ref=e125] [cursor=pointer]:
+                  - /url: "#"
+        - generic [ref=e128]: 2 件 · 合計 ¥5,500,000
+      - generic [ref=e129]:
+        - generic [ref=e130]:
+          - generic [ref=e131]: ニーズ分析 (1)
+          - generic [ref=e132]: ¥6,200,000
+        - article [ref=e134]:
+          - generic [ref=e135]:
+            - link "CRM 統合 - フェーズ1" [ref=e136] [cursor=pointer]:
+              - /url: "#"
+            - button "アクション" [ref=e137] [cursor=pointer]
+          - generic [ref=e138]:
+            - term [ref=e139]: 金額
+            - definition [ref=e140]: ¥6,200,000
+            - term [ref=e141]: 完了予定日
+            - definition [ref=e142]: 2026/10/05
+            - term [ref=e143]: 取引先
+            - definition [ref=e144]:
+              - link "サンプル建設株式会社" [ref=e145] [cursor=pointer]:
+                - /url: "#"
+        - generic [ref=e148]: 1 件 · 合計 ¥6,200,000
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - generic [ref=e151]: 価値提案 (2)
+          - generic [ref=e152]: ¥9,800,000
+        - generic [ref=e153]:
+          - article [ref=e154]:
+            - generic [ref=e155]:
+              - link "データ基盤刷新案件" [ref=e156] [cursor=pointer]:
+                - /url: "#"
+              - button "アクション" [ref=e157] [cursor=pointer]
+            - generic [ref=e158]:
+              - term [ref=e159]: 金額
+              - definition [ref=e160]: ¥5,800,000
+              - term [ref=e161]: 完了予定日
+              - definition [ref=e162]: 2026/07/31
+              - term [ref=e163]: 取引先
+              - definition [ref=e164]:
+                - link "テックコア合同会社" [ref=e165] [cursor=pointer]:
+                  - /url: "#"
+            - generic "完了予定日が近い" [ref=e168]
+          - article [ref=e169]:
+            - generic [ref=e170]:
+              - link "業務自動化 - 経理部門" [ref=e171] [cursor=pointer]:
+                - /url: "#"
+              - button "アクション" [ref=e172] [cursor=pointer]
+            - generic [ref=e173]:
+              - term [ref=e174]: 金額
+              - definition [ref=e175]: ¥4,000,000
+              - term [ref=e176]: 完了予定日
+              - definition [ref=e177]: 2026/09/20
+              - term [ref=e178]: 取引先
+              - definition [ref=e179]:
+                - link "日本フィナンシャル株式会社" [ref=e180] [cursor=pointer]:
+                  - /url: "#"
+        - generic [ref=e183]: 2 件 · 合計 ¥9,800,000
+      - generic [ref=e184]:
+        - generic [ref=e185]:
+          - generic [ref=e186]: 意思決定者特定 (1)
+          - generic [ref=e187]: ¥7,500,000
+        - article [ref=e189]:
+          - generic [ref=e190]:
+            - link "複数拠点ロールアウト" [ref=e191] [cursor=pointer]:
+              - /url: "#"
+            - button "アクション" [ref=e192] [cursor=pointer]
+          - generic [ref=e193]:
+            - term [ref=e194]: 金額
+            - definition [ref=e195]: ¥7,500,000
+            - term [ref=e196]: 完了予定日
+            - definition [ref=e197]: 2026/11/30
+            - term [ref=e198]: 取引先
+            - definition [ref=e199]:
+              - link "関西流通サービス株式会社" [ref=e200] [cursor=pointer]:
+                - /url: "#"
+        - generic [ref=e203]: 1 件 · 合計 ¥7,500,000
+      - generic [ref=e204]:
+        - generic [ref=e205]:
+          - generic [ref=e206]: 提案/見積 (2)
+          - generic [ref=e207]: ¥18,000,000
+        - generic [ref=e208]:
+          - article [ref=e209]:
+            - generic [ref=e210]:
+              - link "大型ライセンス契約 - Q4更新" [ref=e211] [cursor=pointer]:
+                - /url: "#"
+              - button "アクション" [ref=e212] [cursor=pointer]
+            - generic [ref=e213]:
+              - term [ref=e214]: 金額
+              - definition [ref=e215]: ¥12,000,000
+              - term [ref=e216]: 完了予定日
+              - definition [ref=e217]: 2026/06/30
+              - term [ref=e218]: 取引先
+              - definition [ref=e219]:
+                - link "株式会社 テスト商事" [ref=e220] [cursor=pointer]:
+                  - /url: "#"
+            - generic "完了予定日が近い" [ref=e223]
+          - article [ref=e224]:
+            - generic [ref=e225]:
+              - link "サポート契約 - 拡張プラン" [ref=e226] [cursor=pointer]:
+                - /url: "#"
+              - button "アクション" [ref=e227] [cursor=pointer]
+            - generic [ref=e228]:
+              - term [ref=e229]: 金額
+              - definition [ref=e230]: ¥6,000,000
+              - term [ref=e231]: 完了予定日
+              - definition [ref=e232]: 2026/07/15
+              - term [ref=e233]: 取引先
+              - definition [ref=e234]:
+                - link "アルファテック株式会社" [ref=e235] [cursor=pointer]:
+                  - /url: "#"
+            - generic "完了予定日が近い" [ref=e238]
+        - generic [ref=e239]: 2 件 · 合計 ¥18,000,000
+      - generic [ref=e240]:
+        - generic [ref=e241]:
+          - generic [ref=e242]: 交渉/レビュー (0)
+          - generic [ref=e243]: ¥0
+        - generic [ref=e245]: このステージに商談はありません
+        - generic [ref=e246]: 0 件
+      - generic [ref=e247]:
+        - generic [ref=e248]:
+          - generic [ref=e249]: 受注 (1)
+          - generic [ref=e250]: ¥4,800,000
+        - article [ref=e252]:
+          - generic [ref=e253]:
+            - link "追加サポート契約" [ref=e254] [cursor=pointer]:
+              - /url: "#"
+            - button "アクション" [ref=e255] [cursor=pointer]
+          - generic [ref=e256]:
+            - term [ref=e257]: 金額
+            - definition [ref=e258]: ¥4,800,000
+            - term [ref=e259]: 完了予定日
+            - definition [ref=e260]: 2026/05/30
+            - term [ref=e261]: 取引先
+            - definition [ref=e262]:
+              - link "株式会社 グリーンソリューション" [ref=e263] [cursor=pointer]:
+                - /url: "#"
+        - generic [ref=e266]: 1 件 · 合計 ¥4,800,000

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Assignee__c</fullName>
+    <label>担当者</label>
+    <description>このタスクを担当するSalesforceユーザー</description>
+    <inlineHelpText>このタスクの主担当者を選択してください</inlineHelpText>
+    <type>Lookup</type>
+    <referenceTo>User</referenceTo>
+    <relationshipLabel>担当タスク</relationshipLabel>
+    <relationshipName>Assigned_Tasks</relationshipName>
+    <required>false</required>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>

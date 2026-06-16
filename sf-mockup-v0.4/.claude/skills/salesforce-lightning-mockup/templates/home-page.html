@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ホーム | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1024px; margin: 0; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .sf-col-2-3 { flex: 0 0 calc(66.666% - 0.375rem); }
+  .sf-col-1-3 { flex: 0 0 calc(33.333% - 0.375rem); }
+  .sf-col-1-4 { flex: 0 0 calc(25% - 0.5625rem); }
+  .sf-header { background: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid #c9c9c9; position: sticky; top: 0; z-index: 50; }
+  .sf-header-search { width: 50%; max-width: 36rem; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn:hover { background: #f3f3f3; }
+  .sf-icon-btn img { width: 18px; height: 18px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-favorite-btn { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 2rem; background: #1b96ff; border-radius: 0.25rem; border: none; cursor: pointer; }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-notify-wrap { position: relative; display: inline-flex; }
+  .sf-notify-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ea001e; border-radius: 50%; border: 1.5px solid white; }
+  .sf-context-bar { background: white; border-bottom: 1px solid #dddbda; padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-context-bar nav ul { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .sf-context-bar nav ul li { display: flex; align-items: center; padding: 0 0.25rem; font-size: 0.875rem; }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid #1589ee; }
+  .sf-context-bar nav ul li.is-active a { color: #0070d2; font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-app-name { font-size: 1.125rem; font-weight: 700; color: #181818; padding: 0.5rem 0; margin-right: 0.75rem; }
+</style>
+</head>
+<body class="slds-scope">
+
+<header class="sf-header">
+  <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+  <div class="sf-header-search">
+    <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+      <input type="search" placeholder="検索..." class="slds-input">
+    </div></div>
+  </div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></button>
+    <button class="sf-favorite-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" /><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></button>
+    <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" /></button><span class="sf-notify-dot"></span></span>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:0.5rem;"><img src="https://ui-avatars.com/api/?name=User&background=1B96FF&color=fff" alt="User"></span>
+  </div>
+</header>
+
+<div class="sf-context-bar">
+  <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  <span class="sf-app-name">Sales</span>
+  <nav>
+    <ul>
+      <li class="is-active"><a href="#">ホーム</a></li>
+      <li><a href="#">取引先 ▾</a></li>
+      <li><a href="#">商談 ▾</a></li>
+      <li><a href="#">レポート ▾</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main class="sf-main">
+
+  <div class="slds-grid slds-grid_align-spread slds-m-bottom_medium">
+    <div>
+      <p class="slds-text-body_small slds-text-color_weak">{今日の日付} · おはようございます</p>
+      <h1 class="slds-text-heading_large">{ユーザー名} さん</h1>
+    </div>
+    <div class="slds-text-body_small">
+      Quarter Performance: <span class="slds-text-color_success slds-text-heading_small">¥34,500,000 達成 (87%)</span>
+    </div>
+  </div>
+
+  <div class="sf-row slds-m-bottom_medium">
+    <div class="sf-col-1-4"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-truncate">本日の活動</p><p class="slds-text-heading_large slds-m-top_x-small">12</p><p class="slds-text-body_small slds-text-color_success">+20% 先週比</p></article></div>
+    <div class="sf-col-1-4"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-truncate">期日のあるToDo</p><p class="slds-text-heading_large slds-m-top_x-small">5</p><p class="slds-text-body_small slds-text-color_destructive">2 件 期限切れ</p></article></div>
+    <div class="sf-col-1-4"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-truncate">アクティブな商談</p><p class="slds-text-heading_large slds-m-top_x-small">8</p><p class="slds-text-body_small slds-text-color_weak">¥45,000,000</p></article></div>
+    <div class="sf-col-1-4"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-truncate">未読メッセージ</p><p class="slds-text-heading_large slds-m-top_x-small">3</p></article></div>
+  </div>
+
+  <div class="sf-row">
+    <div class="sf-col-2-3">
+      <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-task">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body"><h2 class="slds-card__header-title">今日のToDo</h2></div>
+            <div class="slds-no-flex"><button class="slds-button slds-button_neutral">新規ToDo</button></div>
+          </header>
+        </div>
+        <div class="slds-card__body">
+          <ul>
+            <li class="slds-grid slds-grid_align-spread slds-p-around_small slds-border_top">
+              <div class="slds-grid slds-grid_vertical-align-center">
+                <input type="checkbox" class="slds-m-right_small">
+                <div>
+                  <div class="slds-text-body_regular">提案書を顧客にレビュー依頼</div>
+                  <div class="slds-text-body_small slds-text-color_weak">関連: 取引先A · 期日 今日 17:00</div>
+                </div>
+              </div>
+              <span class="slds-badge slds-theme_error">高</span>
+            </li>
+            <li class="slds-grid slds-grid_align-spread slds-p-around_small slds-border_top">
+              <div class="slds-grid slds-grid_vertical-align-center">
+                <input type="checkbox" class="slds-m-right_small">
+                <div>
+                  <div class="slds-text-body_regular">フォローアップコール</div>
+                  <div class="slds-text-body_small slds-text-color_weak">関連: 担当者A · 期日 今日 14:30</div>
+                </div>
+              </div>
+              <span class="slds-badge slds-theme_warning">中</span>
+            </li>
+          </ul>
+        </div>
+      </article>
+    </div>
+
+    <div class="sf-col-1-3">
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header"><h2 class="slds-card__header-title">今後のイベント</h2></div>
+        <div class="slds-card__body slds-p-around_medium">
+          <ul>
+            <li class="slds-grid slds-grid_vertical-align-center slds-p-around_x-small">
+              <div class="slds-text-align_center slds-m-right_small">
+                <div class="slds-text-color_destructive slds-text-body_small">JUN</div>
+                <div class="slds-text-heading_medium">12</div>
+              </div>
+              <div>
+                <a href="#" class="slds-text-link">提案レビュー会議</a>
+                <div class="slds-text-body_small slds-text-color_weak">10:00 - 11:00</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

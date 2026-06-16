@@ -1,0 +1,12 @@
+{
+  "/Users/nyamamoto/claude-projects/ScreenDemoProApp/ScreenDemoPro/AppDelegate.swift" : {
+    "abi-baseline-json" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro.abi.json",
+    "const-values" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary.swiftconstvalues",
+    "dependencies" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary.d",
+    "diagnostics" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-primary.dia",
+    "objc-header" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro-Swift.h",
+    "swiftdoc" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro.swiftdoc",
+    "swiftmodule" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro.swiftmodule",
+    "swiftsourceinfo" : "/Users/nyamamoto/claude-projects/ScreenDemoProApp/build/Build/Intermediates.noindex/ScreenDemoPro.build/Release/ScreenDemoPro.build/Objects-normal/arm64/ScreenDemoPro.swiftsourceinfo"
+  }
+}

@@ -1,0 +1,79 @@
+<!--
+  Toasts - SLDS Toast / Notification 各種
+  ===========================================
+  使用箇所: 保存成功・エラー・警告・情報の一時通知
+
+  SLDS テーマ修飾子:
+    slds-theme_success / slds-theme_info / slds-theme_warning / slds-theme_error
+    + slds-notify slds-notify_toast を組み合わせる
+-->
+
+<!-- ============ Toast コンテナ（画面上部中央 fixed） ============ -->
+<div class="slds-notify_container slds-is-relative">
+
+  <!-- Success -->
+  <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+    <span class="slds-assistive-text">success</span>
+    <span class="slds-icon_container slds-icon-utility-success slds-m-right_small">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/success.svg" alt="" class="slds-icon slds-icon_small" />
+    </span>
+    <div class="slds-notify__content">
+      <h2 class="slds-text-heading_small">成功: 取引先「TEST」を保存しました。</h2>
+    </div>
+    <div class="slds-notify__close">
+      <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" class="slds-button__icon" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Info -->
+  <div class="slds-notify slds-notify_toast slds-theme_info slds-m-top_x-small" role="status">
+    <span class="slds-icon_container slds-m-right_small">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" class="slds-icon slds-icon_small" />
+    </span>
+    <div class="slds-notify__content">
+      <h2 class="slds-text-heading_small">情報: 同期処理を実行中です。</h2>
+    </div>
+  </div>
+
+  <!-- Warning -->
+  <div class="slds-notify slds-notify_toast slds-theme_warning slds-m-top_x-small" role="status">
+    <span class="slds-icon_container slds-m-right_small">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" class="slds-icon slds-icon_small" />
+    </span>
+    <div class="slds-notify__content">
+      <h2 class="slds-text-heading_small">警告: 来月の予算が上限に近づいています。</h2>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="slds-notify slds-notify_toast slds-theme_error slds-m-top_x-small" role="alert">
+    <span class="slds-icon_container slds-m-right_small">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/error.svg" alt="" class="slds-icon slds-icon_small" />
+    </span>
+    <div class="slds-notify__content">
+      <h2 class="slds-text-heading_small">エラー: 必須項目が未入力です。</h2>
+    </div>
+  </div>
+</div>
+
+<!-- ============ インライン通知バナー（ページ内常駐） ============ -->
+<div class="slds-notify slds-notify_alert slds-theme_warning" role="alert">
+  <span class="slds-assistive-text">warning</span>
+  <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" class="slds-icon slds-icon_x-small" />
+  </span>
+  <h2>このレコードは読み取り専用です。編集するには共有ルールを変更してください。</h2>
+  <button class="slds-button slds-button_icon slds-notify__close slds-button_icon-inverse" title="Close">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" class="slds-button__icon slds-button__icon_small" />
+  </button>
+</div>
+
+<!-- Info Bar -->
+<div class="slds-notify slds-notify_alert slds-theme_info slds-m-top_x-small" role="status">
+  <span class="slds-icon_container slds-m-right_x-small">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" class="slds-icon slds-icon_x-small" />
+  </span>
+  <h2>Agentforce が 3 件の関連商談を提案しています。</h2>
+</div>

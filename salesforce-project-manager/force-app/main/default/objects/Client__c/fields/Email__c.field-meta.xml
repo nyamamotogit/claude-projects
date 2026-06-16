@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email__c</fullName>
+    <label>メールアドレス</label>
+    <description>顧客の主要な連絡先メールアドレス</description>
+    <inlineHelpText>顧客担当者の主要なメールアドレスを入力してください</inlineHelpText>
+    <type>Email</type>
+</CustomField>

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>#fw-mcu-dev | NovaSemi Lab | Slack</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --slack-aubergine: #4A154B;
+    --slack-aubergine-dark: #350D36;
+    --slack-aubergine-text: #FFFFFF;
+    --slack-aubergine-text-dim: rgba(255,255,255,0.7);
+    --slack-yellow: #ECB22E;
+    --slack-blue:   #36C5F0;
+    --slack-green:  #2EB67D;
+    --slack-red:    #E01E5A;
+    --slack-bg: #FFFFFF;
+    --slack-bg-hover: #F8F8F8;
+    --slack-text: #1D1C1D;
+    --slack-text-dim: #616061;
+    --slack-border: #E1E1E1;
+    --slack-link: #1264A3;
+    --slack-mention-bg: #E01E5A;
+    --slack-sidebar-w: 260px;
+    --slack-header-h: 44px;
+  }
+  body.slack-scope {
+    margin: 0;
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px; line-height: 1.46;
+    color: var(--slack-text); background: var(--slack-bg);
+  }
+  .slack-scope * { box-sizing: border-box; }
+  .slack-scope a { color: var(--slack-link); text-decoration: none; }
+  .slack-scope a:hover { text-decoration: underline; }
+  .slack-scope button { font-family: inherit; }
+
+  .slack-app {
+    display: grid;
+    grid-template-columns: var(--slack-sidebar-w) 1fr;
+    grid-template-rows: var(--slack-header-h) 1fr;
+    height: 100vh;
+  }
+  .slack-topbar {
+    grid-column: 1 / -1;
+    background: var(--slack-aubergine-dark);
+    color: var(--slack-aubergine-text);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px; height: var(--slack-header-h);
+  }
+  .slack-topbar-left, .slack-topbar-right {
+    display: flex; align-items: center; gap: 6px; flex: 1;
+  }
+  .slack-topbar-right { justify-content: flex-end; }
+  .slack-topbar-search {
+    flex: 0 1 720px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px; height: 28px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 10px; color: var(--slack-aubergine-text-dim);
+    font-size: 13px; cursor: text;
+  }
+  .slack-topbar-icon-btn {
+    background: transparent; border: none; color: var(--slack-aubergine-text);
+    width: 28px; height: 28px; border-radius: 4px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-topbar-icon-btn:hover { background: rgba(255,255,255,0.15); }
+  .slack-topbar-icon-btn i[data-lucide] { width: 16px; height: 16px; }
+
+  .slack-sidebar {
+    background: var(--slack-aubergine);
+    color: var(--slack-aubergine-text);
+    overflow-y: auto; padding: 8px 0;
+    grid-row: 2 / 3;
+  }
+  .slack-sidebar-workspace {
+    padding: 4px 16px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .slack-sidebar-workspace .name {
+    font-weight: 900; font-size: 18px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .slack-sidebar-workspace .name i[data-lucide] { width: 14px; height: 14px; }
+  .slack-sidebar-workspace .compose-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: white; color: var(--slack-aubergine);
+    border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-sidebar-workspace .compose-btn i[data-lucide] { width: 14px; height: 14px; }
+
+  .slack-sidebar-quicklinks { list-style: none; margin: 8px 0; padding: 0; }
+  .slack-sidebar-quicklinks li {
+    padding: 4px 16px;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--slack-aubergine-text-dim); cursor: pointer; font-size: 15px;
+  }
+  .slack-sidebar-quicklinks li:hover { background: var(--slack-aubergine-dark); color: white; }
+  .slack-sidebar-quicklinks li i[data-lucide] { width: 16px; height: 16px; }
+
+  .slack-sidebar-section { margin-top: 12px; }
+  .slack-sidebar-section-header {
+    padding: 4px 16px;
+    color: var(--slack-aubergine-text-dim);
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .slack-sidebar-section-header i[data-lucide] { width: 12px; height: 12px; }
+  .slack-sidebar-section-header .label { flex: 1; }
+
+  .slack-sidebar-item {
+    padding: 4px 16px 4px 22px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--slack-aubergine-text-dim);
+    font-size: 15px; cursor: pointer; text-decoration: none;
+  }
+  .slack-sidebar-item:hover { background: var(--slack-aubergine-dark); color: white; text-decoration: none; }
+  .slack-sidebar-item.is-active { background: #1164A3; color: white; font-weight: 700; }
+  .slack-sidebar-item.is-unread { color: white; font-weight: 700; }
+  .slack-sidebar-item i[data-lucide] { width: 14px; height: 14px; flex-shrink: 0; }
+  .slack-sidebar-item .badge {
+    margin-left: auto;
+    background: var(--slack-mention-bg); color: white; font-weight: 700;
+    font-size: 11px; min-width: 18px; height: 18px;
+    border-radius: 9px; padding: 0 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-sidebar-item .presence {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: transparent; border: 1.5px solid var(--slack-aubergine-text-dim);
+  }
+  .slack-sidebar-item .presence.online { background: var(--slack-green); border-color: var(--slack-green); }
+
+  .slack-main {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    overflow: hidden; background: white;
+  }
+
+  .slack-channel-header {
+    border-bottom: 1px solid var(--slack-border);
+    padding: 8px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: white;
+  }
+  .slack-channel-header-title {
+    display: flex; align-items: center; gap: 6px;
+    font-weight: 900; font-size: 18px;
+  }
+  .slack-channel-header-title i[data-lucide] { width: 18px; height: 18px; }
+  .slack-channel-header-meta {
+    font-size: 13px; color: var(--slack-text-dim); margin-top: 2px;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .slack-channel-header-meta .meta-item {
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-channel-header-meta i[data-lucide] { width: 12px; height: 12px; }
+  .slack-channel-header-actions { display: flex; gap: 4px; align-items: center; }
+  .slack-channel-header-actions button {
+    background: transparent; border: 1px solid var(--slack-border);
+    padding: 4px 10px; border-radius: 4px; cursor: pointer;
+    color: var(--slack-text); font-size: 13px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-channel-header-actions button:hover { background: #F0F0F0; }
+  .slack-channel-header-actions button i[data-lucide] { width: 14px; height: 14px; }
+  .slack-channel-header-actions .members-pill { border-radius: 18px; padding: 2px 8px; gap: 4px; }
+
+  .slack-pin-banner {
+    background: #FFFCEB;
+    border-bottom: 1px solid #F0E6B8;
+    padding: 6px 20px; font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+    color: var(--slack-text);
+  }
+  .slack-pin-banner i[data-lucide] { width: 14px; height: 14px; }
+  .slack-pin-banner .label { font-weight: 700; }
+
+  .slack-messages { overflow-y: auto; padding: 12px 0; }
+  .slack-day-divider {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 20px;
+    position: sticky; top: 0;
+    background: linear-gradient(to bottom, white 60%, transparent);
+    z-index: 1;
+  }
+  .slack-day-divider .line { flex: 1; height: 1px; background: var(--slack-border); }
+  .slack-day-divider .label {
+    font-weight: 700; font-size: 13px; color: var(--slack-text);
+    border: 1px solid var(--slack-border); border-radius: 16px;
+    padding: 4px 14px; background: white;
+  }
+  .slack-message {
+    display: flex; gap: 10px; padding: 8px 20px; position: relative;
+  }
+  .slack-message:hover { background: var(--slack-bg-hover); }
+  .slack-message-avatar {
+    width: 36px; height: 36px; border-radius: 4px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 14px; overflow: hidden;
+  }
+  .slack-message-body { flex: 1; min-width: 0; }
+  .slack-message-head { display: flex; align-items: baseline; gap: 8px; }
+  .slack-message-head .name { font-weight: 900; color: var(--slack-text); }
+  .slack-message-head .time { font-size: 12px; color: var(--slack-text-dim); }
+  .slack-message-head .badge-app {
+    font-size: 10px; padding: 1px 4px; border-radius: 2px;
+    background: #DDDDDD; color: #444; font-weight: 700;
+  }
+  .slack-message-text { color: var(--slack-text); word-break: break-word; }
+  .slack-mention {
+    background: #FDEAF1; color: var(--slack-link);
+    padding: 0 2px; border-radius: 3px; font-weight: 700;
+  }
+  .slack-channel-link { color: var(--slack-link); font-weight: 700; }
+  .slack-codeblock {
+    background: #F8F8F8; border: 1px solid var(--slack-border);
+    border-radius: 4px; padding: 8px 10px;
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 13px; margin: 4px 0; white-space: pre-wrap;
+  }
+  .slack-quote {
+    border-left: 4px solid #DDDDDD; padding: 2px 0 2px 10px;
+    margin: 4px 0; color: var(--slack-text-dim);
+  }
+  .slack-attachment {
+    margin-top: 6px; max-width: 600px;
+    border-left: 4px solid #1264A3;
+    background: #F8F8F8; border-radius: 0 4px 4px 0;
+    padding: 8px 12px;
+  }
+  .slack-attachment .att-title { font-weight: 700; color: var(--slack-link); }
+  .slack-attachment .att-body { font-size: 13px; color: var(--slack-text-dim); margin-top: 4px; }
+
+  .slack-file {
+    margin-top: 6px; max-width: 540px;
+    border: 1px solid var(--slack-border);
+    border-radius: 8px; padding: 10px 12px;
+    display: flex; align-items: center; gap: 12px;
+    background: white;
+  }
+  .slack-file .icon {
+    width: 40px; height: 40px; border-radius: 4px;
+    background: #1264A3; color: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .slack-file .icon i[data-lucide] { width: 20px; height: 20px; }
+  .slack-file .icon.pdf { background: #E01E5A; }
+  .slack-file .icon.csv { background: #2EB67D; }
+  .slack-file .icon.zip { background: #ECB22E; color: #1D1C1D; }
+  .slack-file .name { font-weight: 700; }
+  .slack-file .meta { font-size: 12px; color: var(--slack-text-dim); }
+
+  .slack-image-preview {
+    margin-top: 6px; max-width: 460px;
+    border: 1px solid var(--slack-border); border-radius: 8px;
+    overflow: hidden; background: #0d1117;
+  }
+  .slack-image-preview .canvas-img {
+    width: 100%; height: 220px;
+    background:
+      linear-gradient(45deg, transparent 48%, #2EB67D 48%, #2EB67D 52%, transparent 52%),
+      linear-gradient(135deg, transparent 48%, #ECB22E 48%, #ECB22E 52%, transparent 52%),
+      radial-gradient(circle at 30% 50%, #36C5F0 0 6px, transparent 7px),
+      radial-gradient(circle at 70% 30%, #E01E5A 0 6px, transparent 7px),
+      radial-gradient(circle at 50% 70%, #2EB67D 0 5px, transparent 6px),
+      #0d1117;
+    background-size: 24px 24px, 24px 24px, auto, auto, auto, auto;
+    position: relative;
+  }
+  .slack-image-preview .img-caption {
+    padding: 6px 10px; color: #c9d1d9; font-size: 12px;
+    border-top: 1px solid #21262d;
+    font-family: Monaco, Menlo, Consolas, monospace;
+  }
+
+  .slack-reactions { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .slack-reaction {
+    background: #EFF4F8; border: 1px solid #B8C7D6;
+    border-radius: 12px; padding: 2px 8px; font-size: 13px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-reaction:hover { border-color: var(--slack-link); }
+  .slack-reaction.is-mine {
+    background: #E8F4FA; border-color: var(--slack-link);
+    color: var(--slack-link); font-weight: 700;
+  }
+  .slack-reaction-add {
+    background: transparent; color: var(--slack-text-dim); padding: 2px 6px;
+  }
+
+  .slack-thread-replies {
+    margin-top: 4px;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 8px; border: 1px solid transparent; border-radius: 6px;
+    cursor: pointer; font-size: 13px;
+  }
+  .slack-thread-replies:hover {
+    background: white; border-color: var(--slack-border);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+  }
+  .slack-thread-replies .avatars { display: flex; }
+  .slack-thread-replies .avatars > * {
+    width: 20px; height: 20px; border-radius: 3px;
+    margin-right: -4px; border: 1.5px solid white;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 10px;
+  }
+  .slack-thread-replies .count { color: var(--slack-link); font-weight: 700; margin-left: 8px; }
+  .slack-thread-replies .last { color: var(--slack-text-dim); }
+
+  .slack-system-message {
+    padding: 6px 20px 6px 66px;
+    font-size: 13px; color: var(--slack-text-dim);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .slack-system-message i[data-lucide] { width: 12px; height: 12px; }
+
+  .slack-composer { padding: 0 20px 24px; }
+  .slack-composer-box {
+    border: 1px solid #B8B8B8; border-radius: 8px; background: white;
+  }
+  .slack-composer-box:focus-within { border-color: #1264A3; box-shadow: 0 0 0 1px #1264A3; }
+  .slack-composer-toolbar {
+    display: flex; align-items: center; gap: 2px;
+    padding: 4px 8px; border-bottom: 1px solid var(--slack-border);
+    color: var(--slack-text-dim);
+  }
+  .slack-composer-toolbar button {
+    background: transparent; border: none; padding: 4px 6px;
+    border-radius: 4px; cursor: pointer; color: var(--slack-text-dim);
+    display: inline-flex; align-items: center;
+  }
+  .slack-composer-toolbar button:hover { background: #F0F0F0; color: var(--slack-text); }
+  .slack-composer-toolbar button i[data-lucide] { width: 14px; height: 14px; }
+  .slack-composer-toolbar .sep { width: 1px; height: 14px; background: var(--slack-border); margin: 0 4px; }
+  .slack-composer-input {
+    padding: 10px 12px; min-height: 44px;
+    color: var(--slack-text-dim); font-size: 15px;
+  }
+  .slack-composer-actions {
+    display: flex; align-items: center; gap: 4px; padding: 4px 6px 6px;
+  }
+  .slack-composer-actions .left { display: flex; gap: 2px; flex: 1; }
+  .slack-composer-actions button {
+    background: transparent; border: none; padding: 6px;
+    border-radius: 4px; cursor: pointer; color: var(--slack-text-dim);
+    display: inline-flex; align-items: center;
+  }
+  .slack-composer-actions button:hover { background: #F0F0F0; color: var(--slack-text); }
+  .slack-composer-actions button i[data-lucide] { width: 16px; height: 16px; }
+  .slack-composer-send {
+    background: var(--slack-green) !important; color: white !important;
+  }
+  .slack-composer-send:hover { background: #258F60 !important; }
+
+  .slack-avatar-blue   { background: #1264A3; }
+  .slack-avatar-green  { background: #2EB67D; }
+  .slack-avatar-yellow { background: #ECB22E; color: #1D1C1D !important; }
+  .slack-avatar-red    { background: #E01E5A; }
+  .slack-avatar-purple { background: #7C3085; }
+  .slack-avatar-teal   { background: #0F8E91; }
+</style>
+</head>
+<body class="slack-scope">
+
+<div class="slack-app">
+
+  <header class="slack-topbar">
+    <div class="slack-topbar-left">
+      <button class="slack-topbar-icon-btn"><i data-lucide="chevron-left"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="chevron-right"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="clock"></i></button>
+    </div>
+    <div class="slack-topbar-search">
+      <i data-lucide="search" style="width:14px;height:14px;"></i>
+      <span>NovaSemi Lab を検索</span>
+    </div>
+    <div class="slack-topbar-right">
+      <button class="slack-topbar-icon-btn"><i data-lucide="help-circle"></i></button>
+      <button class="slack-topbar-icon-btn">
+        <span class="slack-message-avatar slack-avatar-blue" style="width:24px;height:24px;font-size:11px;border-radius:4px;">YK</span>
+      </button>
+    </div>
+  </header>
+
+  <aside class="slack-sidebar">
+    <div class="slack-sidebar-workspace">
+      <span class="name">NovaSemi Lab <i data-lucide="chevron-down"></i></span>
+      <button class="compose-btn"><i data-lucide="pen-square"></i></button>
+    </div>
+
+    <ul class="slack-sidebar-quicklinks">
+      <li><i data-lucide="message-square"></i> スレッド</li>
+      <li><i data-lucide="at-sign"></i> 全アクティビティ</li>
+      <li><i data-lucide="bookmark"></i> あとで</li>
+      <li><i data-lucide="send"></i> 下書きと送信済み</li>
+      <li><i data-lucide="more-horizontal"></i> その他</li>
+    </ul>
+
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">チャンネル</span><i data-lucide="plus"></i>
+      </div>
+      <a class="slack-sidebar-item is-active"><i data-lucide="hash"></i>fw-mcu-dev</a>
+      <a class="slack-sidebar-item is-unread"><i data-lucide="hash"></i>hw-pcb-rev <span class="badge">5</span></a>
+      <a class="slack-sidebar-item is-unread"><i data-lucide="hash"></i>analog-power-design <span class="badge">2</span></a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>fpga-rtl</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>emc-emi-test</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>signal-integrity</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>thermal-mech</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>component-procurement</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>lab-equipment</a>
+      <a class="slack-sidebar-item"><i data-lucide="lock"></i>nda-customer-aichi</a>
+      <a class="slack-sidebar-item" style="opacity:0.7;"><i data-lucide="plus"></i>チャンネルを追加する</a>
+    </div>
+
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">ダイレクトメッセージ</span><i data-lucide="plus"></i>
+      </div>
+      <a class="slack-sidebar-item"><span class="presence online"></span>佐々木 諒(HW Lead)</a>
+      <a class="slack-sidebar-item is-unread"><span class="presence online"></span>長谷川 美咲(FW) <span class="badge">3</span></a>
+      <a class="slack-sidebar-item"><span class="presence"></span>Dr. Park (RFアナログ)</a>
+      <a class="slack-sidebar-item"><span class="presence online"></span>製造ライン #2</a>
+      <a class="slack-sidebar-item"><span class="presence online"></span>Slackbot</a>
+    </div>
+
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">アプリ</span>
+      </div>
+      <a class="slack-sidebar-item"><i data-lucide="grid-3x3"></i>Jenkins</a>
+      <a class="slack-sidebar-item"><i data-lucide="grid-3x3"></i>GitLab</a>
+      <a class="slack-sidebar-item"><i data-lucide="grid-3x3"></i>JIRA</a>
+      <a class="slack-sidebar-item"><i data-lucide="grid-3x3"></i>Altium 365</a>
+    </div>
+  </aside>
+
+  <main class="slack-main">
+
+    <div class="slack-channel-header">
+      <div class="slack-channel-header-left">
+        <div class="slack-channel-header-title">
+          <i data-lucide="hash"></i>fw-mcu-dev
+          <span style="cursor:pointer;color:var(--slack-text-dim);"><i data-lucide="star" style="width:14px;height:14px;"></i></span>
+          <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--slack-text-dim);"></i>
+        </div>
+        <div class="slack-channel-header-meta">
+          <span class="meta-item"><i data-lucide="info"></i>STM32H7 / ESP32-S3 ファームウェア開発</span>
+          <span class="meta-item"><i data-lucide="pin"></i>5件のピン留め</span>
+        </div>
+      </div>
+      <div class="slack-channel-header-actions">
+        <button><i data-lucide="headphones"></i>Huddle</button>
+        <button><i data-lucide="file-pen-line"></i>Canvas</button>
+        <button class="members-pill"><i data-lucide="users" style="width:14px;height:14px;"></i>14</button>
+        <button><i data-lucide="more-vertical" style="width:14px;height:14px;"></i></button>
+      </div>
+    </div>
+
+    <div class="slack-pin-banner">
+      <i data-lucide="pin"></i>
+      <span class="label">ピン留め:</span>
+      <span>Rev.C 試作評価期間 (2026-06-08 〜 06-20) / 評価ボードはラボ棚 B-3 / 評価項目チェックリストは Canvas 参照</span>
+    </div>
+
+    <div class="slack-messages">
+
+      <div class="slack-day-divider">
+        <div class="line"></div>
+        <div class="label">本日 — 2026年6月12日(金)</div>
+        <div class="line"></div>
+      </div>
+
+      <!-- 1: 朝の挨拶 + ラボ稼働状況 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar slack-avatar-purple">SR</div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">佐々木 諒</span>
+            <span class="time">8:42</span>
+          </div>
+          <div class="slack-message-text">
+            おはようございます ☕ 昨夜の恒温槽試験(85℃ / 24h)、今朝6時に正常終了しました。
+            Rev.C 基板 #007 〜 #012 すべてリセット無し、ウォッチドッグログもクリーン。
+            <span class="slack-mention">@長谷川 美咲</span> 計測データは Altium 365 の評価フォルダに置きました。
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction">🔥 <span>4</span></button>
+            <button class="slack-reaction is-mine">🙌 <span>3</span></button>
+            <button class="slack-reaction">☕ <span>2</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2: ファーム書き込みエラー報告 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar slack-avatar-green">HM</div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">長谷川 美咲</span>
+            <span class="time">9:15</span>
+          </div>
+          <div class="slack-message-text">
+            ありがとうございます。一点共有 — 今朝 Rev.C #009 にFW v0.7.2を書き込もうとしたら SWD でエラーが出ました。
+            BOOT0 がハイのままだった可能性が高いです。
+          </div>
+          <pre class="slack-codeblock">$ openocd -f interface/stlink.cfg -f target/stm32h7x.cfg
+Error: init mode failed (unable to connect to the target)
+in procedure 'init'
+Error: target voltage may be too low for reliable debugging
+DAP transaction stalled (WAIT) - slowing down</pre>
+          <div class="slack-message-text" style="margin-top:4px;">
+            R47 のプルダウン、シルクと実装がズレてないか念のためHWチームに確認したいです 🙏
+          </div>
+          <a class="slack-thread-replies">
+            <div class="avatars">
+              <span class="slack-message-avatar slack-avatar-purple" style="width:20px;height:20px;font-size:10px;">SR</span>
+              <span class="slack-message-avatar slack-avatar-yellow" style="width:20px;height:20px;font-size:10px;">TK</span>
+              <span class="slack-message-avatar slack-avatar-teal" style="width:20px;height:20px;font-size:10px;">PK</span>
+            </div>
+            <span class="count">7件の返信</span>
+            <span class="last">最終返信 12分前</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 3: HWチームから写真添付 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar slack-avatar-yellow">TK</div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">高橋 邦彦</span>
+            <span class="time">9:28</span>
+          </div>
+          <div class="slack-message-text">
+            #009 を顕微鏡で見ました。R47 (10kΩ 0402) の実装、極性は問題ないですが
+            隣の C23 とのクリアランスがギリギリですね。リフロー時にずれた可能性あり。
+          </div>
+          <div class="slack-image-preview">
+            <div class="canvas-img" title="基板顕微鏡写真"></div>
+            <div class="img-caption">📷 IMG_0042.jpg — Rev.C #009 / R47-C23付近 / 倍率 40x</div>
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction is-mine">🔍 <span>2</span></button>
+            <button class="slack-reaction">😨 <span>1</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4: GitLab MR通知 (Bot) -->
+      <div class="slack-message">
+        <div class="slack-message-avatar" style="background:#FC6D26;">
+          <i data-lucide="git-merge" style="width:20px;height:20px;color:white;"></i>
+        </div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">GitLab</span>
+            <span class="badge-app">APP</span>
+            <span class="time">10:03</span>
+          </div>
+          <div class="slack-message-text">Merge Request opened by <b>m.hasegawa</b></div>
+          <div class="slack-attachment">
+            <div class="att-title">!241 fix(adc): DMA double-buffer race on STM32H7 channel 8</div>
+            <div class="att-body">
+              <b>fw-mcu-firmware</b> / branch: <code>fix/adc-dma-race</code> → <code>develop</code><br>
+              +147 −82 / 6 files / 2 reviewers required<br>
+              CI: <span style="color:#2EB67D;font-weight:700;">✓ build pass</span> /
+              <span style="color:#ECB22E;font-weight:700;">⏳ HIL test running</span>
+            </div>
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction">👀 <span>4</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5: Dr.Parkの解析考察 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar slack-avatar-teal">PK</div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">Dr. Park (J.H.)</span>
+            <span class="time">10:31</span>
+          </div>
+          <div class="slack-message-text">
+            ADCのノイズ、3.3V_A レール側のリップルが原因かもしれません。
+            昨日オシロで見たとき、LDO出力に <b>120kHz / 8mVpp</b> の成分が乗っていました。
+          </div>
+          <blockquote class="slack-quote">「DMA二重バッファのレース」より「アナログ電源の注入ノイズ」の可能性を先に潰したい</blockquote>
+          <div class="slack-message-text" style="margin-top:4px;">
+            U7 (TPS7A47) のフィードバック分圧を見直すか、
+            出力に 10µF/X7R を追加してみる価値あります。Bode plot 取り直したいです。
+          </div>
+          <div class="slack-file">
+            <div class="icon pdf"><i data-lucide="file-text"></i></div>
+            <div>
+              <div class="name">U7_LDO_PSRR_meas_20260611.pdf</div>
+              <div class="meta">PDF · 1.4 MB · NovaSemi-Lab / EE-Reports</div>
+            </div>
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction is-mine">🧠 <span>5</span></button>
+            <button class="slack-reaction">📈 <span>2</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6: Huddleお誘い -->
+      <div class="slack-message">
+        <div class="slack-message-avatar slack-avatar-purple">SR</div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">佐々木 諒</span>
+            <span class="time">10:45</span>
+          </div>
+          <div class="slack-message-text">
+            これ重要なので30分だけ Huddle しませんか？電源 vs DMA、どっちが主原因か切り分けたいです。
+            🎧 開始しました → <span class="slack-channel-link">#fw-mcu-dev</span> Huddle 参加できる方どうぞ
+          </div>
+          <div style="margin-top:8px;border:1px solid var(--slack-border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#F8F0F8,white);max-width:480px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--slack-aubergine);color:white;display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="headphones" style="width:18px;height:18px;"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:700;">Huddle: ADCノイズ切り分け</div>
+              <div style="font-size:12px;color:var(--slack-text-dim);">参加中: 4人 · 開始 10:45 · 画面共有あり</div>
+            </div>
+            <button style="background:var(--slack-green);color:white;border:none;padding:6px 14px;border-radius:4px;font-weight:700;cursor:pointer;">参加</button>
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction is-mine">🎧 <span>4</span></button>
+            <button class="slack-reaction">⚡ <span>2</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- システムメッセージ -->
+      <div class="slack-system-message">
+        <i data-lucide="user-plus"></i>
+        <span><b>井上 翔太(QA)</b> がチャンネルに参加しました</span>
+      </div>
+
+      <!-- 7: 部品手配の話 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar slack-avatar-red">NA</div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">中井 杏奈(調達)</span>
+            <span class="time">11:02</span>
+          </div>
+          <div class="slack-message-text">
+            <span class="slack-mention">@channel</span> 念のためアップデート —
+            TPS7A4700RGW、Mouser/DigiKeyとも在庫薄(L/T 18週)。
+            互換候補として <b>ADM7172ACPZ</b> を共立で確保してあります。
+            BOM差し替え可能か HW 側の判断お願いします 🙏
+          </div>
+          <div class="slack-attachment" style="border-left-color:#E01E5A;">
+            <div class="att-title" style="color:#E01E5A;">⚠️ 在庫アラート: U7 候補比較</div>
+            <div class="att-body">
+              <table style="border-collapse:collapse;font-size:12px;color:var(--slack-text);">
+                <tr><th style="text-align:left;padding:2px 8px;">部品</th><th style="text-align:left;padding:2px 8px;">Vin</th><th style="text-align:left;padding:2px 8px;">Iout</th><th style="text-align:left;padding:2px 8px;">Noise</th><th style="text-align:left;padding:2px 8px;">L/T</th></tr>
+                <tr><td style="padding:2px 8px;">TPS7A4700</td><td style="padding:2px 8px;">3-36V</td><td style="padding:2px 8px;">1A</td><td style="padding:2px 8px;">4 µVrms</td><td style="padding:2px 8px;">18週</td></tr>
+                <tr><td style="padding:2px 8px;"><b>ADM7172</b></td><td style="padding:2px 8px;">2.3-6.5V</td><td style="padding:2px 8px;">2A</td><td style="padding:2px 8px;">2 µVrms</td><td style="padding:2px 8px;"><b>2週</b></td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction is-mine">🙏 <span>3</span></button>
+            <button class="slack-reaction">📦 <span>1</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8: Jenkins CI Bot -->
+      <div class="slack-message">
+        <div class="slack-message-avatar" style="background:#D33833;">
+          <i data-lucide="hammer" style="width:20px;height:20px;color:white;"></i>
+        </div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">Jenkins</span>
+            <span class="badge-app">APP</span>
+            <span class="time">11:18</span>
+          </div>
+          <div class="slack-message-text">
+            ✅ <b>fw-mcu-firmware » develop #1247</b> — <span style="color:#2EB67D;font-weight:700;">SUCCESS</span> (build 4m 12s, HIL 8m 03s)
+          </div>
+          <div class="slack-attachment" style="border-left-color:#2EB67D;">
+            <div class="att-title">HIL Test Summary</div>
+            <div class="att-body">
+              ✓ ADC accuracy (±0.05% LSB)<br>
+              ✓ I2C @ 1MHz, 10000 trans, 0 NACK<br>
+              ✓ CAN-FD 5Mbps, 30s sustained<br>
+              ✓ Watchdog reset cycles: 100/100<br>
+              ⚠️ Boot time: 312ms (target ≤ 300ms) — フラッシュキャッシュ調整余地あり
+            </div>
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction">🟢 <span>3</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9: FPGAエンジニアの参戦 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar slack-avatar-blue">YK</div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">山本 健介(FPGA)</span>
+            <span class="time">11:34</span>
+          </div>
+          <div class="slack-message-text">
+            ブート遅い件、FPGA(XC7A35T)のコンフィグ完了を待ってからMCU起動してませんか？
+            DONE pin の立ち上がりは平均 220ms くらいなので、並列に動かせば 90ms くらい削れるはず。
+          </div>
+          <pre class="slack-codeblock">// boot_seq.c (現在: 直列)
+fpga_load_bitstream();   // ~220ms (blocking)
+mcu_peripherals_init();  // ~90ms
+
+// 提案: DMA で並列ロード
+fpga_load_bitstream_async();    // 別スレッドで開始
+mcu_peripherals_init();         // この間に並行
+fpga_wait_done();               // join</pre>
+          <div class="slack-reactions">
+            <button class="slack-reaction is-mine">💡 <span>4</span></button>
+            <button class="slack-reaction">⚡ <span>2</span></button>
+            <button class="slack-reaction">🤔 <span>1</span></button>
+          </div>
+          <a class="slack-thread-replies">
+            <div class="avatars">
+              <span class="slack-message-avatar slack-avatar-green" style="width:20px;height:20px;font-size:10px;">HM</span>
+              <span class="slack-message-avatar slack-avatar-purple" style="width:20px;height:20px;font-size:10px;">SR</span>
+            </div>
+            <span class="count">3件の返信</span>
+            <span class="last">最終返信 たった今</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 10: Altium 365 アプリ -->
+      <div class="slack-message">
+        <div class="slack-message-avatar" style="background:#A4C539;">
+          <i data-lucide="cpu" style="width:20px;height:20px;color:white;"></i>
+        </div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">Altium 365</span>
+            <span class="badge-app">APP</span>
+            <span class="time">11:50</span>
+          </div>
+          <div class="slack-message-text">
+            <b>NS-MainBoard-Rev.D</b> Schematic コミット by <b>r.sasaki</b>
+          </div>
+          <div class="slack-attachment">
+            <div class="att-title">差分: U7 LDO 置き換え + C23 実装位置調整</div>
+            <div class="att-body">
+              📐 ECO #41 / 変更ネット: 3 / 変更フットプリント: 2<br>
+              影響部品: U7, R47, C23, C24(新規)<br>
+              DRC: ✓ 0 errors / 2 warnings (silkscreen overlap)
+            </div>
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction">📐 <span>2</span></button>
+            <button class="slack-reaction is-mine">👍 <span>5</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11: ランチ前の軽口 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar slack-avatar-yellow">TK</div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">高橋 邦彦</span>
+            <span class="time">11:58</span>
+          </div>
+          <div class="slack-message-text">
+            ECO通ったら午後イチでリワーク試します。
+            ハンダごて温めとくので、誰か一緒にレビューしてくれる人手伝って〜🔥
+            (お昼食べてからにします、お腹減った)
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction is-mine">🍜 <span>4</span></button>
+            <button class="slack-reaction">🔥 <span>2</span></button>
+            <button class="slack-reaction">✋ <span>3</span></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="slack-composer">
+      <div class="slack-composer-box">
+        <div class="slack-composer-toolbar">
+          <button><i data-lucide="bold"></i></button>
+          <button><i data-lucide="italic"></i></button>
+          <button><i data-lucide="strikethrough"></i></button>
+          <span class="sep"></span>
+          <button><i data-lucide="link"></i></button>
+          <button><i data-lucide="list"></i></button>
+          <button><i data-lucide="list-ordered"></i></button>
+          <span class="sep"></span>
+          <button><i data-lucide="quote"></i></button>
+          <button><i data-lucide="code"></i></button>
+          <button><i data-lucide="code-2"></i></button>
+        </div>
+        <div class="slack-composer-input">#fw-mcu-dev にメッセージを送信</div>
+        <div class="slack-composer-actions">
+          <div class="left">
+            <button><i data-lucide="plus"></i></button>
+            <button><i data-lucide="at-sign"></i></button>
+            <button><i data-lucide="smile"></i></button>
+            <button><i data-lucide="video"></i></button>
+            <button><i data-lucide="mic"></i></button>
+          </div>
+          <button class="slack-composer-send"><i data-lucide="send"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

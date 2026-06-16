@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Attachment_Title__c</fullName>
+    <label>添付タイトル</label>
+    <length>200</length>
+    <type>Text</type>
+</CustomField>

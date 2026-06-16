@@ -1,0 +1,31 @@
+﻿{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(pnpm:*)",
+      "Bash(yarn:*)",
+      "Bash(python3:*)",
+      "Bash(pytest:*)",
+      "Bash(go:*)",
+      "Bash(make:*)"
+    ],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(rm -rf:*)",
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(nc:*)",
+      "Read(.env*)",
+      "Read(.envrc*)",
+      "Read(**/*token*)",
+      "Read(**/*key*)",
+      "Read(**/*secret*)",
+      "Write(.env*)",
+      "Write(.envrc*)",
+      "Write(**/secrets/**)"
+    ]
+  }
+}

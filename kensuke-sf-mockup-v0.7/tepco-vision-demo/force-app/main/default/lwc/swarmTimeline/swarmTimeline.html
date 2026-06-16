@@ -1,0 +1,54 @@
+<template>
+    <div class="slack-shell">
+        <div class="slack-head">
+            <div class="ws">
+                <div class="ws-mark">T</div>
+                <div>
+                    <div class="ws-name">TEPCO HD</div>
+                    <div class="ws-meta">11,420名</div>
+                </div>
+            </div>
+            <div class="ch">
+                <div class="ch-name"># 緊急-新豊洲トランス保全-対策室</div>
+                <div class="ch-meta">14名 ・ 自動作成 ・ Salesforce 連携中</div>
+            </div>
+            <div class="head-right">
+                <span class="live">🔴 LIVE</span>
+            </div>
+        </div>
+
+        <div class="msgs">
+            <div class="day-divider">— 自動メッセージ —</div>
+            <template for:each={messages} for:item="m">
+                <div key={m.Id} class={m.rowClass}>
+                    <img src={m.avatarUrl} class="avatar" alt=""/>
+                    <div class="body">
+                        <div class="head">
+                            <span class="name">{m.Sender_Name__c}</span>
+                            <template lwc:if={m.isApp}>
+                                <span class="app-tag">APP</span>
+                            </template>
+                            <span class="role">{m.Sender_Role__c}</span>
+                            <span class="time">{m.timeLabel}</span>
+                        </div>
+                        <div class="text"><lightning-formatted-text value={m.Body__c}></lightning-formatted-text></div>
+                        <template lwc:if={m.hasAttachment}>
+                            <div class="attach">
+                                <div class="attach-title">{m.Attachment_Title__c}</div>
+                                <div class="attach-body"><lightning-formatted-text value={m.Attachment_Body__c}></lightning-formatted-text></div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="controls">
+            <span class="progress">{progressLabel}</span>
+            <button class="btn" onclick={rewind} disabled={canRewindDisabled}>◀ 戻る</button>
+            <button class="btn primary" onclick={advance} disabled={hasMoreDisabled}>次のメッセージを再生 ▶</button>
+            <button class="btn light" onclick={revealAll}>すべて表示</button>
+            <button class="btn light" onclick={resetReveal}>⟳ リセット</button>
+        </div>
+    </div>
+</template>

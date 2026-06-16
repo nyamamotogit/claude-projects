@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod +x deploy.sh)",
+      "Bash(sf project *)",
+      "Bash(npm install *)",
+      "Bash(chmod +x *)",
+      "Bash(./scripts/insertDemoDataCLI.sh *)",
+      "Bash(sf sobject *)",
+      "Bash(sf data *)",
+      "Bash(sf org *)",
+      "Bash(./scripts/insertDemoDataSimple.sh)",
+      "Bash(sf --version)",
+      "Bash(sf plugins *)",
+      "Bash(sf template *)",
+      "Bash(gh auth *)",
+      "Bash(git --version)",
+      "Bash(brew install *)",
+      "Bash(curl -fsSL https://rpm.repo.local.sfdc.net/artifactory/strata-blobs/aibar/install.sh)",
+      "Bash(bash)",
+      "Bash(claude plugin *)",
+      "Bash(claude plugins *)",
+      "Bash(mkdir -p /Users/nyamamoto/.claude/plugins)",
+      "Bash(gh repo *)"
+    ]
+  },
+  "enabledPlugins": {
+    "slack@salesforce-native-ai-stack": true
+  }
+}

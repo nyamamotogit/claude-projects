@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>※次世代データセンター用 極低熱抵抗テープ商談 | 商談 | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  body {
+    background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3;
+    min-width: 1024px;
+    margin: 0;
+  }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .sf-col-2-3 { flex: 0 0 calc(66.666% - 0.375rem); }
+  .sf-col-1-3 { flex: 0 0 calc(33.333% - 0.375rem); }
+  .sf-header { background: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid #c9c9c9; position: sticky; top: 0; z-index: 50; }
+  .sf-header-search { width: 50%; max-width: 36rem; }
+  .sf-context-bar { background: white; border-bottom: 1px solid #dddbda; padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-context-bar nav ul { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .sf-context-bar nav ul li { display: flex; align-items: center; padding: 0 0.25rem; font-size: 0.875rem; }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid #1589ee; padding-bottom: 0; }
+  .sf-context-bar nav ul li.is-active a { color: #0070d2; font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn:hover { background: #f3f3f3; }
+  .sf-icon-btn img { width: 18px; height: 18px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-favorite-btn { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 2rem; background: #1b96ff; border-radius: 0.25rem; border: none; cursor: pointer; }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-notify-wrap { position: relative; display: inline-flex; }
+  .sf-notify-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ea001e; border-radius: 50%; border: 1.5px solid white; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+  .sf-app-name { font-size: 1.125rem; font-weight: 700; color: #181818; padding: 0.5rem 0; margin-right: 0.75rem; }
+
+  /* ===== Slack channel embed (sf-slack-*) ===== */
+  .sf-slack {
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    color: #1d1c1d; font-size: 15px; line-height: 1.46;
+  }
+  .sf-slack a { color: #1264a3; text-decoration: none; }
+  .sf-slack a:hover { text-decoration: underline; }
+  .sf-slack-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; }
+  .sf-slack-header-left { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 900; color: #1d1c1d; }
+  .sf-slack-logo { width: 28px; height: 28px; }
+  .sf-slack-members { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #dddbda; border-radius: 9999px; padding: 4px 10px; font-size: 13px; color: #1d1c1d; background: white; cursor: pointer; }
+  .sf-slack-members .icon { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(20%); }
+  .sf-slack-members .caret { width: 10px; height: 10px; filter: brightness(0) saturate(100%) invert(20%); }
+  .sf-slack-thread-summary { display: flex; align-items: center; gap: 8px; padding: 4px 16px 12px 64px; font-size: 13px; }
+  .sf-slack-thread-avatars { display: inline-flex; }
+  .sf-slack-thread-avatars img { width: 22px; height: 22px; border-radius: 4px; border: 2px solid white; margin-right: -6px; }
+  .sf-slack-thread-summary a { color: #1264a3; font-weight: 700; }
+  .sf-slack-thread-summary .meta { color: #616061; }
+  .sf-slack-msg { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 8px 16px; }
+  .sf-slack-msg:hover { background: #f8f8f8; }
+  .sf-slack-avatar { width: 36px; height: 36px; border-radius: 6px; flex-shrink: 0; object-fit: cover; }
+  .sf-slack-body { flex: 1; min-width: 0; }
+  .sf-slack-author-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+  .sf-slack-author { font-weight: 900; color: #1d1c1d; font-size: 15px; }
+  .sf-slack-time { color: #616061; font-size: 12px; }
+  .sf-slack-text { color: #1d1c1d; font-size: 15px; }
+  .sf-slack-text p { margin: 0 0 4px; }
+  .sf-slack-mention { background: rgba(29, 155, 209, 0.1); color: #1264a3; border-radius: 3px; padding: 0 2px; font-weight: 700; }
+  .sf-slack-mention:hover { text-decoration: none; background: rgba(29, 155, 209, 0.2); }
+  .sf-slack-replies { margin-top: 6px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid transparent; border-radius: 6px; padding: 4px 8px; cursor: pointer; background: white; }
+  .sf-slack-replies:hover { border-color: #dddbda; }
+  .sf-slack-replies img { width: 20px; height: 20px; border-radius: 4px; }
+  .sf-slack-replies .count { color: #1264a3; font-weight: 700; font-size: 13px; }
+  .sf-slack-replies .since { color: #616061; font-size: 13px; }
+  .sf-slack-actions { position: absolute; top: -10px; right: 16px; display: inline-flex; align-items: center; background: white; border: 1px solid #dddbda; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; }
+  .sf-slack-actions button { width: 32px; height: 32px; background: transparent; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; border-right: 1px solid #f1f1f1; }
+  .sf-slack-actions button:last-child { border-right: none; }
+  .sf-slack-actions button:hover { background: #f8f8f8; }
+  .sf-slack-actions img { width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(40%); }
+  .sf-slack-card { margin-top: 8px; border: 1px solid #dddbda; border-left: 4px solid #1264a3; border-radius: 4px; overflow: hidden; max-width: 520px; background: white; }
+  .sf-slack-card-header { padding: 8px 12px; font-size: 13px; color: #616061; }
+  .sf-slack-card-body { padding: 0 12px 12px; }
+  .sf-slack-card-source { font-size: 12px; color: #616061; margin-bottom: 2px; }
+  .sf-slack-card-title { font-size: 15px; font-weight: 700; color: #1264a3; margin-bottom: 4px; }
+  .sf-slack-card-meta { font-size: 12px; color: #616061; margin-bottom: 8px; }
+  .sf-slack-card-preview { background: linear-gradient(135deg, #1f4e8c 0%, #1264a3 100%); border-radius: 4px; height: 110px; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 8px; color: white; }
+  .sf-slack-card-preview::before { content: "商談分析"; position: absolute; top: 8px; left: 12px; color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; }
+  .sf-slack-card-preview .bars { display: flex; align-items: flex-end; gap: 6px; height: 70px; }
+  .sf-slack-card-preview .bar { width: 18px; background: rgba(255,255,255,0.85); border-radius: 2px; }
+  .sf-slack-footer-banner { margin-top: 12px; padding: 10px 16px; background: #f4f4f4; border-top: 1px solid #e1e1e1; color: #1264a3; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .sf-slack-footer-banner .agent-icon { width: 18px; height: 18px; border-radius: 50%; background: #1264a3; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+  .sf-slack-footer-banner .meta { color: #616061; }
+  .sf-slack-thread-inline { display: none; margin: 4px 16px 12px; padding-top: 4px; }
+  .sf-slack-thread-inline.is-open { display: block; }
+  .sf-slack-thread-divider { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 13px; color: #616061; }
+  .sf-slack-thread-divider::after { content: ""; flex: 1; height: 1px; background: #e1e1e1; }
+  .sf-slack-agent-tag { display: inline-block; margin-left: 8px; padding: 1px 6px; background: #f1f1f1; color: #616061; border-radius: 3px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+  .sf-slack-quote { border-left: 3px solid #dddbda; padding: 4px 0 4px 12px; margin: 4px 0; color: #1d1c1d; }
+  .sf-slack-thread-input { margin-top: 12px; border: 1px solid #dddbda; border-radius: 8px; background: white; }
+  .sf-slack-thread-input-mention { padding: 8px 12px; border-bottom: 1px solid #f1f1f1; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+  .sf-slack-thread-input-mention .info-icon { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(40%) sepia(94%) saturate(2231%) hue-rotate(186deg) brightness(91%) contrast(86%); }
+  .sf-slack-thread-input-mention a { color: #1264a3; font-weight: 700; }
+  .sf-slack-thread-input-toolbar { display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-bottom: 1px solid #f1f1f1; background: #fafafa; }
+  .sf-slack-thread-input-toolbar button { width: 28px; height: 28px; background: transparent; border: none; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #616061; }
+  .sf-slack-thread-input-toolbar button:hover { background: #f1f1f1; }
+  .sf-slack-thread-input-toolbar img { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(40%); }
+  .sf-slack-thread-input-toolbar .sep { width: 1px; height: 18px; background: #e1e1e1; margin: 0 4px; }
+  .sf-slack-thread-input-text { padding: 12px; color: #616061; font-size: 14px; }
+  .sf-slack-thread-input-bottom { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-top: 1px solid #f1f1f1; }
+  .sf-slack-thread-input-bottom-left { display: flex; gap: 4px; }
+  .sf-slack-thread-input-bottom-left button { width: 28px; height: 28px; background: transparent; border: none; cursor: pointer; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-slack-thread-input-bottom-left button:hover { background: #f1f1f1; }
+  .sf-slack-thread-input-bottom-left img { width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(40%); }
+  .sf-slack-send-btn { width: 32px; height: 32px; border-radius: 6px; background: #f1f1f1; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-slack-send-btn img { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(60%); }
+</style>
+</head>
+<body class="slds-scope">
+
+<header class="sf-header">
+  <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+  <div class="sf-header-search">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+        <input type="search" placeholder="検索..." class="slds-input">
+      </div>
+    </div>
+  </div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn" title="Agentforce"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></button>
+    <button class="sf-favorite-btn" title="お気に入り">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" />
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px; height:10px;" />
+    </button>
+    <span class="sf-notify-wrap">
+      <button class="sf-icon-btn" title="通知"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" /></button>
+      <span class="sf-notify-dot"></span>
+    </span>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:0.5rem;">
+      <img src="https://ui-avatars.com/api/?name=User&background=1B96FF&color=fff" alt="User">
+    </span>
+  </div>
+</header>
+
+<div class="sf-context-bar">
+  <div class="sf-app-launcher" title="アプリケーションランチャー">
+    <div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+  <span class="sf-app-name">Sales</span>
+  <nav>
+    <ul>
+      <li><a href="#">ホーム</a></li>
+      <li><a href="#">取引先 ▾</a></li>
+      <li class="is-active"><a href="#">商談 ▾</a></li>
+      <li><a href="#">リード ▾</a></li>
+      <li><a href="#">ダッシュボード ▾</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main class="sf-main">
+  <div class="slds-page-header slds-page-header_record-home slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-opportunity">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/opportunity.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-page-header__name">
+              <h1><span class="slds-page-header__title">※次世代データセンター用 極低熱抵抗テープ商談</span></h1>
+            </div>
+            <p class="slds-page-header__name-meta">商談 · 提案/見積</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <div class="slds-page-header__controls">
+          <div class="slds-page-header__control">
+            <ul class="slds-button-group-list">
+              <li><button class="slds-button slds-button_neutral">+ フォローする</button></li>
+              <li><button class="slds-button slds-button_neutral">議事録作成</button></li>
+              <li><button class="slds-button slds-button_neutral">開発テーマ申請</button></li>
+              <li><button class="slds-button slds-button_neutral">活動の記録</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <div class="sf-col-2-3">
+      <article class="slds-card">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav" role="tablist">
+            <li class="slds-tabs_default__item" role="presentation">
+              <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">詳細</a>
+            </li>
+            <li class="slds-tabs_default__item" role="presentation">
+              <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">見積/注文</a>
+            </li>
+            <li class="slds-tabs_default__item" role="presentation">
+              <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">ニーズ</a>
+            </li>
+            <li class="slds-tabs_default__item" role="presentation">
+              <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">開発テーマ</a>
+            </li>
+            <li class="slds-tabs_default__item" role="presentation">
+              <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">活動情報</a>
+            </li>
+            <li class="slds-tabs_default__item slds-is-active" role="presentation">
+              <a class="slds-tabs_default__link" href="#" role="tab" tabindex="0">会話</a>
+            </li>
+          </ul>
+          <div class="slds-tabs_default__content slds-show" role="tabpanel">
+
+            <!-- ===== Slack Channel Embed (slack-channel-embed.html を貼り付け) ===== -->
+            <div class="sf-slack">
+              <header class="sf-slack-header">
+                <div class="sf-slack-header-left">
+                  <img class="sf-slack-logo" src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="Slack" />
+                  <span>Slack チャンネル</span>
+                </div>
+                <button class="sf-slack-members" type="button">
+                  <img class="icon" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" />
+                  <span>3</span>
+                  <img class="caret" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" />
+                </button>
+              </header>
+
+              <!-- 最初の投稿 (親メッセージ) -->
+              <div class="sf-slack-msg">
+                <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row">
+                    <span class="sf-slack-author">田中 健二</span>
+                    <span class="sf-slack-time">5月18日 11:54</span>
+                  </div>
+                  <div class="sf-slack-text">
+                    <p><a class="sf-slack-mention" href="#">@Tableau Next Agentforce in Slack</a></p>
+                    <p>次のダッシュボードを参考にして失注理由を多い順に並べて</p>
+                  </div>
+                  <div class="sf-slack-replies" onclick="sfSlackToggleThread(this)">
+                    <span class="sf-slack-thread-avatars" style="margin-right:4px;">
+                      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="background:#1264a3;" />
+                      <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+                      <img src="https://randomuser.me/api/portraits/men/90.jpg" alt="" />
+                    </span>
+                    <span class="count">3 件の会話</span>
+                    <span class="since">最終返信: 24 日前</span>
+                  </div>
+                </div>
+                <div class="sf-slack-actions">
+                  <button title="リアクション"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/like.svg" alt="" /></button>
+                  <button title="スレッドで返信"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/reply.svg" alt="" /></button>
+                  <button title="その他"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" /></button>
+                </div>
+              </div>
+
+              <!-- インラインスレッド (3 件の会話 をクリックで開閉) -->
+              <div class="sf-slack-thread-inline">
+                <div class="sf-slack-thread-divider"><span>3 件の返信</span></div>
+
+                <div class="sf-slack-msg" style="padding-left:0; padding-right:0;">
+                  <img class="sf-slack-avatar" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="background:#1264a3; padding:6px;" />
+                  <div class="sf-slack-body">
+                    <div class="sf-slack-author-row">
+                      <span class="sf-slack-author">Tableau Next Agentforce in Slack</span>
+                      <span class="sf-slack-agent-tag">AGENTFORCE</span>
+                      <span class="sf-slack-time">5月18日 14:19</span>
+                    </div>
+                    <div class="sf-slack-text">
+                      <p>失注理由を多い順に並べました。主要な要因と件数を一覧でご確認いただけます。</p>
+                      <div class="sf-slack-quote">
+                        <p>There are <strong>6 loss reasons</strong> sorted by frequency. The most common reasons are:</p>
+                        <ul style="margin: 4px 0 4px 20px; padding: 0;">
+                          <li><strong>顧客側のプロジェクト中止</strong> with <strong>10 cases</strong></li>
+                          <li><strong>価格競争力不足</strong> with <strong>8 cases</strong></li>
+                          <li><strong>納期遅延/供給不安</strong> with <strong>6 cases</strong></li>
+                          <li><strong>予算不足</strong> and <strong>競合他社採用</strong>, each with <strong>5 cases</strong></li>
+                          <li><strong>スペックアンマッチ</strong> with <strong>3 cases</strong></li>
+                        </ul>
+                      </div>
+                      <div class="sf-slack-quote">
+                        <p>This ranking highlights the key factors contributing to lost opportunities.</p>
+                      </div>
+                      <p><strong>Sources</strong><br>失注理由ごとに件数を集計し、多い順に並べました。失注理由フィールドを使い、全レコードを対象に集計・並び替えしています（制限なし）。</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sf-slack-msg" style="padding-left:0; padding-right:0;">
+                  <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+                  <div class="sf-slack-body">
+                    <div class="sf-slack-author-row">
+                      <span class="sf-slack-author">田中 健二</span>
+                      <span class="sf-slack-time">5月18日 14:30</span>
+                    </div>
+                    <div class="sf-slack-text">
+                      <p>ありがとうございます。プロジェクト中止と価格競争力が上位に来ているので、提案資料の差別化ポイントを優先して見直します。</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sf-slack-msg" style="padding-left:0; padding-right:0;">
+                  <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/90.jpg" alt="" />
+                  <div class="sf-slack-body">
+                    <div class="sf-slack-author-row">
+                      <span class="sf-slack-author">山田 太郎</span>
+                      <span class="sf-slack-time">5月18日 16:00</span>
+                    </div>
+                    <div class="sf-slack-text">
+                      <p>確認しました。次回の営業ミーティングでこの内容をもとに対策を議論しましょう。</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sf-slack-thread-input">
+                  <div class="sf-slack-thread-input-mention">
+                    <img class="info-icon" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" />
+                    <a href="#">エージェントにメンションする</a>
+                    <span style="color:#616061;">返信の取得用</span>
+                  </div>
+                  <div class="sf-slack-thread-input-toolbar">
+                    <button title="太字"><strong>B</strong></button>
+                    <button title="斜体"><em>I</em></button>
+                    <button title="下線"><u>U</u></button>
+                    <button title="取り消し線" style="text-decoration:line-through;">S</button>
+                    <span class="sep"></span>
+                    <button title="リンク"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/link.svg" alt="" /></button>
+                    <button title="番号付きリスト"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/number_input.svg" alt="" /></button>
+                    <button title="箇条書き"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/list.svg" alt="" /></button>
+                    <button title="引用"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/quote.svg" alt="" /></button>
+                    <button title="コード"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/insert_tag_field.svg" alt="" /></button>
+                  </div>
+                  <div class="sf-slack-thread-input-text">返信...</div>
+                  <div class="sf-slack-thread-input-bottom">
+                    <div class="sf-slack-thread-input-bottom-left">
+                      <button title="追加"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button>
+                      <button title="絵文字"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/emoji.svg" alt="" /></button>
+                      <button title="メンション"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" /></button>
+                    </div>
+                    <button class="sf-slack-send-btn" title="送信">
+                      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/forward.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2 つ目のルート投稿 (添付カード付き) -->
+              <div class="sf-slack-msg">
+                <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+                <div class="sf-slack-body">
+                  <div class="sf-slack-author-row">
+                    <span class="sf-slack-author">田中 健二</span>
+                    <span class="sf-slack-time">5月18日 12:25</span>
+                  </div>
+                  <div class="sf-slack-text">
+                    <p><a class="sf-slack-mention" href="#">@Tableau Next Agentforce in Slack</a></p>
+                    <p>次のダッシュボードを参考にして失注理由を多い順に並べて</p>
+                    <p><a href="#">営業ダッシュボード</a></p>
+                  </div>
+
+                  <div class="sf-slack-card">
+                    <div class="sf-slack-card-header">Tableau Next</div>
+                    <div class="sf-slack-card-body">
+                      <div class="sf-slack-card-source">営業ダッシュボード</div>
+                      <div class="sf-slack-card-title">Filter</div>
+                      <div class="sf-slack-card-meta">Details as of 2026-05-18 12:25:14</div>
+                      <div class="sf-slack-card-preview">
+                        <div class="bars">
+                          <div class="bar" style="height: 60%;"></div>
+                          <div class="bar" style="height: 80%;"></div>
+                          <div class="bar" style="height: 45%;"></div>
+                          <div class="bar" style="height: 95%;"></div>
+                          <div class="bar" style="height: 30%;"></div>
+                          <div class="bar" style="height: 70%;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sf-slack-footer-banner">
+                <span class="agent-icon">2</span>
+                <strong>2 エージェント</strong>
+                <span class="meta">はこのチャンネルに含まれる - メンションされたときに返信します</span>
+              </div>
+            </div>
+            <!-- ===== /Slack Channel Embed ===== -->
+
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="sf-col-1-3">
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">Agentforceからの示唆があります</h2>
+            </div>
+          </header>
+        </div>
+        <div class="slds-card__body slds-p-around_medium">
+          <div class="slds-notify slds-notify_alert slds-theme_info" role="status">
+            <h2>商談発生元の問い合わせ情報を確認してください。</h2>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
+<script>
+  function sfSlackToggleThread(el) {
+    const msg = el.closest('.sf-slack-msg');
+    if (!msg) return;
+    const inline = msg.nextElementSibling;
+    if (inline && inline.classList.contains('sf-slack-thread-inline')) {
+      inline.classList.toggle('is-open');
+    }
+  }
+</script>
+
+</body>
+</html>

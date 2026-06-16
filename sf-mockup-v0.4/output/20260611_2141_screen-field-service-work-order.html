@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WO-2026-0341 | 作業指示 | Salesforce Field Service</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1280px; margin: 0; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; padding-right: 400px; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .sf-col-2-3 { flex: 0 0 calc(66.666% - 0.375rem); }
+  .sf-col-1-3 { flex: 0 0 calc(33.333% - 0.375rem); }
+
+  .sf-header { background: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid #c9c9c9; position: sticky; top: 0; z-index: 50; }
+  .sf-header-search { width: 50%; max-width: 36rem; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn:hover { background: #f3f3f3; }
+  .sf-icon-btn img { width: 18px; height: 18px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-favorite-btn { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 2rem; background: #1b96ff; border-radius: 0.25rem; border: none; cursor: pointer; }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-notify-wrap { position: relative; display: inline-flex; }
+  .sf-notify-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ea001e; border-radius: 50%; border: 1.5px solid white; }
+  .sf-context-bar { background: white; border-bottom: 1px solid #dddbda; padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-context-bar nav ul { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .sf-context-bar nav ul li { display: flex; align-items: center; padding: 0 0.25rem; font-size: 0.875rem; }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid #1589ee; }
+  .sf-context-bar nav ul li.is-active a { color: #0070d2; font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-app-name { font-size: 1.125rem; font-weight: 700; color: #181818; padding: 0.5rem 0; margin-right: 0.75rem; }
+
+  .sf-timeline { list-style: none; padding: 0; margin: 0; }
+  .sf-timeline-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; }
+  .sf-timeline-icon { flex: 0 0 2rem; height: 2rem; border-radius: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-timeline-icon-call { background: #056764; }
+  .sf-timeline-icon-task { background: #04844b; }
+  .sf-timeline-icon-event { background: #cc6cdd; }
+  .sf-timeline-icon img { width: 1.25rem; height: 1.25rem; filter: brightness(0) invert(1); }
+  .sf-timeline-body { flex: 1; min-width: 0; line-height: 1.4; }
+  .sf-timeline-body a { color: #0070d2; text-decoration: none; font-weight: 700; }
+  .sf-timeline-body .meta { font-size: 0.8125rem; color: #444; margin-top: 0.25rem; }
+
+  /* Agentforce パネル */
+  .sf-af-panel { position: fixed; top: 3rem; right: 0; bottom: 0; width: 380px; background: white; border-left: 1px solid #c9c9c9; box-shadow: -4px 0 12px rgba(0,0,0,0.08); z-index: 100; display: flex; flex-direction: column; transition: transform 0.3s ease-out; }
+  .sf-af-panel.is-closed { transform: translateX(100%); }
+  .sf-af-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid #dddbda; flex-shrink: 0; }
+  .sf-af-title { font-size: 1rem; font-weight: 700; }
+  .sf-af-header-actions { display: flex; gap: 0.25rem; }
+  .sf-af-header-actions button { width: 1.75rem; height: 1.75rem; background: transparent; border: none; cursor: pointer; border-radius: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-af-header-actions button:hover { background: #f3f3f3; }
+  .sf-af-header-actions img { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-af-conversation { flex: 1; overflow-y: auto; padding: 1rem; }
+  .sf-af-msg { display: flex; gap: 0.75rem; margin-bottom: 1rem; opacity: 0; transform: translateY(12px); animation: sf-af-msg-in 0.4s ease-out forwards; }
+  .sf-af-msg:nth-child(1) { animation-delay: 0.1s; }
+  .sf-af-msg:nth-child(2) { animation-delay: 0.7s; }
+  .sf-af-msg:nth-child(3) { animation-delay: 1.4s; }
+  .sf-af-msg:nth-child(4) { animation-delay: 2.2s; }
+  .sf-af-msg:nth-child(5) { animation-delay: 3.0s; }
+  @keyframes sf-af-msg-in { to { opacity: 1; transform: translateY(0); } }
+  .sf-af-avatar { flex: 0 0 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-af-avatar-bot { background: #0070d2; }
+  .sf-af-avatar-bot img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+  .sf-af-avatar-user { background: #b8b8b8; }
+  .sf-af-avatar-user img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+  .sf-af-bubble { flex: 1; font-size: 0.875rem; line-height: 1.5; color: #181818; }
+  .sf-af-bubble strong { display: block; margin-top: 0.5rem; color: #0070d2; }
+  .sf-af-bubble p { margin: 0 0 0.25rem 0; }
+  .sf-similar-card { background: #f3f9fe; border: 1px solid #aacbff; border-radius: 0.25rem; padding: 0.625rem; margin-top: 0.5rem; cursor: pointer; transition: background 0.15s; }
+  .sf-similar-card:hover { background: #e3f1fc; }
+  .sf-similar-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; }
+  .sf-similar-card-id { font-size: 0.8125rem; color: #0070d2; font-weight: 700; }
+  .sf-similarity { display: inline-flex; align-items: center; gap: 4px; font-size: 0.6875rem; color: #04844b; font-weight: 700; background: #cdefc4; padding: 2px 6px; border-radius: 0.75rem; }
+  .sf-similar-card-title { font-size: 0.8125rem; color: #181818; font-weight: 600; margin-bottom: 0.25rem; }
+  .sf-similar-card-meta { font-size: 0.75rem; color: #54698d; }
+  .sf-af-suggestions { border-top: 1px solid #dddbda; padding: 0.75rem 1rem; flex-shrink: 0; background: #fafaf9; }
+  .sf-af-suggestions-title { font-size: 0.75rem; font-weight: 700; color: #444; margin-bottom: 0.5rem; }
+  .sf-af-suggestion { display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0; font-size: 0.8125rem; color: #0070d2; cursor: pointer; }
+  .sf-af-suggestion::before { content: "▸"; }
+  .sf-af-input-wrap { border-top: 1px solid #dddbda; padding: 0.75rem 1rem; flex-shrink: 0; }
+  .sf-af-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #dddbda; border-radius: 0.25rem; font-size: 0.875rem; box-sizing: border-box; }
+  .sf-af-input:focus { outline: none; border-color: #1589ee; box-shadow: 0 0 3px #0070d2; }
+</style>
+</head>
+<body class="slds-scope">
+
+<header class="sf-header">
+  <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+  <div class="sf-header-search"><div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+    <input type="search" placeholder="作業指示・装置・サービスリソースを検索..." class="slds-input">
+  </div></div></div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn" title="Agentforce" onclick="toggleAgentforce()"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></button>
+    <button class="sf-favorite-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" /><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" /></button>
+    <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></button>
+    <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" /></button><span class="sf-notify-dot"></span></span>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small"><img src="https://ui-avatars.com/api/?name=Tanaka+Kenji&background=1B96FF&color=fff" alt="User"></span>
+  </div>
+</header>
+
+<div class="sf-context-bar">
+  <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  <span class="sf-app-name">Field Service</span>
+  <nav><ul>
+    <li><a href="#">ホーム</a></li>
+    <li><a href="#">スケジューラ ▾</a></li>
+    <li class="is-active"><a href="#">作業指示 ▾</a></li>
+    <li><a href="#">サービス予定 ▾</a></li>
+    <li><a href="#">資産 ▾</a></li>
+    <li><a href="#">在庫 ▾</a></li>
+  </ul></nav>
+</div>
+
+<main class="sf-main">
+
+  <div class="slds-page-header slds-page-header_record-home slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-work-order">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/work_order.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <h1><span class="slds-page-header__title">WO-2026-0341 - スピンチャック異常振動の調査・修理</span></h1>
+            <p class="slds-page-header__name-meta">作業指示 · 緊急修理 (Break-Fix) · <span class="slds-badge slds-theme_error">緊急</span> <span class="slds-badge slds-theme_warning">SLA残 3h12m</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <ul class="slds-button-group-list">
+          <li><button class="slds-button slds-button_neutral">編集</button></li>
+          <li><button class="slds-button slds-button_neutral">▶ 作業開始</button></li>
+          <li><button class="slds-button slds-button_brand">完了報告</button></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slds-page-header__row slds-page-header__row_gutters">
+      <div class="slds-page-header__col-details">
+        <ul class="slds-page-header__detail-row">
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">取引先</div><p><a href="#">東京テック半導体 (株)</a></p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">設置場所</div><p>熊本工場 第2クリーンルーム</p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">対象装置</div><p><a href="#">SU-3200 #A12</a></p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">優先度</div><p class="slds-text-color_destructive"><strong>高 (P1)</strong></p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">予定工数</div><p>4.5 時間</p></li>
+          <li class="slds-page-header__detail-block"><div class="slds-text-title">担当エンジニア</div><p><a href="#">田中 賢治</a></p></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <div class="sf-col-2-3">
+      <article class="slds-card">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav" role="tablist">
+            <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab">詳細</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">作業手順</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">点検項目</a></li>
+            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">関連</a></li>
+          </ul>
+          <div class="slds-tabs_default__content slds-show" role="tabpanel">
+
+            <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small"><span class="slds-p-horizontal_small">作業指示概要</span></h3>
+            <div class="slds-p-around_medium">
+              <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">作業指示番号</dt><dd>WO-2026-0341</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">作業区分</dt><dd>緊急修理 (Break-Fix)</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">関連ケース</dt><dd><a href="#">CS-00012984 - 異音発生によるライン停止</a></dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">保守契約</dt><dd><a href="#">SCREEN-MA-2024-0087 (Premium)</a></dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">予定開始日時</dt><dd>2026/06/11 10:00</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">実績開始日時</dt><dd>2026/06/11 10:42</dd></div>
+                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">作業内容（顧客報告）</dt><dd>SU-3200 #A12 にて、ロット切替後にスピンチャックから周期的な異音および振動値の上昇を確認。Hi アラーム閾値（1.2g）を 6/10 22:30 に超過。生産ラインを安全停止中。</dd></div>
+              </dl>
+            </div>
+
+            <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small"><span class="slds-p-horizontal_small">対象装置情報 (SCREEN SU-3200)</span></h3>
+            <div class="slds-p-around_medium">
+              <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">機種</dt><dd>SU-3200 シングルウェーハスピン洗浄装置</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small"><dt class="slds-item_label slds-text-color_weak">シリアル番号</dt><dd>TK21-0419</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">設置日</dt><dd>2021/04/19</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">累計稼働時間</dt><dd>38,142 h</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">前回メンテナンス</dt><dd>2026/03/02 (定期点検)</dd></div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top"><dt class="slds-item_label slds-text-color_weak">クリーンルーム入室許可</dt><dd>必要 (Lv.B)</dd></div>
+              </dl>
+            </div>
+
+            <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small"><span class="slds-p-horizontal_small">使用部品 (3)</span></h3>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+              <thead><tr><th>部品番号</th><th>部品名</th><th class="slds-text-align_right">数量</th><th>状態</th></tr></thead>
+              <tbody>
+                <tr><th scope="row"><a href="#">SP-CHK-BR-040</a></th><td>スピンチャックベアリング (耐薬液仕様)</td><td class="slds-text-align_right">2</td><td><span class="slds-badge slds-theme_warning">配送中 ETA 14:00</span></td></tr>
+                <tr><th scope="row"><a href="#">SP-OR-N15</a></th><td>フッ素ゴム製 O-リング N15</td><td class="slds-text-align_right">4</td><td><span class="slds-badge slds-theme_success">使用済</span></td></tr>
+                <tr><th scope="row"><a href="#">SP-LB-PFPE</a></th><td>PFPE 系 真空グリス (10g)</td><td class="slds-text-align_right">1</td><td><span class="slds-badge slds-theme_success">使用済</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="sf-col-1-3">
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header"><h2 class="slds-card__header-title">活動タイムライン</h2></div>
+        <div class="slds-card__body slds-p-around_medium">
+          <ul class="sf-timeline">
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-event"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" alt="" /></span>
+              <div class="sf-timeline-body"><a href="#">部品配送依頼を起票</a><div class="meta">11:35 · ベアリング在庫切れのため緊急配送 (ETA 14:00)</div></div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-task"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" /></span>
+              <div class="sf-timeline-body"><a href="#">点検写真をアップロード (4枚)</a><div class="meta">11:32 · ベアリング偏摩耗を撮影</div></div>
+            </li>
+            <li class="sf-timeline-item">
+              <span class="sf-timeline-icon sf-timeline-icon-call"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg" alt="" /></span>
+              <div class="sf-timeline-body"><a href="#">作業開始 / LOTO 完了</a><div class="meta">10:42 · 田中 賢治</div></div>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="slds-card">
+        <div class="slds-card__header"><h2 class="slds-card__header-title">手順書・ナレッジ</h2></div>
+        <div class="slds-card__body slds-p-around_medium">
+          <ul style="list-style:none; padding:0;">
+            <li class="slds-p-vertical_x-small"><a href="#" class="slds-text-link"><strong>SU-3200 スピンチャック交換手順書 v3.2</strong></a><div class="slds-text-body_small slds-text-color_weak">PDF · 4.2 MB</div></li>
+            <li class="slds-p-vertical_x-small"><a href="#" class="slds-text-link"><strong>ベアリング偏摩耗 トラブルシューティング</strong></a><div class="slds-text-body_small slds-text-color_weak">ナレッジ #KA-00428</div></li>
+            <li class="slds-p-vertical_x-small"><a href="#" class="slds-text-link"><strong>薬液系統 LOTO チェックシート</strong></a><div class="slds-text-body_small slds-text-color_weak">PDF · 760 KB</div></li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
+<!-- Agentforce パネル: 類似作業指示の検索 -->
+<aside class="sf-af-panel" id="sf-af-panel">
+  <header class="sf-af-header">
+    <div class="sf-af-title">FieldService Agent</div>
+    <div class="sf-af-header-actions">
+      <button title="情報"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" /></button>
+      <button title="新規セッション"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" /></button>
+      <button title="ピン留め"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/pinned.svg" alt="" /></button>
+      <button title="閉じる" onclick="toggleAgentforce()"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" /></button>
+    </div>
+  </header>
+
+  <div class="sf-af-conversation" id="sf-af-conversation">
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>
+      <div class="sf-af-bubble"><p>こんにちは、田中さん！この作業指示について何かお手伝いできますか？</p></div>
+    </div>
+
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-user"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" /></span>
+      <div class="sf-af-bubble"><p>SU-3200のスピンチャック異常振動の類似作業指示を探して</p></div>
+    </div>
+
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>
+      <div class="sf-af-bubble">
+        <p>過去の作業履歴から、類似度が高い作業指示を3件見つけました。症状（スピンチャック異常振動・ベアリング摩耗）と装置機種（SU-3200系）でマッチングしています。</p>
+
+        <div class="sf-similar-card" onclick="alert('WO-2025-1187 を開く')">
+          <div class="sf-similar-card-head">
+            <span class="sf-similar-card-id">WO-2025-1187</span>
+            <span class="sf-similarity">類似度 94%</span>
+          </div>
+          <div class="sf-similar-card-title">SU-3200 スピンチャックベアリング偏摩耗による振動異常</div>
+          <div class="sf-similar-card-meta">2025/11/20 · 解決 · 富士電機 米沢工場 · 工数 4.2h</div>
+        </div>
+
+        <div class="sf-similar-card" onclick="alert('WO-2025-0823 を開く')">
+          <div class="sf-similar-card-head">
+            <span class="sf-similar-card-id">WO-2025-0823</span>
+            <span class="sf-similarity">類似度 87%</span>
+          </div>
+          <div class="sf-similar-card-title">SU-3100 ロット切替後の振動 Hi アラーム</div>
+          <div class="sf-similar-card-meta">2025/08/14 · 解決 · ソニーセミコン 大分 · 工数 5.5h</div>
+        </div>
+
+        <div class="sf-similar-card" onclick="alert('WO-2024-2451 を開く')">
+          <div class="sf-similar-card-head">
+            <span class="sf-similar-card-id">WO-2024-2451</span>
+            <span class="sf-similarity">類似度 79%</span>
+          </div>
+          <div class="sf-similar-card-title">スピンモータ ベアリング異音・薬液汚染</div>
+          <div class="sf-similar-card-meta">2024/12/03 · 解決 · キオクシア 四日市 · 工数 6.8h</div>
+        </div>
+
+        <strong>共通する解決策</strong>
+        <p>3件すべてで「ベアリング交換 (SP-CHK-BR-040) + PFPE グリス再塗布 + 回転バランス調整」が実施されています。今回の点検結果（内輪偏摩耗）とも一致しているため、同じ手順で対応できる可能性が高いです。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-af-suggestions">
+    <div class="sf-af-suggestions-title">おすすめ</div>
+    <div class="sf-af-suggestion">最も類似度が高い WO-2025-1187 の作業手順を表示</div>
+    <div class="sf-af-suggestion">ベアリング交換の標準作業時間を予測</div>
+    <div class="sf-af-suggestion">過去の同症状のクリーンルーム作業注意点を確認</div>
+  </div>
+
+  <div class="sf-af-input-wrap">
+    <input type="text" class="sf-af-input" placeholder="この作業について質問する..." />
+  </div>
+</aside>
+
+<script>
+  function toggleAgentforce() {
+    const panel = document.getElementById('sf-af-panel');
+    panel.classList.toggle('is-closed');
+    if (!panel.classList.contains('is-closed')) {
+      const conv = document.getElementById('sf-af-conversation');
+      const messages = conv.innerHTML;
+      conv.innerHTML = '';
+      void conv.offsetWidth;
+      conv.innerHTML = messages;
+    }
+  }
+</script>
+
+</body>
+</html>

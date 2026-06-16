@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Phone__c</fullName>
+    <label>電話番号</label>
+    <description>顧客の主要な電話番号</description>
+    <inlineHelpText>顧客の代表電話番号を入力してください</inlineHelpText>
+    <type>Phone</type>
+</CustomField>

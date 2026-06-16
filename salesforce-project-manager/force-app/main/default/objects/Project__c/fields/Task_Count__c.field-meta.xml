@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Task_Count__c</fullName>
+    <label>タスク数</label>
+    <description>このプロジェクトに登録されたタスクの総数</description>
+    <inlineHelpText>関連するタスクレコードから自動集計されます</inlineHelpText>
+    <type>Summary</type>
+    <summaryOperation>count</summaryOperation>
+    <summaryForeignKey>Task__c.Project__c</summaryForeignKey>
+</CustomField>
