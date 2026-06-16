@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>c:tepcoEquipment</componentName>
+                <identifier>tepcoEquipment</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>region1</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <masterLabel>TEPCO 設備管理</masterLabel>
+    <template><name>flexipage:appHomeTemplateTwoColumnsStacked</name></template>
+    <type>AppPage</type>
+</FlexiPage>

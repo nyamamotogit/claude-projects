@@ -1,0 +1,102 @@
+<template>
+  <div class="wo-root">
+    <div class="page-header">
+      <div class="ph-left"><div class="ph-title">作業指示管理</div><div class="ph-sub">保全・工事作業の計画・実行管理</div></div>
+      <div class="ph-actions">
+        <button class="btn-primary">📋 ガントチャート</button>
+        <button class="btn-primary green">＋ 新規作業指示</button>
+      </div>
+    </div>
+
+    <!-- Status summary -->
+    <div class="status-row">
+      <div class="status-card urgent"><div class="sc-num">3</div><div class="sc-lbl">緊急</div></div>
+      <div class="status-card progress"><div class="sc-num">8</div><div class="sc-lbl">作業中</div></div>
+      <div class="status-card planned"><div class="sc-num">12</div><div class="sc-lbl">計画中</div></div>
+      <div class="status-card done"><div class="sc-num">47</div><div class="sc-lbl">完了 (今月)</div></div>
+    </div>
+
+    <div class="wo-content">
+      <!-- Tab nav -->
+      <div class="tab-nav">
+        <span class={tab1Cls} onclick={setTab1}>🔴 緊急・進行中 (11)</span>
+        <span class={tab2Cls} onclick={setTab2}>📅 計画済 (12)</span>
+        <span class={tab3Cls} onclick={setTab3}>✓ 完了 (47)</span>
+      </div>
+
+      <!-- Work orders -->
+      <div class="wo-list">
+        <template for:each={visibleWorkOrders} for:item="wo">
+          <div key={wo.id} class="wo-card" onclick={selectWO} data-woid={wo.id}>
+            <div class="wo-card-hdr">
+              <span class={wo.priorityCls}>{wo.priority}</span>
+              <span class="wo-id">{wo.woNum}</span>
+              <span class="wo-time">{wo.scheduledDate}</span>
+              <span class={wo.statusCls}>{wo.status}</span>
+            </div>
+            <div class="wo-card-title">{wo.title}</div>
+            <div class="wo-card-meta">
+              <span class="wo-location">📍 {wo.location}</span>
+              <span class="wo-assignee">👤 {wo.assignee}</span>
+              <span class="wo-duration">⏱ {wo.duration}</span>
+            </div>
+            <template if:true={wo.isUrgent}>
+              <div class="wo-alert-banner">⚡ Agentforce により自動生成 — {wo.agentNote}</div>
+            </template>
+            <div class="wo-progress-wrap">
+              <div class="wo-progress-lbl"><span>進捗</span><span>{wo.progress}%</span></div>
+              <div class="wo-progress-track"><div class="wo-progress-fill" style={wo.progressStyle}></div></div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- Detail modal -->
+    <template if:true={selectedWO}>
+      <div class="wo-detail-overlay" onclick={closeWODetail}>
+        <div class="wo-detail-panel" onclick={stopProp}>
+          <div class="wo-detail-hdr">
+            <div class="wd-title">{selectedWO.title}</div>
+            <div class="wd-sub">{selectedWO.woNum} ・ {selectedWO.location}</div>
+            <button class="wd-close" onclick={closeWODetail}>✕</button>
+          </div>
+          <div class="wo-detail-body">
+            <div class="wd-section-title">作業概要</div>
+            <div class="wd-grid">
+              <div class="wd-item"><div class="wd-l">優先度</div><div class="wd-v"><span class={selectedWO.priorityCls}>{selectedWO.priority}</span></div></div>
+              <div class="wd-item"><div class="wd-l">ステータス</div><div class="wd-v"><span class={selectedWO.statusCls}>{selectedWO.status}</span></div></div>
+              <div class="wd-item"><div class="wd-l">予定日時</div><div class="wd-v">{selectedWO.scheduledDate}</div></div>
+              <div class="wd-item"><div class="wd-l">所要時間</div><div class="wd-v">{selectedWO.duration}</div></div>
+              <div class="wd-item"><div class="wd-l">作業班</div><div class="wd-v">{selectedWO.assignee}</div></div>
+              <div class="wd-item"><div class="wd-l">設備</div><div class="wd-v">{selectedWO.equipment}</div></div>
+            </div>
+            <div class="wd-section-title">作業内容</div>
+            <div class="wd-desc">{selectedWO.description}</div>
+            <div class="wd-section-title">作業ステップ</div>
+            <div class="step-list">
+              <template for:each={selectedWO.steps} for:item="step">
+                <div key={step.id} class={step.cls}>
+                  <span class="step-num">{step.num}</span>
+                  <span class="step-text">{step.text}</span>
+                  <span class="step-by">{step.by}</span>
+                </div>
+              </template>
+            </div>
+            <template if:true={selectedWO.materials}>
+              <div class="wd-section-title">使用部材</div>
+              <table class="mat-table">
+                <thead><tr><th>品番</th><th>品名</th><th>数量</th><th>調達先</th></tr></thead>
+                <tbody>
+                  <template for:each={selectedWO.materials} for:item="m">
+                    <tr key={m.id}><td>{m.pn}</td><td>{m.name}</td><td>{m.qty}</td><td>{m.src}</td></tr>
+                  </template>
+                </tbody>
+              </table>
+            </template>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>

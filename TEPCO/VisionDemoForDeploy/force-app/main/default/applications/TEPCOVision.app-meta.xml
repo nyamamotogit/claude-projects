@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>TEPCOVisionHome</defaultLandingTab>
+    <description>東京電力 系統設備保全 Agentforce デモ</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>系統設備保全</label>
+    <navType>Standard</navType>
+    <tabs>TEPCOVisionEquipment</tabs>
+    <tabs>TEPCOVisionHome</tabs>
+    <tabs>TEPCOVisionWorkOrder</tabs>
+    <tabs>TEPCOVisionApproval</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

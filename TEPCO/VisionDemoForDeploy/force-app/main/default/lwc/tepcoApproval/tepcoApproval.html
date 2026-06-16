@@ -1,0 +1,121 @@
+<template>
+  <div class="ap-root">
+    <div class="page-header">
+      <div class="ph-left"><div class="ph-title">稟議・承認管理</div><div class="ph-sub">保全費用・緊急予算の承認ワークフロー</div></div>
+      <div class="ph-actions">
+        <button class="btn-primary green">＋ 新規稟議作成</button>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="ap-summary-row">
+      <div class="sum-card pending-ap"><div class="sum-icon">⏳</div><div><div class="sum-val">2</div><div class="sum-lbl">承認待ち</div></div></div>
+      <div class="sum-card approved-ap"><div class="sum-icon">✓</div><div><div class="sum-val">8</div><div class="sum-lbl">承認済 (今月)</div></div></div>
+      <div class="sum-card amount-card"><div class="sum-icon">💰</div><div><div class="sum-val">¥7.4億</div><div class="sum-lbl">今月承認額</div></div></div>
+      <div class="sum-card budget-card"><div class="sum-icon">📊</div><div><div class="sum-val">78%</div><div class="sum-lbl">緊急予算消化率</div></div></div>
+    </div>
+
+    <div class="ap-content">
+      <!-- Pending approvals (top) -->
+      <div class="section-title">⏳ 承認待ち (2件)</div>
+      <div class="approval-list">
+        <template for:each={pendingApprovals} for:item="ap">
+          <div key={ap.id} class="approval-card pending" onclick={selectAP} data-apid={ap.id}>
+            <div class="ap-card-hdr">
+              <span class="ap-num">{ap.apNum}</span>
+              <span class="ap-amount">{ap.amount}</span>
+              <span class="ap-badge pending-badge">{ap.status}</span>
+            </div>
+            <div class="ap-card-title">{ap.title}</div>
+            <div class="ap-card-meta">
+              <span>🏢 {ap.dept}</span>
+              <span>👤 {ap.requester}</span>
+              <span>📅 {ap.date}</span>
+            </div>
+            <template if:true={ap.isAgentGenerated}>
+              <div class="ap-agent-tag">🤖 Agentforce が自動生成 — {ap.agentNote}</div>
+            </template>
+            <div class="ap-urgency-bar">{ap.urgencyNote}</div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Recent approved -->
+      <div class="section-title" style="margin-top:1rem;">✓ 最近の承認済 (今月)</div>
+      <table class="ap-table">
+        <thead>
+          <tr><th>稟議番号</th><th>件名</th><th>申請者</th><th>金額</th><th>承認者</th><th>承認日時</th><th>ステータス</th></tr>
+        </thead>
+        <tbody>
+          <template for:each={approvedApprovals} for:item="ap">
+            <tr key={ap.id} onclick={selectAP} data-apid={ap.id} class="ap-row">
+              <td class="ap-num-cell">{ap.apNum}</td>
+              <td class="ap-title-cell">{ap.title}</td>
+              <td>{ap.requester}</td>
+              <td class="ap-amount-cell">{ap.amount}</td>
+              <td>{ap.approver}</td>
+              <td class="ap-date-cell">{ap.approvalDate}</td>
+              <td><span class="ap-badge approved-badge">{ap.status}</span></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Detail modal -->
+    <template if:true={selectedAP}>
+      <div class="ap-detail-backdrop" onclick={closeAPDetail}>
+        <div class="ap-detail-modal" onclick={stopProp}>
+          <div class="ap-modal-hdr">
+            <div class="apm-title">{selectedAP.title}</div>
+            <div class="apm-sub">{selectedAP.apNum} ・ {selectedAP.dept}</div>
+            <button class="apm-close" onclick={closeAPDetail}>✕</button>
+          </div>
+          <div class="ap-modal-body">
+            <div class="ap-modal-section">
+              <div class="ams-title">稟議概要</div>
+              <div class="ams-grid">
+                <div class="amg-item"><div class="amg-l">申請金額</div><div class="amg-v amount-large">{selectedAP.amount}</div></div>
+                <div class="amg-item"><div class="amg-l">ステータス</div><div class="amg-v"><span class={selectedAP.badgeCls}>{selectedAP.status}</span></div></div>
+                <div class="amg-item"><div class="amg-l">申請者</div><div class="amg-v">{selectedAP.requester}</div></div>
+                <div class="amg-item"><div class="amg-l">承認者</div><div class="amg-v">{selectedAP.approver}</div></div>
+                <div class="amg-item"><div class="amg-l">申請日</div><div class="amg-v">{selectedAP.date}</div></div>
+                <div class="amg-item"><div class="amg-l">承認日</div><div class="amg-v">{selectedAP.approvalDate}</div></div>
+              </div>
+            </div>
+            <div class="ap-modal-section">
+              <div class="ams-title">稟議内容</div>
+              <div class="ap-desc">{selectedAP.description}</div>
+            </div>
+            <div class="ap-modal-section">
+              <div class="ams-title">費用内訳</div>
+              <table class="cost-table">
+                <thead><tr><th>項目</th><th>金額</th><th>備考</th></tr></thead>
+                <tbody>
+                  <template for:each={selectedAP.costItems} for:item="c">
+                    <tr key={c.id}><td>{c.item}</td><td class="cost-amount">{c.amount}</td><td>{c.note}</td></tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <div class="ap-modal-section">
+              <div class="ams-title">承認フロー</div>
+              <div class="approval-flow">
+                <template for:each={selectedAP.flowSteps} for:item="fs">
+                  <div key={fs.id} class={fs.cls}>
+                    <div class="flow-icon">{fs.icon}</div>
+                    <div class="flow-body">
+                      <div class="flow-role">{fs.role}</div>
+                      <div class="flow-name">{fs.name}</div>
+                      <div class="flow-date">{fs.date}</div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>

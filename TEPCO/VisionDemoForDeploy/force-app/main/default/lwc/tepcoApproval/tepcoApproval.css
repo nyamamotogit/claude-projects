@@ -1,0 +1,72 @@
+.ap-root { font-family:'Salesforce Sans',-apple-system,BlinkMacSystemFont,sans-serif; background:#f3f3f3; min-height:80vh; width:100%; }
+.page-header { background:white; padding:.75rem 1rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #ecebea; }
+.ph-title { font-size:1.25rem; font-weight:700; color:#181818; }
+.ph-sub { font-size:.75rem; color:#444; }
+.btn-primary { background:linear-gradient(135deg,#032d60,#0070d2); color:white; border:none; padding:.375rem .875rem; border-radius:.25rem; cursor:pointer; font-size:.8125rem; font-weight:600; }
+.btn-primary.green { background:linear-gradient(135deg,#04844b,#2eb67d); }
+.ap-summary-row { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; padding:.75rem 1rem; }
+.sum-card { background:white; border-radius:.25rem; box-shadow:0 2px 4px rgba(0,0,0,.07); padding:.75rem; display:flex; align-items:center; gap:.75rem; }
+.sum-icon { font-size:1.5rem; }
+.sum-val { font-size:1.5rem; font-weight:700; color:#181818; }
+.sum-lbl { font-size:.75rem; color:#444; }
+.sum-card.pending-ap { border-left:4px solid #ecb22e; }
+.sum-card.approved-ap { border-left:4px solid #04844b; }
+.sum-card.amount-card { border-left:4px solid #0070d2; }
+.sum-card.budget-card { border-left:4px solid #fe9339; }
+.ap-content { padding:0 1rem .75rem; }
+.section-title { font-size:.875rem; font-weight:700; color:#181818; margin:.75rem 0 .5rem; }
+.approval-list { display:flex; flex-direction:column; gap:.5rem; }
+.approval-card { background:white; border-radius:.25rem; box-shadow:0 2px 4px rgba(0,0,0,.07); padding:.75rem 1rem; cursor:pointer; transition:all .15s; }
+.approval-card.pending { border-left:4px solid #ecb22e; }
+.approval-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.12); }
+.ap-card-hdr { display:flex; align-items:center; gap:.5rem; margin-bottom:.375rem; }
+.ap-num { font-size:.6875rem; color:#444; font-family:monospace; }
+.ap-amount { font-size:.9375rem; font-weight:700; color:#181818; margin-left:auto; }
+.ap-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:.6875rem; font-weight:600; }
+.ap-badge.pending-badge { background:#fff3d6; color:#936800; }
+.ap-badge.approved-badge { background:#def6e6; color:#04844b; }
+.ap-card-title { font-size:.875rem; font-weight:700; color:#181818; margin-bottom:.375rem; }
+.ap-card-meta { display:flex; gap:1rem; font-size:.75rem; color:#444; flex-wrap:wrap; }
+.ap-agent-tag { margin-top:.375rem; background:linear-gradient(135deg,#032d60,#0070d2); color:white; padding:.25rem .625rem; border-radius:4px; font-size:.6875rem; }
+.ap-urgency-bar { margin-top:.375rem; font-size:.75rem; color:#936800; font-weight:600; }
+.ap-table { width:100%; border-collapse:collapse; background:white; border-radius:.25rem; box-shadow:0 2px 4px rgba(0,0,0,.07); }
+.ap-table th { padding:.5rem .75rem; font-size:.75rem; font-weight:700; color:#444; background:#f7f9fc; border-bottom:2px solid #ecebea; text-align:left; }
+.ap-row { cursor:pointer; transition:background .15s; }
+.ap-row:hover { background:#f0f4ff; }
+.ap-row td { padding:.5rem .75rem; font-size:.8125rem; border-bottom:1px solid #f3f3f3; color:#181818; }
+.ap-num-cell { font-family:monospace; font-size:.75rem; color:#444; }
+.ap-title-cell { font-weight:600; }
+.ap-amount-cell { font-weight:700; color:#181818; }
+.ap-date-cell { font-size:.75rem; color:#444; }
+/* Modal */
+.ap-detail-backdrop { position:fixed; inset:0; background:rgba(3,45,96,.45); z-index:500; display:flex; align-items:flex-start; justify-content:center; padding:4vh 1rem; overflow-y:auto; animation:fadeIn .2s ease-out; }
+@keyframes fadeIn { from{opacity:0;}to{opacity:1;} }
+.ap-detail-modal { width:560px; max-width:100%; background:white; border-radius:12px; box-shadow:0 24px 64px rgba(0,0,0,.3); overflow:hidden; animation:modalIn .28s cubic-bezier(.34,1.56,.64,1); }
+@keyframes modalIn { from{opacity:0;transform:translateY(-12px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);} }
+.ap-modal-hdr { background:linear-gradient(135deg,#032d60,#0070d2); color:white; padding:.875rem 1rem; position:relative; }
+.apm-title { font-size:.9375rem; font-weight:700; color:white; line-height:1.4; padding-right:2rem; }
+.apm-sub { font-size:.75rem; color:rgba(255,255,255,.8); margin-top:4px; }
+.apm-close { position:absolute; top:.875rem; right:.875rem; background:rgba(255,255,255,.18); border:none; color:white; cursor:pointer; width:28px; height:28px; border-radius:50%; font-size:.875rem; }
+.ap-modal-body { padding:1rem; max-height:75vh; overflow-y:auto; }
+.ap-modal-section { margin-bottom:1rem; }
+.ams-title { font-size:.75rem; font-weight:700; color:#032d60; text-transform:uppercase; letter-spacing:.04em; margin-bottom:.375rem; border-bottom:1px solid #ecebea; padding-bottom:.375rem; }
+.ams-grid { display:grid; grid-template-columns:1fr 1fr; gap:.375rem; }
+.amg-l { font-size:.6875rem; color:#444; }
+.amg-v { font-size:.8125rem; font-weight:600; }
+.amount-large { font-size:1.25rem; font-weight:700; color:#181818; }
+.ap-desc { font-size:.8125rem; color:#181818; line-height:1.6; background:#f7f9fc; padding:.625rem; border-radius:4px; }
+.cost-table { width:100%; border-collapse:collapse; font-size:.75rem; }
+.cost-table th { padding:.375rem .5rem; background:#f7f9fc; color:#444; font-weight:700; border-bottom:2px solid #ecebea; text-align:left; }
+.cost-table td { padding:.375rem .5rem; border-bottom:1px solid #f3f3f3; }
+.cost-amount { font-weight:700; text-align:right; }
+.approval-flow { display:flex; align-items:flex-start; gap:.5rem; flex-wrap:wrap; }
+.flow-step { display:flex; align-items:flex-start; gap:.5rem; padding:.5rem .625rem; border-radius:6px; min-width:100px; }
+.flow-step.done { background:#def6e6; }
+.flow-step.active { background:#e0f0ff; border:1px solid #1589ee; }
+.flow-step.pending { background:#f3f3f3; opacity:.6; }
+.flow-icon { width:24px; height:24px; border-radius:50%; background:#ecebea; display:flex; align-items:center; justify-content:center; font-size:.75rem; flex-shrink:0; }
+.flow-step.done .flow-icon { background:#04844b; color:white; }
+.flow-step.active .flow-icon { background:#1589ee; color:white; }
+.flow-role { font-size:.6875rem; color:#444; }
+.flow-name { font-size:.75rem; font-weight:600; color:#181818; }
+.flow-date { font-size:.6875rem; color:#6b6b6b; }

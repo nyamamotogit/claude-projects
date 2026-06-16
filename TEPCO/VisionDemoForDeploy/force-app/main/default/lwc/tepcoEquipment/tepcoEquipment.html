@@ -1,0 +1,130 @@
+<template>
+  <div class="eq-root">
+    <div class="page-header">
+      <div class="ph-left">
+        <div class="ph-title">設備管理</div>
+        <div class="ph-sub">東京電力パワーグリッド 系統設備台帳</div>
+      </div>
+      <div class="ph-actions">
+        <button class="btn-primary" onclick={toggleFilter}>🔍 フィルタ</button>
+        <button class="btn-primary green" onclick={showNewEquipModal}>＋ 新規設備登録</button>
+      </div>
+    </div>
+
+    <!-- KPI row -->
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-icon blue">⚡</div><div class="kpi-body"><div class="kpi-val">342</div><div class="kpi-lbl">変電設備 総数</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon red">⚠</div><div class="kpi-body"><div class="kpi-val">3</div><div class="kpi-lbl">要注意アラート</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon orange">🔧</div><div class="kpi-body"><div class="kpi-val">18</div><div class="kpi-lbl">保全作業進行中</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon green">✓</div><div class="kpi-body"><div class="kpi-val">97.8%</div><div class="kpi-lbl">設備稼働率</div></div></div>
+    </div>
+
+    <div class="main-row">
+      <!-- Equipment list -->
+      <div class="col-list">
+        <div class="list-header">
+          <div class="list-title">設備一覧 <span class="list-count">({equipmentList.length}件)</span></div>
+          <div class="view-toggle">
+            <span class={listViewCls} onclick={setListView}>☰ リスト</span>
+            <span class={gridViewCls} onclick={setGridView}>⊞ グリッド</span>
+          </div>
+        </div>
+
+        <template if:true={isListView}>
+          <table class="eq-table">
+            <thead>
+              <tr>
+                <th>設備名</th><th>種別</th><th>設置場所</th><th>電圧</th><th>運開年</th><th>状態</th><th>直近保全</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={equipmentList} for:item="eq">
+                <tr key={eq.id} class={eq.rowCls} onclick={selectEquipment} data-eqid={eq.id}>
+                  <td class="eq-name">{eq.name}</td>
+                  <td>{eq.type}</td>
+                  <td>{eq.location}</td>
+                  <td>{eq.voltage}</td>
+                  <td>{eq.year}</td>
+                  <td><span class={eq.statusCls}>{eq.status}</span></td>
+                  <td>{eq.lastMaint}</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </template>
+
+        <template if:true={isGridView}>
+          <div class="eq-grid">
+            <template for:each={equipmentList} for:item="eq">
+              <div key={eq.id} class="eq-card" onclick={selectEquipment} data-eqid={eq.id}>
+                <div class="eq-card-hdr">
+                  <span class={eq.cardIconCls}>{eq.typeIcon}</span>
+                  <span class={eq.statusCls}>{eq.status}</span>
+                </div>
+                <div class="eq-card-name">{eq.name}</div>
+                <div class="eq-card-loc">{eq.location}</div>
+                <div class="eq-card-meta">{eq.voltage} ・ {eq.year}運開</div>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <!-- Detail panel -->
+      <div class="col-detail">
+        <template if:true={selectedEquipment}>
+          <div class="detail-card">
+            <div class="detail-hdr">
+              <span class="detail-icon">{selectedEquipment.typeIcon}</span>
+              <div>
+                <div class="detail-name">{selectedEquipment.name}</div>
+                <div class="detail-loc">{selectedEquipment.location}</div>
+              </div>
+              <span class={selectedEquipment.statusCls}>{selectedEquipment.status}</span>
+            </div>
+            <div class="detail-body">
+              <div class="detail-section-title">基本情報</div>
+              <div class="detail-grid">
+                <div class="dg-item"><div class="dg-l">設備種別</div><div class="dg-v">{selectedEquipment.type}</div></div>
+                <div class="dg-item"><div class="dg-l">電圧</div><div class="dg-v">{selectedEquipment.voltage}</div></div>
+                <div class="dg-item"><div class="dg-l">容量</div><div class="dg-v">{selectedEquipment.capacity}</div></div>
+                <div class="dg-item"><div class="dg-l">製造メーカー</div><div class="dg-v">{selectedEquipment.maker}</div></div>
+                <div class="dg-item"><div class="dg-l">運開年月</div><div class="dg-v">{selectedEquipment.commDate}</div></div>
+                <div class="dg-item"><div class="dg-l">設計寿命</div><div class="dg-v">{selectedEquipment.lifespan}</div></div>
+                <div class="dg-item"><div class="dg-l">設置場所</div><div class="dg-v">{selectedEquipment.location}</div></div>
+                <div class="dg-item"><div class="dg-l">担当グループ</div><div class="dg-v">{selectedEquipment.group}</div></div>
+              </div>
+              <div class="detail-section-title">保全履歴</div>
+              <div class="maint-list">
+                <template for:each={selectedEquipment.maintHistory} for:item="m">
+                  <div key={m.id} class="maint-item">
+                    <span class="maint-date">{m.date}</span>
+                    <span class={m.typeCls}>{m.type}</span>
+                    <span class="maint-desc">{m.desc}</span>
+                    <span class="maint-by">{m.by}</span>
+                  </div>
+                </template>
+              </div>
+              <div class="detail-section-title">センサーデータ (直近)</div>
+              <div class="sensor-grid">
+                <template for:each={selectedEquipment.sensors} for:item="s">
+                  <div key={s.id} class={s.cls}>
+                    <div class="sensor-lbl">{s.label}</div>
+                    <div class="sensor-val">{s.value}</div>
+                    <div class="sensor-trend">{s.trend}</div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </template>
+        <template if:false={selectedEquipment}>
+          <div class="detail-placeholder">
+            <div class="dp-icon">⚡</div>
+            <div class="dp-text">設備を選択すると詳細が表示されます</div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+</template>

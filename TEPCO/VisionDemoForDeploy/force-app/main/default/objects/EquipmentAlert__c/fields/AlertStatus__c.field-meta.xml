@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AlertStatus__c</fullName>
+    <label>ステータス</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>IoT検知</fullName><default>false</default><label>IoT検知</label></value>
+            <value><fullName>AI診断</fullName><default>true</default><label>AI診断</label></value>
+            <value><fullName>部品手配</fullName><default>false</default><label>部品手配</label></value>
+            <value><fullName>作業班手配</fullName><default>false</default><label>作業班手配</label></value>
+            <value><fullName>対応実施</fullName><default>false</default><label>対応実施</label></value>
+            <value><fullName>復旧確認</fullName><default>false</default><label>復旧確認</label></value>
+            <value><fullName>完了</fullName><default>false</default><label>完了</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

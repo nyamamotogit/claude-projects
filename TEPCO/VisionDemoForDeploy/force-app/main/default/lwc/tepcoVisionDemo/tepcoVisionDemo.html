@@ -1,0 +1,404 @@
+<template>
+  <div class="tepco-root">
+    <!-- Toast stack -->
+    <div class="toast-stack" lwc:ref="toastStack"></div>
+    <!-- Demo helper -->
+    <div class={demoHelperClass}>
+      <div class="demo-helper-icon">🤖</div>
+      <div class="demo-helper-text" lwc:ref="demoHelperText"></div>
+    </div>
+
+    <!-- SCENE 1 -->
+    <div class={scene1Class}>
+
+      <!-- Highlights bar -->
+      <div class="highlights-bar">
+        <div class="hl-icon-wrap red">⚠</div>
+        <div class="hl-info">
+          <div class="hl-label">設備アラート ・ ALT-2026-0615-1342</div>
+          <div class="hl-name">新豊洲変電所 1号トランス ・ 絶縁油中ガス異常上昇</div>
+        </div>
+        <div class="hl-actions">
+          <span class="pill pill-red">⚠ Critical</span>
+          <button class="btn-neutral">設備カルテ</button>
+          <button class="btn-neutral">過去事例</button>
+          <button class="af-btn" onclick={toggleAgentforce}>🤖 Agentforce</button>
+        </div>
+      </div>
+      <div class="hl-fields-bar">
+        <div class="hf"><div class="hf-l">設備</div><div class="hf-v">新豊洲変電所 (地下式 275/154kV)</div></div>
+        <div class="hf"><div class="hf-l">対象機器</div><div class="hf-v">1号主変圧器 / 300MVA / 2018運開</div></div>
+        <div class="hf"><div class="hf-l">検知</div><div class="hf-v">水素 +218ppm / アセチレン 検出</div></div>
+        <div class="hf"><div class="hf-l">影響</div><div class="hf-v">中央区・港区・江東区 約24万世帯</div></div>
+        <div class="hf"><div class="hf-l">担当</div><div class="hf-v">佐々木 雅也 (東京NWセンター)</div></div>
+        <div class="hf"><div class="hf-l">受信</div><div class="hf-v">本日 13:42:04</div></div>
+      </div>
+
+      <!-- Clickable Path -->
+      <div class="path-wrap">
+        <div class="sf-path">
+          <template for:each={pathSteps} for:item="step">
+            <div key={step.id} class={step.cls} onclick={clickPath} data-stepid={step.id}>
+              {step.label}
+            </div>
+          </template>
+        </div>
+        <!-- Path detail panel -->
+        <template if:true={showPathDetail}>
+          <div class="path-detail">
+            <div class="path-detail-header">
+              <span class="path-detail-title">{activePathStep.label} — 確認項目 &amp; ガイダンス</span>
+              <button class="path-detail-close" onclick={closePathDetail}>✕</button>
+            </div>
+            <div class="path-detail-body">
+              <div class="path-checklist">
+                <template for:each={activePathStep.checks} for:item="chk">
+                  <div key={chk.id} class={chk.rowCls} onclick={toggleCheck} data-chkid={chk.id} data-stepid={activePathStep.id}>
+                    <span class="chk-box">{chk.mark}</span>
+                    <span class="chk-text">{chk.text}</span>
+                  </div>
+                </template>
+              </div>
+              <div class="path-guidance">
+                <div class="path-guidance-title">📋 ガイダンス</div>
+                <div class="path-guidance-text">{activePathStep.guidance}</div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Main content -->
+      <div class="main-row">
+        <!-- LEFT -->
+        <div class="col-main">
+
+          <!-- IoT Panel -->
+          <div class="iot-panel">
+            <div class="iot-hdr">
+              <span class="iot-pulse"></span>
+              <span class="iot-hdr-title">AWS IoT Core ・ 油中ガス分析センサー (DGA-MON-1F-A) ライブストリーム</span>
+              <span class="badge aws">AWS</span><span class="badge iot">IoT</span>
+            </div>
+            <div class="iot-body">
+              <div class="iot-grid">
+                <div class={iotH2Cls} onclick={selectH2}>
+                  <div class="iot-lbl">水素 H₂</div>
+                  <div class="iot-val">218 ppm</div>
+                  <div class="iot-trend">▲ +186% vs ベース</div>
+                </div>
+                <div class={iotC2h2Cls} onclick={selectC2h2}>
+                  <div class="iot-lbl">アセチレン C₂H₂</div>
+                  <div class="iot-val">12 ppm</div>
+                  <div class="iot-trend">▲ 通常検出されない</div>
+                </div>
+                <div class={iotTempCls} onclick={selectTemp}>
+                  <div class="iot-lbl">油温</div>
+                  <div class="iot-val">68.4 ℃</div>
+                  <div class="iot-trend" style="color:#fbbf24;">▲ +4.2 ℃</div>
+                </div>
+                <div class={iotLoadCls} onclick={selectLoad}>
+                  <div class="iot-lbl">負荷率</div>
+                  <div class="iot-val">62%</div>
+                  <div class="iot-trend" style="color:#94a3b8;">平常範囲</div>
+                </div>
+              </div>
+              <div class="iot-chart-wrap">
+                <div class="iot-chart-title">
+                  <span>{currentChartName}</span>
+                  <span class="play-link" onclick={redrawChart}>▶ 再生</span>
+                </div>
+                <div lwc:ref="chartContainer" class="chart-container"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pre-launch -->
+          <template if:true={showPreAfCard}>
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">対応プラン</span>
+                <span class="pill pill-orange">未生成</span>
+              </div>
+              <div class="card-body center-pad">
+                <p class="pre-af-text">IoT センサーが異常を検知しました。<br/><strong>Agentforce</strong> を起動して、SAP・M365・Teams・AWS から<br/>関連情報を横断統合し、対応プランを生成します。</p>
+                <button class="hero-btn glow" onclick={launchAgentforce}>🤖 Agentforce を起動して対応プランを生成</button>
+              </div>
+            </div>
+          </template>
+
+          <!-- Action plan -->
+          <template if:true={showActionPlan}>
+            <div class="action-plan">
+              <div class="ap-hdr">
+                <span>🤖</span>
+                <span class="ap-title">Agentforce が組み立てた対応プラン</span>
+                <span class="ap-conf">{afConfidence}</span>
+              </div>
+              <div class="ap-body">
+                <template for:each={actionSteps} for:item="step">
+                  <div key={step.id} class={step.stepClass} onclick={openStepModal} data-stepid={step.id}>
+                    <div class={step.numClass}>{step.num}</div>
+                    <div class="as-body">
+                      <div class="as-title"><span class={step.badgeClass}>{step.source}</span> {step.title}</div>
+                      <div class="as-desc">{step.desc}</div>
+                      <div class="as-meta">{step.meta}</div>
+                    </div>
+                    <span class={step.pillClass}>{step.pillText}</span>
+                  </div>
+                </template>
+              </div>
+              <div class="ap-cta">
+                <div class="ap-cta-hint"><strong>承認1回</strong>で 5 システムが同時に動きます</div>
+                <button class="hero-btn green glow" onclick={executePlan} disabled={executeDisabled}>✓ 承認して実行</button>
+              </div>
+            </div>
+          </template>
+
+          <div class="scene-nav" style="margin-top:.5rem;">
+            <button class="hero-btn" onclick={goToScene2} disabled={executeNotDone}>▶ Slack 対策室を見る</button>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-side">
+          <template if:true={showInsightCard}>
+            <div class="card">
+              <div class="card-hdr">
+                <span class="card-title">Agentforce 推論ログ</span>
+                <span class="pill pill-blue">LIVE</span>
+              </div>
+              <div class="card-body insight-body">
+                <div class="insight-sec"><div class="insight-lbl">🔍 過去類似事例</div><div class="insight-txt">2020 大阪・南港変電所 (関電 / 公開IR)、2017 川崎・南渡田 (当社) と<strong>一致度 89%</strong>。両事例とも放置で 72-96時間以内に部分ショート。</div></div>
+                <div class="insight-sec"><div class="insight-lbl">🌡️ 物理パラメータ</div><div class="insight-txt">油温 +4.2℃の上昇は負荷率では説明不可。<strong>内部局所放電による発熱の可能性大</strong>。アセチレン検出が裏付け。</div></div>
+                <div class="insight-sec"><div class="insight-lbl">📊 影響シミュレーション</div><div class="insight-txt">本機停止で 24万世帯リスク (中央/港/江東)。系統迂回で実停電は回避可能。<strong>放置の場合: 連鎖停止 → 都心約62万世帯</strong>。</div></div>
+              </div>
+            </div>
+          </template>
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">関連設備</span></div>
+            <div class="card-body equip-info">
+              <div class="ei"><div class="ei-l">変電所</div><div class="ei-v">新豊洲変電所 (地下式 / 江東区豊洲)</div></div>
+              <div class="ei"><div class="ei-l">建設</div><div class="ei-v">2017年運開 ・ 設計寿命 40年</div></div>
+              <div class="ei"><div class="ei-l">系統</div><div class="ei-v">京葉幹線 → 新豊洲 → 都心ループ</div></div>
+              <div class="ei"><div class="ei-l">直近1年保全</div><div class="ei-v">6件 ・ 重大事故 0件</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 2 -->
+    <div class={scene2Class}>
+      <div class="sys-grid">
+        <div class="sys-tile done"><div class="sys-icon sap">SAP</div><div class="sys-name">S/4HANA</div><div class="sys-stat">予備品発注確定</div></div>
+        <div class="sys-tile done"><div class="sys-icon m365">M365</div><div class="sys-name">Exchange</div><div class="sys-stat">保全2班スケジュール確定</div></div>
+        <div class="sys-tile done"><div class="sys-icon teams">TEAMS</div><div class="sys-name">東芝会議</div><div class="sys-stat">16:00 確定</div></div>
+        <div class="sys-tile done"><div class="sys-icon aws">AWS</div><div class="sys-name">系統シミュレータ</div><div class="sys-stat">迂回プラン生成済</div></div>
+        <div class="sys-tile done"><div class="sys-icon slk">SLACK</div><div class="sys-name">対策室チャンネル</div><div class="sys-stat">14名招集</div></div>
+      </div>
+      <div class="main-row">
+        <div class="col-main">
+          <div class="slack-shell">
+            <div class="slack-sb">
+              <div class="slack-ws"><div class="slack-ws-icon">T</div><div><div class="slack-ws-name">TEPCO HD</div><div class="slack-ws-meta">11,420名</div></div></div>
+              <div class="slack-chs">
+                <div class="slack-sec-title">▾ チャンネル</div>
+                <div class="slack-ch"># general</div>
+                <div class="slack-ch"># 系統運用-中給</div>
+                <div class="slack-ch active new"># 緊急-新豊洲</div>
+                <div class="slack-ch"># 設備保全-東京nw</div>
+                <div class="slack-ch"># 経営企画-リスク</div>
+                <div class="slack-sec-title">▾ Apps</div>
+                <div class="slack-ch">⚡ Agentforce</div>
+                <div class="slack-ch">📊 Tableau Next</div>
+              </div>
+            </div>
+            <div class="slack-main">
+              <div class="slack-main-hdr">
+                <div>
+                  <div class="slack-ch-name"># 緊急-新豊洲トランス保全-対策室</div>
+                  <div class="slack-ch-meta">14名 ・ 自動作成 13:42 ・ Salesforce ALT-2026-0615-1342 連携</div>
+                </div>
+                <div class="hdr-pills"><span class="pill pill-red">🔴 LIVE</span><span class="pill pill-blue">SF同期</span></div>
+              </div>
+              <div class="slack-msgs" lwc:ref="slackMsgs">
+                <div class="slack-divider">— 13:42 自動メッセージ —</div>
+                <div class="slack-msg show">
+                  <img class="slack-av" src="https://ui-avatars.com/api/?name=AF&background=0070d2&color=fff" alt=""/>
+                  <div class="slack-body"><div><span class="slack-name">Agentforce</span><span class="slack-app">APP</span><span class="slack-time">13:42</span></div><div>このチャンネルを自動作成しました。新豊洲1号トランスの油中ガス異常を受け、<strong>関係者14名を自動招待</strong>しました。</div></div>
+                </div>
+                <div class="slack-msg show">
+                  <img class="slack-av" src="https://ui-avatars.com/api/?name=渡辺+健&background=2eb67d&color=fff" alt=""/>
+                  <div class="slack-body"><div><span class="slack-name">渡辺 健</span><span class="slack-role">中央給電指令所・主任給電員</span><span class="slack-time">13:43</span></div><div>来ました。<span class="slack-mention">@Agentforce</span> 1号機停止の場合、都心ループに与える影響を最新潮流で計算してくれる？富津火力の余力含めて。</div></div>
+                </div>
+                <template for:each={visibleSlackMsgs} for:item="msg">
+                  <div key={msg.id} class="slack-msg show">
+                    <img class="slack-av" src={msg.avatar} alt=""/>
+                    <div class="slack-body">
+                      <div><span class="slack-name">{msg.name}</span><template if:true={msg.isApp}><span class="slack-app">APP</span></template><template if:true={msg.role}><span class="slack-role">{msg.role}</span></template><span class="slack-time">{msg.time}</span></div>
+                      <div class="slack-msg-content" lwc:dom="manual" data-msgid={msg.id}></div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+              <div class="slack-input-area"><div class="slack-input-mock">メッセージを入力...</div></div>
+            </div>
+          </div>
+          <div class="scene-nav">
+            <template if:false={showEscalateBtn}>
+              <button class="hero-btn" onclick={advanceSlack}>▶ {slackNextLabel}</button>
+            </template>
+            <template if:true={showEscalateBtn}>
+              <button class="hero-btn red glow" onclick={goToScene3}>📱 関 常務のスマホ画面を見る ▶</button>
+            </template>
+            <button class="hero-btn" style="background:#54698d;" onclick={backToScene1}>← 戻る</button>
+          </div>
+        </div>
+        <div class="col-side">
+          <div class="card">
+            <div class="card-hdr"><span class="badge tableau" style="font-size:.75rem;padding:4px 10px;">Tableau</span><span class="card-title">リスク指標 (ライブ)</span></div>
+            <div class="card-body"><div class="chart-label">残時間ごとのショート確率</div><div lwc:ref="riskChart" class="risk-chart-wrap"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">参加メンバー (14)</span></div>
+            <div class="card-body member-list">
+              <div class="mg-title">現場・保全</div>
+              <div class="mi">👤 佐々木 雅也</div><div class="mi">👤 大山 剛 (保全2班長)</div>
+              <div class="mg-title">系統運用</div>
+              <div class="mi">👤 渡辺 健 (中給) <span class="pill pill-red" style="font-size:.625rem;">LIVE</span></div><div class="mi">👤 山口 貴志 (給電課長)</div>
+              <div class="mg-title">経企/広報</div>
+              <div class="mi">👤 松本 真理</div><div class="mi">👤 吉田 悟 (広報部長)</div>
+              <div class="mg-title">経営層</div>
+              <div class="mi">👤 <strong>関 常務</strong> <span class={sekiStatusClass}>{sekiStatusText}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3 -->
+    <div class={scene3Class}>
+      <div class="mobile-stage">
+        <div class="mobile-container">
+          <div class="mobile-frame">
+            <div class="mobile-screen">
+              <template if:true={showMobileSlack}>
+                <div class="mobile-sb"><span>13:48</span><span>📶 5G 🔋 84%</span></div>
+                <div class="mobile-sl-hdr">
+                  <div class="m-ws-icon">T</div>
+                  <div><div class="m-ch-name">Agentforce</div><div class="m-ch-meta">DM ・ TEPCO HD</div></div>
+                  <span class="pill pill-red" style="background:white;color:#ba0517;">緊急</span>
+                </div>
+                <div class="mobile-msgs">
+                  <div class="mobile-msg">
+                    <div class="m-msg-hdr"><img class="m-av" src="https://ui-avatars.com/api/?name=AF&background=0070d2&color=fff" alt=""/><span class="m-name">Agentforce</span><span class="m-time">13:48</span></div>
+                    <div class="m-body"><strong style="color:#ba0517;">⚠ 経営判断要件:</strong> 新豊洲変電所 1号トランスの油中ガス異常。<strong>放置で 72時間以内に都心約62万世帯が停電するリスク</strong>。<br/><br/>緊急保全で停電は回避できますが、<strong>追加コスト ¥5.2億 (緊急予算枠 ¥3億超過)</strong> のため経営承認が必要です。停電許容シナリオの想定損害は <strong>¥84〜120億</strong>。</div>
+                    <div class="m-cta blue" onclick={showMobileTableauFn}>📊 詳細データを確認</div>
+                  </div>
+                  <div class="mobile-msg">
+                    <div class="m-msg-hdr"><img class="m-av" src="https://ui-avatars.com/api/?name=松本&background=ecb22e&color=fff" alt=""/><span class="m-name">松本 真理 (経企)</span><span class="m-time">13:48</span></div>
+                    <div class="m-body">常務、中央給電指令所と現場保全は系統切替プランで合意済み。<strong>ご判断のみで作業開始できます</strong>。</div>
+                  </div>
+                  <div class="mobile-msg highlight-msg">
+                    <div class="m-msg-hdr"><img class="m-av" src="https://ui-avatars.com/api/?name=AF&background=0070d2&color=fff" alt=""/><span class="m-name">Agentforce</span><span class="m-time">13:49</span></div>
+                    <div class="m-body">📌 タップで実行される処理:<br/>• SAP 緊急稟議 → <strong>承認済</strong><br/>• 現場 Slack に「作業開始指示」自動投稿<br/>• 監査ログを Salesforce に永続記録<br/>• 広報部に対外コミュ準備指示</div>
+                  </div>
+                </div>
+              </template>
+              <template if:true={showMobileTableau2}>
+                <div class="mobile-sb"><span>13:49</span><span>📶 5G 🔋 84%</span></div>
+                <div class="m-tab-hdr">
+                  <button class="m-back" onclick={backToMobileSlack}>←</button>
+                  <div><div class="m-tab-title">📊 関 常務 VIP ビュー</div><div class="m-tab-meta">新豊洲事案 ・ Tableau Next</div></div>
+                  <span class="pill pill-red" style="background:white;color:#ba0517;">LIVE</span>
+                </div>
+                <div class="m-tab-body">
+                  <div class="m-kpi-row">
+                    <div class="m-kpi bad"><div class="m-kpi-lbl">停電許容</div><div class="m-kpi-val">¥84-120億</div><div class="m-kpi-sub">想定損害</div></div>
+                    <div class="m-kpi good"><div class="m-kpi-lbl">緊急対応</div><div class="m-kpi-val">¥5.2億</div><div class="m-kpi-sub">予算超過 ¥2.2億</div></div>
+                  </div>
+                  <div class="m-sec-title">▼ コスト比較 <span class="play-link" onclick={animateBars}>▶ 再生</span></div>
+                  <div class="bar-area">
+                    <div class="bar-row"><span class="bar-lbl">停電許容</span><span class="bar-cost red-t">¥84-120億</span></div>
+                    <div class="bar-track"><div class="bar-fill red-bar" style={blackoutBarStyle}></div></div>
+                    <div class="bar-row"><span class="bar-lbl">緊急対応 (推奨)</span><span class="bar-cost green-t">¥5.2億</span></div>
+                    <div class="bar-track"><div class="bar-fill green-bar" style={emergencyBarStyle}></div></div>
+                    <div class="roi-txt"><strong>回避ROI 16〜23倍</strong></div>
+                  </div>
+                  <div class="m-sec-title">🗺️ 都心停電影響ヒートマップ <span class="play-link" onclick={animateHeatmap}>▶ 表示</span></div>
+                  <div class="heatmap-wrap">
+                    <div class="heatmap-grid">
+                      <div class={hmChiyodaCls}>千代田区</div><div class={hmChuoCls}>中央区</div><div class={hmKotoCls}>江東区</div>
+                      <div class={hmShinjukuCls}>新宿区</div><div class={hmMinatoCls}>港区</div><div class={hmShibuyaCls}>渋谷区</div>
+                    </div>
+                    <div class="hm-note">影響範囲: 中央区・港区・江東区・千代田区 ・ 病院 7 / 避難所 14 / 地下鉄駅 32</div>
+                  </div>
+                  <div class="af-summary">
+                    <strong>🤖 Agentforce サマリー:</strong><br/>
+                    都心約24万世帯への供給リスク。系統迂回 + 緊急保全で停電は回避可。コスト ¥5.2億で<strong>16〜23倍の損失回避</strong>。<strong>常務のワンタップで作業開始できます。</strong>
+                  </div>
+                  <button class="m-approve-btn" onclick={vipApprove}>✓ 緊急予算執行・対応承認 (¥5.2億)<div class="approve-sub">タップで SAP 稟議「承認済」</div></button>
+                </div>
+              </template>
+              <template if:true={showMobileResult}>
+                <div class="mobile-sb"><span>13:50</span><span>📶 5G 🔋 84%</span></div>
+                <div class="m-success"><div class="m-success-icon">✓</div><div class="m-success-title">承認完了</div><div class="m-success-sub">SAP 稟議 RNG-2026-0615-EM01 が「承認済」に更新されました</div></div>
+                <div class="ds-tiles">
+                  <div class="ds-hdr">▼ 全システムが連動して稼働開始</div>
+                  <template for:each={dsTiles} for:item="tile">
+                    <div key={tile.id} class={tile.tileClass}>
+                      <div class="ds-icon" style={tile.iconStyle}>{tile.icon}</div>
+                      <div class="ds-body"><div class="ds-title">{tile.title}</div><div class="ds-desc">{tile.desc}</div></div>
+                      <div class="ds-check">✓</div>
+                    </div>
+                  </template>
+                  <div class="scene-nav" style="padding:1rem;">
+                    <button class="hero-btn" onclick={resetDemo}>🔄 最初から再生</button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+          <div class="mobile-caption">関 常務 私用 iPhone (Slack アプリ)</div>
+        </div>
+      </div>
+      <div class="scene-nav" style="text-align:center;padding:1rem;">
+        <button class="hero-btn" style="background:#54698d;" onclick={backToScene2}>← Slack に戻る</button>
+      </div>
+    </div>
+
+    <!-- Agentforce Panel -->
+    <aside class={afPanelClass}>
+      <header class="af-hdr">
+        <div class="af-title">🤖 Agentforce <span class="af-dot"></span></div>
+        <button class="af-close" onclick={toggleAgentforce}>✕</button>
+      </header>
+      <div class="af-conv" lwc:ref="afConversation">
+        <template for:each={afMessages} for:item="msg">
+          <div key={msg.id} class="af-msg">
+            <div class="af-av">🤖</div>
+            <div class="af-bubble" lwc:dom="manual" data-msgid={msg.id}></div>
+          </div>
+        </template>
+      </div>
+      <div class="af-input-wrap">
+        <input type="text" class="af-input" placeholder="Agentforce に質問..." onkeydown={handleAfInput}/>
+      </div>
+    </aside>
+
+    <!-- Step Modal -->
+    <template if:true={showStepModal}>
+      <div class="modal-backdrop" onclick={closeStepModal}>
+        <div class="step-modal" onclick={stopProp}>
+          <div class="step-modal-hdr">
+            <div class="step-modal-title">{modalTitle}</div>
+            <div class="step-modal-sub">{modalSub}</div>
+            <button class="step-modal-close" onclick={closeStepModal}>✕</button>
+          </div>
+          <div class="step-modal-body" lwc:dom="manual" lwc:ref="modalBody"></div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
