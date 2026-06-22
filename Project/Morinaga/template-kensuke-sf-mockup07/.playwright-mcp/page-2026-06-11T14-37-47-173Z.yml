@@ -1,0 +1,250 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - button "戻る" [ref=e5] [cursor=pointer]:
+        - img [ref=e6]
+      - button "進む" [ref=e8] [cursor=pointer]:
+        - img [ref=e9]
+      - button "履歴" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+    - generic [ref=e15]:
+      - img [ref=e16]
+      - generic [ref=e19]: Acme Corp を検索
+    - generic [ref=e20]:
+      - button "ヘルプ" [ref=e21] [cursor=pointer]:
+        - img [ref=e22]
+      - button "YK" [ref=e25] [cursor=pointer]:
+        - generic [ref=e26]: YK
+  - complementary [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - text: Acme Corp
+        - img [ref=e30]
+      - button "メッセージを作成" [ref=e32] [cursor=pointer]:
+        - img [ref=e33]
+    - list [ref=e36]:
+      - listitem [ref=e37] [cursor=pointer]:
+        - img [ref=e38]
+        - text: スレッド
+      - listitem [ref=e40] [cursor=pointer]:
+        - img [ref=e41]
+        - text: 全アクティビティ
+      - listitem [ref=e44] [cursor=pointer]:
+        - img [ref=e45]
+        - text: あとで
+      - listitem [ref=e47] [cursor=pointer]:
+        - img [ref=e48]
+        - text: 下書きと送信済み
+      - listitem [ref=e51] [cursor=pointer]:
+        - img [ref=e52]
+        - text: その他
+    - generic [ref=e56]:
+      - generic [ref=e57] [cursor=pointer]:
+        - img [ref=e58]
+        - generic [ref=e60]: チャンネル
+        - img [ref=e61]
+      - generic [ref=e62] [cursor=pointer]:
+        - img [ref=e63]
+        - text: general
+      - generic [ref=e66] [cursor=pointer]:
+        - img [ref=e67]
+        - text: announcements
+        - generic [ref=e70]: "3"
+      - generic [ref=e71] [cursor=pointer]:
+        - img [ref=e72]
+        - text: random
+      - generic [ref=e75] [cursor=pointer]:
+        - img [ref=e76]
+        - text: sales-japan
+      - generic [ref=e79] [cursor=pointer]:
+        - img [ref=e80]
+        - text: release-notes
+      - generic [ref=e83] [cursor=pointer]:
+        - img [ref=e84]
+        - text: finance-private
+      - generic [ref=e87] [cursor=pointer]:
+        - img [ref=e88]
+        - text: チャンネルを追加する
+    - generic [ref=e89]:
+      - generic [ref=e90] [cursor=pointer]:
+        - img [ref=e91]
+        - generic [ref=e93]: ダイレクトメッセージ
+        - img [ref=e94]
+      - generic [ref=e95] [cursor=pointer]: 鈴木 さくら
+      - generic [ref=e97] [cursor=pointer]:
+        - text: 田中 拓也
+        - generic [ref=e99]: "2"
+      - generic [ref=e100] [cursor=pointer]: 中村 玲奈
+      - generic [ref=e102] [cursor=pointer]: Slackbot
+    - generic [ref=e104]:
+      - generic [ref=e105] [cursor=pointer]:
+        - img [ref=e106]
+        - generic [ref=e108]: アプリ
+      - generic [ref=e109] [cursor=pointer]:
+        - img [ref=e110]
+        - text: Salesforce
+      - generic [ref=e112] [cursor=pointer]:
+        - img [ref=e113]
+        - text: Google Drive
+      - generic [ref=e115] [cursor=pointer]:
+        - img [ref=e116]
+        - text: GitHub
+  - main [ref=e118]:
+    - generic [ref=e119]:
+      - generic [ref=e120]:
+        - generic [ref=e121]:
+          - img [ref=e122]
+          - text: general
+          - generic "お気に入り" [ref=e125] [cursor=pointer]:
+            - img [ref=e126]
+          - img [ref=e128]
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - img [ref=e132]
+            - text: 会社全体のアナウンスと業務連絡用
+          - generic [ref=e134]:
+            - img [ref=e135]
+            - text: 3件のピン留め
+      - generic [ref=e137]:
+        - button "Huddle" [ref=e138] [cursor=pointer]:
+          - img [ref=e139]
+          - text: Huddle
+        - button "Canvas" [ref=e141] [cursor=pointer]:
+          - img [ref=e142]
+          - text: Canvas
+        - button "128" [ref=e146] [cursor=pointer]:
+          - img [ref=e147]
+          - text: "128"
+        - button "その他" [ref=e152] [cursor=pointer]:
+          - img [ref=e153]
+    - generic [ref=e157]:
+      - img [ref=e158]
+      - generic [ref=e160]: "ピン留め:"
+      - generic [ref=e161]: 2026年Q2の全社目標と週次定例ルールはこのチャンネルにピン留めしています
+    - generic [ref=e162]:
+      - generic [ref=e165]: 本日 — 2026年6月11日(木)
+      - generic [ref=e167]:
+        - generic [ref=e168]: MN
+        - generic [ref=e169]:
+          - generic [ref=e170]:
+            - generic [ref=e171]: 中村 玲奈
+            - generic [ref=e172]: 9:02
+          - generic [ref=e173]: "おはようございます ☀️ 本日10:00から全社定例があります。アジェンダは #release-notes に共有済みです。"
+          - generic [ref=e174]:
+            - button "👀 3" [ref=e175] [cursor=pointer]:
+              - text: 👀
+              - generic [ref=e176]: "3"
+            - button "✅ 5" [ref=e177] [cursor=pointer]:
+              - text: ✅
+              - generic [ref=e178]: "5"
+            - button [ref=e179] [cursor=pointer]:
+              - img [ref=e180]
+      - generic [ref=e183]:
+        - generic [ref=e184]: SK
+        - generic [ref=e185]:
+          - generic [ref=e186]:
+            - generic [ref=e187]: 鈴木 さくら
+            - generic [ref=e188]: 10:15
+          - generic [ref=e189]: "@山本 健介 オムロン様の見積、本日の14:00までに出せそうですか？ 役員レビューが15:00に入っていて、間に合わせたいです 🙏"
+          - generic [ref=e190]:
+            - button "🙏 2" [ref=e191] [cursor=pointer]:
+              - text: 🙏
+              - generic [ref=e192]: "2"
+            - button [ref=e193] [cursor=pointer]:
+              - img [ref=e194]
+      - generic [ref=e197]:
+        - generic [ref=e198]: YK
+        - generic [ref=e199]:
+          - generic [ref=e200]:
+            - generic [ref=e201]: 山本 健介
+            - generic [ref=e202]: 10:22
+          - generic [ref=e203]: "@鈴木 さくら 11:30に下書き共有します。先方からの追加要望が1件入ったので反映してから出します。"
+          - generic [ref=e204] [cursor=pointer]:
+            - generic [ref=e205]:
+              - generic [ref=e206]: SK
+              - generic [ref=e207]: TT
+            - generic [ref=e208]: 5件の返信
+            - generic [ref=e209]: 最終返信 10分前
+      - generic [ref=e210]:
+        - img [ref=e211]
+        - generic [ref=e214]: 田中 拓也 がチャンネルに参加しました
+      - generic [ref=e215]:
+        - generic [ref=e216]: TT
+        - generic [ref=e217]:
+          - generic [ref=e218]:
+            - generic [ref=e219]: 田中 拓也
+            - generic [ref=e220]: 11:08
+          - generic [ref=e221]: "@channel APIの新エンドポイント、stagingで動作確認できました。サンプル:"
+          - generic [ref=e222]: "curl -X POST https://api.acme.dev/v2/quotes \\ -H \"Authorization: Bearer $TOKEN\" \\ -d '{\"account\":\"omron\",\"amount\":12500000}'"
+          - generic [ref=e223]: 正式リリースは来週月曜の予定です。
+          - generic [ref=e224]:
+            - button "🚀 4" [ref=e225] [cursor=pointer]:
+              - text: 🚀
+              - generic [ref=e226]: "4"
+            - button "🎉 2" [ref=e227] [cursor=pointer]:
+              - text: 🎉
+              - generic [ref=e228]: "2"
+      - generic [ref=e229]:
+        - img [ref=e231]
+        - generic [ref=e233]:
+          - generic [ref=e234]:
+            - generic [ref=e235]: Salesforce
+            - generic [ref=e236]: APP
+            - generic [ref=e237]: 12:34
+          - generic [ref=e238]: 商談ステージが更新されました
+          - generic [ref=e239]:
+            - generic [ref=e240]: オムロン株式会社 - Q2新規契約
+            - generic [ref=e241]:
+              - text: "ステージ: 提案/見積 → 交渉"
+              - text: "金額: ¥12,500,000 / クローズ予定: 2026-06-30 / 所有者: 山本 健介"
+          - button "📈 3" [ref=e243] [cursor=pointer]:
+            - text: 📈
+            - generic [ref=e244]: "3"
+      - generic [ref=e245]:
+        - generic [ref=e246]: AS
+        - generic [ref=e247]:
+          - generic [ref=e248]:
+            - generic [ref=e249]: 青山 昇
+            - generic [ref=e250]: 13:50
+          - generic [ref=e251]: 先ほど共有された議事録について 1点確認です
+          - blockquote [ref=e252]: 「リリース判定は QA OK + ドキュメント更新済み を条件とする」
+          - generic [ref=e253]: "ここでいう「ドキュメント」は #release-notes 内のChangelogだけでよいですか？"
+          - generic [ref=e254] [cursor=pointer]:
+            - generic [ref=e256]: MN
+            - generic [ref=e257]: 1件の返信
+            - generic [ref=e258]: 最終返信 たった今
+    - generic [ref=e260]:
+      - generic [ref=e261]:
+        - button "太字" [ref=e262] [cursor=pointer]:
+          - img [ref=e263]
+        - button "斜体" [ref=e265] [cursor=pointer]:
+          - img [ref=e266]
+        - button "取り消し線" [ref=e268] [cursor=pointer]:
+          - img [ref=e269]
+        - button "リンク" [ref=e273] [cursor=pointer]:
+          - img [ref=e274]
+        - button "リスト" [ref=e277] [cursor=pointer]:
+          - img [ref=e278]
+        - button "番号付きリスト" [ref=e279] [cursor=pointer]:
+          - img [ref=e280]
+        - button "引用" [ref=e284] [cursor=pointer]:
+          - img [ref=e285]
+        - button "コード" [ref=e288] [cursor=pointer]:
+          - img [ref=e289]
+        - button "コードブロック" [ref=e292] [cursor=pointer]:
+          - img [ref=e293]
+      - generic [ref=e297]: "#general にメッセージを送信"
+      - generic [ref=e298]:
+        - generic [ref=e299]:
+          - button "添付" [ref=e300] [cursor=pointer]:
+            - img [ref=e301]
+          - button "メンション" [ref=e302] [cursor=pointer]:
+            - img [ref=e303]
+          - button "絵文字" [ref=e306] [cursor=pointer]:
+            - img [ref=e307]
+          - button "ビデオ" [ref=e310] [cursor=pointer]:
+            - img [ref=e311]
+          - button "音声" [ref=e314] [cursor=pointer]:
+            - img [ref=e315]
+        - button "送信" [ref=e318] [cursor=pointer]:
+          - img [ref=e319]

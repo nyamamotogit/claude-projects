@@ -1,0 +1,134 @@
+<!--
+  Tiles / Tree / Tabs / Tooltip / Spinner / Empty - その他UI要素
+  ===========================================
+-->
+
+<!-- ============ Tile（コンパクトレコード表示） ============ -->
+<article class="slds-tile slds-tile_board slds-card">
+  <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate slds-p-around_small">
+    <div class="slds-media">
+      <div class="slds-media__figure">
+        <span class="slds-icon_container slds-icon-standard-contact">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/contact.svg" alt="" class="slds-icon slds-icon_small" />
+        </span>
+      </div>
+      <div class="slds-media__body">
+        <h3 class="slds-tile__title slds-truncate">
+          <a href="#"><strong>山田 太郎</strong></a>
+        </h3>
+        <div class="slds-tile__detail">
+          <p class="slds-text-body_small slds-truncate">部長 · 株式会社 テスト商事</p>
+          <ul class="slds-list_horizontal slds-has-dividers_right">
+            <li class="slds-item slds-text-body_small">03-1234-5678</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <button class="slds-button slds-button_icon slds-button_icon-x-small">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" />
+    </button>
+  </div>
+</article>
+
+<!-- ============ Tree (階層リスト) ============ -->
+<div class="slds-tree_container" role="application">
+  <h4 class="slds-tree__group-header" id="treeheading">階層</h4>
+  <ul class="slds-tree" role="tree" aria-labelledby="treeheading">
+    <li role="treeitem" aria-level="1" aria-expanded="true">
+      <div class="slds-tree__item">
+        <button class="slds-button slds-button_icon slds-m-right_x-small">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevronright.svg" alt="" class="slds-button__icon slds-button__icon_small" />
+        </button>
+        <span class="slds-has-flexi-truncate">
+          <span class="slds-tree__item-label slds-truncate">営業部</span>
+        </span>
+      </div>
+      <ul role="group">
+        <li role="treeitem" aria-level="2">
+          <div class="slds-tree__item">
+            <span class="slds-has-flexi-truncate">
+              <span class="slds-tree__item-label slds-truncate">東日本チーム</span>
+            </span>
+          </div>
+        </li>
+        <li role="treeitem" aria-level="2" aria-selected="true">
+          <div class="slds-tree__item slds-is-selected">
+            <span class="slds-has-flexi-truncate">
+              <span class="slds-tree__item-label slds-truncate">山田 太郎</span>
+            </span>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li role="treeitem" aria-level="1">
+      <div class="slds-tree__item">
+        <button class="slds-button slds-button_icon slds-m-right_x-small">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevronright.svg" alt="" class="slds-button__icon slds-button__icon_small" />
+        </button>
+        <span class="slds-has-flexi-truncate">
+          <span class="slds-tree__item-label slds-truncate">マーケティング部</span>
+        </span>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ============ Tabs (横スクロール対応) ============ -->
+<div class="slds-tabs_default">
+  <ul class="slds-tabs_default__nav" role="tablist">
+    <li class="slds-tabs_default__item slds-is-active" role="presentation">
+      <a class="slds-tabs_default__link" href="#" role="tab" aria-selected="true" tabindex="0">関連</a>
+    </li>
+    <li class="slds-tabs_default__item" role="presentation">
+      <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">詳細</a>
+    </li>
+    <li class="slds-tabs_default__item" role="presentation">
+      <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">ニュース</a>
+    </li>
+    <li class="slds-tabs_default__item" role="presentation">
+      <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1">活動</a>
+    </li>
+  </ul>
+</div>
+
+<!-- ============ Vertical Tabs（左サイドナビ風） ============ -->
+<div class="slds-vertical-tabs">
+  <ul class="slds-vertical-tabs__nav" role="tablist">
+    <li class="slds-vertical-tabs__nav-item" role="presentation">
+      <a class="slds-vertical-tabs__link" role="tab" tabindex="-1" href="#">概要</a>
+    </li>
+    <li class="slds-vertical-tabs__nav-item slds-is-active" role="presentation">
+      <a class="slds-vertical-tabs__link" role="tab" aria-selected="true" tabindex="0" href="#">取引先情報</a>
+    </li>
+    <li class="slds-vertical-tabs__nav-item" role="presentation">
+      <a class="slds-vertical-tabs__link" role="tab" tabindex="-1" href="#">関連リスト</a>
+    </li>
+  </ul>
+</div>
+
+<!-- ============ Tooltip（SLDS popover） ============ -->
+<div class="slds-popover slds-popover_tooltip slds-nubbin_bottom" role="tooltip" style="position:absolute">
+  <div class="slds-popover__body slds-text-body_small">詳細情報を表示</div>
+</div>
+
+<!-- ============ Spinner ============ -->
+<div class="slds-spinner_container">
+  <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+    <span class="slds-assistive-text">Loading</span>
+    <div class="slds-spinner__dot-a"></div>
+    <div class="slds-spinner__dot-b"></div>
+  </div>
+</div>
+
+<!-- ============ Empty State ============ -->
+<div class="slds-illustration slds-illustration_small slds-p-around_large slds-text-align_center">
+  <svg class="slds-illustration__svg" viewBox="0 0 454 213" aria-hidden="true">
+    <!-- 公式 SLDS イラストを使う場合はここに <use> を入れる。代替で utility 'inbox' を表示 -->
+  </svg>
+  <span class="slds-icon_container">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/inbox.svg" alt="" class="slds-icon slds-icon_large slds-icon-text-default" />
+  </span>
+  <h3 class="slds-text-heading_medium slds-m-top_small">まだレコードがありません</h3>
+  <p class="slds-text-body_small slds-m-bottom_medium">新しい取引先を作成して開始しましょう。</p>
+  <button class="slds-button slds-button_brand">新規取引先</button>
+</div>

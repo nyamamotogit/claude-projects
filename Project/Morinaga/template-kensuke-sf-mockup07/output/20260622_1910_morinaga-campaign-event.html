@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026夏季 駅前健康フェア - キャンペーン | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body {
+    background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3;
+    min-width: 1024px;
+    margin: 0;
+  }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .sf-col-2-3 { flex: 0 0 calc(66.666% - 0.375rem); }
+  .sf-col-1-3 { flex: 0 0 calc(33.333% - 0.375rem); }
+
+  .sf-header { background: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid #c9c9c9; position: sticky; top: 0; z-index: 50; }
+  .sf-header-search { width: 50%; max-width: 36rem; }
+  .sf-context-bar { background: white; border-bottom: 1px solid #dddbda; padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-context-bar nav ul { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .sf-context-bar nav ul li { display: flex; align-items: center; padding: 0 0.25rem; font-size: 0.875rem; }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid #1589ee; }
+  .sf-context-bar nav ul li.is-active a { color: #0070d2; font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn:hover { background: #f3f3f3; }
+  .sf-icon-btn img { width: 18px; height: 18px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-favorite-btn { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 2rem; background: #1b96ff; border-radius: 0.25rem; border: none; cursor: pointer; }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-notify-wrap { position: relative; display: inline-flex; }
+  .sf-notify-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ea001e; border-radius: 50%; border: 1.5px solid white; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+  .sf-app-name { font-size: 1.125rem; font-weight: 700; color: #181818; padding: 0.5rem 0; margin-right: 0.75rem; }
+
+  /* タイムライン */
+  .sf-timeline { list-style: none; padding: 0; margin: 0; }
+  .sf-timeline-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid #f3f2f2; }
+  .sf-timeline-item:last-child { border-bottom: none; }
+  .sf-timeline-icon { flex: 0 0 2rem; height: 2rem; border-radius: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-timeline-icon-call  { background: #056764; }
+  .sf-timeline-icon-email { background: #b0adab; }
+  .sf-timeline-icon-task  { background: #04844b; }
+  .sf-timeline-icon-event { background: #cc6cdd; }
+  .sf-timeline-icon img { width: 1.25rem; height: 1.25rem; filter: brightness(0) invert(1); }
+  .sf-timeline-body { flex: 1; min-width: 0; line-height: 1.4; }
+  .sf-timeline-body a { color: #0070d2; text-decoration: none; font-weight: 700; }
+  .sf-timeline-body a:hover { text-decoration: underline; }
+  .sf-timeline-body .meta { font-size: 0.8125rem; color: #444; margin-top: 0.25rem; }
+  .sf-timeline-body .meta-overdue { color: #ba0517; }
+
+  /* キャンペーン進捗バー */
+  .sf-progress-bar { background: #e9e7e7; border-radius: 4px; height: 10px; overflow: hidden; }
+  .sf-progress-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+
+  /* ステータスバッジ */
+  .sf-badge-planning  { background: #f4bc25; color: #1b1b1b; font-size: 0.75rem; padding: 2px 10px; border-radius: 9999px; font-weight: 600; }
+  .sf-badge-active    { background: #04844b; color: white;   font-size: 0.75rem; padding: 2px 10px; border-radius: 9999px; font-weight: 600; }
+  .sf-badge-completed { background: #b0adab; color: white;   font-size: 0.75rem; padding: 2px 10px; border-radius: 9999px; font-weight: 600; }
+  .sf-badge-hot       { background: #ea001e; color: white;   font-size: 0.75rem; padding: 2px 8px; border-radius: 9999px; font-weight: 600; }
+  .sf-badge-warm      { background: #f4bc25; color: #1b1b1b; font-size: 0.75rem; padding: 2px 8px; border-radius: 9999px; font-weight: 600; }
+  .sf-badge-cold      { background: #b0adab; color: white;   font-size: 0.75rem; padding: 2px 8px; border-radius: 9999px; font-weight: 600; }
+  .sf-badge-new       { background: #1b96ff; color: white;   font-size: 0.75rem; padding: 2px 8px; border-radius: 9999px; font-weight: 600; }
+
+  /* KPI カード */
+  .sf-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 0.75rem; }
+  .sf-kpi-card { background: white; border: 1px solid #e0e0e0; border-radius: 0.5rem; padding: 0.75rem 1rem; text-align: center; }
+  .sf-kpi-card .kpi-num { font-size: 2rem; font-weight: 700; line-height: 1; }
+  .sf-kpi-card .kpi-label { font-size: 0.75rem; color: #666; margin-top: 0.25rem; }
+  .sf-kpi-card .kpi-sub { font-size: 0.75rem; color: #04844b; font-weight: 600; margin-top: 2px; }
+
+  /* Agentforce パネル */
+  .sf-af-insight { background: linear-gradient(135deg, #f0f6ff 0%, #faf0ff 100%); border: 1px solid #c9d9f5; border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 0.75rem; }
+  .sf-af-insight-header { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.875rem; color: #0070d2; margin-bottom: 0.5rem; }
+  .sf-af-insight-header img { width: 18px; height: 18px; }
+  .sf-af-insight p { font-size: 0.8125rem; color: #333; margin: 0 0 0.5rem; line-height: 1.5; }
+  .sf-af-insight ul { margin: 0; padding-left: 1rem; font-size: 0.8125rem; color: #333; }
+  .sf-af-insight ul li { margin-bottom: 0.25rem; }
+
+  /* メンバーリスト */
+  .sf-member-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; border-bottom: 1px solid #f3f2f2; }
+  .sf-member-row:last-child { border-bottom: none; }
+  .sf-member-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
+  .sf-member-name { font-size: 0.875rem; font-weight: 600; color: #0070d2; flex: 1; }
+  .sf-member-meta { font-size: 0.75rem; color: #666; }
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- Global Header -->
+<header class="sf-header">
+  <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+  <div class="sf-header-search">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+        <input type="search" placeholder="検索..." class="slds-input">
+      </div>
+    </div>
+  </div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn" title="Agentforce">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+    </button>
+    <button class="sf-favorite-btn" title="お気に入り">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" />
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;" />
+    </button>
+    <button class="sf-icon-btn" title="新規作成">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" />
+    </button>
+    <button class="sf-icon-btn" title="セットアップ">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" />
+    </button>
+    <button class="sf-icon-btn" title="ヘルプ">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" />
+    </button>
+    <span class="sf-notify-wrap">
+      <button class="sf-icon-btn" title="通知">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" />
+      </button>
+      <span class="sf-notify-dot"></span>
+    </span>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:0.5rem;">
+      <img src="https://ui-avatars.com/api/?name=田中+恵美&background=1B96FF&color=fff" alt="田中恵美" />
+    </span>
+  </div>
+</header>
+
+<!-- App Nav -->
+<div class="sf-context-bar">
+  <div class="sf-app-launcher" title="アプリケーションランチャー">
+    <div class="sf-app-launcher-grid">
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <span class="sf-app-name">Sales</span>
+  <nav>
+    <ul>
+      <li><a href="#">ホーム</a></li>
+      <li><a href="#">取引先 ▾</a></li>
+      <li><a href="#">取引先責任者 ▾</a></li>
+      <li><a href="#">リード ▾</a></li>
+      <li class="is-active"><a href="#">キャンペーン ▾</a></li>
+      <li><a href="#">商談 ▾</a></li>
+      <li><a href="#">ダッシュボード ▾</a></li>
+      <li><a href="#">レポート ▾</a></li>
+    </ul>
+  </nav>
+  <button class="sf-icon-btn" title="ナビ編集" style="margin-left:auto;">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/edit.svg" alt="" />
+  </button>
+</div>
+
+<main class="sf-main">
+
+  <!-- Page Header -->
+  <div class="slds-page-header slds-page-header_record-home slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-campaign">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/campaign.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-page-header__name">
+              <h1>
+                <span class="slds-page-header__title" style="font-size:1.4rem;font-weight:700;">2026夏季 駅前健康フェア（市乳事業部）</span>
+              </h1>
+            </div>
+            <p class="slds-page-header__name-meta">キャンペーン · 展示会 · <span class="sf-badge-active">実施中</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <div class="slds-page-header__controls">
+          <ul class="slds-button-group-list">
+            <li><button class="slds-button slds-button_neutral">+ フォローする</button></li>
+            <li><button class="slds-button slds-button_neutral">編集</button></li>
+            <li><button class="slds-button slds-button_brand">新規リード追加</button></li>
+            <li>
+              <button class="sf-icon-btn" title="その他" style="border:1px solid #dddbda;border-radius:0.25rem;">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" />
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- ハイライト項目 -->
+    <div class="slds-page-header__row slds-page-header__row_gutters">
+      <div class="slds-page-header__col-details">
+        <ul class="slds-page-header__detail-row">
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">開始日</div>
+            <p class="slds-text-body_regular">2026/07/12</p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">終了日</div>
+            <p class="slds-text-body_regular">2026/07/13</p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">開催場所</div>
+            <p class="slds-text-body_regular">渋谷駅東口イベント広場</p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">予算</div>
+            <p class="slds-text-body_regular"><strong>¥2,400,000</strong></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">実績コスト</div>
+            <p class="slds-text-body_regular"><strong>¥1,820,000</strong></p>
+          </li>
+          <li class="slds-page-header__detail-block">
+            <div class="slds-text-title slds-truncate">担当者</div>
+            <p class="slds-text-body_regular"><a href="#">田中 恵美</a></p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI サマリー -->
+  <div class="sf-kpi-grid">
+    <div class="sf-kpi-card">
+      <div class="kpi-num" style="color:#1b96ff;">247</div>
+      <div class="kpi-label">来場者数（目標300名）</div>
+      <div class="kpi-sub">↑ 達成率 82%</div>
+    </div>
+    <div class="sf-kpi-card">
+      <div class="kpi-num" style="color:#04844b;">89</div>
+      <div class="kpi-label">獲得リード数</div>
+      <div class="kpi-sub">↑ 前回比 +23%</div>
+    </div>
+    <div class="sf-kpi-card">
+      <div class="kpi-num" style="color:#f4bc25;">34</div>
+      <div class="kpi-label">フォロー済み</div>
+      <div class="kpi-sub">残り 55件</div>
+    </div>
+    <div class="sf-kpi-card">
+      <div class="kpi-num" style="color:#ea001e;">12</div>
+      <div class="kpi-label">ホットリード</div>
+      <div class="kpi-sub">商談化見込み</div>
+    </div>
+  </div>
+
+  <!-- 2カラムレイアウト -->
+  <div class="sf-row">
+
+    <!-- 左カラム -->
+    <div class="sf-col-2-3">
+
+      <!-- タブ：詳細 / キャンペーンメンバー / 関連リード -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav" role="tablist">
+            <li class="slds-tabs_default__item" role="presentation" id="tab-detail-li">
+              <a class="slds-tabs_default__link" href="#tab-detail" role="tab" onclick="switchTab('detail')">詳細</a>
+            </li>
+            <li class="slds-tabs_default__item slds-is-active" role="presentation" id="tab-members-li">
+              <a class="slds-tabs_default__link" href="#tab-members" role="tab" onclick="switchTab('members')">キャンペーンメンバー</a>
+            </li>
+            <li class="slds-tabs_default__item" role="presentation" id="tab-leads-li">
+              <a class="slds-tabs_default__link" href="#tab-leads" role="tab" onclick="switchTab('leads')">獲得リード</a>
+            </li>
+          </ul>
+
+          <!-- 詳細タブ -->
+          <div class="slds-tabs_default__content" id="tab-detail" role="tabpanel" style="display:none;">
+            <div class="slds-p-around_medium">
+              <h3 class="slds-section__title slds-theme_shade slds-p-around_x-small slds-m-bottom_small">
+                <span class="slds-p-horizontal_small">キャンペーン情報</span>
+              </h3>
+              <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                  <dt class="slds-item_label slds-text-color_weak">キャンペーン名</dt>
+                  <dd class="slds-item_detail">2026夏季 駅前健康フェア（市乳事業部）</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small">
+                  <dt class="slds-item_label slds-text-color_weak">種別</dt>
+                  <dd class="slds-item_detail">展示会</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">ステータス</dt>
+                  <dd class="slds-item_detail"><span class="sf-badge-active">実施中</span></dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">事業部</dt>
+                  <dd class="slds-item_detail">市乳事業部</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">開始日</dt>
+                  <dd class="slds-item_detail">2026/07/12</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">終了日</dt>
+                  <dd class="slds-item_detail">2026/07/13</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">開催場所</dt>
+                  <dd class="slds-item_detail">渋谷駅東口イベント広場</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">ターゲット層</dt>
+                  <dd class="slds-item_detail">30〜50代 健康意識高い層・ファミリー</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">予算</dt>
+                  <dd class="slds-item_detail">¥2,400,000</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">実績コスト</dt>
+                  <dd class="slds-item_detail">¥1,820,000</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-p-vertical_x-small slds-border_top">
+                  <dt class="slds-item_label slds-text-color_weak">説明</dt>
+                  <dd class="slds-item_detail">渋谷駅東口での健康訴求型イベント。牛乳・ヨーグルト試飲・試食コーナー、骨密度測定体験、栄養士相談ブースを設置。来場者の健康意識・購買ニーズをアンケートで収集し、リードとして登録してフォローアップにつなげる。</dd>
+                </div>
+              </dl>
+
+              <!-- 進捗バー -->
+              <div class="slds-m-top_medium">
+                <div style="display:flex;justify-content:space-between;font-size:0.8125rem;color:#444;margin-bottom:4px;">
+                  <span>リードフォロー進捗</span>
+                  <span>34 / 89 件完了（38%）</span>
+                </div>
+                <div class="sf-progress-bar">
+                  <div class="sf-progress-bar-fill" style="width:38%;background:#1b96ff;"></div>
+                </div>
+              </div>
+              <div class="slds-m-top_small">
+                <div style="display:flex;justify-content:space-between;font-size:0.8125rem;color:#444;margin-bottom:4px;">
+                  <span>予算消化率</span>
+                  <span>¥1,820,000 / ¥2,400,000（76%）</span>
+                </div>
+                <div class="sf-progress-bar">
+                  <div class="sf-progress-bar-fill" style="width:76%;background:#04844b;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- キャンペーンメンバータブ（デフォルト表示） -->
+          <div class="slds-tabs_default__content slds-show" id="tab-members" role="tabpanel">
+            <div class="slds-card__header slds-grid slds-p-around_small">
+              <div style="display:flex;align-items:center;gap:0.5rem;flex:1;">
+                <span style="font-size:0.875rem;font-weight:600;">89件のメンバー</span>
+                <span class="sf-badge-hot" style="margin-left:0.5rem;">Hot 12</span>
+                <span class="sf-badge-warm" style="margin-left:0.25rem;">Warm 38</span>
+                <span class="sf-badge-cold" style="margin-left:0.25rem;">Cold 39</span>
+              </div>
+              <div style="display:flex;gap:0.5rem;">
+                <div class="slds-form-element" style="width:180px;">
+                  <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+                    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon_x-small" style="filter:brightness(0) saturate(100%) invert(60%);" />
+                    <input type="search" placeholder="名前で検索..." class="slds-input" style="height:1.75rem;font-size:0.8125rem;" />
+                  </div>
+                </div>
+                <button class="slds-button slds-button_brand" style="font-size:0.8125rem;">新規メンバー追加</button>
+              </div>
+            </div>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+              <thead>
+                <tr>
+                  <th style="width:28px;"><input type="checkbox" class="slds-checkbox" /></th>
+                  <th>氏名</th>
+                  <th>年齢層</th>
+                  <th>関心商品</th>
+                  <th>温度感</th>
+                  <th>登録日</th>
+                  <th>担当者</th>
+                  <th>ステータス</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" class="slds-checkbox" /></td>
+                  <th scope="row"><a href="#">佐藤 美幸</a></th>
+                  <td>40代</td>
+                  <td>ヨーグルト・低脂肪乳</td>
+                  <td><span class="sf-badge-hot">Hot</span></td>
+                  <td>2026/07/12</td>
+                  <td><a href="#">田中 恵美</a></td>
+                  <td><span class="slds-badge" style="background:#e8f4fd;color:#0070d2;">フォロー中</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="slds-checkbox" /></td>
+                  <th scope="row"><a href="#">山田 健太郎</a></th>
+                  <td>30代</td>
+                  <td>プロテイン入り牛乳</td>
+                  <td><span class="sf-badge-hot">Hot</span></td>
+                  <td>2026/07/12</td>
+                  <td><a href="#">田中 恵美</a></td>
+                  <td><span class="slds-badge" style="background:#e8f4fd;color:#0070d2;">フォロー中</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="slds-checkbox" /></td>
+                  <th scope="row"><a href="#">鈴木 由美子</a></th>
+                  <td>50代</td>
+                  <td>低脂肪乳・骨ケア商品</td>
+                  <td><span class="sf-badge-warm">Warm</span></td>
+                  <td>2026/07/12</td>
+                  <td><a href="#">中村 浩司</a></td>
+                  <td><span class="slds-badge">未対応</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="slds-checkbox" /></td>
+                  <th scope="row"><a href="#">高橋 さやか</a></th>
+                  <td>30代</td>
+                  <td>キッズ向け牛乳・ヨーグルト</td>
+                  <td><span class="sf-badge-warm">Warm</span></td>
+                  <td>2026/07/12</td>
+                  <td><a href="#">中村 浩司</a></td>
+                  <td><span class="slds-badge">未対応</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="slds-checkbox" /></td>
+                  <th scope="row"><a href="#">伊藤 俊介</a></th>
+                  <td>40代</td>
+                  <td>業務用牛乳（カフェ経営）</td>
+                  <td><span class="sf-badge-hot">Hot</span></td>
+                  <td>2026/07/12</td>
+                  <td><a href="#">田中 恵美</a></td>
+                  <td><span class="slds-badge" style="background:#effef5;color:#04844b;">完了</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="slds-checkbox" /></td>
+                  <th scope="row"><a href="#">渡辺 幸子</a></th>
+                  <td>60代</td>
+                  <td>カルシウム強化牛乳</td>
+                  <td><span class="sf-badge-warm">Warm</span></td>
+                  <td>2026/07/13</td>
+                  <td><a href="#">小林 麻衣</a></td>
+                  <td><span class="slds-badge">未対応</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="slds-checkbox" /></td>
+                  <th scope="row"><a href="#">中村 孝一</a></th>
+                  <td>50代</td>
+                  <td>低脂肪乳</td>
+                  <td><span class="sf-badge-cold">Cold</span></td>
+                  <td>2026/07/13</td>
+                  <td><a href="#">小林 麻衣</a></td>
+                  <td><span class="slds-badge">未対応</span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="slds-checkbox" /></td>
+                  <th scope="row"><a href="#">小林 真奈美</a></th>
+                  <td>30代</td>
+                  <td>ヨーグルト・デザート系</td>
+                  <td><span class="sf-badge-hot">Hot</span></td>
+                  <td>2026/07/13</td>
+                  <td><a href="#">田中 恵美</a></td>
+                  <td><span class="slds-badge" style="background:#e8f4fd;color:#0070d2;">フォロー中</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <footer class="slds-card__footer">
+              <a href="#" class="slds-card__footer-action">すべて表示（89件）</a>
+            </footer>
+          </div>
+
+          <!-- 獲得リードタブ -->
+          <div class="slds-tabs_default__content" id="tab-leads" role="tabpanel" style="display:none;">
+            <div class="slds-card__header slds-grid slds-p-around_small">
+              <span style="font-size:0.875rem;font-weight:600;flex:1;">89件のリード（キャンペーン起因）</span>
+              <button class="slds-button slds-button_neutral">エクスポート</button>
+              <button class="slds-button slds-button_brand slds-m-left_x-small">一括フォローアップ</button>
+            </div>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+              <thead>
+                <tr>
+                  <th>リード名</th>
+                  <th>会社名 / 職業</th>
+                  <th>電話</th>
+                  <th>メール</th>
+                  <th>温度感</th>
+                  <th>リードソース</th>
+                  <th>作成日</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row"><a href="#">佐藤 美幸</a></th>
+                  <td>主婦</td>
+                  <td>090-1234-5678</td>
+                  <td><a href="#">sato.m@example.com</a></td>
+                  <td><span class="sf-badge-hot">Hot</span></td>
+                  <td>展示会</td>
+                  <td>2026/07/12</td>
+                </tr>
+                <tr>
+                  <th scope="row"><a href="#">山田 健太郎</a></th>
+                  <td>会社員（食品商社）</td>
+                  <td>090-2345-6789</td>
+                  <td><a href="#">yamada.k@biz.co.jp</a></td>
+                  <td><span class="sf-badge-hot">Hot</span></td>
+                  <td>展示会</td>
+                  <td>2026/07/12</td>
+                </tr>
+                <tr>
+                  <th scope="row"><a href="#">伊藤 俊介</a></th>
+                  <td>自営業（カフェ オーナー）</td>
+                  <td>03-5678-9012</td>
+                  <td><a href="#">ito.s@cafe-example.jp</a></td>
+                  <td><span class="sf-badge-hot">Hot</span></td>
+                  <td>展示会</td>
+                  <td>2026/07/12</td>
+                </tr>
+                <tr>
+                  <th scope="row"><a href="#">鈴木 由美子</a></th>
+                  <td>主婦</td>
+                  <td>090-3456-7890</td>
+                  <td><a href="#">suzuki.y@home.ne.jp</a></td>
+                  <td><span class="sf-badge-warm">Warm</span></td>
+                  <td>展示会</td>
+                  <td>2026/07/12</td>
+                </tr>
+                <tr>
+                  <th scope="row"><a href="#">高橋 さやか</a></th>
+                  <td>主婦（2児の母）</td>
+                  <td>090-4567-8901</td>
+                  <td><a href="#">takahashi.s@family.jp</a></td>
+                  <td><span class="sf-badge-warm">Warm</span></td>
+                  <td>展示会</td>
+                  <td>2026/07/12</td>
+                </tr>
+                <tr>
+                  <th scope="row"><a href="#">渡辺 幸子</a></th>
+                  <td>無職（退職後）</td>
+                  <td>090-5678-9012</td>
+                  <td>-</td>
+                  <td><span class="sf-badge-warm">Warm</span></td>
+                  <td>展示会</td>
+                  <td>2026/07/13</td>
+                </tr>
+                <tr>
+                  <th scope="row"><a href="#">中村 孝一</a></th>
+                  <td>会社員</td>
+                  <td>090-6789-0123</td>
+                  <td><a href="#">nakamura@example.co.jp</a></td>
+                  <td><span class="sf-badge-cold">Cold</span></td>
+                  <td>展示会</td>
+                  <td>2026/07/13</td>
+                </tr>
+              </tbody>
+            </table>
+            <footer class="slds-card__footer">
+              <a href="#" class="slds-card__footer-action">すべて表示（89件）</a>
+            </footer>
+          </div>
+        </div>
+      </article>
+
+      <!-- 過去の展示会キャンペーン比較 -->
+      <article class="slds-card slds-m-top_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-campaign">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/campaign.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">過去の展示会キャンペーン履歴</h2>
+            </div>
+          </header>
+        </div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead>
+            <tr>
+              <th>キャンペーン名</th>
+              <th>開催日</th>
+              <th class="slds-text-align_right">来場者</th>
+              <th class="slds-text-align_right">獲得リード</th>
+              <th class="slds-text-align_right">商談化数</th>
+              <th>ステータス</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><a href="#">2026夏季 駅前健康フェア（市乳）</a></th>
+              <td>2026/07/12〜13</td>
+              <td class="slds-text-align_right">247</td>
+              <td class="slds-text-align_right">89</td>
+              <td class="slds-text-align_right">-</td>
+              <td><span class="sf-badge-active">実施中</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#">2026春季 健康フェスタ in 新宿</a></th>
+              <td>2026/04/05〜06</td>
+              <td class="slds-text-align_right">312</td>
+              <td class="slds-text-align_right">102</td>
+              <td class="slds-text-align_right">18</td>
+              <td><span class="sf-badge-completed">完了</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#">2025秋季 ファミリーフェア（市乳）</a></th>
+              <td>2025/10/18〜19</td>
+              <td class="slds-text-align_right">198</td>
+              <td class="slds-text-align_right">72</td>
+              <td class="slds-text-align_right">11</td>
+              <td><span class="sf-badge-completed">完了</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#">2025夏季 駅前健康フェア（市乳）</a></th>
+              <td>2025/07/19〜20</td>
+              <td class="slds-text-align_right">271</td>
+              <td class="slds-text-align_right">88</td>
+              <td class="slds-text-align_right">14</td>
+              <td><span class="sf-badge-completed">完了</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <footer class="slds-card__footer">
+          <a href="#" class="slds-card__footer-action">すべてのキャンペーンを表示</a>
+        </footer>
+      </article>
+
+    </div><!-- /左カラム -->
+
+    <!-- 右カラム -->
+    <div class="sf-col-1-3">
+
+      <!-- Agentforce インサイト -->
+      <div class="sf-af-insight">
+        <div class="sf-af-insight-header">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+          Agentforce インサイト
+        </div>
+        <p>現在 <strong>12件のホットリード</strong>があります。うち3件は「業務用牛乳・カフェ向け」への興味を示しており、法人商談化の可能性があります。</p>
+        <ul>
+          <li>📅 3件は48時間以内の折り返し連絡を希望</li>
+          <li>📦 「プロテイン入り牛乳」への反応が前回比+40%</li>
+          <li>👶 ファミリー層（30代・子供あり）が全体の38%</li>
+        </ul>
+        <div style="margin-top:0.5rem;">
+          <button class="slds-button slds-button_brand" style="font-size:0.75rem;height:1.75rem;">フォロー計画を生成する</button>
+        </div>
+      </div>
+
+      <!-- 活動タイムライン -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-tabs_default">
+          <ul class="slds-tabs_default__nav" role="tablist">
+            <li class="slds-tabs_default__item slds-is-active" role="presentation">
+              <a class="slds-tabs_default__link" href="#" role="tab">活動</a>
+            </li>
+            <li class="slds-tabs_default__item" role="presentation">
+              <a class="slds-tabs_default__link" href="#" role="tab">Chatter</a>
+            </li>
+          </ul>
+          <div class="slds-tabs_default__content slds-show slds-p-around_medium" role="tabpanel">
+            <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">
+              <button class="slds-button slds-button_neutral" style="font-size:0.75rem;height:1.75rem;">活動の記録</button>
+              <button class="slds-button slds-button_neutral" style="font-size:0.75rem;height:1.75rem;">新規ToDo</button>
+              <button class="slds-button slds-button_neutral" style="font-size:0.75rem;height:1.75rem;">新規行動</button>
+            </div>
+
+            <h4 class="slds-text-title_caps slds-m-bottom_x-small" style="font-size:0.75rem;color:#666;">今後・期限切れ</h4>
+            <ul class="sf-timeline">
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-task">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" />
+                </span>
+                <div class="sf-timeline-body">
+                  <a href="#">伊藤さん（カフェ）へ業務用見積送付</a>
+                  <div class="meta meta-overdue">期日 7月14日（期限切れ）· 田中 恵美</div>
+                </div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-call">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg" alt="" />
+                </span>
+                <div class="sf-timeline-body">
+                  <a href="#">佐藤さんへフォローコール（定期便案内）</a>
+                  <div class="meta">期日 7月16日 10:00 · 田中 恵美</div>
+                </div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-event">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" alt="" />
+                </span>
+                <div class="sf-timeline-body">
+                  <a href="#">フォローアップメール一斉配信（Warm層）</a>
+                  <div class="meta">期日 7月18日 · 中村 浩司</div>
+                </div>
+              </li>
+            </ul>
+
+            <h4 class="slds-text-title_caps slds-m-top_medium slds-m-bottom_x-small" style="font-size:0.75rem;color:#666;">過去の活動</h4>
+            <ul class="sf-timeline">
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-call">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg" alt="" />
+                </span>
+                <div class="sf-timeline-body">
+                  <a href="#">イベント当日 来場者受付・ヒアリング</a>
+                  <div class="meta">7月13日 · 247名対応完了</div>
+                </div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-email">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/email.svg" alt="" />
+                </span>
+                <div class="sf-timeline-body">
+                  <a href="#">来場お礼メール送信（Hot12件）</a>
+                  <div class="meta">7月13日 17:00 · 田中 恵美</div>
+                </div>
+              </li>
+              <li class="sf-timeline-item">
+                <span class="sf-timeline-icon sf-timeline-icon-task">
+                  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" />
+                </span>
+                <div class="sf-timeline-body">
+                  <a href="#">リード89件 Salesforce登録完了</a>
+                  <div class="meta">7月13日 19:30 · 小林 麻衣</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- 担当チームメンバー -->
+      <article class="slds-card slds-m-bottom_x-small">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-user">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/user.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">担当チーム（市乳事業部）</h2>
+            </div>
+          </header>
+        </div>
+        <div class="slds-p-around_small">
+          <div class="sf-member-row">
+            <img class="sf-member-avatar" src="https://ui-avatars.com/api/?name=田中+恵美&background=1B96FF&color=fff" alt="" />
+            <div style="flex:1;">
+              <div class="sf-member-name"><a href="#">田中 恵美</a></div>
+              <div class="sf-member-meta">キャンペーンマネージャー</div>
+            </div>
+            <span style="font-size:0.75rem;color:#666;">担当33件</span>
+          </div>
+          <div class="sf-member-row">
+            <img class="sf-member-avatar" src="https://ui-avatars.com/api/?name=中村+浩司&background=04844b&color=fff" alt="" />
+            <div style="flex:1;">
+              <div class="sf-member-name"><a href="#">中村 浩司</a></div>
+              <div class="sf-member-meta">営業担当</div>
+            </div>
+            <span style="font-size:0.75rem;color:#666;">担当28件</span>
+          </div>
+          <div class="sf-member-row">
+            <img class="sf-member-avatar" src="https://ui-avatars.com/api/?name=小林+麻衣&background=cc6cdd&color=fff" alt="" />
+            <div style="flex:1;">
+              <div class="sf-member-name"><a href="#">小林 麻衣</a></div>
+              <div class="sf-member-meta">インサイドセールス</div>
+            </div>
+            <span style="font-size:0.75rem;color:#666;">担当28件</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 添付ファイル -->
+      <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-document">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/document.svg" alt="" class="slds-icon slds-icon_small" />
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">ファイル (4)</h2>
+            </div>
+          </header>
+        </div>
+        <ul class="slds-has-dividers_top-space">
+          <li class="slds-item slds-p-around_x-small">
+            <span class="slds-icon_container slds-icon-doctype-pdf slds-m-right_x-small">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/pdf.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+            <a href="#">キャンペーン計画書_2026夏.pdf</a>
+            <p class="slds-text-body_small slds-text-color_weak">1.2 MB · 7月1日</p>
+          </li>
+          <li class="slds-item slds-p-around_x-small">
+            <span class="slds-icon_container slds-icon-doctype-excel slds-m-right_x-small">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/excel.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+            <a href="#">来場者アンケート集計.xlsx</a>
+            <p class="slds-text-body_small slds-text-color_weak">840 KB · 7月13日</p>
+          </li>
+          <li class="slds-item slds-p-around_x-small">
+            <span class="slds-icon_container slds-icon-doctype-ppt slds-m-right_x-small">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/ppt.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+            <a href="#">ブース展示パネル素材.pptx</a>
+            <p class="slds-text-body_small slds-text-color_weak">3.5 MB · 7月5日</p>
+          </li>
+          <li class="slds-item slds-p-around_x-small">
+            <span class="slds-icon_container slds-icon-doctype-image slds-m-right_x-small">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/doctype/image.svg" alt="" class="slds-icon slds-icon_small" />
+            </span>
+            <a href="#">会場写真_2026-07-12.zip</a>
+            <p class="slds-text-body_small slds-text-color_weak">45.2 MB · 7月13日</p>
+          </li>
+        </ul>
+      </article>
+
+    </div><!-- /右カラム -->
+  </div><!-- /sf-row -->
+
+</main>
+
+<script>
+function switchTab(name) {
+  // すべてのタブコンテンツを非表示
+  ['detail','members','leads'].forEach(function(id) {
+    var content = document.getElementById('tab-' + id);
+    var li = document.getElementById('tab-' + id + '-li');
+    if (content) content.style.display = 'none';
+    if (li) li.classList.remove('slds-is-active');
+  });
+  // 選択タブを表示
+  var target = document.getElementById('tab-' + name);
+  var targetLi = document.getElementById('tab-' + name + '-li');
+  if (target) target.style.display = '';
+  if (targetLi) targetLi.classList.add('slds-is-active');
+  // slds-show クラスも切り替え
+  ['detail','members','leads'].forEach(function(id) {
+    var el = document.getElementById('tab-' + id);
+    if (el) el.classList.remove('slds-show');
+  });
+  if (target) target.classList.add('slds-show');
+}
+</script>
+
+</body>
+</html>

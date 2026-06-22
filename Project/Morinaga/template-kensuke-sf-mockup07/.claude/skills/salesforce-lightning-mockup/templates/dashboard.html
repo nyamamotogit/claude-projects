@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales パイプライン ダッシュボード | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1024px; margin: 0; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .slds-global-header_container { position: sticky; top: 0; z-index: 50; background: white; border-bottom: 1px solid #c9c9c9; }
+  .slds-global-header { height: 3rem; padding: 0 1rem; }
+  .slds-global-header__item_search { width: 56%; max-width: 48rem; }
+  .slds-global-header .slds-button .slds-button__icon,
+  .slds-context-bar .slds-button_icon .slds-button__icon,
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); width: 14px; height: 14px; }
+  .slds-context-bar .slds-button_icon .slds-button__icon_small { width: 14px; height: 14px; }
+  .sf-search-combo { display: flex; height: 2rem; border: 1px solid #dddbda; border-radius: 0.25rem; background: white; overflow: hidden; }
+  .sf-search-combo .slds-form-element { flex: 1; }
+  .sf-search-combo .slds-input { border: none; height: 100%; box-shadow: none; background: white; }
+  .sf-search-combo .slds-input:focus { box-shadow: none; outline: none; }
+  .sf-scope-selector { flex: 0 0 8rem; border: none; border-right: 1px solid #dddbda; background: white; height: 2rem; padding: 0 0.5rem 0 0.75rem; display: inline-flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .sf-scope-selector .sf-scope-name { font-size: 0.8125rem; color: #181818; }
+  .sf-scope-selector .sf-scope-chev { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-global-header .slds-global-actions__favorites { margin-right: 0; }
+  .slds-global-header .slds-global-actions__favorites,
+  .slds-global-header .slds-global-actions__favorites-more { background: white; border: 1px solid #dddbda; height: 2rem; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+  .slds-global-header .slds-global-actions__favorites { border-right: none; border-radius: 0.25rem 0 0 0.25rem; width: 2rem; }
+  .slds-global-header .slds-global-actions__favorites-more { border-radius: 0 0.25rem 0.25rem 0; width: 1.5rem; margin-left: 0; }
+  .slds-global-header .slds-global-actions__favorites-more .slds-button__icon { width: 10px; height: 10px; }
+  .sf-action-add { width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #747474; display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; padding: 0; }
+  .sf-action-add img { filter: brightness(0) invert(1); width: 12px; height: 12px; }
+  .sf-app-launcher { width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+
+  /* ===== ダッシュボード固有 ===== */
+  /* ウィジェットカード */
+  .sf-widget { background: white; border: 1px solid #e5e5e5; border-radius: 0.25rem; box-shadow: 0 1px 0 rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+  .sf-widget__header { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; border-bottom: 1px solid #f3f3f3; min-height: 2.25rem; }
+  .sf-widget__title { font-size: 0.8125rem; font-weight: 700; color: #181818; }
+  .sf-widget__actions { display: flex; align-items: center; gap: 0.25rem; }
+  .sf-widget__actions .slds-button_icon { width: 1.25rem; height: 1.25rem; }
+  .sf-widget__actions .slds-button__icon { width: 12px; height: 12px; }
+  .sf-widget__body { padding: 0.75rem; flex: 1; }
+  .sf-widget__footer { padding: 0.4rem 0.75rem; border-top: 1px solid #f3f3f3; display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; color: #706e6b; }
+  .sf-widget__footer a { color: #0176d3; text-decoration: none; font-weight: 500; }
+  .sf-widget__footer a:hover { text-decoration: underline; }
+
+  /* メトリック (Number widget) */
+  .sf-metric { display: flex; flex-direction: column; gap: 0.25rem; }
+  .sf-metric__value { font-size: 1.875rem; font-weight: 700; color: #181818; line-height: 1.1; letter-spacing: -0.5px; }
+  .sf-metric__delta { font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 0.25rem; }
+  .sf-metric__delta_up { color: #2e844a; }
+  .sf-metric__delta_down { color: #ba0517; }
+  .sf-metric__sparkline { margin-top: 0.5rem; }
+
+  /* ダッシュボードヘッダ調整 */
+  .sf-dash-header { background: white; border: 1px solid #e5e5e5; border-radius: 0.25rem; padding: 0.75rem 1rem; }
+  /* ダッシュボードヘッダ + ウィジェット内の utility アイコン (fill="#fff") を灰色化 */
+  .sf-dash-header .slds-button__icon,
+  .sf-widget__actions .slds-button__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  /* slds-button_neutral 内の左アイコンも */
+  .sf-dash-header .slds-button_neutral .slds-button__icon_left { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-breadcrumb { font-size: 0.75rem; color: #706e6b; display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; }
+  .sf-breadcrumb a { color: #0176d3; text-decoration: none; }
+  .sf-breadcrumb a:hover { text-decoration: underline; }
+  .sf-breadcrumb__sep { color: #c9c9c9; }
+  .sf-dash-title { font-size: 1.25rem; font-weight: 700; color: #181818; margin-top: 0.125rem; }
+  .sf-dash-meta { font-size: 0.75rem; color: #706e6b; margin-top: 0.125rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+  /* フィルタチップ */
+  .sf-filter-row { display: flex; align-items: center; gap: 0.375rem; flex-wrap: wrap; padding: 0.5rem 0; }
+  .sf-filter-chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.5rem 0.125rem 0.625rem; border: 1px solid #c9c9c9; border-radius: 1rem; background: white; font-size: 0.75rem; color: #181818; }
+  .sf-filter-chip strong { color: #444; font-weight: 500; }
+  .sf-filter-chip__close { background: none; border: none; padding: 0; margin-left: 0.25rem; cursor: pointer; width: 14px; height: 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; }
+  .sf-filter-chip__close img { width: 8px; height: 8px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-filter-add { font-size: 0.75rem; color: #0176d3; background: none; border: 1px dashed #c9c9c9; border-radius: 1rem; padding: 0.125rem 0.625rem; cursor: pointer; }
+
+  /* グリッドレイアウト (本物の Lightning ダッシュは 12カラム grid) */
+  .sf-dash-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 0.75rem; }
+  .sf-w-col-3 { grid-column: span 3; }
+  .sf-w-col-4 { grid-column: span 4; }
+  .sf-w-col-5 { grid-column: span 5; }
+  .sf-w-col-6 { grid-column: span 6; }
+  .sf-w-col-7 { grid-column: span 7; }
+  .sf-w-col-8 { grid-column: span 8; }
+  .sf-w-col-12 { grid-column: span 12; }
+
+  /* チャート凡例 */
+  .sf-legend { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.75rem; color: #444; }
+  .sf-legend__item { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-legend__swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .sf-legend__label { flex: 1; }
+  .sf-legend__value { font-weight: 600; color: #181818; }
+
+  /* 条件付きバッジ (テーブル内) */
+  .sf-stage-pill { display: inline-block; padding: 0.0625rem 0.5rem; border-radius: 0.75rem; font-size: 0.6875rem; font-weight: 600; }
+  .sf-stage-pill_won { background: #cdefc4; color: #064a26; }
+  .sf-stage-pill_proposal { background: #d8e6fe; color: #054291; }
+  .sf-stage-pill_negotiation { background: #fef0c3; color: #5b4b00; }
+  .sf-stage-pill_qualify { background: #f3f3f3; color: #444; }
+  .sf-stage-pill_needs { background: #e5e5e5; color: #444; }
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- Global Header (SLDS 公式) -->
+<header class="slds-global-header_container slds-no-print">
+  <div class="slds-global-header slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+    <div class="slds-global-header__item">
+      <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+    </div>
+    <div class="slds-global-header__item slds-global-header__item_search">
+      <div class="sf-search-combo">
+        <button class="sf-scope-selector" title="検索対象オブジェクトを選択"><span class="sf-scope-name">すべて</span><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="sf-scope-chev" /></button>
+        <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" /><input type="search" placeholder="Salesforce を検索..." class="slds-input"></div></div>
+      </div>
+    </div>
+    <ul class="slds-global-actions slds-grid slds-grid_vertical-align-center" style="gap:0.25rem;">
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon" title="Agentforce"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" class="slds-button__icon" /><span class="slds-assistive-text">Agentforce</span></button></li>
+      <li class="slds-global-actions__item"><div class="slds-grid"><button class="slds-button slds-button_icon slds-global-actions__favorites slds-global-actions__favorites_unselected" aria-pressed="false" title="お気に入り"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" class="slds-button__icon" /></button><button class="slds-button slds-button_icon slds-global-actions__favorites-more" title="お気に入り一覧"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" /></button></div></li>
+      <li class="slds-global-actions__item"><button class="sf-action-add" title="新規作成"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon" title="ヘルプ"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" class="slds-button__icon" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon" title="設定"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" class="slds-button__icon" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon" title="通知"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" class="slds-button__icon" /><span class="slds-notification-badge slds-incoming-notification slds-show-notification">3</span></button></li>
+      <li class="slds-global-actions__item slds-m-left_x-small"><span class="slds-avatar slds-avatar_circle slds-avatar_small"><img src="https://i.pravatar.cc/64?img=12" alt="User"></span></li>
+    </ul>
+  </div>
+</header>
+
+<!-- Global Navigation (SLDS 公式 Context Bar) -->
+<div class="slds-context-bar">
+  <div class="slds-context-bar__primary slds-context-bar__item_app">
+    <div class="sf-app-launcher" title="アプリケーションランチャー"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+    <span class="slds-context-bar__label-action slds-context-bar__app-name"><span>Sales</span></span>
+  </div>
+  <nav class="slds-context-bar__secondary" role="navigation">
+    <ul class="slds-grid">
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ホーム</a></li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">商談</a></li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">取引先</a></li>
+      <li class="slds-context-bar__item slds-is-active"><a href="#" class="slds-context-bar__label-action" aria-haspopup="true">ダッシュボード</a><div class="slds-context-bar__icon-action slds-p-left_none"><button class="slds-button slds-button_icon" title="メニュー"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" class="slds-button__icon slds-button__icon_small" /></button></div></li>
+      <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">レポート</a></li>
+    </ul>
+  </nav>
+</div>
+
+<main class="sf-main">
+
+  <!-- ダッシュボードヘッダ (パンくず + タイトル + アクション) -->
+  <div class="sf-dash-header slds-m-bottom_small">
+    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start">
+      <div>
+        <nav class="sf-breadcrumb">
+          <span class="slds-icon_container slds-icon-standard-dashboard" style="width:16px; height:16px;">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/dashboard.svg" alt="" style="width:16px;height:16px;" />
+          </span>
+          <a href="#">ダッシュボード</a>
+          <span class="sf-breadcrumb__sep">›</span>
+          <a href="#">Sales エグゼクティブ</a>
+          <span class="sf-breadcrumb__sep">›</span>
+          <span>Sales パイプライン</span>
+        </nav>
+        <h1 class="sf-dash-title">Sales パイプライン サマリ</h1>
+        <div class="sf-dash-meta">
+          <span>所有者: <a href="#" style="color:#0176d3;text-decoration:none;">山田 太郎</a></span>
+          <span>·</span>
+          <span>最終更新: 2026年6月14日 9:42</span>
+          <span>·</span>
+          <span style="color:#0176d3;">○ 閲覧者として表示: 自分</span>
+        </div>
+      </div>
+      <ul class="slds-button-group-list">
+        <li><button class="slds-button slds-button_icon-border-filled" title="お気に入り"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" class="slds-button__icon" style="width:14px;height:14px;" /></button></li>
+        <li><button class="slds-button slds-button_icon-border-filled" title="サブスクライブ"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" class="slds-button__icon" style="width:14px;height:14px;" /></button></li>
+        <li><button class="slds-button slds-button_neutral"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" class="slds-button__icon slds-button__icon_left" style="width:12px;height:12px;" />更新</button></li>
+        <li><button class="slds-button slds-button_neutral">編集</button></li>
+        <li><button class="slds-button slds-button_icon-border-filled" title="その他"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" style="width:12px;height:12px;" /></button></li>
+      </ul>
+    </div>
+    <!-- フィルタチップ -->
+    <div class="sf-filter-row">
+      <span style="font-size:0.75rem; color:#706e6b; margin-right:0.25rem;">フィルタ:</span>
+      <span class="sf-filter-chip"><strong>会計年度:</strong> 2026<button class="sf-filter-chip__close"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" /></button></span>
+      <span class="sf-filter-chip"><strong>地域:</strong> 国内<button class="sf-filter-chip__close"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" /></button></span>
+      <span class="sf-filter-chip"><strong>所有者:</strong> 営業1部<button class="sf-filter-chip__close"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" /></button></span>
+      <button class="sf-filter-add">+ フィルタを追加</button>
+    </div>
+  </div>
+
+  <!-- ウィジェットグリッド -->
+  <div class="sf-dash-grid">
+
+    <!-- ===== Row 1: KPI Number ウィジェット 3つ ===== -->
+
+    <!-- KPI 1: パイプライン総額 -->
+    <div class="sf-widget sf-w-col-4">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">パイプライン総額</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="更新"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" class="slds-button__icon" /></button>
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <div class="sf-widget__body">
+        <div class="sf-metric">
+          <div class="sf-metric__value">¥58,500,000</div>
+          <div class="sf-metric__delta sf-metric__delta_up">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/arrowup.svg" alt="" style="width:12px; height:12px; filter: brightness(0) saturate(100%) invert(35%) sepia(67%) saturate(431%) hue-rotate(91deg) brightness(96%) contrast(82%);" />
+            +18% (¥9,000,000) 前期比
+          </div>
+          <!-- スパークライン (12ヶ月) -->
+          <svg class="sf-metric__sparkline" viewBox="0 0 200 40" width="100%" height="40" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#0176d3" stroke-width="2" points="0,32 18,28 36,30 54,22 72,24 90,18 108,20 126,14 144,16 162,10 180,12 200,6" />
+            <polygon fill="rgba(1,118,211,0.1)" points="0,32 18,28 36,30 54,22 72,24 90,18 108,20 126,14 144,16 162,10 180,12 200,6 200,40 0,40" />
+          </svg>
+        </div>
+      </div>
+      <div class="sf-widget__footer">
+        <span>目標 ¥50M</span>
+        <a href="#">レポートを表示</a>
+      </div>
+    </div>
+
+    <!-- KPI 2: 受注率 -->
+    <div class="sf-widget sf-w-col-4">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">受注率</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="更新"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" class="slds-button__icon" /></button>
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <div class="sf-widget__body">
+        <div class="sf-metric">
+          <div class="sf-metric__value">42%</div>
+          <div class="sf-metric__delta sf-metric__delta_down">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/arrowdown.svg" alt="" style="width:12px; height:12px; filter: brightness(0) saturate(100%) invert(13%) sepia(89%) saturate(4928%) hue-rotate(355deg) brightness(95%) contrast(102%);" />
+            -3% 前期比
+          </div>
+          <!-- ゲージ風 (半円) -->
+          <svg viewBox="0 0 200 130" width="100%" height="110" style="margin-top:0.25rem;">
+            <!-- 背景円弧 -->
+            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e5e5e5" stroke-width="14" stroke-linecap="round" />
+            <!-- 値円弧 42% = 75.6deg。180-75.6=104.4 → 終点角=180-104.4=75.6 から測ると左側下方
+                 計算: 終点 X=100+80×cos(180-75.6°)=100-80×cos(75.6°)=100-19.93=80.07
+                       終点 Y=100-80×sin(75.6°)=100-77.49=22.51 -->
+            <path d="M 20 100 A 80 80 0 0 1 80.07 22.51" fill="none" stroke="#fe9339" stroke-width="14" stroke-linecap="round" />
+            <!-- 目標マーカー 50% (頂点) -->
+            <line x1="100" y1="20" x2="100" y2="6" stroke="#444" stroke-width="2" stroke-dasharray="2,2" />
+            <text x="100" y="80" text-anchor="middle" font-size="22" font-weight="700" fill="#181818">42%</text>
+            <text x="14" y="124" font-size="10" fill="#706e6b">0%</text>
+            <text x="100" y="124" text-anchor="middle" font-size="10" fill="#706e6b">目標 50%</text>
+            <text x="186" y="124" text-anchor="end" font-size="10" fill="#706e6b">100%</text>
+          </svg>
+        </div>
+      </div>
+      <div class="sf-widget__footer">
+        <span style="color:#ba0517;">⚠ 目標未達 (-8pt)</span>
+        <a href="#">レポートを表示</a>
+      </div>
+    </div>
+
+    <!-- KPI 3: 平均商談規模 -->
+    <div class="sf-widget sf-w-col-4">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">平均商談規模</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="更新"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" class="slds-button__icon" /></button>
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <div class="sf-widget__body">
+        <div class="sf-metric">
+          <div class="sf-metric__value">¥4,875,000</div>
+          <div class="sf-metric__delta sf-metric__delta_up">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/arrowup.svg" alt="" style="width:12px; height:12px; filter: brightness(0) saturate(100%) invert(35%) sepia(67%) saturate(431%) hue-rotate(91deg) brightness(96%) contrast(82%);" />
+            +¥320,000 前期比 (12 商談)
+          </div>
+          <!-- 縦棒 (月次推移 6ヶ月) -->
+          <svg viewBox="0 0 200 80" width="100%" height="80" style="margin-top:0.5rem;">
+            <g>
+              <rect x="6"   y="40" width="24" height="36" fill="#54698d" rx="2" />
+              <rect x="38"  y="32" width="24" height="44" fill="#54698d" rx="2" />
+              <rect x="70"  y="48" width="24" height="28" fill="#54698d" rx="2" />
+              <rect x="102" y="20" width="24" height="56" fill="#54698d" rx="2" />
+              <rect x="134" y="14" width="24" height="62" fill="#54698d" rx="2" />
+              <rect x="166" y="6"  width="24" height="70" fill="#0176d3" rx="2" />
+            </g>
+            <line x1="0" y1="76" x2="200" y2="76" stroke="#c9c9c9" stroke-width="1" />
+          </svg>
+          <div class="slds-grid slds-grid_align-spread" style="font-size:0.6875rem; color:#706e6b; margin-top:-0.125rem;">
+            <span>1月</span><span>2月</span><span>3月</span><span>4月</span><span>5月</span><span style="color:#0176d3;font-weight:600;">6月</span>
+          </div>
+        </div>
+      </div>
+      <div class="sf-widget__footer">
+        <span>四半期累計 ¥39M</span>
+        <a href="#">レポートを表示</a>
+      </div>
+    </div>
+
+    <!-- ===== Row 2: Funnel (左) + Donut (中) + 担当者別 Bar (右) ===== -->
+
+    <!-- Funnel: ステージ別パイプライン (本物っぽい台形ファネル) -->
+    <div class="sf-widget sf-w-col-5">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">ステージ別 パイプライン (Funnel)</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="更新"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" class="slds-button__icon" /></button>
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <div class="sf-widget__body">
+        <svg viewBox="0 0 400 240" width="100%" height="240">
+          <!-- 各層を台形で。中心 200, 各層高 36px, gap 6px -->
+          <!-- 資格確認 (¥48M, 100%, 半幅 180) -->
+          <polygon points="20,4 380,4 360,40 40,40" fill="#0176d3" />
+          <text x="200" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="white">資格確認 — ¥48M (100%)</text>
+
+          <!-- ニーズ分析 (¥32M, 67%, 半幅 120) -->
+          <polygon points="40,46 360,46 340,82 60,82" fill="#1b96ff" />
+          <text x="200" y="70" text-anchor="middle" font-size="13" font-weight="600" fill="white">ニーズ分析 — ¥32M (67%)</text>
+
+          <!-- 提案/見積 (¥24M, 50%, 半幅 90) -->
+          <polygon points="60,88 340,88 315,124 85,124" fill="#5ebbff" />
+          <text x="200" y="112" text-anchor="middle" font-size="13" font-weight="600" fill="#054291">提案/見積 — ¥24M (50%)</text>
+
+          <!-- 交渉/レビュー (¥18M, 38%, 半幅 70) -->
+          <polygon points="85,130 315,130 285,166 115,166" fill="#aacbff" />
+          <text x="200" y="154" text-anchor="middle" font-size="13" font-weight="600" fill="#054291">交渉/レビュー — ¥18M (38%)</text>
+
+          <!-- 受注 (¥14M, 29%, 半幅 50) -->
+          <polygon points="115,172 285,172 255,208 145,208" fill="#2e844a" />
+          <text x="200" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="white">受注 — ¥14M (29%)</text>
+
+          <!-- 軸ラベル (右側) -->
+          <text x="392" y="28" text-anchor="end" font-size="10" fill="#706e6b">100%</text>
+          <text x="392" y="70" text-anchor="end" font-size="10" fill="#706e6b">67%</text>
+          <text x="392" y="112" text-anchor="end" font-size="10" fill="#706e6b">50%</text>
+          <text x="392" y="154" text-anchor="end" font-size="10" fill="#706e6b">38%</text>
+          <text x="392" y="196" text-anchor="end" font-size="10" fill="#706e6b">29%</text>
+        </svg>
+      </div>
+      <div class="sf-widget__footer">
+        <span>進行率 (受注 / 資格確認): 29%</span>
+        <a href="#">レポートを表示</a>
+      </div>
+    </div>
+
+    <!-- Donut: 業種別構成 -->
+    <div class="sf-widget sf-w-col-4">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">業種別 商談構成</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="更新"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" class="slds-button__icon" /></button>
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <div class="sf-widget__body">
+        <div class="slds-grid slds-grid_align-center" style="gap:1rem;">
+          <!-- SVG ドーナツ (cx=70, cy=70, r=56, stroke-width=24) 円周 = 2πr ≈ 351.86 -->
+          <svg viewBox="0 0 140 140" width="140" height="140" style="flex-shrink:0;">
+            <circle cx="70" cy="70" r="56" fill="none" stroke="#f3f3f3" stroke-width="24" />
+            <!-- 製造 45%: 0-158.34 -->
+            <circle cx="70" cy="70" r="56" fill="none" stroke="#0176d3" stroke-width="24"
+                    stroke-dasharray="158.34 351.86" stroke-dashoffset="0"
+                    transform="rotate(-90 70 70)" />
+            <!-- 金融 25%: 158.34-246.30 (offset = -158.34) -->
+            <circle cx="70" cy="70" r="56" fill="none" stroke="#2e844a" stroke-width="24"
+                    stroke-dasharray="87.97 351.86" stroke-dashoffset="-158.34"
+                    transform="rotate(-90 70 70)" />
+            <!-- 小売 18%: 246.30-309.64 (offset = -246.30) -->
+            <circle cx="70" cy="70" r="56" fill="none" stroke="#fe9339" stroke-width="24"
+                    stroke-dasharray="63.33 351.86" stroke-dashoffset="-246.30"
+                    transform="rotate(-90 70 70)" />
+            <!-- その他 12%: 309.64-351.86 (offset = -309.64) -->
+            <circle cx="70" cy="70" r="56" fill="none" stroke="#ba0517" stroke-width="24"
+                    stroke-dasharray="42.22 351.86" stroke-dashoffset="-309.64"
+                    transform="rotate(-90 70 70)" />
+            <!-- 中央テキスト -->
+            <text x="70" y="66" text-anchor="middle" font-size="22" font-weight="700" fill="#181818">12</text>
+            <text x="70" y="84" text-anchor="middle" font-size="10" fill="#706e6b">商談</text>
+          </svg>
+
+          <ul class="sf-legend" style="flex:1;">
+            <li class="sf-legend__item"><span class="sf-legend__swatch" style="background:#0176d3;"></span><span class="sf-legend__label">製造</span><span class="sf-legend__value">45%</span></li>
+            <li class="sf-legend__item"><span class="sf-legend__swatch" style="background:#2e844a;"></span><span class="sf-legend__label">金融</span><span class="sf-legend__value">25%</span></li>
+            <li class="sf-legend__item"><span class="sf-legend__swatch" style="background:#fe9339;"></span><span class="sf-legend__label">小売</span><span class="sf-legend__value">18%</span></li>
+            <li class="sf-legend__item"><span class="sf-legend__swatch" style="background:#ba0517;"></span><span class="sf-legend__label">その他</span><span class="sf-legend__value">12%</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sf-widget__footer">
+        <span>合計: ¥58.5M</span>
+        <a href="#">レポートを表示</a>
+      </div>
+    </div>
+
+    <!-- 担当者別 横棒 (Bar Chart) -->
+    <div class="sf-widget sf-w-col-3">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">担当者別 受注額</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <div class="sf-widget__body" style="font-size:0.75rem;">
+        <!-- 横棒 (純CSS) -->
+        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+          <div>
+            <div class="slds-grid slds-grid_align-spread"><span>佐藤 一郎</span><strong>¥18.0M</strong></div>
+            <div style="height:6px; background:#f3f3f3; border-radius:3px; margin-top:2px;"><div style="width:100%; height:6px; background:#2e844a; border-radius:3px;"></div></div>
+          </div>
+          <div>
+            <div class="slds-grid slds-grid_align-spread"><span>田中 真理</span><strong>¥14.5M</strong></div>
+            <div style="height:6px; background:#f3f3f3; border-radius:3px; margin-top:2px;"><div style="width:80%; height:6px; background:#0176d3; border-radius:3px;"></div></div>
+          </div>
+          <div>
+            <div class="slds-grid slds-grid_align-spread"><span>鈴木 浩二</span><strong>¥11.2M</strong></div>
+            <div style="height:6px; background:#f3f3f3; border-radius:3px; margin-top:2px;"><div style="width:62%; height:6px; background:#0176d3; border-radius:3px;"></div></div>
+          </div>
+          <div>
+            <div class="slds-grid slds-grid_align-spread"><span>山田 太郎</span><strong>¥8.4M</strong></div>
+            <div style="height:6px; background:#f3f3f3; border-radius:3px; margin-top:2px;"><div style="width:46%; height:6px; background:#0176d3; border-radius:3px;"></div></div>
+          </div>
+          <div>
+            <div class="slds-grid slds-grid_align-spread"><span>高橋 美穂</span><strong>¥6.4M</strong></div>
+            <div style="height:6px; background:#f3f3f3; border-radius:3px; margin-top:2px;"><div style="width:36%; height:6px; background:#0176d3; border-radius:3px;"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sf-widget__footer">
+        <span>5 名</span>
+        <a href="#">レポートを表示</a>
+      </div>
+    </div>
+
+    <!-- ===== Row 3: Stacked Bar (左) + Line Chart (右) ===== -->
+
+    <!-- Stacked Bar: 月次パイプライン推移 -->
+    <div class="sf-widget sf-w-col-7">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">月次パイプライン推移 (積み上げ)</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <div class="sf-widget__body">
+        <svg viewBox="0 0 600 220" width="100%" height="220">
+          <!-- Y軸 (¥0M / ¥20M / ¥40M / ¥60M / ¥80M) -->
+          <g font-size="10" fill="#706e6b">
+            <text x="30" y="20" text-anchor="end">¥80M</text>
+            <text x="30" y="60" text-anchor="end">¥60M</text>
+            <text x="30" y="100" text-anchor="end">¥40M</text>
+            <text x="30" y="140" text-anchor="end">¥20M</text>
+            <text x="30" y="180" text-anchor="end">¥0</text>
+          </g>
+          <!-- 横グリッド線 -->
+          <g stroke="#f3f3f3" stroke-width="1">
+            <line x1="36" y1="20" x2="592" y2="20" />
+            <line x1="36" y1="60" x2="592" y2="60" />
+            <line x1="36" y1="100" x2="592" y2="100" />
+            <line x1="36" y1="140" x2="592" y2="140" />
+            <line x1="36" y1="180" x2="592" y2="180" stroke="#c9c9c9" />
+          </g>
+          <!-- 棒 (6ヶ月 × 4 ステージ積み上げ)
+               x: 60, 150, 240, 330, 420, 510 (幅60), 100% = 160px (180 → 20)
+               1月: 受注10 + 交渉8 + 提案12 + ニーズ8 = 38M -> 76px
+               2月: 12 + 10 + 14 + 10 = 46M -> 92px
+               3月: 8 + 7 + 10 + 6 = 31M -> 62px
+               4月: 14 + 11 + 13 + 9 = 47M -> 94px
+               5月: 16 + 13 + 15 + 10 = 54M -> 108px
+               6月: 18 + 14 + 16 + 10.5 = 58.5M -> 117px
+               1単位 = 180-y, 2px/¥1M -->
+          <g>
+            <!-- 1月 (合計38M=76px) -->
+            <rect x="60"  y="160" width="60" height="20" fill="#2e844a" /><!-- 受注10M -->
+            <rect x="60"  y="144" width="60" height="16" fill="#0176d3" /><!-- 交渉8M -->
+            <rect x="60"  y="120" width="60" height="24" fill="#5ebbff" /><!-- 提案12M -->
+            <rect x="60"  y="104" width="60" height="16" fill="#aacbff" /><!-- ニーズ8M -->
+
+            <!-- 2月 (46M=92px) -->
+            <rect x="150" y="156" width="60" height="24" fill="#2e844a" />
+            <rect x="150" y="136" width="60" height="20" fill="#0176d3" />
+            <rect x="150" y="108" width="60" height="28" fill="#5ebbff" />
+            <rect x="150" y="88"  width="60" height="20" fill="#aacbff" />
+
+            <!-- 3月 (31M=62px) -->
+            <rect x="240" y="164" width="60" height="16" fill="#2e844a" />
+            <rect x="240" y="150" width="60" height="14" fill="#0176d3" />
+            <rect x="240" y="130" width="60" height="20" fill="#5ebbff" />
+            <rect x="240" y="118" width="60" height="12" fill="#aacbff" />
+
+            <!-- 4月 (47M=94px) -->
+            <rect x="330" y="152" width="60" height="28" fill="#2e844a" />
+            <rect x="330" y="130" width="60" height="22" fill="#0176d3" />
+            <rect x="330" y="104" width="60" height="26" fill="#5ebbff" />
+            <rect x="330" y="86"  width="60" height="18" fill="#aacbff" />
+
+            <!-- 5月 (54M=108px) -->
+            <rect x="420" y="148" width="60" height="32" fill="#2e844a" />
+            <rect x="420" y="122" width="60" height="26" fill="#0176d3" />
+            <rect x="420" y="92"  width="60" height="30" fill="#5ebbff" />
+            <rect x="420" y="72"  width="60" height="20" fill="#aacbff" />
+
+            <!-- 6月 (58.5M=117px) -->
+            <rect x="510" y="144" width="60" height="36" fill="#2e844a" />
+            <rect x="510" y="116" width="60" height="28" fill="#0176d3" />
+            <rect x="510" y="84"  width="60" height="32" fill="#5ebbff" />
+            <rect x="510" y="63"  width="60" height="21" fill="#aacbff" />
+          </g>
+          <!-- X軸ラベル -->
+          <g font-size="10" fill="#706e6b" text-anchor="middle">
+            <text x="90"  y="200">2026年1月</text>
+            <text x="180" y="200">2月</text>
+            <text x="270" y="200">3月</text>
+            <text x="360" y="200">4月</text>
+            <text x="450" y="200">5月</text>
+            <text x="540" y="200" font-weight="600" fill="#181818">6月</text>
+          </g>
+        </svg>
+        <!-- 凡例 -->
+        <div class="slds-grid slds-grid_align-center" style="gap:1rem; margin-top:0.25rem;">
+          <span style="display:inline-flex;align-items:center;gap:0.25rem;font-size:0.6875rem;color:#444;"><span style="width:10px;height:10px;background:#2e844a;border-radius:2px;"></span>受注</span>
+          <span style="display:inline-flex;align-items:center;gap:0.25rem;font-size:0.6875rem;color:#444;"><span style="width:10px;height:10px;background:#0176d3;border-radius:2px;"></span>交渉/レビュー</span>
+          <span style="display:inline-flex;align-items:center;gap:0.25rem;font-size:0.6875rem;color:#444;"><span style="width:10px;height:10px;background:#5ebbff;border-radius:2px;"></span>提案/見積</span>
+          <span style="display:inline-flex;align-items:center;gap:0.25rem;font-size:0.6875rem;color:#444;"><span style="width:10px;height:10px;background:#aacbff;border-radius:2px;"></span>ニーズ分析</span>
+        </div>
+      </div>
+      <div class="sf-widget__footer">
+        <span>6 ヶ月平均: ¥45.7M / 月</span>
+        <a href="#">レポートを表示</a>
+      </div>
+    </div>
+
+    <!-- Line Chart: 受注額 vs 目標 -->
+    <div class="sf-widget sf-w-col-5">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">受注額 vs 目標 (累計)</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <div class="sf-widget__body">
+        <svg viewBox="0 0 400 220" width="100%" height="220">
+          <!-- Y軸ラベル -->
+          <g font-size="10" fill="#706e6b">
+            <text x="32" y="20" text-anchor="end">¥120M</text>
+            <text x="32" y="60" text-anchor="end">¥80M</text>
+            <text x="32" y="100" text-anchor="end">¥40M</text>
+            <text x="32" y="180" text-anchor="end">¥0</text>
+          </g>
+          <!-- グリッド -->
+          <g stroke="#f3f3f3">
+            <line x1="38" y1="20" x2="392" y2="20" />
+            <line x1="38" y1="60" x2="392" y2="60" />
+            <line x1="38" y1="100" x2="392" y2="100" />
+            <line x1="38" y1="180" x2="392" y2="180" stroke="#c9c9c9" />
+          </g>
+          <!-- 目標線 (累計目標 6ヶ月で 120M, 直線) 0,180 -> 360,20 (相対) → 38,180 -> 392,20 -->
+          <line x1="38" y1="180" x2="392" y2="20" stroke="#706e6b" stroke-width="1.5" stroke-dasharray="4,3" />
+          <!-- 実績線 (累計受注 6ヶ月で 95M)
+               1月10M=170, 2月22M=160, 3月30M=152, 4月44M=138, 5月60M=120, 6月78M=102 (累計、上限120M=20px)
+               縦軸: y = 180 - 累計M * 1.6 (¥120M → 180-192=ng) → スケール = 160/120 = 1.333
+               y = 180 - cum*1.333
+               1月10M: y=180-13.3=166.7
+               2月22M: y=180-29.3=150.7
+               3月30M: y=180-40=140
+               4月44M: y=180-58.6=121.4
+               5月60M: y=180-80=100
+               6月78M: y=180-104=76 -->
+          <polyline fill="none" stroke="#0176d3" stroke-width="2.5" stroke-linejoin="round"
+                    points="68,166.7 130,150.7 192,140 254,121.4 316,100 378,76" />
+          <polygon fill="rgba(1,118,211,0.12)"
+                   points="68,166.7 130,150.7 192,140 254,121.4 316,100 378,76 378,180 68,180" />
+          <!-- データポイント -->
+          <g fill="#0176d3">
+            <circle cx="68"  cy="166.7" r="4" />
+            <circle cx="130" cy="150.7" r="4" />
+            <circle cx="192" cy="140"   r="4" />
+            <circle cx="254" cy="121.4" r="4" />
+            <circle cx="316" cy="100"   r="4" />
+            <circle cx="378" cy="76"    r="5" stroke="white" stroke-width="2" />
+          </g>
+          <!-- 6月の値ラベル -->
+          <g>
+            <rect x="338" y="50" width="56" height="20" rx="3" fill="#181818" />
+            <text x="366" y="64" text-anchor="middle" font-size="11" font-weight="600" fill="white">¥78M</text>
+          </g>
+          <!-- X軸 -->
+          <g font-size="10" fill="#706e6b" text-anchor="middle">
+            <text x="68"  y="200">1月</text>
+            <text x="130" y="200">2月</text>
+            <text x="192" y="200">3月</text>
+            <text x="254" y="200">4月</text>
+            <text x="316" y="200">5月</text>
+            <text x="378" y="200" font-weight="600" fill="#181818">6月</text>
+          </g>
+        </svg>
+        <div class="slds-grid slds-grid_align-center" style="gap:1rem; margin-top:0.25rem;">
+          <span style="display:inline-flex;align-items:center;gap:0.25rem;font-size:0.6875rem;color:#444;"><span style="width:14px;height:2px;background:#0176d3;"></span>累計受注</span>
+          <span style="display:inline-flex;align-items:center;gap:0.25rem;font-size:0.6875rem;color:#444;"><span style="width:14px;height:0;border-top:2px dashed #706e6b;"></span>累計目標</span>
+        </div>
+      </div>
+      <div class="sf-widget__footer">
+        <span style="color:#ba0517;">⚠ 目標未達 (-¥42M)</span>
+        <a href="#">レポートを表示</a>
+      </div>
+    </div>
+
+    <!-- ===== Row 4: Top 商談 テーブル (全幅) ===== -->
+    <div class="sf-widget sf-w-col-12">
+      <div class="sf-widget__header">
+        <span class="sf-widget__title">トップ 商談 (今月クローズ予定)</span>
+        <div class="sf-widget__actions">
+          <button class="slds-button slds-button_icon" title="更新"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" class="slds-button__icon" /></button>
+          <button class="slds-button slds-button_icon" title="詳細"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" class="slds-button__icon" /></button>
+        </div>
+      </div>
+      <table class="slds-table slds-table_cell-buffer slds-table_bordered" style="font-size:0.8125rem;">
+        <thead>
+          <tr>
+            <th><span>商談名</span></th>
+            <th><span>取引先</span></th>
+            <th><span>ステージ</span></th>
+            <th class="slds-text-align_right"><span>金額</span></th>
+            <th><span>確度</span></th>
+            <th><span>クローズ予定日</span></th>
+            <th><span>所有者</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><a href="#" style="color:#0176d3; text-decoration:none; font-weight:600;">大型基幹刷新案件</a></th>
+            <td><a href="#" style="color:#0176d3; text-decoration:none;">株式会社 グローバル製造</a></td>
+            <td><span class="sf-stage-pill sf-stage-pill_proposal">提案/見積</span></td>
+            <td class="slds-text-align_right"><strong>¥12,000,000</strong></td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><div style="width:48px;height:6px;background:#f3f3f3;border-radius:3px;"><div style="width:75%;height:6px;background:#0176d3;border-radius:3px;"></div></div>75%</div></td>
+            <td>2026/06/28</td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/24?img=33" alt=""></span>佐藤 一郎</div></td>
+          </tr>
+          <tr>
+            <th scope="row"><a href="#" style="color:#0176d3; text-decoration:none; font-weight:600;">クラウド移行プロジェクト</a></th>
+            <td><a href="#" style="color:#0176d3; text-decoration:none;">アクメ商事 株式会社</a></td>
+            <td><span class="sf-stage-pill sf-stage-pill_negotiation">交渉/レビュー</span></td>
+            <td class="slds-text-align_right"><strong>¥8,500,000</strong></td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><div style="width:48px;height:6px;background:#f3f3f3;border-radius:3px;"><div style="width:90%;height:6px;background:#2e844a;border-radius:3px;"></div></div>90%</div></td>
+            <td>2026/06/25</td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/24?img=44" alt=""></span>田中 真理</div></td>
+          </tr>
+          <tr>
+            <th scope="row"><a href="#" style="color:#0176d3; text-decoration:none; font-weight:600;">追加サポート契約 v3</a></th>
+            <td><a href="#" style="color:#0176d3; text-decoration:none;">テストフィナンシャル</a></td>
+            <td><span class="sf-stage-pill sf-stage-pill_won">受注</span></td>
+            <td class="slds-text-align_right slds-text-color_success"><strong>¥4,800,000</strong></td>
+            <td>100%</td>
+            <td>2026/06/12 ✓</td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/24?img=15" alt=""></span>鈴木 浩二</div></td>
+          </tr>
+          <tr>
+            <th scope="row"><a href="#" style="color:#0176d3; text-decoration:none; font-weight:600;">新規案件 — 営業支援ツール</a></th>
+            <td><a href="#" style="color:#0176d3; text-decoration:none;">サンプル小売</a></td>
+            <td><span class="sf-stage-pill sf-stage-pill_needs">ニーズ分析</span></td>
+            <td class="slds-text-align_right"><strong>¥6,200,000</strong></td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><div style="width:48px;height:6px;background:#f3f3f3;border-radius:3px;"><div style="width:30%;height:6px;background:#fe9339;border-radius:3px;"></div></div>30%</div></td>
+            <td>2026/07/15</td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/24?img=22" alt=""></span>山田 太郎</div></td>
+          </tr>
+          <tr>
+            <th scope="row"><a href="#" style="color:#0176d3; text-decoration:none; font-weight:600;">資格確認中: 提案準備中</a></th>
+            <td><a href="#" style="color:#0176d3; text-decoration:none;">未来テクノロジー</a></td>
+            <td><span class="sf-stage-pill sf-stage-pill_qualify">資格確認</span></td>
+            <td class="slds-text-align_right"><strong>¥3,500,000</strong></td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><div style="width:48px;height:6px;background:#f3f3f3;border-radius:3px;"><div style="width:15%;height:6px;background:#fe9339;border-radius:3px;"></div></div>15%</div></td>
+            <td>2026/08/30</td>
+            <td><div style="display:inline-flex;align-items:center;gap:0.375rem;"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/24?img=29" alt=""></span>高橋 美穂</div></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="sf-widget__footer">
+        <span>5 件 · 合計 ¥35,000,000</span>
+        <a href="#">すべて表示 (12件)</a>
+      </div>
+    </div>
+
+  </div><!-- /sf-dash-grid -->
+</main>
+
+</body>
+</html>

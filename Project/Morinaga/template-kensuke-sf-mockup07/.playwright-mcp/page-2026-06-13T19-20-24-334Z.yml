@@ -1,0 +1,117 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - searchbox "検索..." [ref=e9]
+      - list [ref=e10]:
+        - listitem [ref=e11]:
+          - button "Agentforce" [ref=e12] [cursor=pointer]:
+            - generic [ref=e13]: Agentforce
+        - listitem [ref=e14]:
+          - button "お気に入り" [ref=e15] [cursor=pointer]:
+            - generic [ref=e16]: お気に入り
+        - listitem [ref=e17]:
+          - button "新規作成" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]: 新規作成
+        - listitem [ref=e20]:
+          - button "ヘルプ" [ref=e21] [cursor=pointer]:
+            - generic [ref=e22]: ヘルプ
+        - listitem [ref=e23]:
+          - button "設定" [ref=e24] [cursor=pointer]:
+            - generic [ref=e25]: 設定
+        - listitem [ref=e26]:
+          - button "3 通知" [ref=e27] [cursor=pointer]:
+            - generic: "3"
+            - generic [ref=e28]: 通知
+        - listitem [ref=e29]:
+          - img "User" [ref=e31]
+  - generic [ref=e32]:
+    - generic [ref=e33]:
+      - generic "アプリケーションランチャー" [ref=e34] [cursor=pointer]
+      - generic [ref=e46]: Sales
+    - navigation [ref=e47]:
+      - list [ref=e48]:
+        - listitem [ref=e49]:
+          - link "ホーム" [ref=e50] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e51] [cursor=pointer]:
+          - link "取引先" [ref=e52]:
+            - /url: "#"
+          - button "メニュー" [ref=e54]:
+            - generic [ref=e55]: メニュー
+        - listitem [ref=e56]:
+          - link "取引先責任者" [ref=e57] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e58]:
+          - link "商談" [ref=e59] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e60]:
+          - link "レポート" [ref=e61] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e62]:
+    - generic [ref=e64]:
+      - generic [ref=e69]:
+        - paragraph [ref=e70]: 取引先
+        - heading "最近参照したデータ" [level=1] [ref=e71]
+        - paragraph [ref=e72]: 3 件 · 数秒前に更新
+      - list [ref=e74]:
+        - listitem [ref=e75]:
+          - button "グラフ" [ref=e76] [cursor=pointer]
+        - listitem [ref=e77]:
+          - button "フィルタ" [ref=e78] [cursor=pointer]
+        - listitem [ref=e79]:
+          - button "インポート" [ref=e80] [cursor=pointer]
+        - listitem [ref=e81]:
+          - button "新規" [ref=e82] [cursor=pointer]
+    - article [ref=e83]:
+      - generic [ref=e84]:
+        - generic [ref=e85]: 3 件中 1 - 3 件を表示
+        - searchbox "このリストを検索..." [ref=e89]
+      - table [ref=e90]:
+        - rowgroup [ref=e91]:
+          - row "取引先名 電話 業種 取引先種別 所有者" [ref=e92]:
+            - columnheader [ref=e93]:
+              - checkbox [ref=e94]
+            - columnheader "取引先名" [ref=e95]
+            - columnheader "電話" [ref=e96]
+            - columnheader "業種" [ref=e97]
+            - columnheader "取引先種別" [ref=e98]
+            - columnheader "所有者" [ref=e99]
+        - rowgroup [ref=e100]:
+          - row "株式会社 サンプル 03-1234-5678 製造 顧客 - 直接 担当者A" [ref=e101]:
+            - cell [ref=e102]:
+              - checkbox [ref=e103]
+            - rowheader "株式会社 サンプル" [ref=e104]:
+              - link "株式会社 サンプル" [ref=e105] [cursor=pointer]:
+                - /url: "#"
+            - cell "03-1234-5678" [ref=e106]
+            - cell "製造" [ref=e107]
+            - cell "顧客 - 直接" [ref=e108]
+            - cell "担当者A" [ref=e109]:
+              - link "担当者A" [ref=e110] [cursor=pointer]:
+                - /url: "#"
+          - row "サンプル株式会社 06-9876-5432 小売 顧客 - パートナー 担当者B" [ref=e111]:
+            - cell [ref=e112]:
+              - checkbox [ref=e113]
+            - rowheader "サンプル株式会社" [ref=e114]:
+              - link "サンプル株式会社" [ref=e115] [cursor=pointer]:
+                - /url: "#"
+            - cell "06-9876-5432" [ref=e116]
+            - cell "小売" [ref=e117]
+            - cell "顧客 - パートナー" [ref=e118]
+            - cell "担当者B" [ref=e119]:
+              - link "担当者B" [ref=e120] [cursor=pointer]:
+                - /url: "#"
+          - row "テスト株式会社 +1-555-0100 金融 見込み客 担当者C" [ref=e121]:
+            - cell [ref=e122]:
+              - checkbox [ref=e123]
+            - rowheader "テスト株式会社" [ref=e124]:
+              - link "テスト株式会社" [ref=e125] [cursor=pointer]:
+                - /url: "#"
+            - cell "+1-555-0100" [ref=e126]
+            - cell "金融" [ref=e127]
+            - cell "見込み客" [ref=e128]
+            - cell "担当者C" [ref=e129]:
+              - link "担当者C" [ref=e130] [cursor=pointer]:
+                - /url: "#"
+      - generic [ref=e131]: 3 件中 1 - 3 件を表示
