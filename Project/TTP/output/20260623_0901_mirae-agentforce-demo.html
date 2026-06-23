@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiraE+ みらい共創プラットフォーム</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+/* ===== リセット・ベース ===== */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  background: #f4f6f9;
+  color: #1a1a1a;
+  min-width: 1024px;
+}
+
+/* ===== ポータルヘッダー ===== */
+.mp-header {
+  background: #0c3559;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.mp-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.mp-logo-badge {
+  background: #00aaff;
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.mp-nav {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+.mp-nav a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.mp-nav a:hover { background: rgba(255,255,255,0.12); }
+.mp-nav a.active { background: rgba(0,170,255,0.25); color: #7dd6ff; }
+.mp-user {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: white;
+}
+.mp-user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #00aaff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.875rem;
+}
+.mp-user-name { font-size: 0.875rem; }
+.mp-user-badge {
+  background: #2ecc71;
+  font-size: 0.6875rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+}
+
+/* ===== ヒーローバナー ===== */
+.mp-hero {
+  background: linear-gradient(135deg, #0c3559 0%, #1565c0 60%, #0288d1 100%);
+  color: white;
+  padding: 2rem 2rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.mp-hero::after {
+  content: '';
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: rgba(0,170,255,0.12);
+}
+.mp-hero-greeting {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.mp-hero-greeting em {
+  color: #7dd6ff;
+  font-style: normal;
+}
+.mp-hero-sub {
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 1.25rem;
+}
+
+/* AI先読み提案バナー */
+.mp-ai-banner {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(0,200,255,0.4);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 700px;
+  backdrop-filter: blur(4px);
+}
+.mp-ai-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #0070d2, #00aaff);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.mp-ai-icon img { width: 20px; height: 20px; filter: brightness(0) invert(1); }
+.mp-ai-text { flex: 1; }
+.mp-ai-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #7dd6ff;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+.mp-ai-msg { font-size: 0.875rem; line-height: 1.55; color: rgba(255,255,255,0.95); }
+.mp-ai-actions { display: flex; gap: 0.5rem; margin-top: 0.625rem; flex-wrap: wrap; }
+.mp-ai-btn {
+  background: rgba(0,170,255,0.25);
+  border: 1px solid rgba(0,200,255,0.5);
+  color: #7dd6ff;
+  font-size: 0.8125rem;
+  padding: 0.3rem 0.875rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.mp-ai-btn:hover { background: rgba(0,170,255,0.4); }
+
+/* ===== メインレイアウト ===== */
+.mp-main {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.25rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  transition: max-width 0.3s;
+}
+.mp-main.af-open { max-width: calc(100% - 420px); }
+.mp-col-left { flex: 0 0 calc(66% - 0.625rem); }
+.mp-col-right { flex: 0 0 calc(34% - 0.625rem); }
+
+/* ===== カード共通 ===== */
+.mp-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+.mp-card-header {
+  padding: 0.875rem 1.125rem 0.75rem;
+  border-bottom: 1px solid #e8eaed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mp-card-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0c3559;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.mp-card-title img {
+  width: 18px; height: 18px;
+  filter: brightness(0) saturate(100%) invert(14%) sepia(49%) saturate(1200%) hue-rotate(192deg);
+}
+.mp-card-body { padding: 1rem 1.125rem; }
+.mp-card-link { font-size: 0.8125rem; color: #0070d2; text-decoration: none; }
+.mp-card-link:hover { text-decoration: underline; }
+
+/* ===== ソリューションカード ===== */
+.mp-sol-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+}
+.mp-sol-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.mp-sol-item:hover { border-color: #0070d2; box-shadow: 0 2px 8px rgba(0,112,210,0.15); }
+.mp-sol-item.recommended {
+  border-color: #00aaff;
+  background: linear-gradient(to bottom, #f0f8ff, white);
+}
+.mp-sol-badge {
+  position: absolute;
+  top: -8px; right: 8px;
+  background: #ff6b00;
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  letter-spacing: 0.05em;
+}
+.mp-sol-icon {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.625rem;
+}
+.mp-sol-icon.green { background: #e8f5e9; }
+.mp-sol-icon.blue { background: #e3f2fd; }
+.mp-sol-icon.orange { background: #fff3e0; }
+.mp-sol-icon.purple { background: #f3e5f5; }
+.mp-sol-icon.teal { background: #e0f2f1; }
+.mp-sol-icon.indigo { background: #e8eaf6; }
+.mp-sol-icon img { width: 22px; height: 22px; }
+.mp-sol-name { font-size: 0.8125rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.25rem; }
+.mp-sol-desc { font-size: 0.75rem; color: #666; line-height: 1.45; }
+
+/* ===== ケース進捗 ===== */
+.mp-case-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.mp-case-item:last-child { border-bottom: none; }
+.mp-case-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.mp-case-icon img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+.mp-case-info { flex: 1; }
+.mp-case-num { font-size: 0.75rem; color: #888; }
+.mp-case-title { font-size: 0.875rem; font-weight: 600; color: #0c3559; }
+.mp-case-status { display: inline-block; font-size: 0.6875rem; padding: 2px 8px; border-radius: 10px; margin-top: 3px; }
+.status-new { background: #e3f2fd; color: #0070d2; }
+.status-progress { background: #fff8e1; color: #ff8f00; }
+.status-done { background: #e8f5e9; color: #2e7d32; }
+.mp-case-date { font-size: 0.75rem; color: #aaa; white-space: nowrap; }
+
+/* ===== おすすめコンテンツ ===== */
+.mp-rec-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  align-items: flex-start;
+}
+.mp-rec-item:last-child { border-bottom: none; }
+.mp-rec-thumb {
+  width: 72px; height: 54px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+}
+.mp-rec-body { flex: 1; }
+.mp-rec-tag { font-size: 0.6875rem; color: #0070d2; font-weight: 600; margin-bottom: 0.25rem; }
+.mp-rec-title { font-size: 0.8125rem; font-weight: 600; color: #1a1a1a; line-height: 1.4; margin-bottom: 0.25rem; }
+.mp-rec-meta { font-size: 0.75rem; color: #aaa; }
+
+/* ===== シミュレーション結果カード（チャット内埋め込み用） ===== */
+.af-sim-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 0.75rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.af-sim-header {
+  background: linear-gradient(90deg, #0c3559, #0288d1);
+  color: white;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.af-sim-body { padding: 0.75rem; }
+.af-sim-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 0.8125rem;
+}
+.af-sim-row:last-child { border-bottom: none; }
+.af-sim-label { color: #666; }
+.af-sim-value { font-weight: 700; color: #0c3559; }
+.af-sim-value.green { color: #2e7d32; }
+.af-sim-actions {
+  padding: 0.625rem 0.75rem;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  gap: 0.5rem;
+}
+.af-btn-primary {
+  background: #0070d2;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.875rem;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+.af-btn-neutral {
+  background: white;
+  color: #0070d2;
+  border: 1px solid #0070d2;
+  padding: 0.4rem 0.875rem;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ===== ケース作成カード ===== */
+.af-case-card {
+  background: #f8fffe;
+  border: 1px solid #b2dfdb;
+  border-left: 4px solid #00897b;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+}
+.af-case-card-title { font-weight: 700; color: #00695c; margin-bottom: 0.375rem; }
+.af-case-card-row { color: #444; margin-bottom: 0.2rem; }
+.af-case-card-row span { font-weight: 600; }
+
+/* ===== Agentforceパネル ===== */
+.af-panel {
+  position: fixed;
+  top: 60px;
+  right: 0;
+  bottom: 0;
+  width: 400px;
+  background: white;
+  border-left: 1px solid #c9c9c9;
+  box-shadow: -4px 0 16px rgba(0,0,0,0.12);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-out;
+}
+.af-panel.is-open { transform: translateX(0); }
+
+.af-panel-header {
+  background: #0c3559;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.af-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: white;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+.af-panel-title-icon {
+  width: 28px; height: 28px;
+  background: #00aaff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.af-panel-title-icon img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
+.af-panel-actions { display: flex; gap: 0.25rem; }
+.af-panel-btn {
+  width: 28px; height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+}
+.af-panel-btn:hover { background: rgba(255,255,255,0.15); }
+.af-panel-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1); }
+
+.af-context-bar {
+  background: #f0f7ff;
+  border-bottom: 1px solid #c8e0f4;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: #0c3559;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.af-context-bar img { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(14%) sepia(49%) saturate(1200%) hue-rotate(192deg); }
+
+.af-conversation {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.af-msg {
+  display: flex;
+  gap: 0.625rem;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: af-in 0.4s ease-out forwards;
+}
+.af-msg:nth-child(1) { animation-delay: 0.1s; }
+.af-msg:nth-child(2) { animation-delay: 0.7s; }
+.af-msg:nth-child(3) { animation-delay: 1.5s; }
+.af-msg:nth-child(4) { animation-delay: 2.5s; }
+.af-msg:nth-child(5) { animation-delay: 3.6s; }
+.af-msg:nth-child(6) { animation-delay: 4.8s; }
+.af-msg:nth-child(7) { animation-delay: 6.0s; }
+.af-msg:nth-child(8) { animation-delay: 7.2s; }
+@keyframes af-in { to { opacity: 1; transform: translateY(0); } }
+
+.af-msg.user { flex-direction: row-reverse; }
+.af-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.af-avatar.bot { background: linear-gradient(135deg, #0070d2, #00aaff); }
+.af-avatar.bot img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
+.af-avatar.user { background: #546e7a; font-size: 0.75rem; font-weight: 700; color: white; }
+
+.af-bubble {
+  max-width: 80%;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #1a1a1a;
+}
+.af-bubble.bot {
+  background: #f5f8fa;
+  border: 1px solid #e0e8f0;
+  border-radius: 0 8px 8px 8px;
+  padding: 0.625rem 0.75rem;
+}
+.af-bubble.user {
+  background: #0070d2;
+  color: white;
+  border-radius: 8px 0 8px 8px;
+  padding: 0.625rem 0.75rem;
+}
+.af-bubble p { margin: 0 0 0.375rem; }
+.af-bubble p:last-child { margin-bottom: 0; }
+.af-bubble strong { color: #0c3559; font-weight: 700; display: block; margin-top: 0.375rem; }
+.af-bubble.user strong { color: #b3d9ff; }
+
+/* タイピングインジケーター */
+.af-typing {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 0;
+}
+.af-typing span {
+  width: 6px; height: 6px;
+  background: #90a4ae;
+  border-radius: 50%;
+  animation: af-dot 1.2s infinite ease-in-out;
+}
+.af-typing span:nth-child(2) { animation-delay: 0.2s; }
+.af-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes af-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* おすすめ質問 */
+.af-suggestions {
+  border-top: 1px solid #e8eaed;
+  padding: 0.75rem 1rem;
+  flex-shrink: 0;
+  background: #fafcff;
+}
+.af-suggestions-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+.af-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0;
+  font-size: 0.8125rem;
+  color: #0070d2;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.af-suggestion:hover { background: #f0f7ff; padding-left: 4px; }
+.af-suggestion::before { content: "▸"; font-size: 0.75rem; }
+
+/* 入力エリア */
+.af-input-area {
+  border-top: 1px solid #e0e0e0;
+  padding: 0.75rem 1rem;
+  flex-shrink: 0;
+}
+.af-input-wrap {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.af-input {
+  flex: 1;
+  border: 1px solid #c9c9c9;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  outline: none;
+}
+.af-input:focus { border-color: #0070d2; box-shadow: 0 0 0 2px rgba(0,112,210,0.15); }
+.af-send-btn {
+  width: 34px; height: 34px;
+  background: #0070d2;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.af-send-btn img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
+
+/* ===== フローティングボタン ===== */
+.af-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, #0070d2, #00aaff);
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0,112,210,0.4);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 140;
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.af-fab:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(0,112,210,0.5); }
+.af-fab img { width: 28px; height: 28px; filter: brightness(0) invert(1); }
+.af-fab-badge {
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 14px; height: 14px;
+  background: #ff3b30;
+  border-radius: 50%;
+  border: 2px solid white;
+  font-size: 0.55rem;
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+}
+.af-fab-label {
+  position: absolute;
+  bottom: -1.5rem;
+  font-size: 0.6875rem;
+  color: #0070d2;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+/* ===== AC通知バナー ===== */
+.mp-notification {
+  margin: 0 2rem 0;
+  background: #e8f4fd;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  padding: 0.625rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.8125rem;
+  color: #0c3559;
+}
+.mp-notification img { width: 16px; height: 16px; filter: brightness(0) saturate(100%) invert(14%) sepia(49%) saturate(1200%) hue-rotate(192deg); }
+.mp-notification a { color: #0070d2; }
+
+/* ===== ステータスカラー ===== */
+.icon-bg-green { background: #2e7d32; }
+.icon-bg-blue  { background: #0070d2; }
+.icon-bg-amber { background: #f57c00; }
+
+</style>
+</head>
+<body>
+
+<!-- ===== ポータルヘッダー ===== -->
+<header class="mp-header">
+  <div class="mp-logo">
+    <span style="font-size:1.5rem;">🌱</span>
+    MiraE+
+    <span class="mp-logo-badge">みらい共創プラットフォーム</span>
+  </div>
+  <nav class="mp-nav">
+    <a href="#" class="active">ホーム</a>
+    <a href="#">ソリューション</a>
+    <a href="#">スポンサー企業</a>
+    <a href="#">マイページ</a>
+    <a href="#">お問い合わせ</a>
+  </nav>
+  <div class="mp-user">
+    <div class="mp-user-avatar">田</div>
+    <div>
+      <div class="mp-user-name">田中 誠一 様</div>
+      <div style="font-size:0.6875rem;color:rgba(255,255,255,0.65);">株式会社TTグリーンエナジー</div>
+    </div>
+    <span class="mp-user-badge">法人会員</span>
+    <!-- Agentforceボタン -->
+    <button onclick="openAgentforce()" style="margin-left:0.5rem;background:rgba(0,170,255,0.2);border:1px solid rgba(0,200,255,0.4);border-radius:6px;padding:0.4rem 0.75rem;color:white;cursor:pointer;font-size:0.8125rem;display:flex;align-items:center;gap:0.375rem;" title="Agentforceに質問">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:16px;height:16px;filter:brightness(0) invert(1);" />
+      Agentforce
+    </button>
+  </div>
+</header>
+
+<!-- ===== Service Cloud完了通知 ===== -->
+<div class="mp-notification" style="margin-top:0.75rem;">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" />
+  <strong>お知らせ：</strong>先日お申込みの「現地調査ご依頼（Case #00123）」の担当者が決定しました。
+  <a href="#">進捗を確認する →</a>
+</div>
+
+<!-- ===== ヒーローバナー ===== -->
+<section class="mp-hero" style="margin-top:0.75rem;">
+  <div class="mp-hero-greeting">おかえりなさい、<em>田中様</em></div>
+  <div class="mp-hero-sub">株式会社TTグリーンエナジー | 最終ログイン：本日 09:02</div>
+  <!-- Agentforce先読み提案 -->
+  <div class="mp-ai-banner">
+    <div class="mp-ai-icon">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+    </div>
+    <div class="mp-ai-text">
+      <div class="mp-ai-label">✦ AGENTFORCE からのご提案</div>
+      <div class="mp-ai-msg">
+        田中様、前回ご覧いただいた「BCP向け非常用電源」の続きとして、今月スポンサー企業から新しい「太陽光＋蓄電池パッケージ」の提案が届いています。御社施設（本社ビル 約3,200㎡）向けの初期試算も用意されています。
+      </div>
+      <div class="mp-ai-actions">
+        <button class="mp-ai-btn" onclick="openAgentforce()">詳細を確認する</button>
+        <button class="mp-ai-btn" onclick="openAgentforce()">試算を見る</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== メインコンテンツ ===== -->
+<div class="mp-main" id="mp-main">
+  <!-- 左カラム -->
+  <div class="mp-col-left">
+
+    <!-- ソリューション一覧 -->
+    <div class="mp-card">
+      <div class="mp-card-header">
+        <div class="mp-card-title">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/product_workspace.svg" alt="" />
+          ソリューション一覧
+        </div>
+        <span style="font-size:0.75rem;background:#fff3e0;color:#e65100;padding:2px 8px;border-radius:10px;font-weight:600;">あなたへのおすすめ ★</span>
+      </div>
+      <div class="mp-sol-grid">
+        <div class="mp-sol-item recommended">
+          <span class="mp-sol-badge">NEW</span>
+          <div class="mp-sol-icon green">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/apex.svg" alt="" style="filter:brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(95deg);" />
+          </div>
+          <div class="mp-sol-name">太陽光＋蓄電池パッケージ</div>
+          <div class="mp-sol-desc">初期費用抑制プランあり。施設規模に応じたシミュレーション提供</div>
+        </div>
+        <div class="mp-sol-item recommended">
+          <span class="mp-sol-badge">閲覧済</span>
+          <div class="mp-sol-icon blue">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/lightning_strike.svg" alt="" style="filter:brightness(0) saturate(100%) invert(22%) sepia(80%) saturate(2000%) hue-rotate(202deg);" />
+          </div>
+          <div class="mp-sol-name">BCP・非常用電源</div>
+          <div class="mp-sol-desc">停電時でも業務継続。ディーゼルから電力貯蔵への移行支援</div>
+        </div>
+        <div class="mp-sol-item">
+          <div class="mp-sol-icon orange">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/trending.svg" alt="" style="filter:brightness(0) saturate(100%) invert(50%) sepia(90%) saturate(1500%) hue-rotate(5deg);" />
+          </div>
+          <div class="mp-sol-name">カーボンニュートラル支援</div>
+          <div class="mp-sol-desc">Scope2削減計画の策定・認証取得サポートまで一括対応</div>
+        </div>
+        <div class="mp-sol-item">
+          <div class="mp-sol-icon purple">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/company.svg" alt="" style="filter:brightness(0) saturate(100%) invert(30%) sepia(40%) saturate(2000%) hue-rotate(255deg);" />
+          </div>
+          <div class="mp-sol-name">土地・建物活用</div>
+          <div class="mp-sol-desc">遊休地を収益化。太陽光発電所・EV充電スタンドへの転換提案</div>
+        </div>
+        <div class="mp-sol-item">
+          <div class="mp-sol-icon teal">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/shield.svg" alt="" style="filter:brightness(0) saturate(100%) invert(30%) sepia(50%) saturate(1500%) hue-rotate(150deg);" />
+          </div>
+          <div class="mp-sol-name">防災・レジリエンス強化</div>
+          <div class="mp-sol-desc">自治体連携型の災害対応計画。マイクログリッド構築支援</div>
+        </div>
+        <div class="mp-sol-item">
+          <div class="mp-sol-icon indigo">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/connected_apps.svg" alt="" style="filter:brightness(0) saturate(100%) invert(25%) sepia(60%) saturate(1200%) hue-rotate(215deg);" />
+          </div>
+          <div class="mp-sol-name">EV充電インフラ</div>
+          <div class="mp-sol-desc">駐車場・社有車のEV化対応。補助金申請サポート込み</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ケース進捗 -->
+    <div class="mp-card">
+      <div class="mp-card-header">
+        <div class="mp-card-title">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/cases.svg" alt="" />
+          お問い合わせ・ご依頼の進捗
+        </div>
+        <a href="#" class="mp-card-link">すべて見る →</a>
+      </div>
+      <div class="mp-card-body">
+        <div class="mp-case-item">
+          <div class="mp-case-icon icon-bg-amber">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/home.svg" alt="" />
+          </div>
+          <div class="mp-case-info">
+            <div class="mp-case-num">Case #00123</div>
+            <div class="mp-case-title">太陽光パネル設置 現地調査ご依頼</div>
+            <span class="mp-case-status status-progress">対応中 — 担当者決定済み</span>
+          </div>
+          <div class="mp-case-date">2026/06/23</div>
+        </div>
+        <div class="mp-case-item">
+          <div class="mp-case-icon icon-bg-blue">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/file.svg" alt="" />
+          </div>
+          <div class="mp-case-info">
+            <div class="mp-case-num">Case #00098</div>
+            <div class="mp-case-title">BCP計画書 資料請求</div>
+            <span class="mp-case-status status-done">完了 — 資料送付済み</span>
+          </div>
+          <div class="mp-case-date">2026/06/10</div>
+        </div>
+        <div class="mp-case-item">
+          <div class="mp-case-icon icon-bg-green">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" />
+          </div>
+          <div class="mp-case-info">
+            <div class="mp-case-num">Case #00074</div>
+            <div class="mp-case-title">カーボンニュートラル初回相談</div>
+            <span class="mp-case-status status-done">完了 — 無料相談実施済み</span>
+          </div>
+          <div class="mp-case-date">2026/05/28</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 右カラム -->
+  <div class="mp-col-right">
+
+    <!-- おすすめ情報 -->
+    <div class="mp-card">
+      <div class="mp-card-header">
+        <div class="mp-card-title">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" />
+          あなたへのおすすめ情報
+        </div>
+      </div>
+      <div class="mp-card-body" style="padding-top:0.5rem;">
+        <div class="mp-rec-item">
+          <div class="mp-rec-thumb" style="background:#e8f5e9;">🌞</div>
+          <div class="mp-rec-body">
+            <div class="mp-rec-tag">太陽光・蓄電池</div>
+            <div class="mp-rec-title">初期費用ゼロ！PPA方式で太陽光を導入する方法</div>
+            <div class="mp-rec-meta">東電タウンプランニング · 2026/06/20</div>
+          </div>
+        </div>
+        <div class="mp-rec-item">
+          <div class="mp-rec-thumb" style="background:#e3f2fd;">⚡</div>
+          <div class="mp-rec-body">
+            <div class="mp-rec-tag">BCP・防災</div>
+            <div class="mp-rec-title">72時間対応の蓄電池BCPソリューション事例集</div>
+            <div class="mp-rec-meta">スポンサー企業A · 2026/06/18</div>
+          </div>
+        </div>
+        <div class="mp-rec-item">
+          <div class="mp-rec-thumb" style="background:#fff3e0;">📋</div>
+          <div class="mp-rec-body">
+            <div class="mp-rec-tag">補助金・制度</div>
+            <div class="mp-rec-title">2026年度 省エネ設備補助金 申請期限まもなく</div>
+            <div class="mp-rec-meta">経済産業省情報 · 2026/06/15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 次のアクション -->
+    <div class="mp-card">
+      <div class="mp-card-header">
+        <div class="mp-card-title">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/task.svg" alt="" />
+          次のアクション
+        </div>
+      </div>
+      <div class="mp-card-body">
+        <div style="display:flex;flex-direction:column;gap:0.625rem;">
+          <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:0.625rem;font-size:0.8125rem;">
+            <div style="font-weight:700;color:#e65100;margin-bottom:0.25rem;">📅 現地調査 日程調整中</div>
+            <div style="color:#555;">担当：山田 太郎（東電TP）<br>2営業日以内にご連絡予定</div>
+          </div>
+          <div style="background:#f3e5f5;border:1px solid #ce93d8;border-radius:6px;padding:0.625rem;font-size:0.8125rem;">
+            <div style="font-weight:700;color:#6a1b9a;margin-bottom:0.25rem;">📧 資料をお送りしました</div>
+            <div style="color:#555;">「太陽光＋蓄電池 試算レポート（パーソナライズ版）」をメールでお送りしました</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== Agentforceフローティングボタン ===== -->
+<button class="af-fab" onclick="openAgentforce()" id="af-fab">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="Agentforce" />
+  <span class="af-fab-badge">1</span>
+</button>
+
+<!-- ===== Agentforceパネル ===== -->
+<aside class="af-panel" id="af-panel">
+  <header class="af-panel-header">
+    <div class="af-panel-title">
+      <div class="af-panel-title-icon">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+      </div>
+      Agentforce（MiraE+）
+    </div>
+    <div class="af-panel-actions">
+      <button class="af-panel-btn" title="新規セッション">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" />
+      </button>
+      <button class="af-panel-btn" title="閉じる" onclick="closeAgentforce()">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" />
+      </button>
+    </div>
+  </header>
+
+  <div class="af-context-bar">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" />
+    田中 誠一様 | 株式会社TTグリーンエナジー | 法人会員 | 閲覧履歴：BCP・太陽光
+  </div>
+
+  <div class="af-conversation" id="af-conv">
+
+    <!-- Step1: ボット先読み提案 -->
+    <div class="af-msg">
+      <div class="af-avatar bot">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+      </div>
+      <div class="af-bubble bot">
+        <p>田中様、おかえりなさい！</p>
+        <p>前回ご覧いただいた「BCP向け非常用電源」の続きとして、スポンサー企業より<strong>「太陽光＋蓄電池パッケージ」</strong>の新プランが届いています。</p>
+        <p>御社の施設情報（本社ビル・約3,200㎡）をもとにした初期試算もご用意できます。ご確認しますか？</p>
+      </div>
+    </div>
+
+    <!-- Step2: ユーザー質問 -->
+    <div class="af-msg user">
+      <div class="af-avatar user">田</div>
+      <div class="af-bubble user">
+        <p>太陽光パネルを設置した場合、どれくらいコストがかかりますか？</p>
+      </div>
+    </div>
+
+    <!-- Step2: ボット個人化回答 -->
+    <div class="af-msg">
+      <div class="af-avatar bot">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+      </div>
+      <div class="af-bubble bot">
+        <p>一般的には100〜300万円程度（10kWシステム）ですが、田中様の施設情報をもとにスポンサー企業Aが試算した結果はこちらです：</p>
+        <!-- シミュレーションカード（アダプティブ埋め込み） -->
+        <div class="af-sim-card">
+          <div class="af-sim-header">⚡ 太陽光＋蓄電池 試算結果｜本社ビル（3,200㎡）</div>
+          <div class="af-sim-body">
+            <div class="af-sim-row">
+              <span class="af-sim-label">推奨システム容量</span>
+              <span class="af-sim-value">30kW + 蓄電池 20kWh</span>
+            </div>
+            <div class="af-sim-row">
+              <span class="af-sim-label">初期費用（概算）</span>
+              <span class="af-sim-value">約 1,050万円</span>
+            </div>
+            <div class="af-sim-row">
+              <span class="af-sim-label">年間削減電気代</span>
+              <span class="af-sim-value green">約 84万円/年</span>
+            </div>
+            <div class="af-sim-row">
+              <span class="af-sim-label">投資回収期間</span>
+              <span class="af-sim-value">約 12.5年</span>
+            </div>
+            <div class="af-sim-row">
+              <span class="af-sim-label">CO₂削減量</span>
+              <span class="af-sim-value green">約 15t-CO₂/年</span>
+            </div>
+            <div class="af-sim-row">
+              <span class="af-sim-label">補助金適用後（概算）</span>
+              <span class="af-sim-value">約 735万円（▲30%）</span>
+            </div>
+          </div>
+          <div class="af-sim-actions">
+            <button class="af-btn-primary">詳細レポートを受け取る</button>
+            <button class="af-btn-neutral">現地調査を依頼する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step3: ユーザー依頼 -->
+    <div class="af-msg user">
+      <div class="af-avatar user">田</div>
+      <div class="af-bubble user">
+        <p>現地調査をお願いしたいです。</p>
+      </div>
+    </div>
+
+    <!-- Step3: ケース作成通知 -->
+    <div class="af-msg">
+      <div class="af-avatar bot">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+      </div>
+      <div class="af-bubble bot">
+        <p>承知しました。現地調査のご依頼を受け付けました。</p>
+        <!-- ケース作成カード（Service Cloud連携） -->
+        <div class="af-case-card">
+          <div class="af-case-card-title">✅ Service Cloud にケースを作成しました</div>
+          <div class="af-case-card-row"><span>Case番号：</span>#00123</div>
+          <div class="af-case-card-row"><span>件名：</span>太陽光パネル設置 現地調査ご依頼</div>
+          <div class="af-case-card-row"><span>担当者：</span>山田 太郎（東電タウンプランニング）</div>
+          <div class="af-case-card-row"><span>対応予定：</span>2営業日以内にご連絡</div>
+          <div class="af-case-card-row"><span>ステータス：</span><span style="color:#f57c00;font-weight:700;">対応中</span></div>
+        </div>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:#666;">進捗はこのポータルの「ケース進捗」セクションからいつでも確認できます。</p>
+      </div>
+    </div>
+
+    <!-- Step5: Account Engagement通知 -->
+    <div class="af-msg">
+      <div class="af-avatar bot">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+      </div>
+      <div class="af-bubble bot">
+        <p>また、本日のご相談をもとに、パーソナライズされた資料をメールでお送りしました。</p>
+        <p style="font-size:0.75rem;color:#888;">📧 Account Engagement 自動配信 — 「太陽光＋蓄電池 補助金活用ガイド（田中様向け）」</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- おすすめ質問 -->
+  <div class="af-suggestions">
+    <div class="af-suggestions-label">続けて質問する</div>
+    <div class="af-suggestion" onclick="addUserMsg(this, 'BCP対策の具体的な事例を教えてください')">BCP対策の具体的な事例を教えてください</div>
+    <div class="af-suggestion" onclick="addUserMsg(this, '補助金の申請手続きを教えてください')">補助金の申請手続きを教えてください</div>
+    <div class="af-suggestion" onclick="addUserMsg(this, 'ケースの進捗を確認したい')">ケースの進捗を確認したい</div>
+  </div>
+
+  <!-- 入力エリア -->
+  <div class="af-input-area">
+    <div class="af-input-wrap">
+      <input type="text" class="af-input" id="af-input" placeholder="質問や依頼を入力してください…" onkeydown="handleKey(event)" />
+      <button class="af-send-btn" onclick="sendMsg()">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/send.svg" alt="送信" />
+      </button>
+    </div>
+    <div style="font-size:0.6875rem;color:#aaa;text-align:center;margin-top:0.375rem;">
+      Powered by Agentforce × Experience Cloud × Service Cloud
+    </div>
+  </div>
+</aside>
+
+<script>
+function openAgentforce() {
+  const panel = document.getElementById('af-panel');
+  const fab   = document.getElementById('af-fab');
+  const main  = document.getElementById('mp-main');
+  panel.classList.add('is-open');
+  fab.style.display = 'none';
+  main.classList.add('af-open');
+  // アニメーション再生
+  restartAnim();
+}
+
+function closeAgentforce() {
+  const panel = document.getElementById('af-panel');
+  const fab   = document.getElementById('af-fab');
+  const main  = document.getElementById('mp-main');
+  panel.classList.remove('is-open');
+  fab.style.display = 'flex';
+  main.classList.remove('af-open');
+}
+
+function restartAnim() {
+  const conv = document.getElementById('af-conv');
+  const html = conv.innerHTML;
+  conv.innerHTML = '';
+  void conv.offsetWidth;
+  conv.innerHTML = html;
+}
+
+function addUserMsg(el, text) {
+  const conv = document.getElementById('af-conv');
+  const msg = document.createElement('div');
+  msg.className = 'af-msg user';
+  msg.style.animation = 'af-in 0.3s ease-out forwards';
+  msg.innerHTML = `
+    <div class="af-avatar user">田</div>
+    <div class="af-bubble user"><p>${text}</p></div>
+  `;
+  conv.appendChild(msg);
+  conv.scrollTop = conv.scrollHeight;
+  el.style.display = 'none';
+  // タイピング表示
+  setTimeout(() => {
+    const typing = document.createElement('div');
+    typing.className = 'af-msg';
+    typing.style.animation = 'af-in 0.3s ease-out forwards';
+    typing.innerHTML = `
+      <div class="af-avatar bot">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+      </div>
+      <div class="af-bubble bot"><span class="af-typing"><span></span><span></span><span></span></span></div>
+    `;
+    conv.appendChild(typing);
+    conv.scrollTop = conv.scrollHeight;
+  }, 400);
+}
+
+function sendMsg() {
+  const input = document.getElementById('af-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  const conv = document.getElementById('af-conv');
+  const msg = document.createElement('div');
+  msg.className = 'af-msg user';
+  msg.style.animation = 'af-in 0.3s ease-out forwards';
+  msg.innerHTML = `
+    <div class="af-avatar user">田</div>
+    <div class="af-bubble user"><p>${text}</p></div>
+  `;
+  conv.appendChild(msg);
+  conv.scrollTop = conv.scrollHeight;
+  setTimeout(() => {
+    const typing = document.createElement('div');
+    typing.className = 'af-msg';
+    typing.style.animation = 'af-in 0.3s ease-out forwards';
+    typing.innerHTML = `
+      <div class="af-avatar bot">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+      </div>
+      <div class="af-bubble bot"><span class="af-typing"><span></span><span></span><span></span></span></div>
+    `;
+    conv.appendChild(typing);
+    conv.scrollTop = conv.scrollHeight;
+  }, 400);
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter') sendMsg();
+}
+</script>
+
+</body>
+</html>
