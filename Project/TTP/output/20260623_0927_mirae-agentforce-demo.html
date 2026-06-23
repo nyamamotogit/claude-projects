@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【公式】MiraE+（ミライー）｜みらい共創プラットフォーム</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:10px;}
+body{font-family:'Noto Sans JP',sans-serif;font-size:1.6rem;color:#333;background:#fff;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+ul,li{list-style:none;}
+img{max-width:100%;display:block;}
+button{cursor:pointer;font-family:inherit;background:none;border:none;}
+
+/* ===== ヘッダー ===== */
+.l-header{
+  position:sticky;top:0;z-index:100;
+  background:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  height:80px;
+}
+.l-header__inner{
+  max-width:1200px;margin:0 auto;padding:0 24px;
+  height:100%;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+/* ロゴ */
+.l-header__logo{display:flex;align-items:center;gap:0;flex-shrink:0;}
+.logo-svg{height:52px;width:auto;}
+
+/* ナビ */
+.l-gnav__list{display:flex;align-items:center;gap:0;}
+.l-gnav__link{
+  font-size:1.4rem;font-weight:500;color:#333;
+  padding:0 14px;line-height:80px;white-space:nowrap;
+  transition:color .2s;
+}
+.l-gnav__link:hover{color:#2b9e4e;}
+.l-gnav__contact{
+  background:#f5a623;color:#fff;
+  font-size:1.4rem;font-weight:700;
+  padding:10px 22px;border-radius:24px;
+  display:flex;align-items:center;gap:8px;
+  transition:background .2s;white-space:nowrap;flex-shrink:0;
+}
+.l-gnav__contact:hover{background:#e09000;}
+.l-gnav__contact-arrow{
+  width:22px;height:22px;background:rgba(255,255,255,.3);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;font-weight:700;
+}
+
+/* ログインユーザーバッジ（追加） */
+.l-header__user{
+  display:flex;align-items:center;gap:10px;
+  padding-left:16px;border-left:1px solid #e8e8e8;flex-shrink:0;
+}
+.user-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:#2b9e4e;color:#fff;
+  font-size:1.3rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.user-name{font-size:1.3rem;font-weight:700;color:#333;white-space:nowrap;}
+.user-org{font-size:1.1rem;color:#888;white-space:nowrap;}
+.user-badge{
+  background:#e8f5ee;color:#2b9e4e;
+  font-size:1.0rem;font-weight:700;
+  padding:2px 8px;border-radius:10px;white-space:nowrap;
+}
+
+/* ===== ヒーロー（緑のグラデ＋画像） ===== */
+.top-hero{
+  position:relative;
+  min-height:580px;
+  background:
+    linear-gradient(120deg,rgba(30,90,40,.55) 0%,rgba(20,120,50,.3) 40%,rgba(0,0,0,0) 80%),
+    url('https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=1800&q=80') center/cover no-repeat;
+  display:flex;align-items:center;
+  overflow:hidden;
+}
+.top-hero__inner{
+  max-width:1200px;margin:0 auto;padding:60px 24px;
+  width:100%;
+}
+.top-hero__textbox{
+  background:rgba(255,255,255,.92);
+  display:inline-block;
+  padding:6px 18px 6px 12px;
+  margin-bottom:10px;
+  border-radius:2px;
+}
+.top-hero__heading{
+  font-size:3.6rem;font-weight:900;color:#1a4d2a;
+  line-height:1.3;
+}
+.top-hero__textbox:last-of-type{margin-bottom:20px;}
+.top-hero__lead{
+  color:#fff;font-size:1.4rem;line-height:1.9;
+  text-shadow:0 1px 4px rgba(0,0,0,.5);
+  margin-bottom:36px;max-width:500px;
+}
+.top-hero__btns{display:flex;gap:16px;flex-wrap:wrap;}
+.hero-btn{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+  font-size:1.7rem;font-weight:700;color:#fff;
+  padding:16px 28px;border-radius:32px;
+  min-width:280px;
+  transition:transform .2s,box-shadow .2s;
+}
+.hero-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.25);}
+.hero-btn.blue{background:#1b5abf;}
+.hero-btn.green{background:#2b9e4e;}
+.hero-btn__arrow{
+  width:30px;height:30px;background:rgba(255,255,255,.25);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;
+}
+
+/* ===== MiraE+とは？セクション ===== */
+.about-section{
+  max-width:1100px;margin:0 auto;padding:80px 24px 60px;
+}
+.about-logo-row{
+  display:flex;align-items:center;gap:16px;margin-bottom:24px;
+}
+.about-logo-svg{height:48px;}
+.about-logo-label{font-size:2.8rem;font-weight:700;color:#333;}
+.about-desc{
+  font-size:1.5rem;line-height:2.0;color:#555;margin-bottom:48px;
+}
+.solution-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+}
+.solution-card{
+  background:#f7f9f5;border-radius:12px;
+  padding:36px 20px 28px;text-align:center;
+  transition:all .2s;cursor:pointer;
+  border:2px solid transparent;
+}
+.solution-card:hover{
+  border-color:#2b9e4e;
+  box-shadow:0 4px 16px rgba(43,158,78,.15);
+  transform:translateY(-3px);
+}
+.solution-card__icon{
+  width:90px;height:90px;margin:0 auto 16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:5.2rem;
+}
+.solution-card__name{font-size:1.6rem;font-weight:700;color:#1a4d2a;line-height:1.4;}
+
+/* ===== Agentforceフローティングボタン ===== */
+.af-fab{
+  position:fixed;bottom:28px;right:28px;
+  width:64px;height:64px;
+  background:linear-gradient(135deg,#1b5abf,#2b9e4e);
+  border-radius:50%;border:none;cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:200;color:#fff;
+  transition:transform .2s;
+}
+.af-fab:hover{transform:scale(1.1);}
+.af-fab__icon{font-size:2.8rem;line-height:1;}
+.af-fab__label{font-size:0.9rem;margin-top:2px;}
+.af-fab__badge{
+  position:absolute;top:4px;right:4px;
+  width:16px;height:16px;
+  background:#ff3b30;border-radius:50%;border:2px solid #fff;
+  font-size:0.9rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ========================================================
+   アダプティブウェブ オーバーレイ
+   やまや方式：左チャット(400px) + 右コンテンツ(800px)
+   ======================================================== */
+.aw-overlay{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:300;
+  transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.aw-overlay.is-open{transform:translateY(0);}
+
+/* ヘッダーバー */
+.aw-header{
+  background:#1a1f2e;
+  height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+  gap:12px;
+}
+.aw-header-left{display:flex;align-items:center;gap:12px;}
+.aw-header-avatar{
+  width:36px;height:36px;border-radius:50%;overflow:hidden;
+  background:#2b9e4e;display:flex;align-items:center;justify-content:center;
+  font-size:2.0rem;flex-shrink:0;
+}
+.aw-header-info{}
+.aw-header-name{font-size:1.5rem;font-weight:700;color:#fff;}
+.aw-header-status{
+  font-size:1.2rem;color:#2ecc71;display:flex;align-items:center;gap:5px;
+}
+.aw-header-status::before{
+  content:'';width:7px;height:7px;background:#2ecc71;border-radius:50%;
+}
+.aw-header-right{display:flex;align-items:center;gap:4px;}
+.aw-ctrl-btn{
+  width:32px;height:32px;color:rgba(255,255,255,.7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;border-radius:4px;
+  transition:background .15s;
+}
+.aw-ctrl-btn:hover{background:rgba(255,255,255,.15);color:#fff;}
+
+/* ボディ（横分割） */
+.aw-body{
+  display:flex;
+  height:780px;
+}
+
+/* 左：チャットエリア(400px) */
+.aw-chat{
+  width:400px;flex-shrink:0;
+  background:#fff;
+  border-right:1px solid #e8e8e8;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.aw-chat-messages{
+  flex:1;overflow-y:auto;
+  padding:20px 16px;
+  display:flex;flex-direction:column;gap:16px;
+  scroll-behavior:smooth;
+}
+
+/* チャットターン */
+.chat-turn{
+  display:none;flex-direction:column;gap:12px;
+  animation:msg-in .3s ease-out both;
+}
+.chat-turn.visible{display:flex;}
+@keyframes msg-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* メッセージ */
+.chat-msg{display:flex;gap:8px;align-items:flex-start;}
+.chat-msg.user{flex-direction:row-reverse;}
+.chat-avatar{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.8rem;
+  margin-top:2px;
+}
+.chat-avatar.bot{background:#2b9e4e;}
+.chat-avatar.user{background:#546e7a;font-size:1.2rem;font-weight:700;color:#fff;}
+.chat-bubble{
+  max-width:78%;font-size:1.3rem;line-height:1.65;
+  padding:10px 14px;border-radius:4px 12px 12px 12px;
+}
+.chat-bubble.bot{background:#f2f9f4;border:1px solid #d0e8d8;color:#1a1a1a;}
+.chat-bubble.user{background:#2b9e4e;color:#fff;border-radius:12px 4px 12px 12px;}
+.chat-bubble p{margin:0 0 6px;}
+.chat-bubble p:last-child{margin-bottom:0;}
+
+/* 送信時刻 */
+.chat-time{font-size:1.0rem;color:#aaa;margin-top:2px;text-align:right;}
+
+/* 送信済みステータス */
+.chat-sent{font-size:1.0rem;color:#aaa;text-align:right;margin-bottom:4px;}
+
+/* タイピング */
+.typing-dots{display:inline-flex;gap:4px;align-items:center;padding:2px 0;}
+.typing-dots span{
+  width:7px;height:7px;background:#aaa;border-radius:50%;
+  animation:typing-bounce 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes typing-bounce{
+  0%,60%,100%{transform:translateY(0);opacity:.4;}
+  30%{transform:translateY(-5px);opacity:1;}
+}
+
+/* クイック返信ボタン */
+.quick-replies{display:flex;flex-direction:column;gap:8px;padding:0 0 0 40px;}
+.quick-reply-btn{
+  background:#fff;border:1.5px solid #2b9e4e;color:#2b9e4e;
+  font-size:1.3rem;font-weight:700;
+  padding:10px 16px;border-radius:6px;
+  text-align:left;
+  display:flex;align-items:center;gap:8px;
+  transition:background .15s;
+}
+.quick-reply-btn:hover{background:#f0fbf4;}
+.quick-reply-btn .qr-icon{font-size:1.4rem;}
+
+/* ===== → 進む ボタン ===== */
+.aw-next-bar{
+  flex-shrink:0;
+  padding:12px 16px;
+  border-top:1px solid #eee;
+  background:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.aw-step-indicator{font-size:1.2rem;color:#999;}
+.aw-next-btn{
+  display:flex;align-items:center;gap:8px;
+  background:#2b9e4e;color:#fff;
+  font-size:1.4rem;font-weight:700;
+  padding:10px 22px;border-radius:24px;border:none;
+  box-shadow:0 3px 10px rgba(43,158,78,.35);
+  transition:all .2s;font-family:inherit;
+}
+.aw-next-btn:hover{background:#1f7a3a;transform:translateX(3px);}
+.aw-next-btn:disabled{background:#ccc;box-shadow:none;transform:none;cursor:not-allowed;}
+.aw-next-arrow{font-size:2.0rem;line-height:1;}
+
+/* 入力エリア（最終後） */
+.aw-input-bar{
+  flex-shrink:0;
+  padding:12px 16px;
+  border-top:1px solid #eee;
+  background:#fff;
+  display:none;
+}
+.aw-input-row{display:flex;gap:10px;align-items:center;}
+.aw-input{
+  flex:1;border:1.5px solid #d0e8d8;border-radius:24px;
+  padding:10px 18px;font-size:1.4rem;font-family:inherit;
+  outline:none;background:#f8fcf9;
+}
+.aw-input:focus{border-color:#2b9e4e;background:#fff;}
+.aw-send-btn{
+  width:42px;height:42px;border-radius:50%;
+  background:#2b9e4e;border:none;cursor:pointer;
+  color:#fff;font-size:1.8rem;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background .15s;
+}
+.aw-send-btn:hover{background:#1f7a3a;}
+.aw-powered{text-align:center;font-size:1.0rem;color:#bbb;margin-top:6px;}
+
+/* ===== 右：コンテンツゾーン ===== */
+.aw-content{
+  flex:1;
+  background:#f4f4f4;
+  overflow-y:auto;
+  position:relative;
+}
+.content-panel{
+  display:none;width:100%;height:100%;
+  animation:panel-in .35s ease-out both;
+}
+.content-panel.visible{display:block;}
+@keyframes panel-in{from{opacity:0;}to{opacity:1;}}
+
+/* ——— コンテンツパネル別スタイル ——— */
+
+/* パネル1: おすすめ提案 */
+.cp-proposal{
+  padding:32px 36px;
+  background:linear-gradient(135deg,#e8f5ee,#f4faf6);
+  height:100%;overflow-y:auto;
+}
+.cp-proposal__badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#2b9e4e;color:#fff;
+  font-size:1.2rem;font-weight:700;
+  padding:4px 14px;border-radius:16px;margin-bottom:16px;
+}
+.cp-proposal__title{font-size:2.4rem;font-weight:700;color:#1a4d2a;margin-bottom:8px;}
+.cp-proposal__sub{font-size:1.4rem;color:#555;margin-bottom:28px;line-height:1.7;}
+.proposal-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.proposal-card{
+  background:#fff;border-radius:10px;padding:20px;
+  border:2px solid transparent;
+  transition:all .2s;cursor:pointer;
+}
+.proposal-card:hover{border-color:#2b9e4e;box-shadow:0 4px 12px rgba(43,158,78,.15);}
+.proposal-card.highlight{border-color:#2b9e4e;background:linear-gradient(to bottom,#f0fbf4,#fff);}
+.proposal-card__icon{font-size:3.6rem;margin-bottom:10px;}
+.proposal-card__name{font-size:1.5rem;font-weight:700;color:#1a4d2a;margin-bottom:6px;}
+.proposal-card__desc{font-size:1.3rem;color:#666;line-height:1.6;}
+.proposal-card__badge{
+  display:inline-block;margin-top:8px;
+  background:#ff6b00;color:#fff;
+  font-size:1.0rem;font-weight:700;padding:2px 8px;border-radius:10px;
+}
+.proposal-context{
+  background:#fff;border:1px solid #c8e6d0;border-left:4px solid #2b9e4e;
+  border-radius:4px;padding:14px 18px;
+  font-size:1.3rem;color:#444;line-height:1.7;
+}
+.proposal-context strong{color:#1a4d2a;}
+
+/* パネル2: シミュレーション */
+.cp-sim{padding:28px 32px;background:#fff;height:100%;overflow-y:auto;}
+.cp-sim__header{
+  background:linear-gradient(90deg,#1a4d2a,#2b9e4e);
+  color:#fff;border-radius:10px;
+  padding:20px 24px;margin-bottom:24px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+}
+.cp-sim__title{font-size:2.0rem;font-weight:700;margin-bottom:4px;}
+.cp-sim__subtitle{font-size:1.3rem;color:rgba(255,255,255,.8);}
+.cp-sim__big{font-size:3.6rem;font-weight:900;color:#a8ffc4;}
+.cp-sim__big-label{font-size:1.2rem;color:rgba(255,255,255,.7);margin-top:4px;text-align:right;}
+.sim-table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+.sim-table th{
+  background:#f0f9f4;font-size:1.3rem;color:#1a4d2a;font-weight:700;
+  padding:10px 16px;text-align:left;border-bottom:2px solid #c8e6d0;
+}
+.sim-table td{
+  padding:12px 16px;font-size:1.4rem;color:#333;
+  border-bottom:1px solid #f0f0f0;vertical-align:middle;
+}
+.sim-table tr:last-child td{border-bottom:none;}
+.sim-table td.val{font-weight:700;color:#1a4d2a;text-align:right;}
+.sim-table td.val.green{color:#2b9e4e;}
+.sim-bar-wrap{margin-bottom:20px;}
+.sim-bar-title{font-size:1.3rem;font-weight:700;color:#333;margin-bottom:10px;}
+.sim-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.sim-bar-label{width:120px;font-size:1.3rem;color:#555;flex-shrink:0;}
+.sim-bar-track{flex:1;height:14px;background:#eee;border-radius:7px;overflow:hidden;}
+.sim-bar-fill{height:100%;border-radius:7px;transition:width .8s ease;}
+.sim-bar-val{width:80px;font-size:1.3rem;font-weight:700;text-align:right;flex-shrink:0;}
+.sim-actions{display:flex;gap:12px;margin-top:8px;}
+.sim-btn-primary{
+  background:#2b9e4e;color:#fff;font-size:1.4rem;font-weight:700;
+  padding:12px 24px;border-radius:6px;border:none;cursor:pointer;
+  font-family:inherit;transition:background .15s;
+}
+.sim-btn-primary:hover{background:#1f7a3a;}
+.sim-btn-neutral{
+  background:#fff;color:#2b9e4e;border:2px solid #2b9e4e;
+  font-size:1.4rem;font-weight:700;
+  padding:12px 24px;border-radius:6px;cursor:pointer;
+  font-family:inherit;transition:background .15s;
+}
+.sim-btn-neutral:hover{background:#f0fbf4;}
+
+/* パネル3: Service Cloud ケース */
+.cp-case{padding:28px 32px;background:#fff;height:100%;overflow-y:auto;}
+.case-created-banner{
+  background:linear-gradient(90deg,#1a4d2a,#2b9e4e);
+  color:#fff;border-radius:10px;padding:16px 20px;
+  display:flex;align-items:center;gap:14px;margin-bottom:24px;
+}
+.case-created-icon{font-size:3.2rem;}
+.case-created-title{font-size:2.0rem;font-weight:700;margin-bottom:2px;}
+.case-created-sub{font-size:1.3rem;color:rgba(255,255,255,.8);}
+.case-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.case-detail-item{background:#f8f8f8;border-radius:8px;padding:16px 18px;}
+.case-detail-label{font-size:1.2rem;color:#888;margin-bottom:4px;}
+.case-detail-value{font-size:1.5rem;font-weight:700;color:#1a1a1a;}
+.case-detail-value.status{color:#f57c00;}
+.case-timeline-title{font-size:1.5rem;font-weight:700;color:#333;margin-bottom:14px;}
+.case-timeline{position:relative;padding-left:24px;}
+.case-timeline::before{
+  content:'';position:absolute;left:8px;top:0;bottom:0;
+  width:2px;background:#d0e8d8;
+}
+.ct-item{
+  position:relative;display:flex;align-items:flex-start;gap:12px;
+  margin-bottom:16px;
+}
+.ct-item::before{
+  content:'';position:absolute;left:-20px;top:6px;
+  width:10px;height:10px;border-radius:50%;
+  background:#2b9e4e;border:2px solid #fff;
+  box-shadow:0 0 0 2px #2b9e4e;flex-shrink:0;
+}
+.ct-item.pending::before{background:#fff;border-color:#aaa;box-shadow:0 0 0 2px #aaa;}
+.ct-date{font-size:1.2rem;color:#888;white-space:nowrap;flex-shrink:0;padding-top:2px;}
+.ct-text{font-size:1.3rem;color:#444;line-height:1.6;}
+.ct-text strong{color:#1a1a1a;display:block;}
+.sf-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:1.1rem;font-weight:700;
+  padding:2px 10px;border-radius:10px;
+}
+.sf-badge.new{background:#e3f2fd;color:#1565c0;}
+.sf-badge.progress{background:#fff3e0;color:#e65100;}
+.sf-badge.done{background:#e8f5e9;color:#2e7d32;}
+
+/* パネル4: Account Engagement おすすめ */
+.cp-ae{padding:28px 32px;background:#fff;height:100%;overflow-y:auto;}
+.ae-header{
+  background:linear-gradient(90deg,#1b5abf,#0288d1);
+  color:#fff;border-radius:10px;padding:16px 20px;
+  display:flex;align-items:center;gap:14px;margin-bottom:24px;
+}
+.ae-header-icon{font-size:3.0rem;}
+.ae-header-title{font-size:1.9rem;font-weight:700;margin-bottom:2px;}
+.ae-header-sub{font-size:1.3rem;color:rgba(255,255,255,.8);}
+.ae-article-list{display:flex;flex-direction:column;gap:16px;margin-bottom:24px;}
+.ae-article{
+  background:#f8f8f8;border-radius:10px;overflow:hidden;
+  display:flex;gap:0;
+  transition:box-shadow .2s;cursor:pointer;border:1px solid #eee;
+}
+.ae-article:hover{box-shadow:0 4px 12px rgba(0,0,0,.1);}
+.ae-article__thumb{
+  width:120px;flex-shrink:0;
+  background:linear-gradient(135deg,#1a4d2a,#2b9e4e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:4.0rem;
+}
+.ae-article__body{padding:16px 18px;flex:1;}
+.ae-article__tag{
+  font-size:1.1rem;font-weight:700;color:#1565c0;margin-bottom:6px;
+}
+.ae-article__title{font-size:1.5rem;font-weight:700;color:#1a1a1a;margin-bottom:6px;line-height:1.45;}
+.ae-article__meta{font-size:1.2rem;color:#999;}
+.ae-email-notice{
+  background:#e3f2fd;border:1px solid #90caf9;
+  border-left:4px solid #1565c0;
+  border-radius:4px;padding:14px 18px;
+  font-size:1.3rem;color:#0d47a1;line-height:1.7;
+}
+.ae-email-notice strong{font-weight:700;}
+
+/* ===== フッター ===== */
+.l-footer{
+  background:#1a3c2b;color:#fff;padding:40px 24px 20px;
+}
+.l-footer__inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:40px;
+  padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.15);
+  margin-bottom:16px;
+}
+.footer-logo{font-family:'Poppins',sans-serif;font-size:2.0rem;font-weight:700;color:#fff;margin-bottom:8px;}
+.footer-addr{font-size:1.2rem;color:rgba(255,255,255,.6);line-height:1.7;}
+.footer-nav{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;}
+.footer-nav a{color:rgba(255,255,255,.6);font-size:1.2rem;}
+.footer-nav a:hover{color:#fff;}
+.footer-copy{text-align:center;font-size:1.2rem;color:rgba(255,255,255,.4);}
+</style>
+</head>
+<body>
+
+<!-- ===== ヘッダー ===== -->
+<header class="l-header">
+  <div class="l-header__inner">
+    <!-- ロゴ SVG -->
+    <a href="#" class="l-header__logo">
+      <svg class="logo-svg" viewBox="0 0 220 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- スマイルアイコン -->
+        <circle cx="28" cy="30" r="24" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+        <circle cx="28" cy="30" r="22" fill="white"/>
+        <!-- 葉っぱ装飾 -->
+        <path d="M18 16 Q28 8 38 16 Q28 24 18 16Z" fill="#2b9e4e" opacity=".8"/>
+        <circle cx="28" cy="16" r="3" fill="#f5a623"/>
+        <!-- 顔 -->
+        <circle cx="22" cy="30" r="3" fill="#2b9e4e"/>
+        <circle cx="34" cy="30" r="3" fill="#2b9e4e"/>
+        <path d="M22 36 Q28 42 34 36" stroke="#2b9e4e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- テキスト miraE+ -->
+        <text x="58" y="42" font-family="Arial,sans-serif" font-size="28" font-weight="900" fill="#2b9e4e" letter-spacing="-1">mira</text>
+        <text x="131" y="42" font-family="Arial,sans-serif" font-size="28" font-weight="900" fill="#2b9e4e" letter-spacing="-1">E</text>
+        <text x="153" y="36" font-family="Arial,sans-serif" font-size="22" font-weight="900" fill="#f5a623">+</text>
+      </svg>
+    </a>
+
+    <!-- ナビ -->
+    <nav>
+      <ul style="display:flex;align-items:center;gap:0;">
+        <li><button class="l-gnav__link">自治体のお客さま</button></li>
+        <li><button class="l-gnav__link">法人のお客さま</button></li>
+        <li><button class="l-gnav__link">ソリューション事例</button></li>
+        <li><button class="l-gnav__link">製品・サービス一覧</button></li>
+        <li><button class="l-gnav__link">お役立ちリンク集</button></li>
+      </ul>
+    </nav>
+
+    <!-- ログインユーザー + お問い合わせ -->
+    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+      <div class="l-header__user">
+        <div class="user-avatar">田</div>
+        <div>
+          <div class="user-name">田中 誠一 様</div>
+          <div class="user-org">TTグリーンエナジー(株)</div>
+        </div>
+        <span class="user-badge">法人会員 ✓</span>
+      </div>
+      <button class="l-gnav__contact" onclick="openOverlay()">
+        Agentforceに相談
+        <span class="l-gnav__contact-arrow">›</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== ヒーロー ===== -->
+<section class="top-hero">
+  <div class="top-hero__inner">
+    <div>
+      <div class="top-hero__textbox">
+        <h1 class="top-hero__heading">クリーンエネルギーを中心に</h1>
+      </div>
+      <br>
+      <div class="top-hero__textbox">
+        <h1 class="top-hero__heading">様々な課題にお応えいたします。</h1>
+      </div>
+      <p class="top-hero__lead">
+        当社は東京電力グループ企業をはじめ、多様な強みを有する協賛企業と<br>
+        連携して、エネルギーの地産地消をベースとした脱炭素化と<br>
+        レジリエンス強化を軸としたまちづくりや、地域課題の解決を目指した<br>
+        ソリューションを自治体さまや企業さまにご提供します。
+      </p>
+      <div class="top-hero__btns">
+        <a class="hero-btn blue" onclick="openOverlay()">
+          自治体のお客さまはこちら
+          <span class="hero-btn__arrow">›</span>
+        </a>
+        <a class="hero-btn green" onclick="openOverlay()">
+          法人のお客さまはこちら
+          <span class="hero-btn__arrow">›</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MiraE+とは？ ===== -->
+<section class="about-section">
+  <div class="about-logo-row">
+    <svg viewBox="0 0 220 60" class="about-logo-svg" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="30" r="24" fill="#f5f5f5"/>
+      <circle cx="28" cy="30" r="22" fill="white" stroke="#eee" stroke-width="1"/>
+      <path d="M18 16 Q28 8 38 16 Q28 24 18 16Z" fill="#2b9e4e" opacity=".8"/>
+      <circle cx="28" cy="16" r="3" fill="#f5a623"/>
+      <circle cx="22" cy="30" r="3" fill="#2b9e4e"/>
+      <circle cx="34" cy="30" r="3" fill="#2b9e4e"/>
+      <path d="M22 36 Q28 42 34 36" stroke="#2b9e4e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <text x="58" y="42" font-family="Arial,sans-serif" font-size="28" font-weight="900" fill="#2b9e4e" letter-spacing="-1">mira</text>
+      <text x="131" y="42" font-family="Arial,sans-serif" font-size="28" font-weight="900" fill="#2b9e4e" letter-spacing="-1">E</text>
+      <text x="153" y="36" font-family="Arial,sans-serif" font-size="22" font-weight="900" fill="#f5a623">+</text>
+    </svg>
+    <span class="about-logo-label">とは？</span>
+  </div>
+  <p class="about-desc">
+    「カーボンニュートラルを推進したいが、何が我々に向いているのか分からない」といったベーシックなお悩みから、<br>
+    「遊休地の活用によりカーボンニュートラルはもとより、レジリエンス対策や収益向上にも繋げたい」といった具体的なご要望まで、<br>
+    それにお応えする様々なソリューションやサービス・製品を東電タウンプランニング（株）と協賛企業各社の得意分野を組み合わせてご紹介しております。
+  </p>
+  <ul class="solution-grid">
+    <li class="solution-card" onclick="openOverlay()">
+      <div class="solution-card__icon">💡</div>
+      <div class="solution-card__name">再エネ導入、防災、<br>安全に関する企画提案</div>
+    </li>
+    <li class="solution-card" onclick="openOverlay()">
+      <div class="solution-card__icon">🏗️</div>
+      <div class="solution-card__name">事業用地選定</div>
+    </li>
+    <li class="solution-card" onclick="openOverlay()">
+      <div class="solution-card__icon">🖥️</div>
+      <div class="solution-card__name">設備・システム提案</div>
+    </li>
+    <li class="solution-card" onclick="openOverlay()">
+      <div class="solution-card__icon">🪖</div>
+      <div class="solution-card__name">施工</div>
+    </li>
+    <li class="solution-card" onclick="openOverlay()">
+      <div class="solution-card__icon">🔧</div>
+      <div class="solution-card__name">メンテナンス</div>
+    </li>
+    <li class="solution-card" onclick="openOverlay()">
+      <div class="solution-card__icon">🌆</div>
+      <div class="solution-card__name">地域活性化サポート</div>
+    </li>
+  </ul>
+</section>
+
+<!-- ===== フッター ===== -->
+<footer class="l-footer">
+  <div class="l-footer__inner">
+    <div>
+      <div class="footer-logo">MiraE+</div>
+      <div class="footer-addr">〒105-0022 東京都港区海岸1-11-1 ニューピア竹芝ノースタワー</div>
+      <div class="footer-nav">
+        <a href="#">ご利用にあたって</a>
+        <a href="#">プライバシーポリシー</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copy">© 東電タウンプランニング株式会社</div>
+</footer>
+
+<!-- ===== フローティングボタン ===== -->
+<button class="af-fab" id="af-fab" onclick="openOverlay()">
+  <span class="af-fab__icon">🤖</span>
+  <span class="af-fab__label">AI相談</span>
+  <span class="af-fab__badge">1</span>
+</button>
+
+
+<!-- ==========================================================
+     アダプティブウェブ オーバーレイ
+     左: チャット(400px) | 右: コンテンツゾーン(残り全幅)
+     ========================================================== -->
+<div class="aw-overlay" id="aw-overlay">
+
+  <!-- ヘッダーバー -->
+  <div class="aw-header">
+    <div class="aw-header-left">
+      <div class="aw-header-avatar">🌱</div>
+      <div class="aw-header-info">
+        <div class="aw-header-name">Agentforce（MiraE+）</div>
+        <div class="aw-header-status">オンライン</div>
+      </div>
+    </div>
+    <div class="aw-header-right">
+      <button class="aw-ctrl-btn" title="閉じる" onclick="closeOverlay()">✕</button>
+      <button class="aw-ctrl-btn" title="最小化" onclick="closeOverlay()">▼</button>
+    </div>
+  </div>
+
+  <!-- ボディ：左チャット + 右コンテンツ -->
+  <div class="aw-body">
+
+    <!-- ===== 左：チャット ===== -->
+    <div class="aw-chat">
+      <div class="aw-chat-messages" id="aw-messages">
+
+        <!-- Turn 1: ウェルカム -->
+        <div class="chat-turn visible" id="turn-1">
+          <div class="chat-sent">送信済み · <span id="chat-time-1"></span></div>
+          <div class="chat-msg">
+            <div class="chat-avatar bot">🌱</div>
+            <div class="chat-bubble bot">
+              <p>田中様、おかえりなさい！</p>
+              <p>前回ご覧の「BCP向け非常用電源」の続きで、スポンサー企業より<strong>「太陽光＋蓄電池パッケージ」</strong>の新プランが届いています。右側でご確認ください。</p>
+            </div>
+          </div>
+          <div class="chat-time" style="padding-left:40px;">Agentforce · <span id="chat-time-1b"></span></div>
+          <div class="quick-replies">
+            <button class="quick-reply-btn" onclick="goStep(2)">
+              <span class="qr-icon">☀️</span>コスト試算を見たい
+            </button>
+            <button class="quick-reply-btn" onclick="goStep(2)">
+              <span class="qr-icon">📋</span>BCP対策について詳しく
+            </button>
+          </div>
+        </div>
+
+        <!-- Turn 2: FAQ + シミュレーション -->
+        <div class="chat-turn" id="turn-2">
+          <div class="chat-msg user">
+            <div class="chat-avatar user">田</div>
+            <div class="chat-bubble user">
+              <p>太陽光パネルを設置した場合、どれくらいコストがかかりますか？</p>
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar bot">🌱</div>
+            <div class="chat-bubble bot">
+              <p>田中様の施設（本社ビル・3,200㎡）をもとに試算しました。右側に詳細をご確認いただけます。</p>
+              <p>補助金適用で初期費用を<strong>約30%削減</strong>できます。</p>
+            </div>
+          </div>
+          <div class="chat-time" style="padding-left:40px;">Agentforce · <span id="chat-time-2"></span></div>
+          <div class="quick-replies">
+            <button class="quick-reply-btn" onclick="goStep(3)">
+              <span class="qr-icon">🏠</span>現地調査を依頼する
+            </button>
+            <button class="quick-reply-btn" onclick="goStep(3)">
+              <span class="qr-icon">📄</span>詳細レポートを受け取る
+            </button>
+          </div>
+        </div>
+
+        <!-- Turn 3: Service Cloud Case作成 -->
+        <div class="chat-turn" id="turn-3">
+          <div class="chat-msg user">
+            <div class="chat-avatar user">田</div>
+            <div class="chat-bubble user">
+              <p>現地調査をお願いしたいです。</p>
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar bot">🌱</div>
+            <div class="chat-bubble bot">
+              <p>承知しました。ケースを作成し担当者を手配しました。右側で進捗をご確認いただけます。</p>
+              <p style="font-size:1.2rem;color:#888;margin-top:4px;">2営業日以内に山田よりご連絡いたします。</p>
+            </div>
+          </div>
+          <div class="chat-time" style="padding-left:40px;">Agentforce · <span id="chat-time-3"></span></div>
+          <div class="quick-replies">
+            <button class="quick-reply-btn" onclick="goStep(4)">
+              <span class="qr-icon">📬</span>おすすめ情報を見る
+            </button>
+          </div>
+        </div>
+
+        <!-- Turn 4: Account Engagement -->
+        <div class="chat-turn" id="turn-4">
+          <div class="chat-msg">
+            <div class="chat-avatar bot">🌱</div>
+            <div class="chat-bubble bot">
+              <p>田中様のご関心に合わせたコンテンツをお届けします。右側でご確認ください。</p>
+              <p style="font-size:1.2rem;color:#888;margin-top:4px;">パーソナライズされた資料はメールでもお送りしました（Account Engagement連携）。</p>
+            </div>
+          </div>
+          <div class="chat-time" style="padding-left:40px;">Agentforce · <span id="chat-time-4"></span></div>
+        </div>
+
+      </div><!-- /aw-chat-messages -->
+
+      <!-- → 進む ボタン -->
+      <div class="aw-next-bar" id="aw-next-bar">
+        <span class="aw-step-indicator" id="aw-step-label">ステップ 1 / 4</span>
+        <button class="aw-next-btn" id="aw-next-btn" onclick="nextStep()">
+          次へ <span class="aw-next-arrow">→</span>
+        </button>
+      </div>
+
+      <!-- 入力エリア（最終後） -->
+      <div class="aw-input-bar" id="aw-input-bar">
+        <div class="aw-input-row">
+          <input type="text" class="aw-input" id="aw-input" placeholder="メッセージを入力..." onkeydown="if(event.key==='Enter')sendFreeMsg()"/>
+          <button class="aw-send-btn" onclick="sendFreeMsg()">➤</button>
+        </div>
+        <div class="aw-powered">Powered by Agentforce × Service Cloud × Account Engagement</div>
+      </div>
+    </div><!-- /aw-chat -->
+
+    <!-- ===== 右：コンテンツゾーン ===== -->
+    <div class="aw-content" id="aw-content">
+
+      <!-- パネル1: おすすめ提案（閲覧履歴連動） -->
+      <div class="content-panel visible cp-proposal" id="panel-1">
+        <div>
+          <span class="cp-proposal__badge">🤖 Agentforce × Experience Cloud</span>
+          <h2 class="cp-proposal__title">田中様へのご提案</h2>
+          <p class="cp-proposal__sub">閲覧履歴・会員情報をもとに、最適なソリューションをご提案します。</p>
+        </div>
+        <div class="proposal-cards">
+          <div class="proposal-card highlight">
+            <div class="proposal-card__icon">☀️</div>
+            <div class="proposal-card__name">太陽光＋蓄電池パッケージ</div>
+            <div class="proposal-card__desc">初期費用ゼロのPPA方式対応。施設規模に応じたシミュレーション付き。スポンサー企業A 最新プラン。</div>
+            <span class="proposal-card__badge">NEW</span>
+          </div>
+          <div class="proposal-card highlight">
+            <div class="proposal-card__icon">⚡</div>
+            <div class="proposal-card__name">BCP・非常用電源</div>
+            <div class="proposal-card__desc">前回ご覧いただいたページです。停電時でも業務継続。ディーゼルから電力貯蔵への移行支援。</div>
+            <span class="proposal-card__badge" style="background:#1565c0;">閲覧済</span>
+          </div>
+          <div class="proposal-card">
+            <div class="proposal-card__icon">🌿</div>
+            <div class="proposal-card__name">カーボンニュートラル支援</div>
+            <div class="proposal-card__desc">Scope2削減計画の策定・認証取得まで一括対応。</div>
+          </div>
+          <div class="proposal-card">
+            <div class="proposal-card__icon">🔋</div>
+            <div class="proposal-card__name">EV充電インフラ</div>
+            <div class="proposal-card__desc">駐車場・社有車のEV化対応。補助金申請サポート込み。</div>
+          </div>
+        </div>
+        <div class="proposal-context">
+          <strong>📊 会員情報連携（Experience Cloud）</strong><br>
+          田中様：法人会員 / 施設情報：本社ビル 約3,200㎡ / 前回閲覧：BCP向け非常用電源 / スコア：高関心 ★★★★☆
+        </div>
+      </div>
+
+      <!-- パネル2: シミュレーション結果 -->
+      <div class="content-panel cp-sim" id="panel-2">
+        <div class="cp-sim__header">
+          <div>
+            <div class="cp-sim__title">⚡ 太陽光＋蓄電池 試算結果</div>
+            <div class="cp-sim__subtitle">本社ビル（3,200㎡）| スポンサー企業A | 2026年6月最新プラン</div>
+          </div>
+          <div>
+            <div class="cp-sim__big">▲30%</div>
+            <div class="cp-sim__big-label">補助金適用削減率</div>
+          </div>
+        </div>
+
+        <table class="sim-table">
+          <thead><tr>
+            <th>項目</th><th style="text-align:right">内容</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>推奨システム容量</td><td class="val">30kW ＋ 蓄電池 20kWh</td></tr>
+            <tr><td>初期費用（概算）</td><td class="val">約 1,050万円</td></tr>
+            <tr><td>補助金適用後</td><td class="val green">約 735万円（▲315万円）</td></tr>
+            <tr><td>年間電気代削減額</td><td class="val green">約 84万円/年</td></tr>
+            <tr><td>投資回収期間</td><td class="val">約 8.7年（補助金適用後）</td></tr>
+            <tr><td>CO₂削減量</td><td class="val green">約 15.2t-CO₂/年</td></tr>
+            <tr><td>Scope2削減貢献度</td><td class="val green">約 42%削減</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sim-bar-wrap">
+          <div class="sim-bar-title">📊 年間効果シミュレーション</div>
+          <div class="sim-bar">
+            <div class="sim-bar-label">電気代削減</div>
+            <div class="sim-bar-track"><div class="sim-bar-fill" style="width:84%;background:#2b9e4e;"></div></div>
+            <div class="sim-bar-val" style="color:#2b9e4e;">84万円</div>
+          </div>
+          <div class="sim-bar">
+            <div class="sim-bar-label">CO₂削減</div>
+            <div class="sim-bar-track"><div class="sim-bar-fill" style="width:60%;background:#0288d1;"></div></div>
+            <div class="sim-bar-val" style="color:#0288d1;">15.2t</div>
+          </div>
+          <div class="sim-bar">
+            <div class="sim-bar-label">補助金活用</div>
+            <div class="sim-bar-track"><div class="sim-bar-fill" style="width:30%;background:#f5a623;"></div></div>
+            <div class="sim-bar-val" style="color:#f5a623;">315万円</div>
+          </div>
+        </div>
+
+        <div class="sim-actions">
+          <button class="sim-btn-primary">📄 詳細レポートを受け取る</button>
+          <button class="sim-btn-neutral">🏠 現地調査を依頼する</button>
+        </div>
+      </div>
+
+      <!-- パネル3: Service Cloud ケース詳細 -->
+      <div class="content-panel cp-case" id="panel-3">
+        <div class="case-created-banner">
+          <div class="case-created-icon">✅</div>
+          <div>
+            <div class="case-created-title">Service Cloud にケースを作成しました</div>
+            <div class="case-created-sub">担当者を手配しました。2営業日以内にご連絡いたします。</div>
+          </div>
+        </div>
+
+        <div class="case-detail-grid">
+          <div class="case-detail-item">
+            <div class="case-detail-label">Case番号</div>
+            <div class="case-detail-value">#00123</div>
+          </div>
+          <div class="case-detail-item">
+            <div class="case-detail-label">ステータス</div>
+            <div class="case-detail-value status">対応中 <span class="sf-badge progress">In Progress</span></div>
+          </div>
+          <div class="case-detail-item">
+            <div class="case-detail-label">件名</div>
+            <div class="case-detail-value">太陽光パネル設置 現地調査ご依頼</div>
+          </div>
+          <div class="case-detail-item">
+            <div class="case-detail-label">担当者</div>
+            <div class="case-detail-value">山田 太郎（東電タウンプランニング）</div>
+          </div>
+          <div class="case-detail-item">
+            <div class="case-detail-label">優先度</div>
+            <div class="case-detail-value">高</div>
+          </div>
+          <div class="case-detail-item">
+            <div class="case-detail-label">対応期限</div>
+            <div class="case-detail-value">2026/06/25</div>
+          </div>
+        </div>
+
+        <div class="case-timeline-title">📋 対応タイムライン</div>
+        <div class="case-timeline">
+          <div class="ct-item">
+            <div class="ct-date">06/23 09:31</div>
+            <div class="ct-text">
+              <strong>ケース作成（Agentforce自動）</strong>
+              Agentforceにより現地調査依頼ケースが自動作成されました。
+            </div>
+          </div>
+          <div class="ct-item">
+            <div class="ct-date">06/23 09:35</div>
+            <div class="ct-text">
+              <strong>担当者アサイン完了</strong>
+              山田 太郎にアサインされました。
+            </div>
+          </div>
+          <div class="ct-item pending">
+            <div class="ct-date">〜06/25</div>
+            <div class="ct-text">
+              <strong>担当者よりご連絡予定</strong>
+              日程調整のご連絡をいたします。
+            </div>
+          </div>
+          <div class="ct-item pending">
+            <div class="ct-date">調整中</div>
+            <div class="ct-text">
+              <strong>現地調査実施</strong>
+              施設の現地調査・計測を行います。
+            </div>
+          </div>
+          <div class="ct-item pending">
+            <div class="ct-date">調査後</div>
+            <div class="ct-text">
+              <strong>正式提案書の提出</strong>
+              現地情報をもとにした最終試算・提案書をご提出します。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- パネル4: Account Engagement おすすめ記事 -->
+      <div class="content-panel cp-ae" id="panel-4">
+        <div class="ae-header">
+          <div class="ae-header-icon">📬</div>
+          <div>
+            <div class="ae-header-title">田中様へのおすすめ情報</div>
+            <div class="ae-header-sub">Account Engagement / パーソナライズドコンテンツ配信</div>
+          </div>
+        </div>
+
+        <div class="ae-article-list">
+          <div class="ae-article">
+            <div class="ae-article__thumb">☀️</div>
+            <div class="ae-article__body">
+              <div class="ae-article__tag">📌 太陽光・蓄電池</div>
+              <div class="ae-article__title">初期費用ゼロ！PPA方式で太陽光を導入する完全ガイド</div>
+              <div class="ae-article__meta">東電タウンプランニング · 2026/06/20 · 推定読了 5分</div>
+            </div>
+          </div>
+          <div class="ae-article">
+            <div class="ae-article__thumb">⚡</div>
+            <div class="ae-article__body">
+              <div class="ae-article__tag">📌 BCP・防災</div>
+              <div class="ae-article__title">72時間対応の蓄電池BCPソリューション｜法人向け事例集</div>
+              <div class="ae-article__meta">スポンサー企業A · 2026/06/18 · 推定読了 7分</div>
+            </div>
+          </div>
+          <div class="ae-article">
+            <div class="ae-article__thumb">📋</div>
+            <div class="ae-article__body">
+              <div class="ae-article__tag">📌 補助金・制度</div>
+              <div class="ae-article__title">2026年度 省エネ設備補助金 申請期限まもなく｜対象設備・申請手順まとめ</div>
+              <div class="ae-article__meta">経済産業省情報 · 2026/06/15 · 推定読了 4分</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ae-email-notice">
+          <strong>📧 メール送信済み（Account Engagement 自動配信）</strong><br>
+          件名：「太陽光＋蓄電池 補助金活用ガイド（田中様専用パーソナライズ版）」を<br>
+          登録メールアドレス宛に送信しました。次回メール開封時にスコアリングが更新されます。
+        </div>
+      </div>
+
+    </div><!-- /aw-content -->
+  </div><!-- /aw-body -->
+</div><!-- /aw-overlay -->
+
+
+<script>
+// 現在時刻セット
+function setTime(){
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const t = h+':'+m;
+  ['chat-time-1','chat-time-1b','chat-time-2','chat-time-3','chat-time-4'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.textContent = '2026/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')+' '+t;
+  });
+}
+setTime();
+
+let currentStep = 1;
+const TOTAL = 4;
+
+function openOverlay(){
+  document.getElementById('aw-overlay').classList.add('is-open');
+  document.getElementById('af-fab').style.display = 'none';
+}
+function closeOverlay(){
+  document.getElementById('aw-overlay').classList.remove('is-open');
+  document.getElementById('af-fab').style.display = 'flex';
+}
+
+function showPanel(n){
+  document.querySelectorAll('.content-panel').forEach(p=>p.classList.remove('visible'));
+  const panel = document.getElementById('panel-'+n);
+  if(panel) panel.classList.add('visible');
+}
+
+function showTurn(n){
+  const el = document.getElementById('turn-'+n);
+  if(el){
+    el.classList.add('visible');
+    const msgs = document.getElementById('aw-messages');
+    setTimeout(()=>{ msgs.scrollTop = msgs.scrollHeight; },50);
+  }
+}
+
+function goStep(n){
+  if(n <= currentStep) return;
+  currentStep = n;
+  applyStep(n);
+}
+
+function nextStep(){
+  if(currentStep >= TOTAL){
+    document.getElementById('aw-next-bar').style.display = 'none';
+    document.getElementById('aw-input-bar').style.display = 'block';
+    return;
+  }
+  currentStep++;
+  applyStep(currentStep);
+}
+
+function applyStep(n){
+  showTurn(n);
+  showPanel(n);
+  document.getElementById('aw-step-label').textContent = 'ステップ '+n+' / '+TOTAL;
+  if(n >= TOTAL){
+    document.getElementById('aw-next-bar').style.display = 'none';
+    document.getElementById('aw-input-bar').style.display = 'block';
+  }
+}
+
+function sendFreeMsg(){
+  const input = document.getElementById('aw-input');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  const msgs = document.getElementById('aw-messages');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;flex-direction:row-reverse;animation:msg-in .3s ease-out both;';
+  div.innerHTML = `
+    <div style="width:32px;height:32px;border-radius:50%;background:#546e7a;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff;flex-shrink:0;">田</div>
+    <div style="max-width:78%;font-size:1.3rem;line-height:1.65;padding:10px 14px;border-radius:12px 4px 12px 12px;background:#2b9e4e;color:#fff;">${text}</div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  // タイピング
+  setTimeout(()=>{
+    const t = document.createElement('div');
+    t.style.cssText = 'display:flex;gap:8px;align-items:flex-start;animation:msg-in .3s ease-out both;';
+    t.innerHTML = `
+      <div style="width:32px;height:32px;border-radius:50%;background:#2b9e4e;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;">🌱</div>
+      <div style="background:#f2f9f4;border:1px solid #d0e8d8;border-radius:4px 12px 12px 12px;padding:10px 14px;">
+        <span class="typing-dots"><span></span><span></span><span></span></span>
+      </div>
+    `;
+    msgs.appendChild(t);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 500);
+}
+</script>
+
+</body>
+</html>
