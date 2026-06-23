@@ -1,0 +1,233 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - button "戻る" [ref=e5] [cursor=pointer]:
+        - img [ref=e6]
+      - button "進む" [ref=e8] [cursor=pointer]:
+        - img [ref=e9]
+      - button "履歴" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+    - generic [ref=e15]:
+      - img [ref=e16]
+      - generic [ref=e19]: Acme Corp を検索
+    - generic [ref=e20]:
+      - button "ヘルプ" [ref=e21] [cursor=pointer]:
+        - img [ref=e22]
+      - button "アカウント" [ref=e25] [cursor=pointer]
+  - complementary [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - text: Acme Corp
+        - img [ref=e30]
+      - button "メッセージを作成" [ref=e32] [cursor=pointer]:
+        - img [ref=e33]
+    - list [ref=e36]:
+      - listitem [ref=e37] [cursor=pointer]:
+        - img [ref=e38]
+        - text: スレッド
+      - listitem [ref=e40] [cursor=pointer]:
+        - img [ref=e41]
+        - text: 全アクティビティ
+      - listitem [ref=e44] [cursor=pointer]:
+        - img [ref=e45]
+        - text: あとで
+      - listitem [ref=e47] [cursor=pointer]:
+        - img [ref=e48]
+        - text: 下書きと送信済み
+      - listitem [ref=e51] [cursor=pointer]:
+        - img [ref=e52]
+        - text: その他
+    - generic [ref=e56]:
+      - generic [ref=e57] [cursor=pointer]:
+        - img [ref=e58]
+        - generic [ref=e60]: チャンネル
+        - img [ref=e61]
+      - generic [ref=e62] [cursor=pointer]:
+        - img [ref=e63]
+        - text: general
+      - generic [ref=e66] [cursor=pointer]:
+        - img [ref=e67]
+        - text: sales-japan
+      - generic [ref=e70] [cursor=pointer]:
+        - img [ref=e71]
+        - text: omron-tr5310-spec
+      - generic [ref=e74] [cursor=pointer]:
+        - img [ref=e75]
+        - text: design-thermal-tape
+        - generic [ref=e78]: "2"
+      - generic [ref=e79] [cursor=pointer]:
+        - img [ref=e80]
+        - text: release-notes
+      - generic [ref=e83] [cursor=pointer]:
+        - img [ref=e84]
+        - text: finance-private
+      - generic [ref=e87] [cursor=pointer]:
+        - img [ref=e88]
+        - text: チャンネルを追加する
+    - generic [ref=e89]:
+      - generic [ref=e90] [cursor=pointer]:
+        - img [ref=e91]
+        - generic [ref=e93]: ダイレクトメッセージ
+        - img [ref=e94]
+      - generic [ref=e95] [cursor=pointer]: 田中 拓也
+      - generic [ref=e97] [cursor=pointer]: 中村 玲奈
+      - generic [ref=e99] [cursor=pointer]: Slackbot
+    - generic [ref=e101]:
+      - generic [ref=e102] [cursor=pointer]:
+        - img [ref=e103]
+        - generic [ref=e105]: アプリ
+      - generic [ref=e106] [cursor=pointer]:
+        - img [ref=e107]
+        - text: Salesforce
+      - generic [ref=e109] [cursor=pointer]:
+        - img [ref=e110]
+        - text: Google Drive
+  - main [ref=e112]:
+    - generic [ref=e113]:
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - img [ref=e116]
+          - text: omron-tr5310-spec
+          - generic "お気に入り" [ref=e119] [cursor=pointer]:
+            - img [ref=e120]
+          - img [ref=e122]
+        - generic [ref=e124]:
+          - generic [ref=e125]:
+            - img [ref=e126]
+            - text: オムロン様 TR-5310 仕様検討（営業×設計）
+          - generic [ref=e128]:
+            - img [ref=e129]
+            - text: 2件のピン留め
+      - generic [ref=e131]:
+        - button "Huddle" [ref=e132] [cursor=pointer]:
+          - img [ref=e133]
+          - text: Huddle
+        - button "Canvas" [ref=e135] [cursor=pointer]:
+          - img [ref=e136]
+          - text: Canvas
+        - button "5" [ref=e140] [cursor=pointer]:
+          - img [ref=e141]
+          - text: "5"
+        - button "その他" [ref=e146] [cursor=pointer]:
+          - img [ref=e147]
+    - generic [ref=e151]:
+      - img [ref=e152]
+      - generic [ref=e154]: "ピン留め:"
+      - generic [ref=e155]: オムロン様 仕様要望書（v2.1）と試作スケジュールはこのチャンネルに集約しています
+    - generic [ref=e156]:
+      - generic [ref=e159]: 本日 — 2026年6月12日(金)
+      - generic [ref=e163]:
+        - generic [ref=e164]:
+          - generic [ref=e165]: 山本 健介
+          - generic [ref=e166]: 営業
+          - generic [ref=e167]: 9:48
+        - generic [ref=e168]: おはようございます。@中村 玲奈 @田中 拓也 さきほどオムロン様の技術部から TR-5310 の追加要望が来ました。設計レビューお願いできますか？ 一次回答は来週水曜（6/17）の定例で出したいです 🙏
+        - generic [ref=e169]:
+          - generic [ref=e170]: 📄 オムロン様 仕様要望書（v2.1）
+          - generic [ref=e171]: 次世代データセンター向け 熱伝導両面テープ TR-5310 / TR-5325
+          - generic [ref=e172]:
+            - term [ref=e173]: 熱抵抗
+            - definition [ref=e174]: 0.8 K・cm²/W 以下（圧力 100 kPa 時）
+            - term [ref=e175]: 圧縮特性
+            - definition [ref=e176]: 柔軟性に富み、被着体の凹凸に追従して空気層を排除できること
+            - term [ref=e177]: 難燃性
+            - definition [ref=e178]: UL94 V-0 規格（または相当）に準拠
+            - term [ref=e179]: 使用温度域
+            - definition [ref=e180]: "-40°C 〜 +120°C（連続）"
+            - term [ref=e181]: 初回試作希望
+            - definition [ref=e182]: 2026/07/10 までにサンプル 30 枚
+        - generic [ref=e183]:
+          - button "👀 2" [ref=e184] [cursor=pointer]:
+            - text: 👀
+            - generic [ref=e185]: "2"
+          - button "🙏 1" [ref=e186] [cursor=pointer]:
+            - text: 🙏
+            - generic [ref=e187]: "1"
+          - button [ref=e188] [cursor=pointer]:
+            - img [ref=e189]
+        - generic [ref=e192] [cursor=pointer]:
+          - generic [ref=e197]: 6 件の返信
+          - generic [ref=e198]: 最終返信 たった今
+      - generic [ref=e199]:
+        - img [ref=e200]
+        - generic [ref=e203]: 青山 昇 がチャンネルに参加しました
+      - generic [ref=e204]:
+        - img [ref=e206]
+        - generic [ref=e208]:
+          - generic [ref=e209]:
+            - generic [ref=e210]: Salesforce
+            - generic [ref=e211]: APP
+            - generic [ref=e212]: 14:19
+          - generic [ref=e213]: 商談が更新されました（営業 山本さんによる）
+          - generic [ref=e214]:
+            - generic [ref=e215]: オムロン株式会社 - 次世代DC用 極低熱抵抗テープ商談
+            - generic [ref=e216]:
+              - term [ref=e217]: ステージ
+              - definition [ref=e218]: ニーズの確認 → 技術的実現性の確認
+              - term [ref=e219]: 金額
+              - definition [ref=e220]: ¥18,500,000
+              - term [ref=e221]: クローズ予定
+              - definition [ref=e222]: 2026-09-30
+              - term [ref=e223]: 所有者
+              - definition [ref=e224]: 山本 健介
+          - button "📈 2" [ref=e226] [cursor=pointer]:
+            - text: 📈
+            - generic [ref=e227]: "2"
+      - generic [ref=e230]:
+        - generic [ref=e231]:
+          - generic [ref=e232]: 青山 昇
+          - generic [ref=e233]: 設計マネージャ
+          - generic [ref=e234]: 14:35
+        - generic [ref=e235]:
+          - text: スレッド拝見しました 👀 UL94 V-0 + 0.8 K・cm²/W はチャレンジングですが、配合検討は中村・田中ペアで OK です。 来週水曜の定例には私も同席します。
+          - text: "@山本 健介 仕様書 v2.2 の正式版が来たら #design-thermal-tape にも共有お願いします 🙏"
+        - generic [ref=e236]:
+          - button "🙇 2" [ref=e237] [cursor=pointer]:
+            - text: 🙇
+            - generic [ref=e238]: "2"
+          - button "✅ 1" [ref=e239] [cursor=pointer]:
+            - text: ✅
+            - generic [ref=e240]: "1"
+      - generic [ref=e243]:
+        - generic [ref=e244]:
+          - generic [ref=e245]: Slackbot
+          - generic [ref=e246]: APP
+          - generic [ref=e247]: 14:40
+        - generic [ref=e248]:
+          - text: "🔔 リマインド: 来週水曜（6/17）13:00〜 TR-5310 仕様レビュー定例"
+          - text: "参加者: @山本 健介 @中村 玲奈 @田中 拓也 @青山 昇"
+    - generic [ref=e250]:
+      - generic [ref=e251]:
+        - button "太字" [ref=e252] [cursor=pointer]:
+          - img [ref=e253]
+        - button "斜体" [ref=e255] [cursor=pointer]:
+          - img [ref=e256]
+        - button "取り消し線" [ref=e258] [cursor=pointer]:
+          - img [ref=e259]
+        - button "リンク" [ref=e263] [cursor=pointer]:
+          - img [ref=e264]
+        - button "リスト" [ref=e267] [cursor=pointer]:
+          - img [ref=e268]
+        - button "番号付きリスト" [ref=e269] [cursor=pointer]:
+          - img [ref=e270]
+        - button "引用" [ref=e274] [cursor=pointer]:
+          - img [ref=e275]
+        - button "コード" [ref=e278] [cursor=pointer]:
+          - img [ref=e279]
+        - button "コードブロック" [ref=e282] [cursor=pointer]:
+          - img [ref=e283]
+      - generic [ref=e287]: "#omron-tr5310-spec にメッセージを送信"
+      - generic [ref=e288]:
+        - generic [ref=e289]:
+          - button "添付" [ref=e290] [cursor=pointer]:
+            - img [ref=e291]
+          - button "メンション" [ref=e292] [cursor=pointer]:
+            - img [ref=e293]
+          - button "絵文字" [ref=e296] [cursor=pointer]:
+            - img [ref=e297]
+          - button "ビデオ" [ref=e300] [cursor=pointer]:
+            - img [ref=e301]
+          - button "音声" [ref=e304] [cursor=pointer]:
+            - img [ref=e305]
+        - button "送信" [ref=e308] [cursor=pointer]:
+          - img [ref=e309]

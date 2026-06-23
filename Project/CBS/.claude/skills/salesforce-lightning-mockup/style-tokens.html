@@ -1,0 +1,148 @@
+<!--
+  Salesforce Lightning Mockup - Style Tokens (SLDS1 公式のみ)
+  ==========================================================
+  方針:
+    - スタイル本体は SLDS1 公式 CSS (slds-* クラス) のみを使う
+    - レイアウト・余白・色は SLDS のスペーシング/カラー/グリッドユーティリティで書く
+    - 自前 CSS は body 背景・1440px ラッパ・9点 App Launcher など、SLDS に対応物が無い箇所のみ
+    - Tailwind は禁止 (Preflight が SLDS を潰す)
+
+  必要な CDN (<head> 内に常に貼る):
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+
+  アイコンの書き方:
+    <span class="slds-icon_container slds-icon-standard-account">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_small" />
+    </span>
+
+  アイコンスプライトの種類:
+    - utility/{name}.svg  … ボタン内・装飾の小型アイコン (fill=#fff のため filter で灰色化)
+    - standard/{name}.svg … オブジェクトアイコン (account, opportunity, case 等)
+    - action/{name}.svg   … 「電話」「メール」等のアクション
+    - doctype/{name}.svg  … ファイル種別 (pdf, xls 等)
+
+  body 末尾には何も呼ぶ必要なし (SLDS は静的 CSS のみ、JS 不要)。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SLDS1 Style Tokens</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+    /* SLDS にない要素のみ自前定義 */
+
+    /* 上部スカイブルー背景 (SLDS では存在しない) */
+    body.sf-app-bg {
+        background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) !important;
+        background-color: #f3f3f3 !important;
+        min-width: 1024px;
+        overflow-x: auto;
+    }
+
+    /* SLDS Path 静的モック用の補助 (本来は JS 駆動の aria-selected 切替) */
+    .slds-path__item.is-complete-static .slds-path__link {
+        background-color: #04844b !important;
+        color: white;
+    }
+    .slds-path__item.is-current-static .slds-path__link {
+        background-color: #0176d3 !important;
+        color: white;
+        font-weight: 700;
+    }
+
+    /* スクロールバー非表示 (タブの横スクロールエリア用) */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+</head>
+<body class="slds-scope sf-app-bg">
+
+<!-- ============================================================
+     SLDS1 で使う主要クラス チートシート
+     ============================================================ -->
+
+<div class="slds-p-around_large">
+  <h1 class="slds-text-heading_large slds-m-bottom_medium">SLDS1 公式クラス早見表</h1>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">ボタン</h2>
+  <button class="slds-button slds-button_brand">Brand (主要CTA)</button>
+  <button class="slds-button slds-button_neutral">Neutral (キャンセル)</button>
+  <button class="slds-button slds-button_outline-brand">Outline (副)</button>
+  <button class="slds-button slds-button_destructive">Destructive (削除)</button>
+  <button class="slds-button slds-button_text-destructive">Text Destructive</button>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">バッジ</h2>
+  <span class="slds-badge">下書き</span>
+  <span class="slds-badge slds-theme_success">完了</span>
+  <span class="slds-badge slds-theme_warning">注意</span>
+  <span class="slds-badge slds-theme_error">遅延</span>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">アイコン</h2>
+  <span class="slds-icon_container slds-icon-standard-account" title="取引先">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_small" />
+  </span>
+  <span class="slds-icon_container slds-icon-standard-opportunity slds-m-left_small">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/opportunity.svg" alt="" class="slds-icon slds-icon_small" />
+  </span>
+  <span class="slds-icon_container slds-m-left_small">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-icon-text-default slds-icon_x-small" />
+  </span>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">グローバル UI (公式)</h2>
+  <pre class="slds-box slds-text-body_small">
+slds-global-header_container             … ヘッダー外殻
+slds-global-header                       … ヘッダー本体 (slds-grid で内部レイアウト)
+slds-global-header__item                 … ヘッダー内アイテム (logo / search / actions)
+slds-global-header__item_search          … 検索バー専用 (中央寄せ)
+slds-global-actions                      … 右側アクション群 (ul)
+slds-global-actions__item                … アクション 1 個 (li)
+slds-global-actions__favorites           … お気に入りボタン (青背景・白アイコン自動)
+slds-notification-badge                  … 通知の赤丸バッジ (数字付き)
+slds-context-bar                         … Global Navigation 親
+slds-context-bar__primary                … 左側 (App Launcher + App Name)
+slds-context-bar__item_app               … App Launcher の修飾子
+slds-context-bar__app-name               … App 名 (太字・大きめ)
+slds-context-bar__secondary              … 右側ナビリンク群 (nav)
+slds-context-bar__item                   … nav item 1 個 (li)
+slds-context-bar__label-action           … クリッカブルなテキストリンク
+slds-context-bar__icon-action            … アイコンボタン (chevron dropdown 等)
+slds-is-active                           … アクティブな item (青下線 #0176d3 3px が自動)
+  </pre>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">レイアウト</h2>
+  <pre class="slds-box slds-text-body_small">
+slds-grid slds-wrap                      … flex 並び (折返しあり)
+slds-grid slds-gutters_small             … gap 0.5rem (推奨)
+slds-grid slds-gutters                   … gap 1.5rem
+slds-grid_align-spread                   … justify-content: space-between
+slds-grid_vertical-align-center          … align-items: center
+slds-col slds-size_2-of-3                … 幅 2/3
+slds-col slds-size_1-of-3                … 幅 1/3
+slds-col slds-size_1-of-4                … 幅 1/4 (4 カラム KPI 用)
+slds-p-around_medium                     … padding 全方向 (12px)
+slds-m-bottom_large                      … margin-bottom (24px)
+slds-card                                … 白い角丸カード
+slds-card__header / slds-card__body      … カード内構造
+  </pre>
+
+  <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_small">プログレスバー (横棒グラフ用)</h2>
+  <pre class="slds-box slds-text-body_small">
+slds-progress-bar                        … 親 (ベース)
+slds-progress-bar_large                  … 高さ 1rem (デフォルト 0.5rem)
+slds-progress-bar__value                 … 内部の塗り (青)
+slds-progress-bar__value_success         … 受注/成功カラー (緑)
+  </pre>
+
+  <p class="slds-text-body_small slds-m-top_large">
+    実装例は <code>templates/</code> と <code>components/</code> を参照。
+    SLDS にない要素 (Service Console の 3 ペイン、Kanban カラム外枠、Agentforce パネル、Slack 埋め込み) のみ
+    自前 <code>sf-*</code> クラスで補完する。詳細は <code>SKILL.md</code> の「自前 sf-* を使ってよい場所 ホワイトリスト」を参照。
+  </p>
+</div>
+
+</body>
+</html>

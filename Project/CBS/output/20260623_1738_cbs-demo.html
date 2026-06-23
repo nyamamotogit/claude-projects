@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBSケータリング デモ | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  /* ===== ベース ===== */
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1024px; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  .sf-main { max-width: 1440px; margin: 0 auto; padding: 1rem; }
+  .sf-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .sf-col-1-4 { flex: 0 0 calc(25% - 0.5625rem); }
+  .sf-col-1-3 { flex: 0 0 calc(33.333% - 0.5rem); }
+  .sf-col-1-2 { flex: 0 0 calc(50% - 0.375rem); }
+  .sf-col-2-3 { flex: 0 0 calc(66.666% - 0.375rem); }
+  .sf-col-3-4 { flex: 0 0 calc(75% - 0.1875rem); }
+  .sf-col-1-1 { flex: 0 0 100%; }
+
+  /* ===== Global Header ===== */
+  .sf-header { background: white; height: 3rem; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid #c9c9c9; position: sticky; top: 0; z-index: 50; }
+  .sf-header-search { width: 50%; max-width: 36rem; }
+  .sf-header-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+  .sf-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.25rem; cursor: pointer; background: transparent; border: none; padding: 0; }
+  .sf-icon-btn:hover { background: #f3f3f3; }
+  .sf-icon-btn img { width: 18px; height: 18px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-favorite-btn { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 2rem; background: #1b96ff; border-radius: 0.25rem; border: none; cursor: pointer; }
+  .sf-favorite-btn img { width: 14px; height: 14px; filter: brightness(0) invert(1) !important; }
+  .sf-notify-wrap { position: relative; display: inline-flex; }
+  .sf-notify-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ea001e; border-radius: 50%; border: 1.5px solid white; }
+
+  /* ===== App Nav ===== */
+  .sf-context-bar { background: white; border-bottom: 1px solid #dddbda; padding: 0 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sf-context-bar nav ul { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+  .sf-context-bar nav ul li { display: flex; align-items: center; padding: 0 0.25rem; font-size: 0.875rem; }
+  .sf-context-bar nav ul li.is-active { border-bottom: 3px solid #1589ee; }
+  .sf-context-bar nav ul li.is-active a { color: #0070d2; font-weight: 700; }
+  .sf-context-bar nav ul li a { color: #444; text-decoration: none; padding: 0.5rem 0; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-app-name { font-size: 1.125rem; font-weight: 700; color: #181818; padding: 0.5rem 0; margin-right: 0.75rem; }
+
+  /* ===== シーン切替タブ（デモナビ） ===== */
+  .demo-nav { background: #032d60; padding: 0.5rem 1rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .demo-nav-label { color: #a8c4e5; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem; letter-spacing: 0.05em; }
+  .demo-nav button { background: rgba(255,255,255,0.1); color: #c9dae8; border: 1px solid rgba(255,255,255,0.2); border-radius: 1rem; padding: 0.25rem 0.75rem; font-size: 0.8125rem; cursor: pointer; transition: all 0.2s; }
+  .demo-nav button:hover { background: rgba(255,255,255,0.2); color: white; }
+  .demo-nav button.active { background: #1b96ff; color: white; border-color: #1b96ff; font-weight: 700; }
+
+  /* ===== シーンパネル ===== */
+  .scene { display: none; }
+  .scene.is-active { display: block; }
+
+  /* ===== ガントチャート（シーン1） ===== */
+  .gantt-wrap { overflow-x: auto; }
+  .gantt-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  .gantt-table th { background: #f4f6f9; color: #444; font-weight: 600; padding: 0.5rem 0.75rem; border-bottom: 2px solid #dddbda; text-align: left; white-space: nowrap; }
+  .gantt-table td { padding: 0.375rem 0.75rem; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+  .gantt-bar-wrap { position: relative; height: 1.25rem; background: #f4f6f9; border-radius: 3px; min-width: 200px; }
+  .gantt-bar { height: 100%; border-radius: 3px; position: absolute; top: 0; display: flex; align-items: center; padding: 0 4px; font-size: 0.7rem; color: white; font-weight: 600; white-space: nowrap; overflow: hidden; }
+  .gantt-bar-blue   { background: #0176d3; }
+  .gantt-bar-green  { background: #2e844a; }
+  .gantt-bar-orange { background: #fe9339; }
+  .gantt-bar-purple { background: #9050e9; }
+  .gantt-bar-teal   { background: #06a59a; }
+  .gantt-bar-red    { background: #ba0517; }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 0.75rem; font-size: 0.75rem; font-weight: 700; }
+  .status-done     { background: #d4edda; color: #155724; }
+  .status-progress { background: #fff3cd; color: #856404; }
+  .status-pending  { background: #f8d7da; color: #721c24; }
+  .status-sched    { background: #d1ecf1; color: #0c5460; }
+
+  /* ===== Agentforce インサイトパネル（シーン2） ===== */
+  .af-insight { background: linear-gradient(135deg, #f0f8ff, #e8f0fb); border: 1px solid #1b96ff; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; }
+  .af-insight-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .af-insight-icon { width: 28px; height: 28px; background: #0070d2; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .af-insight-icon img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
+  .af-insight-title { font-weight: 700; color: #032d60; font-size: 0.9375rem; }
+  .af-insight-body { font-size: 0.875rem; color: #181818; line-height: 1.6; margin-bottom: 0.75rem; }
+  .af-insight-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  /* ===== Slack埋め込み（シーン3） ===== */
+  .sf-slack { font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; color: #1d1c1d; font-size: 15px; line-height: 1.46; }
+  .sf-slack a { color: #1264a3; text-decoration: none; }
+  .sf-slack a:hover { text-decoration: underline; }
+  .sf-slack-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #e1e1e1; }
+  .sf-slack-header-left { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 900; color: #1d1c1d; }
+  .sf-slack-logo { width: 24px; height: 24px; }
+  .sf-slack-ch-name { color: #1d1c1d; font-weight: 900; }
+  .sf-slack-members { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #dddbda; border-radius: 9999px; padding: 4px 10px; font-size: 13px; color: #1d1c1d; background: white; cursor: pointer; }
+  .sf-slack-members img { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(20%); }
+  .sf-slack-msg { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 8px 16px; }
+  .sf-slack-msg:hover { background: #f8f8f8; }
+  .sf-slack-avatar { width: 36px; height: 36px; border-radius: 6px; flex-shrink: 0; object-fit: cover; }
+  .sf-slack-body { flex: 1; min-width: 0; }
+  .sf-slack-author-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+  .sf-slack-author { font-weight: 900; color: #1d1c1d; font-size: 15px; }
+  .sf-slack-time { color: #616061; font-size: 12px; }
+  .sf-slack-text { color: #1d1c1d; font-size: 15px; }
+  .sf-slack-text p { margin: 0 0 4px; }
+  .sf-slack-mention { background: rgba(29,155,209,0.1); color: #1264a3; border-radius: 3px; padding: 0 2px; font-weight: 700; }
+  .sf-slack-agent-tag { display: inline-block; margin-left: 8px; padding: 1px 6px; background: #f1f1f1; color: #616061; border-radius: 3px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+  .sf-slack-card { margin-top: 8px; border: 1px solid #dddbda; border-left: 4px solid #1264a3; border-radius: 4px; overflow: hidden; max-width: 480px; background: white; }
+  .sf-slack-card-header { padding: 8px 12px; font-size: 13px; color: #616061; }
+  .sf-slack-card-body { padding: 0 12px 12px; }
+  .sf-slack-card-title { font-size: 15px; font-weight: 700; color: #1264a3; margin-bottom: 4px; }
+  .sf-slack-card-meta { font-size: 12px; color: #616061; margin-bottom: 8px; }
+  .sf-slack-card-preview { background: linear-gradient(135deg, #1f4e8c 0%, #1264a3 100%); border-radius: 4px; height: 80px; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 8px; color: white; }
+  .sf-slack-card-preview .bars { display: flex; align-items: flex-end; gap: 6px; height: 55px; }
+  .sf-slack-card-preview .bar { width: 16px; background: rgba(255,255,255,0.85); border-radius: 2px; }
+  .sf-slack-footer-banner { padding: 10px 16px; background: #f4f4f4; border-top: 1px solid #e1e1e1; color: #1264a3; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .sf-slack-footer-banner .agent-icon { width: 18px; height: 18px; border-radius: 50%; background: #1264a3; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+  .sf-slack-notify { background: #ebf8ee; border: 1px solid #2e844a; border-radius: 0.5rem; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
+  .sf-slack-notify-icon { font-size: 1.5rem; }
+
+  /* ===== 経営ダッシュボード（シーン5） ===== */
+  .sf-kpi { background: white; border-radius: 0.5rem; padding: 1.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+  .sf-kpi-label { font-size: 0.8125rem; color: #706e6b; margin-bottom: 0.25rem; }
+  .sf-kpi-value { font-size: 1.75rem; font-weight: 700; color: #181818; line-height: 1.2; }
+  .sf-kpi-sub { font-size: 0.8125rem; margin-top: 0.25rem; }
+  .sf-kpi-up { color: #2e844a; }
+  .sf-kpi-down { color: #ba0517; }
+  .sf-progress-wrap { margin-top: 0.75rem; }
+  .sf-progress-label { display: flex; justify-content: space-between; font-size: 0.8125rem; margin-bottom: 0.25rem; color: #444; }
+  .sf-progress-track { height: 0.75rem; background: #f4f6f9; border-radius: 0.375rem; overflow: hidden; }
+  .sf-progress-fill { height: 100%; border-radius: 0.375rem; }
+  .sf-bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.8125rem; }
+  .sf-bar-label { width: 7rem; color: #444; flex-shrink: 0; }
+  .sf-bar-track { flex: 1; height: 1.375rem; background: #f3f3f3; border-radius: 0.25rem; position: relative; }
+  .sf-bar-fill { height: 1.375rem; border-radius: 0.25rem; }
+  .sf-bar-amount { position: absolute; right: 0.5rem; top: 0.125rem; color: #181818; font-size: 0.75rem; }
+
+  /* ===== Agentforce パネル ===== */
+  .sf-af-panel { position: fixed; top: 3rem; right: 0; bottom: 0; width: 360px; background: white; border-left: 1px solid #c9c9c9; box-shadow: -4px 0 12px rgba(0,0,0,0.08); z-index: 100; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.3s ease-out; }
+  .sf-af-panel.is-open { transform: translateX(0); }
+  .sf-af-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid #dddbda; flex-shrink: 0; }
+  .sf-af-title { font-size: 1rem; font-weight: 700; color: #181818; }
+  .sf-af-header-actions { display: flex; gap: 0.25rem; }
+  .sf-af-header-actions button { width: 1.75rem; height: 1.75rem; background: transparent; border: none; cursor: pointer; border-radius: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-af-header-actions button:hover { background: #f3f3f3; }
+  .sf-af-header-actions img { width: 14px; height: 14px; filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); }
+  .sf-af-conversation { flex: 1; overflow-y: auto; padding: 1rem; }
+  .sf-af-msg { display: flex; gap: 0.75rem; margin-bottom: 1rem; opacity: 0; transform: translateY(12px); animation: sf-af-msg-in 0.4s ease-out forwards; }
+  .sf-af-msg:nth-child(1) { animation-delay: 0.1s; }
+  .sf-af-msg:nth-child(2) { animation-delay: 0.6s; }
+  .sf-af-msg:nth-child(3) { animation-delay: 1.2s; }
+  .sf-af-msg:nth-child(4) { animation-delay: 1.8s; }
+  .sf-af-msg:nth-child(5) { animation-delay: 2.4s; }
+  @keyframes sf-af-msg-in { to { opacity: 1; transform: translateY(0); } }
+  .sf-af-avatar { flex: 0 0 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-af-avatar-bot { background: #0070d2; }
+  .sf-af-avatar-bot img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+  .sf-af-avatar-user { background: #b8b8b8; }
+  .sf-af-avatar-user img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+  .sf-af-bubble { flex: 1; font-size: 0.875rem; line-height: 1.5; color: #181818; word-break: break-word; }
+  .sf-af-bubble p { margin: 0 0 0.5rem; }
+  .sf-af-bubble strong { display: block; margin-top: 0.5rem; margin-bottom: 0.25rem; color: #032d60; }
+  .sf-af-suggestions { border-top: 1px solid #dddbda; padding: 0.75rem 1rem; flex-shrink: 0; background: #fafaf9; }
+  .sf-af-suggestions-title { font-size: 0.75rem; font-weight: 700; color: #444; margin-bottom: 0.5rem; }
+  .sf-af-suggestion { display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0; font-size: 0.8125rem; color: #0070d2; cursor: pointer; }
+  .sf-af-suggestion:hover { text-decoration: underline; }
+  .sf-af-suggestion::before { content: "▸"; color: #0070d2; font-size: 0.75rem; }
+  .sf-af-input-wrap { border-top: 1px solid #dddbda; padding: 0.75rem 1rem; flex-shrink: 0; }
+  .sf-af-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #dddbda; border-radius: 0.25rem; font-size: 0.875rem; box-sizing: border-box; }
+  .sf-af-input:focus { outline: none; border-color: #1589ee; box-shadow: 0 0 3px #0070d2; }
+  .sf-af-typing { display: inline-flex; gap: 4px; padding: 6px 0; }
+  .sf-af-typing span { width: 6px; height: 6px; background: #b0adab; border-radius: 50%; animation: sf-af-typing 1.2s infinite ease-in-out; }
+  .sf-af-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .sf-af-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes sf-af-typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+  /* ===== タイムライン ===== */
+  .sf-timeline { list-style: none; padding: 0; margin: 0; }
+  .sf-timeline-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; }
+  .sf-timeline-icon { flex: 0 0 2rem; height: 2rem; border-radius: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
+  .sf-timeline-icon-call  { background: #056764; }
+  .sf-timeline-icon-email { background: #b0adab; }
+  .sf-timeline-icon-task  { background: #04844b; }
+  .sf-timeline-icon-event { background: #cc6cdd; }
+  .sf-timeline-icon img { width: 1.25rem; height: 1.25rem; filter: brightness(0) invert(1); }
+  .sf-timeline-body { flex: 1; min-width: 0; line-height: 1.4; }
+  .sf-timeline-body a { color: #0070d2; text-decoration: none; font-weight: 700; }
+  .sf-timeline-meta { font-size: 0.8125rem; color: #444; margin-top: 0.25rem; }
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- ===== Global Header ===== -->
+<header class="sf-header">
+  <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+  <div class="sf-header-search">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+        <input type="search" placeholder="検索..." class="slds-input">
+      </div>
+    </div>
+  </div>
+  <div class="sf-header-actions">
+    <button class="sf-icon-btn" title="Agentforce" onclick="toggleAgentforce()">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+    </button>
+    <button class="sf-favorite-btn" title="お気に入り">
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" />
+      <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;" />
+    </button>
+    <button class="sf-icon-btn" title="新規作成"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button>
+    <button class="sf-icon-btn" title="設定"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></button>
+    <span class="sf-notify-wrap">
+      <button class="sf-icon-btn" title="通知"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" /></button>
+      <span class="sf-notify-dot"></span>
+    </span>
+    <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:0.5rem;">
+      <img src="https://ui-avatars.com/api/?name=山田+社長&background=032d60&color=fff" alt="山田社長">
+    </span>
+  </div>
+</header>
+
+<!-- ===== App Nav ===== -->
+<div class="sf-context-bar">
+  <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  <span class="sf-app-name">CBSケータリング</span>
+  <nav><ul>
+    <li><a href="#">ホーム</a></li>
+    <li class="is-active"><a href="#">プロジェクト管理 ▾</a></li>
+    <li><a href="#">取引先 ▾</a></li>
+    <li><a href="#">受注管理 ▾</a></li>
+    <li><a href="#">スタッフ管理 ▾</a></li>
+    <li><a href="#">ダッシュボード ▾</a></li>
+  </ul></nav>
+</div>
+
+<!-- ===== デモナビ ===== -->
+<div class="demo-nav">
+  <span class="demo-nav-label">🎬 DEMO SCENE</span>
+  <button class="active" onclick="showScene(1, this)">①CBS プロジェクト管理</button>
+  <button onclick="showScene(2, this)">②Agentforce クロスセル提案</button>
+  <button onclick="showScene(3, this)">③旬菜亭 Slack コラボ</button>
+  <button onclick="showScene(4, this)">④顧客ポータル → 受注通知</button>
+  <button onclick="showScene(5, this)">⑤山田社長 経営ダッシュボード</button>
+</div>
+
+<!-- ======================================================
+     SCENE 1: CBS部門 大規模案件プロジェクト管理
+     ====================================================== -->
+<div id="scene1" class="scene is-active">
+<main class="sf-main">
+
+  <!-- ページヘッダー -->
+  <div class="slds-page-header slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-task">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title">プロジェクト管理</p>
+            <h1 class="slds-page-header__title">グローバルテック株式会社 全社総会 500名様</h1>
+            <p class="slds-text-body_small slds-text-color_weak">実施日: 2026年7月15日（火）18:00〜21:00　担当PM: 佐藤 健一</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <ul class="slds-button-group-list">
+          <li><button class="slds-button slds-button_neutral">発注書を出力</button></li>
+          <li><button class="slds-button slds-button_neutral">チームに共有</button></li>
+          <li><button class="slds-button slds-button_brand">ステータス更新</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIカード 4枚 -->
+  <div class="sf-row slds-m-bottom_small">
+    <div class="sf-col-1-4">
+      <article class="slds-card slds-p-around_medium">
+        <p class="slds-text-title slds-text-color_weak">案件金額</p>
+        <p style="font-size:1.5rem;font-weight:700;color:#181818;margin:4px 0;">¥4,850,000</p>
+        <p class="slds-text-body_small" style="color:#2e844a;">● 受注確定</p>
+      </article>
+    </div>
+    <div class="sf-col-1-4">
+      <article class="slds-card slds-p-around_medium">
+        <p class="slds-text-title slds-text-color_weak">配膳スタッフ</p>
+        <p style="font-size:1.5rem;font-weight:700;color:#181818;margin:4px 0;">28名 / 30名</p>
+        <p class="slds-text-body_small" style="color:#fe9339;">● 2名アサイン待ち</p>
+      </article>
+    </div>
+    <div class="sf-col-1-4">
+      <article class="slds-card slds-p-around_medium">
+        <p class="slds-text-title slds-text-color_weak">仕込み進捗</p>
+        <p style="font-size:1.5rem;font-weight:700;color:#181818;margin:4px 0;">67%</p>
+        <div class="sf-progress-track slds-m-top_xx-small"><div class="sf-progress-fill" style="width:67%;background:#0176d3;"></div></div>
+      </article>
+    </div>
+    <div class="sf-col-1-4">
+      <article class="slds-card slds-p-around_medium">
+        <p class="slds-text-title slds-text-color_weak">実施まで</p>
+        <p style="font-size:1.5rem;font-weight:700;color:#181818;margin:4px 0;">22日</p>
+        <p class="slds-text-body_small" style="color:#706e6b;">2026-07-15</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <!-- ガントチャート（左2/3） -->
+    <div class="sf-col-2-3">
+      <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+          <h3 class="slds-card__header-title">
+            <span class="slds-icon_container slds-icon-standard-task" style="width:1.5rem;height:1.5rem;margin-right:0.5rem;">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" style="width:1.25rem;height:1.25rem;" />
+            </span>
+            実施スケジュール（ガントチャート）
+          </h3>
+          <div style="margin-left:auto;">
+            <button class="slds-button slds-button_neutral slds-button_small">今日</button>
+          </div>
+        </div>
+        <div class="slds-card__body slds-p-around_small gantt-wrap">
+          <table class="gantt-table">
+            <thead>
+              <tr>
+                <th style="width:140px;">タスク</th>
+                <th style="width:70px;">担当</th>
+                <th style="width:70px;">ステータス</th>
+                <th>6/23</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>メニュー最終確定</td>
+                <td>田中シェフ</td>
+                <td><span class="status-badge status-done">完了</span></td>
+                <td>
+                  <div class="gantt-bar-wrap">
+                    <div class="gantt-bar gantt-bar-green" style="left:0%;width:20%;">完了</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>備品レンタル発注</td>
+                <td>鈴木</td>
+                <td><span class="status-badge status-done">完了</span></td>
+                <td>
+                  <div class="gantt-bar-wrap">
+                    <div class="gantt-bar gantt-bar-green" style="left:5%;width:15%;">完了</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>スタッフシフト調整</td>
+                <td>佐藤PM</td>
+                <td><span class="status-badge status-progress">進行中</span></td>
+                <td>
+                  <div class="gantt-bar-wrap">
+                    <div class="gantt-bar gantt-bar-orange" style="left:10%;width:35%;">2名 アサイン中</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>食材仕入れ（主要）</td>
+                <td>購買チーム</td>
+                <td><span class="status-badge status-progress">進行中</span></td>
+                <td>
+                  <div class="gantt-bar-wrap">
+                    <div class="gantt-bar gantt-bar-blue" style="left:15%;width:40%;">7/10 納品</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>会場下見・搬入ルート確認</td>
+                <td>山本</td>
+                <td><span class="status-badge status-sched">予定</span></td>
+                <td>
+                  <div class="gantt-bar-wrap">
+                    <div class="gantt-bar gantt-bar-purple" style="left:30%;width:20%;">6/30 実施</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>仕込み（メイン料理）</td>
+                <td>田中シェフ</td>
+                <td><span class="status-badge status-sched">予定</span></td>
+                <td>
+                  <div class="gantt-bar-wrap">
+                    <div class="gantt-bar gantt-bar-teal" style="left:55%;width:30%;">7/13〜14</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>配送車手配・運行確認</td>
+                <td>物流チーム</td>
+                <td><span class="status-badge status-sched">予定</span></td>
+                <td>
+                  <div class="gantt-bar-wrap">
+                    <div class="gantt-bar gantt-bar-blue" style="left:70%;width:20%;">7/14〜15</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>当日セッティング・会場搬入</td>
+                <td>全スタッフ</td>
+                <td><span class="status-badge status-sched">予定</span></td>
+                <td>
+                  <div class="gantt-bar-wrap">
+                    <div class="gantt-bar gantt-bar-red" style="left:88%;width:12%;">7/15 当日</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- 協力会社発注状況 -->
+      <article class="slds-card slds-m-top_small">
+        <div class="slds-card__header">
+          <h3 class="slds-card__header-title">協力会社・発注ステータス</h3>
+        </div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead>
+            <tr>
+              <th>会社名</th>
+              <th>品目</th>
+              <th>金額</th>
+              <th>ステータス</th>
+              <th>納品日</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>東京備品レンタル㈱</td>
+              <td>テーブル×50、椅子×520</td>
+              <td>¥320,000</td>
+              <td><span class="status-badge status-done">発注済</span></td>
+              <td>7月14日</td>
+            </tr>
+            <tr>
+              <td>築地フーズ㈱</td>
+              <td>魚介類・野菜一式</td>
+              <td>¥480,000</td>
+              <td><span class="status-badge status-progress">確認中</span></td>
+              <td>7月12日</td>
+            </tr>
+            <tr>
+              <td>和牛銘柄㈱</td>
+              <td>黒毛和牛ロース 60kg</td>
+              <td>¥720,000</td>
+              <td><span class="status-badge status-done">発注済</span></td>
+              <td>7月13日</td>
+            </tr>
+            <tr>
+              <td>サポートスタッフ㈲</td>
+              <td>配膳スタッフ 2名</td>
+              <td>¥60,000</td>
+              <td><span class="status-badge status-pending">未確定</span></td>
+              <td>7月15日</td>
+            </tr>
+            <tr>
+              <td>東京配送㈱</td>
+              <td>2tトラック×3台</td>
+              <td>¥180,000</td>
+              <td><span class="status-badge status-done">発注済</span></td>
+              <td>7月15日</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </div>
+
+    <!-- 右1/3 -->
+    <div class="sf-col-1-3">
+      <!-- スタッフアサイン状況 -->
+      <article class="slds-card slds-p-around_medium slds-m-bottom_small">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">スタッフ配置状況</h3>
+        <div class="sf-bar-row"><div class="sf-bar-label">調理スタッフ</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:100%;background:#2e844a;"></div><span class="sf-bar-amount">8/8名</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">配膳スタッフ</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:87%;background:#fe9339;"></div><span class="sf-bar-amount">13/15名</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">飲料担当</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:100%;background:#2e844a;"></div><span class="sf-bar-amount">5/5名</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">片付けチーム</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:100%;background:#2e844a;"></div><span class="sf-bar-amount">7/7名</span></div></div>
+        <div class="slds-m-top_x-small slds-text-body_small" style="color:#856404;">
+          ⚠ 配膳スタッフが2名不足。サポートスタッフ㈲に確認中。
+        </div>
+      </article>
+
+      <!-- アクティビティ -->
+      <article class="slds-card slds-p-around_medium">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">最近のアクティビティ</h3>
+        <ul class="sf-timeline">
+          <li class="sf-timeline-item">
+            <span class="sf-timeline-icon sf-timeline-icon-task">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" />
+            </span>
+            <div class="sf-timeline-body">
+              <a href="#">備品レンタル発注書を送付</a>
+              <div class="sf-timeline-meta">鈴木 — 本日 11:32</div>
+            </div>
+          </li>
+          <li class="sf-timeline-item">
+            <span class="sf-timeline-icon sf-timeline-icon-call">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg" alt="" />
+            </span>
+            <div class="sf-timeline-body">
+              <a href="#">グローバルテック様と最終メニュー確認コール</a>
+              <div class="sf-timeline-meta">佐藤 — 昨日 14:00</div>
+            </div>
+          </li>
+          <li class="sf-timeline-item">
+            <span class="sf-timeline-icon sf-timeline-icon-email">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/email.svg" alt="" />
+            </span>
+            <div class="sf-timeline-body">
+              <a href="#">食材見積り確認メール</a>
+              <div class="sf-timeline-meta">購買チーム — 6/20</div>
+            </div>
+          </li>
+          <li class="sf-timeline-item">
+            <span class="sf-timeline-icon sf-timeline-icon-event">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" alt="" />
+            </span>
+            <div class="sf-timeline-body">
+              <a href="#">会場下見（予定）</a>
+              <div class="sf-timeline-meta">山本 — 6/30 10:00</div>
+            </div>
+          </li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</main>
+</div><!-- /scene1 -->
+
+<!-- ======================================================
+     SCENE 2: Agentforce クロスセル提案
+     ====================================================== -->
+<div id="scene2" class="scene">
+<main class="sf-main">
+
+  <!-- ページヘッダー -->
+  <div class="slds-page-header slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-account">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title">取引先</p>
+            <h1 class="slds-page-header__title">グローバルテック株式会社</h1>
+            <p class="slds-text-body_small slds-text-color_weak">IT・通信 ／ 従業員数 2,400名 ／ 東京都港区</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <ul class="slds-button-group-list">
+          <li><button class="slds-button slds-button_neutral">活動を記録</button></li>
+          <li><button class="slds-button slds-button_brand">新規商談</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <!-- 左2/3 -->
+    <div class="sf-col-2-3">
+
+      <!-- Agentforceインサイト（目玉） -->
+      <div class="af-insight">
+        <div class="af-insight-header">
+          <div class="af-insight-icon">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+          </div>
+          <div>
+            <div class="af-insight-title">💡 Agentforce からの提案</div>
+            <div style="font-size:0.75rem;color:#444;">グローバルテック株式会社 の最新データを分析しました</div>
+          </div>
+          <span class="slds-badge slds-badge_lightest" style="margin-left:auto;">NEW</span>
+        </div>
+        <div class="af-insight-body">
+          <strong>クロスセル機会を検出</strong><br>
+          グローバルテック様は、受注済みの全社総会（7月15日）の翌週に
+          <strong>「海外拠点長を集めたVIP役員会議（7月22日・20名規模）」</strong>
+          を控えています。<br><br>
+          過去3年の取引傾向から、大規模イベント後に少人数かつ高単価のハイエンドケータリング需要が
+          <strong style="color:#0070d2;">87%の確率</strong>で発生しています。<br><br>
+          <strong>旬菜亭ブランド</strong>でのアプローチを推奨します。
+          予算感：1名あたり ¥20,000〜¥30,000、魚介類・和牛への嗜好性が高い（過去注文データ参照）。
+        </div>
+        <div class="af-insight-actions">
+          <button class="slds-button slds-button_brand" onclick="showScene(3, document.querySelector('.demo-nav button:nth-child(4)'))">
+            旬菜亭チームへ Slack で連携
+          </button>
+          <button class="slds-button slds-button_neutral">詳細データを確認</button>
+          <button class="slds-button slds-button_neutral">新規商談を作成</button>
+        </div>
+      </div>
+
+      <!-- 取引履歴 -->
+      <article class="slds-card slds-m-top_small">
+        <div class="slds-card__header"><h3 class="slds-card__header-title">取引履歴（過去3年）</h3></div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead>
+            <tr><th>案件名</th><th>ブランド</th><th>人数</th><th class="slds-text-align_right">金額</th><th>実施日</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="#">全社総会 スタンダードビュッフェ</a></td>
+              <td><span class="slds-badge" style="background:#0176d3;color:white;">CBS</span></td>
+              <td>500名</td>
+              <td class="slds-text-align_right"><strong>¥4,850,000</strong></td>
+              <td>2026-07-15（予定）</td>
+            </tr>
+            <tr>
+              <td><a href="#">役員懇談会 京懐石コース</a></td>
+              <td><span class="slds-badge" style="background:#9050e9;color:white;">旬菜亭</span></td>
+              <td>18名</td>
+              <td class="slds-text-align_right"><strong>¥486,000</strong></td>
+              <td>2025-10-08</td>
+            </tr>
+            <tr>
+              <td><a href="#">年末社員パーティー</a></td>
+              <td><span class="slds-badge" style="background:#0176d3;color:white;">CBS</span></td>
+              <td>320名</td>
+              <td class="slds-text-align_right"><strong>¥2,240,000</strong></td>
+              <td>2025-12-20</td>
+            </tr>
+            <tr>
+              <td><a href="#">取締役会議 ランチビュッフェ</a></td>
+              <td><span class="slds-badge" style="background:#9050e9;color:white;">旬菜亭</span></td>
+              <td>12名</td>
+              <td class="slds-text-align_right"><strong>¥360,000</strong></td>
+              <td>2025-05-22</td>
+            </tr>
+            <tr>
+              <td><a href="#">株主総会 ウェルカムドリンク</a></td>
+              <td><span class="slds-badge" style="background:#0176d3;color:white;">CBS</span></td>
+              <td>800名</td>
+              <td class="slds-text-align_right"><strong>¥1,600,000</strong></td>
+              <td>2024-06-14</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </div>
+
+    <!-- 右1/3 -->
+    <div class="sf-col-1-3">
+      <!-- 基本情報 -->
+      <article class="slds-card slds-p-around_medium slds-m-bottom_small">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">基本情報</h3>
+        <dl>
+          <dt class="slds-text-body_small slds-text-color_weak">取引先責任者</dt>
+          <dd class="slds-m-bottom_x-small"><a href="#">田辺 誠一郎（総務部長）</a></dd>
+          <dt class="slds-text-body_small slds-text-color_weak">電話番号</dt>
+          <dd class="slds-m-bottom_x-small">03-1234-5678</dd>
+          <dt class="slds-text-body_small slds-text-color_weak">年間取引実績</dt>
+          <dd class="slds-m-bottom_x-small" style="font-weight:700;color:#0176d3;">¥9,536,000</dd>
+          <dt class="slds-text-body_small slds-text-color_weak">顧客ランク</dt>
+          <dd class="slds-m-bottom_x-small"><span class="slds-badge" style="background:#fe9339;color:white;">★★★ VIP</span></dd>
+          <dt class="slds-text-body_small slds-text-color_weak">CBS担当者</dt>
+          <dd>鈴木 梓（受注チーム）</dd>
+        </dl>
+      </article>
+
+      <!-- 嗜好分析 -->
+      <article class="slds-card slds-p-around_medium">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:14px;height:14px;vertical-align:middle;filter:none;margin-right:4px;" />
+          Agentforce 嗜好分析
+        </h3>
+        <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">過去受注データから算出</p>
+        <div class="sf-bar-row"><div class="sf-bar-label">魚介類</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:92%;background:#0176d3;"></div><span class="sf-bar-amount">92%</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">和牛・肉類</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:85%;background:#0176d3;"></div><span class="sf-bar-amount">85%</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">和食コース</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:78%;background:#2e844a;"></div><span class="sf-bar-amount">78%</span></div></div>
+        <div class="sf-bar-row"><div class="sf-bar-label">洋食ビュッフェ</div><div class="sf-bar-track"><div class="sf-bar-fill" style="width:55%;background:#b0adab;"></div><span class="sf-bar-amount">55%</span></div></div>
+        <div class="slds-m-top_small slds-text-body_small" style="color:#706e6b;">
+          ※ アレルギー：牡蠣（田辺部長）を確認済み
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+</div><!-- /scene2 -->
+
+<!-- ======================================================
+     SCENE 3: 旬菜亭部門 Slack コラボレーション
+     ====================================================== -->
+<div id="scene3" class="scene">
+<main class="sf-main">
+
+  <div class="slds-page-header slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <div style="width:40px;height:40px;background:#4a154b;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="Slack" style="width:26px;" />
+            </div>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title">Slack チャンネル（Salesforce 連携）</p>
+            <h1 class="slds-page-header__title">#案件_旬菜亭_グローバルテックVIP役員会</h1>
+            <p class="slds-text-body_small slds-text-color_weak">鈴木（受注チーム）がSalesforceから連携 — 本日 14:08</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <!-- Slack本体（左2/3） -->
+    <div class="sf-col-2-3">
+      <article class="slds-card sf-slack">
+        <!-- Slackヘッダー -->
+        <header class="sf-slack-header">
+          <div class="sf-slack-header-left">
+            <img class="sf-slack-logo" src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="Slack" />
+            <span class="sf-slack-ch-name">#案件_旬菜亭_グローバルテックVIP役員会</span>
+          </div>
+          <button class="sf-slack-members" type="button">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" style="width:14px;height:14px;filter:brightness(0) saturate(100%) invert(20%);" />
+            <span>4</span>
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;filter:brightness(0) saturate(100%) invert(20%);" />
+          </button>
+        </header>
+
+        <!-- SF連携の自動投稿 -->
+        <div class="sf-slack-msg" style="background:#f8fff8;border-left:3px solid #2e844a;">
+          <div style="width:36px;height:36px;background:#0176d3;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:22px;height:22px;filter:brightness(0) invert(1);" />
+          </div>
+          <div class="sf-slack-body">
+            <div class="sf-slack-author-row">
+              <span class="sf-slack-author">Salesforce</span>
+              <span class="sf-slack-agent-tag">SYSTEM</span>
+              <span class="sf-slack-time">本日 14:08</span>
+            </div>
+            <div class="sf-slack-text">
+              <p>📋 <strong>新規案件が連携されました</strong></p>
+            </div>
+            <div class="sf-slack-card">
+              <div class="sf-slack-card-header">取引先情報 — Salesforce</div>
+              <div class="sf-slack-card-body">
+                <div class="sf-slack-card-title">グローバルテック株式会社 VIP役員会議</div>
+                <div class="sf-slack-card-meta">実施日: 2026-07-22 ／ 人数: 20名 ／ 予算: ¥400,000（1名¥20,000）</div>
+                <div style="font-size:13px;color:#1d1c1d;line-height:1.5;padding:4px 0;">
+                  嗜好: 魚介類92%・和牛85%。アレルギー: 田辺部長（牡蠣）要注意。<br>
+                  過去実績: 京懐石コース（2025年10月）¥486,000 — 満足度: ★★★★★
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 鈴木のメッセージ -->
+        <div class="sf-slack-msg">
+          <img class="sf-slack-avatar" src="https://ui-avatars.com/api/?name=鈴木+梓&background=1b96ff&color=fff" alt="" />
+          <div class="sf-slack-body">
+            <div class="sf-slack-author-row">
+              <span class="sf-slack-author">鈴木 梓（受注チーム）</span>
+              <span class="sf-slack-time">本日 14:09</span>
+            </div>
+            <div class="sf-slack-text">
+              <p><a class="sf-slack-mention" href="#">@田中 誠（旬菜亭）</a> さん、グローバルテック様のVIP役員会（20名規模・1名¥20,000予算）のリードを獲得しました。Salesforceの顧客データによると、魚介類と和牛を好む役員が多いです。至急、特別メニューの提案をお願いできますか？ 先方の担当・田辺部長は牡蠣アレルギーがありますのでご注意ください🙏</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 田中のメッセージ（即答） -->
+        <div class="sf-slack-msg">
+          <img class="sf-slack-avatar" src="https://ui-avatars.com/api/?name=田中+誠&background=9050e9&color=fff" alt="" />
+          <div class="sf-slack-body">
+            <div class="sf-slack-author-row">
+              <span class="sf-slack-author">田中 誠（旬菜亭 料理長）</span>
+              <span class="sf-slack-time">本日 14:17</span>
+            </div>
+            <div class="sf-slack-text">
+              <p>了解しました！それなら<strong>「伊勢海老のポワレ＋特選黒毛和牛の二段御膳」</strong>で組みましょう。牡蠣は使わず、魚介は伊勢海老・鮑・白身魚で構成します。数分で概算見積もりとメニュー構成のドラフトを共有します👨‍🍳</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 田中の見積もり投稿 -->
+        <div class="sf-slack-msg">
+          <img class="sf-slack-avatar" src="https://ui-avatars.com/api/?name=田中+誠&background=9050e9&color=fff" alt="" />
+          <div class="sf-slack-body">
+            <div class="sf-slack-author-row">
+              <span class="sf-slack-author">田中 誠（旬菜亭 料理長）</span>
+              <span class="sf-slack-time">本日 14:23</span>
+            </div>
+            <div class="sf-slack-text">
+              <p>ドラフトができました。</p>
+            </div>
+            <div class="sf-slack-card">
+              <div class="sf-slack-card-header">旬菜亭 特別御膳プラン（ドラフト）</div>
+              <div class="sf-slack-card-body">
+                <div class="sf-slack-card-title">VIP役員会議 ハイエンド和食コース</div>
+                <div class="sf-slack-card-meta">20名様 ／ 1名 ¥22,000（税込）/ 合計 ¥440,000</div>
+                <div style="font-size:13px;color:#1d1c1d;line-height:1.6;padding:4px 0;">
+                  先付: 季節の前菜5種盛り<br>
+                  椀物: 松茸の土瓶蒸し<br>
+                  造り: 天然鮃・縞鯵・牡丹海老（牡蠣除外版）<br>
+                  焼物: <strong>伊勢海老のポワレ バターソース</strong><br>
+                  強肴: <strong>特選黒毛和牛フィレ 鉄板焼き</strong><br>
+                  食事: 季節の土鍋ご飯・お吸物・香物<br>
+                  水菓子: 旬の果物と抹茶パンナコッタ
+                </div>
+                <div class="sf-slack-card-preview">
+                  <div class="bars">
+                    <div class="bar" style="height:60%;background:rgba(255,200,100,0.9);"></div>
+                    <div class="bar" style="height:80%;background:rgba(255,150,100,0.9);"></div>
+                    <div class="bar" style="height:45%;background:rgba(200,230,100,0.9);"></div>
+                    <div class="bar" style="height:95%;background:rgba(255,220,150,0.9);"></div>
+                    <div class="bar" style="height:70%;background:rgba(180,200,255,0.9);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sf-slack-text" style="margin-top:8px;">
+              <p>原価率は32%で利益率は想定通りです。先方のご希望があれば鮑の量を増やすグレードアップも可能です（+¥3,000/名）。いかがでしょうか？</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 鈴木の返信 -->
+        <div class="sf-slack-msg">
+          <img class="sf-slack-avatar" src="https://ui-avatars.com/api/?name=鈴木+梓&background=1b96ff&color=fff" alt="" />
+          <div class="sf-slack-body">
+            <div class="sf-slack-author-row">
+              <span class="sf-slack-author">鈴木 梓（受注チーム）</span>
+              <span class="sf-slack-time">本日 14:31</span>
+            </div>
+            <div class="sf-slack-text">
+              <p>素晴らしい！田辺部長に今日中に提案書を送ります。ありがとうございました 🙌</p>
+              <p>👍 12 &nbsp; 🎉 8 &nbsp; 🍣 5</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- フッター -->
+        <div class="sf-slack-footer-banner">
+          <span class="agent-icon">2</span>
+          <strong>2 エージェント</strong>
+          <span style="color:#616061;">はこのチャンネルに含まれる — Agentforce Sales Agent / 旬菜亭メニュー提案Bot</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- 右1/3 -->
+    <div class="sf-col-1-3">
+      <!-- スピード指標 -->
+      <article class="slds-card slds-p-around_medium slds-m-bottom_small" style="background:linear-gradient(135deg,#f0fff4,#e6f9ee);border:1px solid #2e844a;">
+        <h3 class="slds-text-heading_small slds-m-bottom_small" style="color:#2e844a;">⚡ 旬菜亭の機動力</h3>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="slds-text-body_small">Slackへ連携から初回返信</span>
+            <strong style="font-size:1.25rem;color:#2e844a;">8分</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="slds-text-body_small">見積もり＋メニュー完成まで</span>
+            <strong style="font-size:1.25rem;color:#2e844a;">15分</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="slds-text-body_small">想定利益率</span>
+            <strong style="font-size:1.25rem;color:#2e844a;">68%</strong>
+          </div>
+        </div>
+        <div class="slds-m-top_small slds-text-body_small" style="color:#155724;">
+          従来の電話・FAX対応比: <strong>約12倍のスピード</strong>
+        </div>
+      </article>
+
+      <!-- 次のアクション -->
+      <article class="slds-card slds-p-around_medium">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">次のアクション</h3>
+        <ul class="slds-list_dotted">
+          <li class="slds-item slds-m-bottom_x-small">
+            <span class="slds-badge slds-badge_lightest slds-m-right_x-small">高</span>
+            田辺部長へ提案書PDF送付（本日中）
+          </li>
+          <li class="slds-item slds-m-bottom_x-small">
+            <span class="slds-badge slds-badge_lightest slds-m-right_x-small">中</span>
+            Salesforceに新規商談として登録
+          </li>
+          <li class="slds-item">
+            <span class="slds-badge slds-badge_lightest slds-m-right_x-small">低</span>
+            アレルギー対応版メニューを食材チームへ共有
+          </li>
+        </ul>
+        <div class="slds-m-top_medium">
+          <button class="slds-button slds-button_brand slds-button_stretch">Salesforceに商談を登録</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+</div><!-- /scene3 -->
+
+<!-- ======================================================
+     SCENE 4: 顧客ポータル → 受注通知
+     ====================================================== -->
+<div id="scene4" class="scene">
+<main class="sf-main">
+
+  <div class="slds-page-header slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-opportunity">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/opportunity.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title">受注管理</p>
+            <h1 class="slds-page-header__title">顧客体験 ＆ リアルタイム受注通知</h1>
+            <p class="slds-text-body_small slds-text-color_weak">Experience Cloud（顧客専用ポータル）→ Salesforce 自動同期 → Slack 通知</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <!-- 顧客ポータル模擬（左1/2） -->
+    <div class="sf-col-1-2">
+      <article class="slds-card">
+        <div style="background:#4a154b;padding:0.75rem 1rem;display:flex;align-items:center;gap:0.75rem;border-radius:4px 4px 0 0;">
+          <img src="https://ui-avatars.com/api/?name=CBS+Catering&background=ffffff&color=4a154b&size=32" alt="" style="border-radius:4px;width:32px;height:32px;" />
+          <span style="color:white;font-weight:700;font-size:1rem;">旬菜亭 VIP プランニング</span>
+          <span style="margin-left:auto;background:#2eb67d;color:white;font-size:0.75rem;padding:2px 8px;border-radius:4px;">顧客専用ポータル</span>
+        </div>
+        <div class="slds-p-around_medium">
+          <h3 class="slds-text-heading_small slds-m-bottom_small">ご提案内容のご確認</h3>
+
+          <!-- プランカード -->
+          <div style="border:2px solid #9050e9;border-radius:0.5rem;padding:1rem;margin-bottom:1rem;background:linear-gradient(135deg,#faf5ff,#f3e8ff);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+              <div>
+                <div style="font-size:1.125rem;font-weight:700;color:#4a154b;">旬菜亭 VIP御膳 プレミアムコース</div>
+                <div style="font-size:0.875rem;color:#666;margin-top:2px;">グローバルテック株式会社 VIP役員会議</div>
+              </div>
+              <span style="background:#9050e9;color:white;padding:4px 10px;border-radius:1rem;font-size:0.75rem;font-weight:700;">推奨プラン</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;font-size:0.875rem;margin-bottom:0.75rem;">
+              <div><span style="color:#666;">実施日</span><br><strong>2026年7月22日（水）</strong></div>
+              <div><span style="color:#666;">人数</span><br><strong>20名様</strong></div>
+              <div><span style="color:#666;">1名様単価</span><br><strong>¥22,000（税込）</strong></div>
+              <div><span style="color:#666;">合計金額</span><br><strong style="color:#9050e9;font-size:1.125rem;">¥440,000</strong></div>
+            </div>
+            <div style="font-size:0.8125rem;color:#555;line-height:1.6;border-top:1px solid #e0d0f0;padding-top:0.5rem;">
+              ✦ 伊勢海老のポワレ ✦ 特選黒毛和牛フィレ鉄板焼き ✦ 松茸の土瓶蒸し<br>
+              ✦ 天然鮃・縞鯵の造り ✦ 旬の土鍋ご飯 ✦ 抹茶パンナコッタ
+            </div>
+          </div>
+
+          <!-- 承認ボタン（クリックで受注演出） -->
+          <div style="text-align:center;">
+            <button class="slds-button slds-button_brand" style="padding:0.75rem 2rem;font-size:1rem;" onclick="triggerOrder()">
+              このプランで発注する ✓
+            </button>
+            <div style="margin-top:0.5rem;font-size:0.8125rem;color:#666;">
+              ボタンを押すと即座に旬菜亭チームへ通知が届きます
+            </div>
+          </div>
+
+          <!-- 受注完了モーション -->
+          <div id="order-done" style="display:none;margin-top:1rem;background:#ebf8ee;border:1px solid #2e844a;border-radius:0.5rem;padding:1rem;text-align:center;">
+            <div style="font-size:2rem;">🎉</div>
+            <div style="font-weight:700;color:#155724;font-size:1.125rem;">ご発注ありがとうございます！</div>
+            <div style="font-size:0.875rem;color:#444;margin-top:0.25rem;">旬菜亭チームが準備を開始しました。確認メールをお送りします。</div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Slack受注通知（右1/2） -->
+    <div class="sf-col-1-2">
+      <article class="slds-card sf-slack">
+        <header class="sf-slack-header">
+          <div class="sf-slack-header-left">
+            <img class="sf-slack-logo" src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="Slack" />
+            <span class="sf-slack-ch-name">#旬菜亭-受注通知</span>
+          </div>
+        </header>
+
+        <!-- 通常のメッセージ -->
+        <div class="sf-slack-msg">
+          <img class="sf-slack-avatar" src="https://ui-avatars.com/api/?name=鈴木+梓&background=1b96ff&color=fff" alt="" />
+          <div class="sf-slack-body">
+            <div class="sf-slack-author-row">
+              <span class="sf-slack-author">鈴木 梓</span>
+              <span class="sf-slack-time">本日 14:32</span>
+            </div>
+            <div class="sf-slack-text">
+              <p>田辺部長に提案書を送付しました。承認待ちです 🙏</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sf-slack-msg">
+          <img class="sf-slack-avatar" src="https://ui-avatars.com/api/?name=田中+誠&background=9050e9&color=fff" alt="" />
+          <div class="sf-slack-body">
+            <div class="sf-slack-author-row">
+              <span class="sf-slack-author">田中 誠</span>
+              <span class="sf-slack-time">本日 14:35</span>
+            </div>
+            <div class="sf-slack-text">
+              <p>了解！食材確保の事前準備を始めておきます 👨‍🍳</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 受注通知（ボタン押下で表示） -->
+        <div id="slack-order-notify" style="display:none;">
+          <div class="sf-slack-msg" style="background:#f0fff4;border-left:4px solid #2e844a;">
+            <div style="width:36px;height:36px;background:#0176d3;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:22px;height:22px;filter:brightness(0) invert(1);" />
+            </div>
+            <div class="sf-slack-body">
+              <div class="sf-slack-author-row">
+                <span class="sf-slack-author">Salesforce Bot</span>
+                <span class="sf-slack-agent-tag">SYSTEM</span>
+                <span class="sf-slack-time">ただいま</span>
+              </div>
+              <div class="sf-slack-text">
+                <p>🎉 <strong>グローバルテック様より、旬菜亭VIP御膳（¥440,000）を受注しました！</strong></p>
+              </div>
+              <div class="sf-slack-card">
+                <div class="sf-slack-card-header">受注確定 — Salesforce 自動同期</div>
+                <div class="sf-slack-card-body">
+                  <div class="sf-slack-card-title">旬菜亭 VIP御膳 グローバルテック役員会</div>
+                  <div class="sf-slack-card-meta">2026-07-22 ／ 20名 ／ ¥440,000 ／ ステータス: 受注確定</div>
+                  <div style="font-size:13px;color:#1d1c1d;padding:4px 0;">
+                    担当: 田中 誠（料理長）／ 鈴木 梓（受注）<br>
+                    プロジェクト管理に自動登録済み ✓
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:8px;font-size:14px;color:#1d1c1d;">
+                👏 x 6 &nbsp; 🎊 x 4 &nbsp; 🍣 x 8
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sf-slack-footer-banner">
+          <span class="agent-icon">1</span>
+          <strong>Salesforce Bot</strong>
+          <span style="color:#616061;">が受注時に自動通知を送信します</span>
+        </div>
+      </article>
+
+      <!-- Salesforce自動同期の説明 -->
+      <article class="slds-card slds-p-around_medium slds-m-top_small">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">受注後の自動処理フロー</h3>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.875rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="width:24px;height:24px;background:#2e844a;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</span>
+            顧客ポータルで承認ボタンをタップ
+          </div>
+          <div style="width:1px;height:16px;background:#dddbda;margin-left:12px;"></div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="width:24px;height:24px;background:#0176d3;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</span>
+            Salesforceの商談ステータスが「受注確定」へ自動更新
+          </div>
+          <div style="width:1px;height:16px;background:#dddbda;margin-left:12px;"></div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="width:24px;height:24px;background:#9050e9;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</span>
+            Slackの#旬菜亭-受注通知チャンネルへ自動通知
+          </div>
+          <div style="width:1px;height:16px;background:#dddbda;margin-left:12px;"></div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="width:24px;height:24px;background:#fe9339;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">4</span>
+            プロジェクト管理ガントチャートに自動登録（シーン1参照）
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+</div><!-- /scene4 -->
+
+<!-- ======================================================
+     SCENE 5: 山田社長 経営ダッシュボード
+     ====================================================== -->
+<div id="scene5" class="scene">
+<main class="sf-main">
+
+  <div class="slds-page-header slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-dashboard">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/dashboard.svg" alt="" class="slds-icon slds-icon_medium" />
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title">経営ダッシュボード</p>
+            <h1 class="slds-page-header__title">CBSケータリング グループ 経営概況</h1>
+            <p class="slds-text-body_small slds-text-color_weak">最終更新: 2026年6月23日 17:38 ／ 閲覧者: 山田 社長</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <ul class="slds-button-group-list">
+          <li><button class="slds-button slds-button_neutral">更新</button></li>
+          <li><button class="slds-button slds-button_neutral">共有</button></li>
+          <li><button class="slds-button slds-button_brand">PDF出力</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 中期目標プログレス -->
+  <article class="slds-card slds-p-around_medium slds-m-bottom_small" style="background:linear-gradient(135deg,#032d60,#0176d3);color:white;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+      <div>
+        <div style="font-size:0.875rem;opacity:0.8;margin-bottom:4px;">🎯 中期目標 — 2030年度 売上高</div>
+        <div style="font-size:2rem;font-weight:700;">¥2,000,000,000 <span style="font-size:1rem;opacity:0.7;">（20億円）</span></div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:0.875rem;opacity:0.8;margin-bottom:4px;">2026年度 見込み（年換算）</div>
+        <div style="font-size:1.75rem;font-weight:700;">¥1,086,000,000</div>
+        <div style="font-size:0.875rem;opacity:0.8;margin-top:2px;">目標達成率 54.3%</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.2);border-radius:0.5rem;height:1.25rem;overflow:hidden;">
+      <div style="height:100%;width:54.3%;background:linear-gradient(to right,#2eb67d,#4ade80);border-radius:0.5rem;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
+        <span style="font-size:0.75rem;font-weight:700;color:#022c22;">54.3%</span>
+      </div>
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.8125rem;opacity:0.8;">残り4年でさらに +¥914,000,000 の成長が必要</div>
+  </article>
+
+  <!-- KPI 4枚 -->
+  <div class="sf-row slds-m-bottom_small">
+    <div class="sf-col-1-4">
+      <div class="sf-kpi">
+        <div class="sf-kpi-label">今期売上（CBS部門）</div>
+        <div class="sf-kpi-value">¥823M</div>
+        <div class="sf-kpi-sub sf-kpi-up">↑ 前期比 +12.4%</div>
+        <div class="sf-progress-wrap">
+          <div class="sf-progress-label"><span>年間目標達成率</span><span>74%</span></div>
+          <div class="sf-progress-track"><div class="sf-progress-fill" style="width:74%;background:#0176d3;"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sf-col-1-4">
+      <div class="sf-kpi">
+        <div class="sf-kpi-label">今期売上（旬菜亭）</div>
+        <div class="sf-kpi-value">¥263M</div>
+        <div class="sf-kpi-sub sf-kpi-up">↑ 前期比 +38.1%</div>
+        <div class="sf-progress-wrap">
+          <div class="sf-progress-label"><span>年間目標達成率</span><span>88%</span></div>
+          <div class="sf-progress-track"><div class="sf-progress-fill" style="width:88%;background:#9050e9;"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sf-col-1-4">
+      <div class="sf-kpi">
+        <div class="sf-kpi-label">粗利益率（旬菜亭）</div>
+        <div class="sf-kpi-value">68.2%</div>
+        <div class="sf-kpi-sub sf-kpi-up">CBS部門の2.3倍</div>
+        <div class="sf-progress-wrap">
+          <div class="sf-progress-label"><span>目標: 65%</span><span>達成</span></div>
+          <div class="sf-progress-track"><div class="sf-progress-fill" style="width:100%;background:#2e844a;"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sf-col-1-4">
+      <div class="sf-kpi">
+        <div class="sf-kpi-label">業務効率化（工数削減）</div>
+        <div class="sf-kpi-value">-34%</div>
+        <div class="sf-kpi-sub sf-kpi-up">Salesforce導入効果</div>
+        <div class="sf-progress-wrap">
+          <div class="sf-progress-label"><span>目標: -30%</span><span>超過達成</span></div>
+          <div class="sf-progress-track"><div class="sf-progress-fill" style="width:100%;background:#2e844a;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sf-row">
+    <!-- 売上グラフ（左2/3） -->
+    <div class="sf-col-2-3">
+      <article class="slds-card slds-p-around_medium slds-m-bottom_small">
+        <h3 class="slds-text-heading_small slds-m-bottom_medium">月次売上推移（CBS + 旬菜亭 / 2026年度）</h3>
+        <!-- 月次棒グラフ（CSS描画） -->
+        <div style="display:flex;align-items:flex-end;gap:0.5rem;height:160px;padding:0 0.5rem;">
+          <!-- 各月 -->
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:140px;gap:2px;">
+              <div style="width:100%;background:#9050e9;height:25%;border-radius:2px 2px 0 0;"></div>
+              <div style="width:100%;background:#0176d3;height:45%;border-radius:2px 2px 0 0;"></div>
+            </div>
+            <div style="font-size:0.7rem;color:#444;">4月</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:140px;gap:2px;">
+              <div style="width:100%;background:#9050e9;height:30%;border-radius:2px 2px 0 0;"></div>
+              <div style="width:100%;background:#0176d3;height:50%;border-radius:2px 2px 0 0;"></div>
+            </div>
+            <div style="font-size:0.7rem;color:#444;">5月</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:140px;gap:2px;">
+              <div style="width:100%;background:#9050e9;height:38%;border-radius:2px 2px 0 0;"></div>
+              <div style="width:100%;background:#0176d3;height:55%;border-radius:2px 2px 0 0;"></div>
+            </div>
+            <div style="font-size:0.7rem;color:#444;">6月</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;opacity:0.5;">
+            <div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:140px;gap:2px;border:2px dashed #dddbda;border-bottom:none;">
+              <div style="width:100%;background:#9050e9;height:42%;border-radius:2px 2px 0 0;opacity:0.6;"></div>
+              <div style="width:100%;background:#0176d3;height:58%;border-radius:2px 2px 0 0;opacity:0.6;"></div>
+            </div>
+            <div style="font-size:0.7rem;color:#444;">7月<br><span style="font-size:0.6rem;">(見込)</span></div>
+          </div>
+        </div>
+        <!-- 凡例 -->
+        <div style="display:flex;gap:1.5rem;margin-top:0.75rem;font-size:0.8125rem;padding-left:0.5rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;"><span style="width:12px;height:12px;background:#0176d3;display:inline-block;border-radius:2px;"></span>CBS部門</div>
+          <div style="display:flex;align-items:center;gap:0.5rem;"><span style="width:12px;height:12px;background:#9050e9;display:inline-block;border-radius:2px;"></span>旬菜亭</div>
+          <div style="display:flex;align-items:center;gap:0.5rem;color:#999;"><span style="width:12px;height:12px;border:2px dashed #dddbda;display:inline-block;border-radius:2px;"></span>見込み</div>
+        </div>
+      </article>
+
+      <!-- 顧客セグメント -->
+      <article class="slds-card">
+        <div class="slds-card__header"><h3 class="slds-card__header-title">主要顧客セグメント別実績（上半期）</h3></div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead>
+            <tr><th>セグメント</th><th>顧客数</th><th class="slds-text-align_right">売上高</th><th class="slds-text-align_right">前期比</th><th>次の施策</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>大企業 総会・パーティー（500名〜）</td>
+              <td>12社</td>
+              <td class="slds-text-align_right"><strong>¥342M</strong></td>
+              <td class="slds-text-align_right" style="color:#2e844a;"><strong>+8%</strong></td>
+              <td>Salesforceによる自動手配強化</td>
+            </tr>
+            <tr>
+              <td>中企業 研修・懇親会（100〜499名）</td>
+              <td>58社</td>
+              <td class="slds-text-align_right"><strong>¥287M</strong></td>
+              <td class="slds-text-align_right" style="color:#2e844a;"><strong>+15%</strong></td>
+              <td>リピート率向上施策</td>
+            </tr>
+            <tr style="background:#faf5ff;">
+              <td><strong>首都圏大手 VIP役員会（旬菜亭）</strong></td>
+              <td>31社</td>
+              <td class="slds-text-align_right"><strong style="color:#9050e9;">¥198M</strong></td>
+              <td class="slds-text-align_right" style="color:#2e844a;"><strong>+42%</strong></td>
+              <td>Slack機動力でさらに拡大中</td>
+            </tr>
+            <tr>
+              <td>公共・官公庁（記念式典等）</td>
+              <td>8社</td>
+              <td class="slds-text-align_right"><strong>¥259M</strong></td>
+              <td class="slds-text-align_right" style="color:#2e844a;"><strong>+5%</strong></td>
+              <td>安定基盤として継続強化</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </div>
+
+    <!-- 右1/3 -->
+    <div class="sf-col-1-3">
+      <!-- 利益率比較 -->
+      <article class="slds-card slds-p-around_medium slds-m-bottom_small">
+        <h3 class="slds-text-heading_small slds-m-bottom_small">部門別 粗利益率</h3>
+        <div style="display:flex;align-items:center;justify-content:center;height:9rem;gap:1.5rem;">
+          <div style="text-align:center;">
+            <div style="position:relative;width:7rem;height:7rem;margin:0 auto;">
+              <div style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(#0176d3 0% 29.4%,#f3f3f3 29.4% 100%);"></div>
+              <div style="position:absolute;inset:0.6rem;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <div style="font-weight:700;font-size:1.125rem;color:#0176d3;">29.4%</div>
+              </div>
+            </div>
+            <div style="font-size:0.8125rem;margin-top:0.25rem;color:#444;">CBS部門</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="position:relative;width:7rem;height:7rem;margin:0 auto;">
+              <div style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(#9050e9 0% 68.2%,#f3f3f3 68.2% 100%);"></div>
+              <div style="position:absolute;inset:0.6rem;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <div style="font-weight:700;font-size:1.125rem;color:#9050e9;">68.2%</div>
+              </div>
+            </div>
+            <div style="font-size:0.8125rem;margin-top:0.25rem;color:#444;">旬菜亭</div>
+          </div>
+        </div>
+        <div style="background:#f8f0ff;border-radius:0.375rem;padding:0.5rem 0.75rem;font-size:0.8125rem;color:#4a154b;margin-top:0.5rem;">
+          旬菜亭の粗利益率はCBS部門の<strong>2.3倍</strong>。<br>売上高の成長率も+38%と高い。
+        </div>
+      </article>
+
+      <!-- 社長向けサマリー（Agentforce） -->
+      <div class="af-insight">
+        <div class="af-insight-header">
+          <div class="af-insight-icon">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+          </div>
+          <div>
+            <div class="af-insight-title">Agentforce 経営サマリー</div>
+            <div style="font-size:0.75rem;color:#444;">本日の最重要インサイト</div>
+          </div>
+        </div>
+        <div class="af-insight-body">
+          <strong style="color:#032d60;">今日の成果</strong>
+          旬菜亭がグローバルテック様VIP役員会議（¥440,000）を受注。Slack連携により提案〜受注まで<strong>わずか2時間17分</strong>で完結しました。<br><br>
+          <strong style="color:#032d60;">経営判断ポイント</strong>
+          旬菜亭の「首都圏大手VIP」セグメントが+42%成長中。CBS部門の安定基盤と組み合わせることで、2030年20億円目標に向けた成長エンジンとして機能しています。<br><br>
+          <strong style="color:#032d60;">推奨アクション</strong>
+          旬菜亭担当スタッフを現在の5名→8名に増員すると、さらに年間+¥120M の売上拡大が見込めます。
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</div><!-- /scene5 -->
+
+<!-- ===== Agentforce パネル ===== -->
+<aside class="sf-af-panel" id="sf-af-panel">
+  <header class="sf-af-header">
+    <div class="sf-af-title">Agentforce — CBSケータリング</div>
+    <div class="sf-af-header-actions">
+      <button title="情報"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" /></button>
+      <button title="新規セッション"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" /></button>
+      <button title="閉じる" onclick="toggleAgentforce()"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt="" /></button>
+    </div>
+  </header>
+  <div class="sf-af-conversation" id="sf-af-conversation">
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>
+      <div class="sf-af-bubble"><p>こんにちは、山田社長！本日のCBSケータリングの状況をお伝えします。</p></div>
+    </div>
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-user"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" /></span>
+      <div class="sf-af-bubble"><p>今日の売上と注目すべき案件を教えて</p></div>
+    </div>
+    <div class="sf-af-msg">
+      <span class="sf-af-avatar sf-af-avatar-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>
+      <div class="sf-af-bubble">
+        <p>本日の主要トピックをまとめました。</p>
+        <strong>🎉 本日の受注</strong>
+        <p>旬菜亭がグローバルテック株式会社様のVIP役員会議（¥440,000）を受注。Slack連携で提案から受注まで2時間17分で完結しました。</p>
+        <strong>📊 今月累計</strong>
+        <p>CBS部門 ¥98M・旬菜亭 ¥32M。旬菜亭は前月比+22%で快調です。</p>
+        <strong>⚠️ 要確認事項</strong>
+        <p>グローバルテック全社総会（7/15）の配膳スタッフが2名不足中。サポートスタッフ㈲への確認を佐藤PMに促してください。</p>
+      </div>
+    </div>
+  </div>
+  <div class="sf-af-suggestions">
+    <div class="sf-af-suggestions-title">おすすめ</div>
+    <div class="sf-af-suggestion">今月の旬菜亭VIP案件一覧を見る</div>
+    <div class="sf-af-suggestion">スタッフ不足案件をリストアップ</div>
+    <div class="sf-af-suggestion">2030年目標への差分を試算する</div>
+  </div>
+  <div class="sf-af-input-wrap">
+    <input type="text" class="sf-af-input" placeholder="何でも聞いてください..." id="sf-af-input" />
+  </div>
+</aside>
+
+<script>
+  // シーン切替
+  function showScene(num, btn) {
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('is-active'));
+    document.getElementById('scene' + num).classList.add('is-active');
+    document.querySelectorAll('.demo-nav button').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Agentforce パネル開閉
+  function toggleAgentforce() {
+    const panel = document.getElementById('sf-af-panel');
+    panel.classList.toggle('is-open');
+    if (panel.classList.contains('is-open')) {
+      const conv = document.getElementById('sf-af-conversation');
+      const html = conv.innerHTML;
+      conv.innerHTML = '';
+      void conv.offsetWidth;
+      conv.innerHTML = html;
+    }
+  }
+
+  // 受注演出
+  function triggerOrder() {
+    document.getElementById('order-done').style.display = 'block';
+    document.getElementById('slack-order-notify').style.display = 'block';
+    document.querySelector('[onclick="triggerOrder()"]').disabled = true;
+    document.querySelector('[onclick="triggerOrder()"]').textContent = '✓ 発注済み';
+    document.querySelector('[onclick="triggerOrder()"]').style.background = '#2e844a';
+  }
+
+  // Agentforce 入力フォーカスでタイピング表示
+  document.getElementById('sf-af-input').addEventListener('focus', function() {
+    const conv = document.getElementById('sf-af-conversation');
+    if (conv.querySelector('.sf-af-typing-msg')) return;
+    const el = document.createElement('div');
+    el.className = 'sf-af-msg sf-af-typing-msg';
+    el.style.animationDelay = '0s';
+    el.innerHTML = '<span class="sf-af-avatar sf-af-avatar-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span><div class="sf-af-bubble"><span class="sf-af-typing"><span></span><span></span><span></span></span></div>';
+    conv.appendChild(el);
+    conv.scrollTop = conv.scrollHeight;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商談 (カンバン) | Salesforce</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+  body { background: linear-gradient(to bottom, #b0c4df 0%, #f3f3f3 250px) #f3f3f3; min-width: 1024px; margin: 0; }
+  .sf-main { max-width: 1600px; margin: 0 auto; padding: 1rem; }
+  .slds-global-header_container { position: sticky; top: 0; z-index: 50; background: white; border-bottom: 1px solid #c9c9c9; }
+  .slds-global-header { height: 3rem; padding: 0 1rem; }
+  .slds-global-header__item_search { width: 56%; max-width: 48rem; }
+  .slds-global-header .slds-button .slds-button__icon,
+  .slds-context-bar .slds-button_icon .slds-button__icon,
+  .slds-input__icon { filter: brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%); width: 14px; height: 14px; }
+  .sf-search-combo { display: flex; height: 2rem; border: 1px solid #dddbda; border-radius: 0.25rem; background: white; overflow: hidden; }
+  .sf-search-combo .slds-form-element { flex: 1; }
+  .sf-search-combo .slds-input { border: none; height: 100%; box-shadow: none; background: white; }
+  .sf-scope-selector { flex: 0 0 8rem; border: none; border-right: 1px solid #dddbda; background: white; height: 2rem; padding: 0 0.5rem 0 0.75rem; display: inline-flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .sf-scope-selector .sf-scope-name { font-size: 0.8125rem; color: #181818; }
+  .sf-scope-selector .sf-scope-chev { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(43%); }
+  .slds-global-header .slds-global-actions__favorites { margin-right: 0; }
+  .slds-global-header .slds-global-actions__favorites,
+  .slds-global-header .slds-global-actions__favorites-more { background: white; border: 1px solid #dddbda; height: 2rem; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+  .slds-global-header .slds-global-actions__favorites { border-right: none; border-radius: 0.25rem 0 0 0.25rem; width: 2rem; }
+  .slds-global-header .slds-global-actions__favorites-more { border-radius: 0 0.25rem 0.25rem 0; width: 1.5rem; margin-left: 0; }
+  .slds-global-header .slds-global-actions__favorites-more .slds-button__icon { width: 10px; height: 10px; }
+  .sf-action-add { width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #747474; display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; padding: 0; }
+  .sf-action-add img { filter: brightness(0) invert(1); width: 12px; height: 12px; }
+  .sf-app-launcher { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; cursor: pointer; }
+  .sf-app-launcher-grid { display: grid; grid-template-columns: repeat(3, 4px); grid-template-rows: repeat(3, 4px); gap: 3px; }
+  .sf-app-launcher-grid span { width: 4px; height: 4px; background: #54698d; border-radius: 1px; }
+  .sf-cloud-logo { width: 36px; height: auto; }
+
+  /* Kanban */
+  .sf-kanban-row { display:flex; gap:0.5rem; overflow-x:auto; padding-bottom:1rem; }
+  .sf-kanban-col { flex: 0 0 16rem; background:#f3f3f3; border-radius:6px; display:flex; flex-direction:column; }
+  .sf-kanban-col-won { background:#defbe9; border-top:3px solid #04844b; }
+  .sf-kanban-col-lost { background:#feded2; border-top:3px solid #ba0517; }
+  .sf-kanban-head { padding:0.625rem 0.75rem; }
+  .sf-kanban-head .stage { font-size:0.8125rem; font-weight:700; color:#181818; }
+  .sf-kanban-head .total { font-size:1.125rem; font-weight:700; color:#181818; }
+  .sf-kanban-col-won .sf-kanban-head .stage { color:#04844b; }
+  .sf-kanban-col-lost .sf-kanban-head .stage { color:#ba0517; }
+  .sf-kanban-body { padding: 0 0.625rem 0.5rem; display:flex; flex-direction:column; gap:0.5rem; }
+  .sf-kanban-card { background:white; border-radius:4px; padding:0.625rem 0.75rem; box-shadow:0 1px 0 rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06); }
+  .sf-kc-head { display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; margin-bottom:0.5rem; }
+  .sf-kc-title { color:#0070d2; font-weight:700; font-size:0.8125rem; line-height:1.3; flex:1; text-decoration:none; }
+  .sf-kc-title:hover { text-decoration:underline; }
+  .sf-kc-menu { background:none; border:none; cursor:pointer; padding:0; }
+  .sf-kc-menu img { width:14px; height:14px; filter:brightness(0) saturate(100%) invert(43%); }
+  .sf-kc-fields { display:grid; grid-template-columns:5rem 1fr; gap:0.125rem 0.5rem; font-size:0.75rem; margin:0 0 0.5rem; }
+  .sf-kc-fields dt { color:#706e6b; }
+  .sf-kc-fields dd { color:#181818; margin:0; }
+  .sf-kc-fields dd.amount { font-weight:700; }
+  .sf-kc-foot { display:flex; align-items:center; justify-content:space-between; }
+  .sf-kc-alert img { width:16px; height:16px; }
+  .sf-kanban-summary { padding:0.5rem 0.75rem; font-size:0.6875rem; color:#706e6b; border-top:1px solid #dddbda; background:rgba(255,255,255,0.4); }
+  .sf-kanban-empty { margin:0.5rem; padding:1.25rem 0.5rem; text-align:center; border:1px dashed #c9c9c9; border-radius:4px; color:#706e6b; font-size:0.75rem; }
+  .sf-toggle-active { background:#eef4ff !important; border-color:#0176d3 !important; }
+  .sf-toggle-active img { filter:brightness(0) saturate(100%) invert(28%) sepia(98%) saturate(2293%) hue-rotate(192deg) brightness(91%) contrast(96%) !important; }
+</style>
+</head>
+<body class="slds-scope">
+
+<header class="slds-global-header_container slds-no-print">
+  <div class="slds-global-header slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+    <div class="slds-global-header__item"><img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" /></div>
+    <div class="slds-global-header__item slds-global-header__item_search"><div class="sf-search-combo">
+      <button class="sf-scope-selector"><span class="sf-scope-name">商談</span><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="sf-scope-chev" /></button>
+      <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small" />
+        <input type="search" placeholder="Salesforce を検索..." class="slds-input">
+      </div></div>
+    </div></div>
+    <ul class="slds-global-actions slds-grid slds-grid_vertical-align-center" style="gap:0.25rem;">
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" class="slds-button__icon" /></button></li>
+      <li class="slds-global-actions__item"><div class="slds-grid">
+        <button class="slds-button slds-button_icon slds-global-actions__favorites"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" class="slds-button__icon" /></button>
+        <button class="slds-button slds-button_icon slds-global-actions__favorites-more"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" /></button>
+      </div></li>
+      <li class="slds-global-actions__item"><button class="sf-action-add"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/help.svg" alt="" class="slds-button__icon" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" class="slds-button__icon" /></button></li>
+      <li class="slds-global-actions__item"><button class="slds-button slds-button_icon" style="position:relative;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" class="slds-button__icon" /><span class="slds-notification-badge slds-incoming-notification slds-show-notification">5</span></button></li>
+      <li class="slds-global-actions__item slds-m-left_x-small"><span class="slds-avatar slds-avatar_circle slds-avatar_small"><img src="https://i.pravatar.cc/64?img=12" alt="User"></span></li>
+    </ul>
+  </div>
+</header>
+
+<div class="slds-context-bar">
+  <div class="slds-context-bar__primary slds-context-bar__item_app">
+    <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+    <span class="slds-context-bar__label-action slds-context-bar__app-name"><span>自動車部品 Sales</span></span>
+  </div>
+  <nav class="slds-context-bar__secondary"><ul class="slds-grid">
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ホーム</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">取引先</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">取引先責任者</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">リード</a></li>
+    <li class="slds-context-bar__item slds-is-active"><a href="#" class="slds-context-bar__label-action">商談</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ケース</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">部品マスタ</a></li>
+    <li class="slds-context-bar__item"><a href="#" class="slds-context-bar__label-action">ダッシュボード</a></li>
+  </ul></nav>
+</div>
+
+<main class="sf-main">
+
+  <!-- Page Header (object home) -->
+  <div class="slds-page-header slds-page-header_object-home slds-m-bottom_small">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-opportunity"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/opportunity.svg" alt="" class="slds-icon slds-icon_medium" /></span></div>
+          <div class="slds-media__body">
+            <p class="slds-page-header__name-meta">商談</p>
+            <div class="slds-page-header__name"><h1>
+              <span class="slds-page-header__title">今期進行中商談 ▾ ☆</span>
+            </h1></div>
+            <p class="slds-page-header__name-meta">23 件 · 並び替え順: ステージ昇順 · 8 分前に更新 · 「完了予定日 = THIS_QUARTER」でフィルタ</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <div class="slds-page-header__controls"><div class="slds-page-header__control"><ul class="slds-button-group-list">
+          <li><button class="slds-button slds-button_neutral">新規</button></li>
+          <li><button class="slds-button slds-button_neutral">インポート</button></li>
+          <li><button class="slds-button slds-button_neutral">変更所有者</button></li>
+          <li><button class="slds-button slds-button_icon slds-button_icon-border-filled"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chart.svg" alt="" class="slds-button__icon" style="filter:brightness(0) saturate(100%) invert(43%); width:14px; height:14px;" /></button></li>
+          <li><button class="slds-button slds-button_icon slds-button_icon-border-filled"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/filterList.svg" alt="" class="slds-button__icon" style="filter:brightness(0) saturate(100%) invert(43%); width:14px; height:14px;" /></button></li>
+          <li><button class="slds-button slds-button_icon slds-button_icon-border-filled"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt="" class="slds-button__icon" style="filter:brightness(0) saturate(100%) invert(43%); width:14px; height:14px;" /></button></li>
+          <li><button class="slds-button slds-button_icon slds-button_icon-border-filled"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/edit.svg" alt="" class="slds-button__icon" style="filter:brightness(0) saturate(100%) invert(43%); width:14px; height:14px;" /></button></li>
+          <li><div class="slds-button-group" role="group">
+            <button class="slds-button slds-button_icon slds-button_icon-border-filled"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/table.svg" alt="" class="slds-button__icon" style="filter:brightness(0) saturate(100%) invert(43%); width:14px; height:14px;" /></button>
+            <button class="slds-button slds-button_icon slds-button_icon-border-filled sf-toggle-active"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/kanban.svg" alt="" class="slds-button__icon" style="width:14px; height:14px;" /></button>
+            <button class="slds-button slds-button_icon slds-button_icon-border-filled"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/side_list.svg" alt="" class="slds-button__icon" style="filter:brightness(0) saturate(100%) invert(43%); width:14px; height:14px;" /></button>
+          </div></li>
+        </ul></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kanban -->
+  <div class="sf-kanban-row">
+
+    <!-- 資格確認 -->
+    <div class="sf-kanban-col">
+      <div class="sf-kanban-head"><div class="stage">資格確認 (3)</div><div class="total">¥58,500,000</div></div>
+      <div class="sf-kanban-body">
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">日産 サクラ後継 駆動コイル</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥18,000,000</dd><dt>完了予定</dt><dd>2026/09/30</dd><dt>取引先</dt><dd><a href="#">日産自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=33" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">スズキ ジムニーEV用 O2センサ</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥22,000,000</dd><dt>完了予定</dt><dd>2026/08/15</dd><dt>取引先</dt><dd><a href="#">スズキ</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=5" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">マツダ MX-30 後継 ECUハーネス</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥18,500,000</dd><dt>完了予定</dt><dd>2026/09/05</dd><dt>取引先</dt><dd><a href="#">マツダ</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=8" alt=""></span></footer>
+        </article>
+      </div>
+      <div class="sf-kanban-summary">3 件 · 合計 ¥58,500,000</div>
+    </div>
+
+    <!-- ニーズ分析 -->
+    <div class="sf-kanban-col">
+      <div class="sf-kanban-head"><div class="stage">ニーズ分析 (4)</div><div class="total">¥132,400,000</div></div>
+      <div class="sf-kanban-body">
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">トヨタ RAV4 MC センサーASSY</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥48,200,000</dd><dt>完了予定</dt><dd>2026/09/30</dd><dt>取引先</dt><dd><a href="#">トヨタ自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=12" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">ホンダ N-VAN HEV ピストンリング</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥35,000,000</dd><dt>完了予定</dt><dd>2026/10/20</dd><dt>取引先</dt><dd><a href="#">本田技研</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=22" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">スバル レヴォーグ 高耐熱ハーネス</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥28,200,000</dd><dt>完了予定</dt><dd>2026/11/15</dd><dt>取引先</dt><dd><a href="#">SUBARU</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=5" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">三菱 アウトランダー 駆動部品</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥21,000,000</dd><dt>完了予定</dt><dd>2026/12/10</dd><dt>取引先</dt><dd><a href="#">三菱自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=8" alt=""></span></footer>
+        </article>
+      </div>
+      <div class="sf-kanban-summary">4 件 · 合計 ¥132,400,000</div>
+    </div>
+
+    <!-- 価値提案 -->
+    <div class="sf-kanban-col">
+      <div class="sf-kanban-head"><div class="stage">価値提案 (3)</div><div class="total">¥98,800,000</div></div>
+      <div class="sf-kanban-body">
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">トヨタ シエンタHEV 高効率ECU</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥38,000,000</dd><dt>完了予定</dt><dd>2026/08/20</dd><dt>取引先</dt><dd><a href="#">トヨタ自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=12" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">日野 大型トラック O2センサ</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥42,000,000</dd><dt>完了予定</dt><dd>2026/09/15</dd><dt>取引先</dt><dd><a href="#">日野自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=44" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">ヤマハ大型バイクIMU</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥18,800,000</dd><dt>完了予定</dt><dd>2026/10/05</dd><dt>取引先</dt><dd><a href="#">ヤマハ発動機</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=33" alt=""></span></footer>
+        </article>
+      </div>
+      <div class="sf-kanban-summary">3 件 · 合計 ¥98,800,000</div>
+    </div>
+
+    <!-- 提案/見積 -->
+    <div class="sf-kanban-col">
+      <div class="sf-kanban-head"><div class="stage">提案/見積 (4)</div><div class="total">¥168,400,000</div></div>
+      <div class="sf-kanban-body">
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">トヨタ クラウンHEV ECUハーネス</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥62,400,000</dd><dt>完了予定</dt><dd>2026/06/30</dd><dt>取引先</dt><dd><a href="#">トヨタ自動車</a></dd></dl>
+          <footer class="sf-kc-foot">
+            <span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=12" alt=""></span>
+            <span class="sf-kc-alert" title="期日まで2週間"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" style="filter:brightness(0) saturate(100%) invert(72%) sepia(58%) saturate(2000%) hue-rotate(0deg) brightness(95%);" /></span>
+          </footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">トヨタ ハイラックス O2センサ</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥38,000,000</dd><dt>完了予定</dt><dd>2026/07/30</dd><dt>取引先</dt><dd><a href="#">トヨタ自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=12" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">本田 EV電池液冷モジュール</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥42,000,000</dd><dt>完了予定</dt><dd>2026/08/30</dd><dt>取引先</dt><dd><a href="#">本田技研</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=22" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">スズキ アルトEV 軽量ハーネス</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥26,000,000</dd><dt>完了予定</dt><dd>2026/09/15</dd><dt>取引先</dt><dd><a href="#">スズキ</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=5" alt=""></span></footer>
+        </article>
+      </div>
+      <div class="sf-kanban-summary">4 件 · 合計 ¥168,400,000</div>
+    </div>
+
+    <!-- 交渉/レビュー -->
+    <div class="sf-kanban-col">
+      <div class="sf-kanban-head"><div class="stage">交渉/レビュー (3)</div><div class="total">¥325,000,000</div></div>
+      <div class="sf-kanban-body">
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">トヨタ bZ後継 駆動モータコイル</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥185,000,000</dd><dt>完了予定</dt><dd>2026/06/25</dd><dt>取引先</dt><dd><a href="#">トヨタ自動車</a></dd></dl>
+          <footer class="sf-kc-foot">
+            <span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=12" alt=""></span>
+            <span class="sf-kc-alert"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/warning.svg" alt="" style="filter:brightness(0) saturate(100%) invert(72%) sepia(58%) saturate(2000%) hue-rotate(0deg) brightness(95%);" /></span>
+          </footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">日産 ノートePOWER ハーネス</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥82,000,000</dd><dt>完了予定</dt><dd>2026/07/10</dd><dt>取引先</dt><dd><a href="#">日産自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=33" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">ホンダ Civic e:HEV 第2期</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥58,000,000</dd><dt>完了予定</dt><dd>2026/08/05</dd><dt>取引先</dt><dd><a href="#">本田技研</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=22" alt=""></span></footer>
+        </article>
+      </div>
+      <div class="sf-kanban-summary">3 件 · 合計 ¥325,000,000</div>
+    </div>
+
+    <!-- 受注 (Won) -->
+    <div class="sf-kanban-col sf-kanban-col-won">
+      <div class="sf-kanban-head"><div class="stage">✓ 受注 (3)</div><div class="total">¥288,500,000</div></div>
+      <div class="sf-kanban-body">
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">トヨタ レクサスLF-ZC ピストンリング</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥94,500,000</dd><dt>完了予定</dt><dd>2026/05/28</dd><dt>取引先</dt><dd><a href="#">トヨタ自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=12" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">本田 CR-V e:FCEV ハーネス</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥112,000,000</dd><dt>完了予定</dt><dd>2026/05/15</dd><dt>取引先</dt><dd><a href="#">本田技研</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=22" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">日産 アリア BMSセンサ</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥82,000,000</dd><dt>完了予定</dt><dd>2026/06/02</dd><dt>取引先</dt><dd><a href="#">日産自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=33" alt=""></span></footer>
+        </article>
+      </div>
+      <div class="sf-kanban-summary" style="color:#04844b;">3 件 · 合計 ¥288,500,000</div>
+    </div>
+
+    <!-- 失注 (Lost) -->
+    <div class="sf-kanban-col sf-kanban-col-lost">
+      <div class="sf-kanban-head"><div class="stage">✕ 失注 (2)</div><div class="total">¥48,000,000</div></div>
+      <div class="sf-kanban-body">
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">マツダ CX-60 ECUハーネス</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥28,000,000</dd><dt>失注理由</dt><dd>価格競争力</dd><dt>取引先</dt><dd><a href="#">マツダ</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=8" alt=""></span></footer>
+        </article>
+        <article class="sf-kanban-card">
+          <header class="sf-kc-head"><a class="sf-kc-title" href="#">三菱 デリカD:5 センサ</a><button class="sf-kc-menu"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/threedots_vertical.svg" alt="" /></button></header>
+          <dl class="sf-kc-fields"><dt>金額</dt><dd class="amount">¥20,000,000</dd><dt>失注理由</dt><dd>納期不一致</dd><dt>取引先</dt><dd><a href="#">三菱自動車</a></dd></dl>
+          <footer class="sf-kc-foot"><span class="slds-avatar slds-avatar_circle slds-avatar_x-small"><img src="https://i.pravatar.cc/40?img=8" alt=""></span></footer>
+        </article>
+      </div>
+      <div class="sf-kanban-summary" style="color:#ba0517;">2 件 · 合計 ¥48,000,000</div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

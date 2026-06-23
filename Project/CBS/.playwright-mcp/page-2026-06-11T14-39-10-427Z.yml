@@ -1,0 +1,232 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - button [ref=e5] [cursor=pointer]:
+        - img [ref=e6]
+      - button [ref=e8] [cursor=pointer]:
+        - img [ref=e9]
+      - button [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+    - generic [ref=e15]:
+      - img [ref=e16]
+      - generic [ref=e19]: Acme Corp を検索
+    - generic [ref=e20]:
+      - button [ref=e21] [cursor=pointer]:
+        - img [ref=e22]
+      - button "YK" [ref=e25] [cursor=pointer]:
+        - generic [ref=e26]: YK
+  - complementary [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - text: Acme Corp
+        - img [ref=e30]
+      - button [ref=e32] [cursor=pointer]:
+        - img [ref=e33]
+    - list [ref=e36]:
+      - listitem [ref=e37] [cursor=pointer]:
+        - img [ref=e38]
+        - text: スレッド
+      - listitem [ref=e40] [cursor=pointer]:
+        - img [ref=e41]
+        - text: 全アクティビティ
+      - listitem [ref=e44] [cursor=pointer]:
+        - img [ref=e45]
+        - text: Canvas
+      - listitem [ref=e49] [cursor=pointer]:
+        - img [ref=e50]
+        - text: あとで
+    - generic [ref=e52]:
+      - generic [ref=e53]:
+        - img [ref=e54]
+        - generic [ref=e56]: チャンネル
+      - generic [ref=e57] [cursor=pointer]:
+        - img [ref=e58]
+        - text: general
+      - generic [ref=e61] [cursor=pointer]:
+        - img [ref=e62]
+        - text: release-notes
+      - generic [ref=e65] [cursor=pointer]:
+        - img [ref=e66]
+        - text: sales-japan
+      - generic [ref=e69] [cursor=pointer]:
+        - img [ref=e70]
+        - text: finance-private
+    - generic [ref=e73]:
+      - generic [ref=e74]:
+        - img [ref=e75]
+        - generic [ref=e77]: 最近のCanvas
+      - generic [ref=e78] [cursor=pointer]:
+        - img [ref=e79]
+        - text: Q2 リリース判定
+      - generic [ref=e83] [cursor=pointer]:
+        - img [ref=e84]
+        - text: 営業企画 OKR
+      - generic [ref=e88] [cursor=pointer]:
+        - img [ref=e89]
+        - text: オムロン提案メモ
+  - main [ref=e93]:
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - img [ref=e97]
+          - text: release-notes
+        - img [ref=e101]
+        - generic [ref=e103]:
+          - img [ref=e104]
+          - text: Q2 リリース判定
+      - generic [ref=e108]:
+        - generic [ref=e109]:
+          - img [ref=e110]
+          - text: 2分前に保存
+        - generic [ref=e113]:
+          - generic [ref=e114]: YK
+          - generic [ref=e115]: SK
+          - generic [ref=e116]: TT
+          - generic [ref=e117]: MN
+          - generic [ref=e118]: "+3"
+        - button "共有" [ref=e119] [cursor=pointer]:
+          - img [ref=e120]
+          - text: 共有
+        - button "招待" [ref=e126] [cursor=pointer]:
+          - img [ref=e127]
+          - text: 招待
+        - button "その他" [ref=e130] [cursor=pointer]:
+          - img [ref=e131]
+    - generic [ref=e135]:
+      - generic [ref=e136] [cursor=pointer]:
+        - text: 標準テキスト
+        - img [ref=e137]
+      - generic [ref=e140]:
+        - button "太字" [ref=e141] [cursor=pointer]:
+          - img [ref=e142]
+        - button "斜体" [ref=e144] [cursor=pointer]:
+          - img [ref=e145]
+        - button "取り消し線" [ref=e147] [cursor=pointer]:
+          - img [ref=e148]
+        - button "下線" [ref=e151] [cursor=pointer]:
+          - img [ref=e152]
+      - generic [ref=e155]:
+        - button "リンク" [ref=e156] [cursor=pointer]:
+          - img [ref=e157]
+        - button "箇条書き" [ref=e160] [cursor=pointer]:
+          - img [ref=e161]
+        - button "番号付き" [ref=e162] [cursor=pointer]:
+          - img [ref=e163]
+        - button "チェックリスト" [ref=e166] [cursor=pointer]:
+          - img [ref=e167]
+      - generic [ref=e171]:
+        - button "引用" [ref=e172] [cursor=pointer]:
+          - img [ref=e173]
+        - button "コード" [ref=e176] [cursor=pointer]:
+          - img [ref=e177]
+        - button "コードブロック" [ref=e180] [cursor=pointer]:
+          - img [ref=e181]
+        - button "表" [ref=e185] [cursor=pointer]:
+          - img [ref=e186]
+        - button "区切り線" [ref=e188] [cursor=pointer]:
+          - img [ref=e189]
+      - generic [ref=e191]:
+        - button "画像" [ref=e192] [cursor=pointer]:
+          - img [ref=e193]
+        - button "動画" [ref=e197] [cursor=pointer]:
+          - img [ref=e198]
+        - button "ファイル" [ref=e201] [cursor=pointer]:
+          - img [ref=e202]
+      - button "コメント" [ref=e204] [cursor=pointer]:
+        - img [ref=e205]
+      - button "履歴" [ref=e207] [cursor=pointer]:
+        - img [ref=e208]
+    - article [ref=e213]:
+      - heading "🚀Q2 リリース判定 — 2026/06/15 (月)" [level=1] [ref=e214]
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - img [ref=e217]
+          - text: "所有者: 山本 健介"
+        - generic [ref=e220]:
+          - img [ref=e221]
+          - text: "作成: 2026-06-08"
+        - generic [ref=e223]:
+          - img [ref=e224]
+          - text: 編集者 7名
+        - generic [ref=e229]:
+          - img [ref=e230]
+          - text: 閲覧 32名
+      - generic [ref=e233]:
+        - img [ref=e235]
+        - generic [ref=e237]:
+          - text: このページの目的
+          - text: Q2 (4-6月) のリリース判定MTGで使う唯一の判定資料です。 判定者は @中村 玲奈 / @青山 昇 / @山本 健介。 意思決定後、ステータスを更新してください。
+      - heading "📋 判定サマリー" [level=2] [ref=e238]
+      - table [ref=e239]:
+        - rowgroup [ref=e240]:
+          - row "機能 担当 QA / Doc 判定" [ref=e241]:
+            - columnheader "機能" [ref=e242]
+            - columnheader "担当" [ref=e243]
+            - columnheader "QA / Doc" [ref=e244]
+            - columnheader "判定" [ref=e245]
+        - rowgroup [ref=e246]:
+          - row "新見積エンジン v2 田中 拓也 QA OK / Changelog 済 ✅ Go" [ref=e247]:
+            - cell "新見積エンジン v2" [ref=e248]
+            - cell "田中 拓也" [ref=e249]
+            - cell "QA OK / Changelog 済" [ref=e250]
+            - cell "✅ Go" [ref=e251]:
+              - generic [ref=e252]: ✅ Go
+          - row "Slack 連携 (案件通知) 青山 昇 QA OK / Doc 進行中 ⚠ 条件付き" [ref=e253]:
+            - cell "Slack 連携 (案件通知)" [ref=e254]
+            - cell "青山 昇" [ref=e255]
+            - cell "QA OK / Doc 進行中" [ref=e256]
+            - cell "⚠ 条件付き" [ref=e257]:
+              - generic [ref=e258]: ⚠ 条件付き
+          - row "分割払い対応 山本 健介 QA NG (3件) / Doc 未着手 ⛔ No Go" [ref=e259]:
+            - cell "分割払い対応" [ref=e260]
+            - cell "山本 健介" [ref=e261]
+            - cell "QA NG (3件) / Doc 未着手" [ref=e262]
+            - cell "⛔ No Go" [ref=e263]:
+              - generic [ref=e264]: ⛔ No Go
+      - heading "✅ リリースまでのToDo" [level=2] [ref=e265]
+      - list [ref=e266]:
+        - listitem [ref=e267]:
+          - img [ref=e269]
+          - generic [ref=e271]: Changelog のドラフト作成
+          - generic [ref=e272]: YK
+          - generic [ref=e273]: 6/9
+        - listitem [ref=e274]:
+          - img [ref=e276]
+          - generic [ref=e278]: QA レポート集約 (3チーム分)
+          - generic [ref=e279]: TT
+          - generic [ref=e280]: 6/10
+        - listitem [ref=e281]:
+          - generic [ref=e283]: Slack連携機能の Doc 仕上げ — 残課題3件
+          - generic [ref=e284]: AS
+          - generic [ref=e285]: 6/11 (期限切れ)
+        - listitem [ref=e286]:
+          - generic [ref=e288]: 分割払い QA NG 3件の根本原因分析と再判定
+          - generic [ref=e289]: YK
+          - generic [ref=e290]: 6/12
+        - listitem [ref=e291]:
+          - generic [ref=e293]: CFO への分割払い条件最終承認依頼
+          - generic [ref=e294]: MN
+          - generic [ref=e295]: 6/13
+        - listitem [ref=e296]:
+          - generic [ref=e298]: リリース判定MTG (60分) — Zoom + 録画
+          - generic [ref=e299]: SK
+          - generic [ref=e300]: 6/15
+      - heading "🛠 Slack 連携 — 残課題" [level=2] [ref=e301]
+      - paragraph [ref=e302]: "#release-notes に投稿される案件通知メッセージのフォーマット最終調整。Block Kit の構造はおおむねOKで、文言のみ未確定です。"
+      - heading "テンプレート (Block Kit JSON)" [level=3] [ref=e303]
+      - generic [ref=e304]: "{ \"blocks\": [ { \"type\": \"header\", \"text\": { \"type\": \"plain_text\", \"text\": \"📈 商談ステージ更新\" } }, { \"type\": \"section\", \"fields\": [ { \"type\": \"mrkdwn\", \"text\": \"*取引先:*\\nオムロン株式会社\" }, { \"type\": \"mrkdwn\", \"text\": \"*金額:*\\n¥12,500,000\" }, { \"type\": \"mrkdwn\", \"text\": \"*ステージ:*\\n提案/見積 → 交渉\" }, { \"type\": \"mrkdwn\", \"text\": \"*所有者:*\\n山本 健介\" } ] }, { \"type\": \"actions\", \"elements\": [ { \"type\": \"button\", \"text\": { \"type\": \"plain_text\", \"text\": \"Salesforceで開く\" }, \"url\": \"https://acme.lightning.force.com/...\" }, { \"type\": \"button\", \"text\": { \"type\": \"plain_text\", \"text\": \"メンションして相談\" }, \"style\": \"primary\" } ] } ] }"
+      - heading "未確定の文言" [level=3] [ref=e305]
+      - list [ref=e306]:
+        - listitem [ref=e307]: 「ステージ更新」のとき、ヘッダーの絵文字を 📈 にするか 🎯 にするか
+        - listitem [ref=e308]: クローズ予定日も常時表示するか、Closing 90日以内のみにするか
+        - listitem [ref=e309]: 担当者がメンションされるか、リアクションをつけるかの差別化
+      - heading "🎯 判定MTG での意思決定事項" [level=2] [ref=e310]
+      - list [ref=e311]:
+        - listitem [ref=e312]: 新見積エンジン v2 — そのままGoでよいか
+        - listitem [ref=e313]: Slack連携 — Docを「6/14 18:00 までに完了」を条件にGoしてよいか
+        - listitem [ref=e314]: 分割払い — Q2スコープから外し、Q3 (7-9月) へ繰越でよいか
+      - generic [ref=e315]:
+        - img [ref=e317]
+        - generic [ref=e319]:
+          - text: 関連スレッド
+          - text: "分割払いのCFO相談は @鈴木 さくら との DM スレッドで進行中。 判定前に結論を #release-notes に展開してください。"
