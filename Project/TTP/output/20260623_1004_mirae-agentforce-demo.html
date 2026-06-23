@@ -265,6 +265,76 @@ button{cursor:pointer;font-family:inherit;background:none;border:none;}
 .ae-art-ttl{font-size:1.5rem;font-weight:700;color:#1a1a1a;margin-bottom:6px;line-height:1.45;}
 .ae-art-meta{font-size:1.2rem;color:#999;}
 .ae-notice{background:#e3f2fd;border:1px solid #90caf9;border-left:4px solid #1565c0;border-radius:4px;padding:14px 18px;font-size:1.3rem;color:#0d47a1;line-height:1.7;}
+
+/* ===== AE リッチパネル v2 ===== */
+.ae2-hd{background:linear-gradient(120deg,#0d3b7c 0%,#1565c0 60%,#1976d2 100%);border-radius:12px;padding:20px 24px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.ae2-hd-left{display:flex;align-items:center;gap:14px;}
+.ae2-hd-icon{width:48px;height:48px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;flex-shrink:0;}
+.ae2-hd-title{font-size:2.0rem;font-weight:700;color:#fff;margin-bottom:3px;}
+.ae2-hd-sub{font-size:1.2rem;color:rgba(255,255,255,.75);}
+.ae2-score-wrap{text-align:center;flex-shrink:0;}
+.ae2-score-label{font-size:1.0rem;color:rgba(255,255,255,.7);margin-bottom:4px;}
+.ae2-score-ring{position:relative;width:64px;height:64px;margin:0 auto;}
+.ae2-score-ring svg{transform:rotate(-90deg);}
+.ae2-score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;color:#fff;}
+/* 注目記事 (hero card) */
+.ae2-hero{border-radius:12px;overflow:hidden;cursor:pointer;position:relative;margin-bottom:18px;transition:box-shadow .2s;}
+.ae2-hero:hover{box-shadow:0 6px 20px rgba(0,0,0,.18);}
+.ae2-hero-img{width:100%;height:200px;object-fit:cover;display:block;}
+.ae2-hero-img-bg{width:100%;height:200px;background:linear-gradient(135deg,#1a4d2a,#2b9e4e);display:flex;align-items:center;justify-content:center;font-size:7rem;}
+.ae2-hero-body{padding:16px 20px;background:#fff;border:1px solid #e8e8e8;border-top:none;border-radius:0 0 12px 12px;}
+.ae2-hero-tag{display:inline-flex;align-items:center;gap:6px;background:#e8f5e9;color:#2b9e4e;font-size:1.1rem;font-weight:700;padding:3px 10px;border-radius:12px;margin-bottom:8px;}
+.ae2-hero-title{font-size:1.7rem;font-weight:700;color:#1a1a1a;line-height:1.45;margin-bottom:8px;}
+.ae2-hero-excerpt{font-size:1.3rem;color:#666;line-height:1.7;margin-bottom:10px;}
+.ae2-hero-meta{display:flex;align-items:center;justify-content:space-between;}
+.ae2-hero-meta-l{font-size:1.2rem;color:#999;}
+.ae2-hero-cta{background:#2b9e4e;color:#fff;font-size:1.2rem;font-weight:700;padding:6px 14px;border-radius:16px;border:none;cursor:pointer;font-family:inherit;}
+/* 2カラム記事グリッド */
+.ae2-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.ae2-card{border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s;background:#fff;}
+.ae2-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);transform:translateY(-2px);}
+.ae2-card-img{width:100%;height:120px;object-fit:cover;display:block;}
+.ae2-card-img-bg{width:100%;height:120px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;}
+.ae2-card-body{padding:12px 14px;}
+.ae2-card-tag{font-size:1.0rem;font-weight:700;color:#1565c0;margin-bottom:5px;}
+.ae2-card-title{font-size:1.3rem;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:5px;}
+.ae2-card-meta{font-size:1.1rem;color:#aaa;}
+/* スコアメーター */
+.ae2-engage{background:linear-gradient(135deg,#f0f9f4,#e8f5ff);border:1px solid #c8e6d0;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;}
+.ae2-engage-label{font-size:1.3rem;font-weight:700;color:#1a4d2a;white-space:nowrap;}
+.ae2-meter-track{flex:1;height:12px;background:#ddd;border-radius:6px;overflow:hidden;}
+.ae2-meter-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#2b9e4e,#69d98b);width:0%;transition:width 1.4s ease;}
+.ae2-meter-val{font-size:1.4rem;font-weight:900;color:#2b9e4e;white-space:nowrap;}
+.ae2-notice{background:#e3f2fd;border-left:4px solid #1565c0;border-radius:4px;padding:12px 16px;font-size:1.3rem;color:#0d47a1;line-height:1.7;margin-top:14px;}
+
+/* ===== 記事詳細パネル ===== */
+.cp-detail{display:none;height:100%;overflow-y:auto;animation:panel-in .35s ease-out both;}
+.cp-detail.on{display:block;}
+.detail-back{display:inline-flex;align-items:center;gap:6px;font-size:1.3rem;color:#2b9e4e;font-weight:700;cursor:pointer;padding:16px 24px 0;transition:opacity .15s;}
+.detail-back:hover{opacity:.75;}
+.detail-hero-img{width:100%;height:240px;object-fit:cover;display:block;}
+.detail-hero-img-bg{width:100%;height:240px;display:flex;align-items:center;justify-content:center;font-size:9rem;}
+.detail-body{padding:20px 28px 32px;}
+.detail-tag{display:inline-flex;align-items:center;gap:6px;background:#e8f5e9;color:#2b9e4e;font-size:1.1rem;font-weight:700;padding:3px 12px;border-radius:12px;margin-bottom:12px;}
+.detail-title{font-size:2.2rem;font-weight:900;color:#1a1a1a;line-height:1.35;margin-bottom:12px;}
+.detail-meta{display:flex;align-items:center;gap:16px;font-size:1.2rem;color:#999;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #eee;}
+.detail-meta-badge{background:#e8f5e9;color:#2b9e4e;font-size:1.0rem;font-weight:700;padding:2px 8px;border-radius:8px;}
+.detail-lead{font-size:1.5rem;font-weight:700;color:#1a4d2a;line-height:1.7;background:#f0f9f4;border-left:4px solid #2b9e4e;padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:20px;}
+.detail-section-title{font-size:1.6rem;font-weight:700;color:#1a1a1a;margin:20px 0 10px;padding-left:12px;border-left:3px solid #2b9e4e;}
+.detail-text{font-size:1.4rem;color:#444;line-height:1.9;margin-bottom:14px;}
+.detail-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:1.3rem;}
+.detail-table th{background:#f0f9f4;color:#1a4d2a;font-weight:700;padding:9px 14px;text-align:left;border-bottom:2px solid #c8e6d0;}
+.detail-table td{padding:10px 14px;border-bottom:1px solid #f0f0f0;color:#333;}
+.detail-table td:last-child{font-weight:700;color:#2b9e4e;text-align:right;}
+.detail-cta-wrap{background:linear-gradient(135deg,#e8f5ee,#e3f2fd);border-radius:12px;padding:20px 24px;margin-top:20px;text-align:center;}
+.detail-cta-title{font-size:1.5rem;font-weight:700;color:#1a4d2a;margin-bottom:14px;}
+.detail-cta-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+.detail-cta-btn-p{background:#2b9e4e;color:#fff;font-size:1.4rem;font-weight:700;padding:12px 28px;border-radius:24px;border:none;cursor:pointer;font-family:inherit;transition:background .15s;}
+.detail-cta-btn-p:hover{background:#1f7a3a;}
+.detail-cta-btn-n{background:#fff;color:#1565c0;border:2px solid #1565c0;font-size:1.4rem;font-weight:700;padding:12px 28px;border-radius:24px;cursor:pointer;font-family:inherit;transition:background .15s;}
+.detail-cta-btn-n:hover{background:#e3f2fd;}
+.detail-img-side{width:100%;border-radius:10px;overflow:hidden;margin:16px 0;}
+.detail-img-side img{width:100%;height:180px;object-fit:cover;display:block;}
 </style>
 </head>
 <body>
@@ -516,44 +586,273 @@ button{cursor:pointer;font-family:inherit;background:none;border:none;}
         </div>
       </div>
 
-      <!-- パネル4: Account Engagement -->
-      <div class="cp" id="cp-4">
-        <div class="ae-hd">
-          <div class="ae-hd-ico">📬</div>
-          <div>
-            <div class="ae-hd-ttl">田中様へのおすすめ情報</div>
-            <div class="ae-hd-sub">Account Engagement / パーソナライズドコンテンツ配信</div>
-          </div>
-        </div>
-        <div class="ae-list">
-          <div class="ae-art">
-            <div class="ae-art-thumb">☀️</div>
-            <div class="ae-art-body">
-              <div class="ae-art-tag">📌 太陽光・蓄電池</div>
-              <div class="ae-art-ttl">初期費用ゼロ！PPA方式で太陽光を導入する完全ガイド</div>
-              <div class="ae-art-meta">東電タウンプランニング · 2026/06/20 · 読了5分</div>
+      <!-- パネル4: Account Engagement リッチ版 -->
+      <div class="cp" id="cp-4" style="padding:24px 28px;overflow-y:auto;">
+
+        <!-- ヘッダー -->
+        <div class="ae2-hd">
+          <div class="ae2-hd-left">
+            <div class="ae2-hd-icon">📬</div>
+            <div>
+              <div class="ae2-hd-title">田中様へのおすすめ情報</div>
+              <div class="ae2-hd-sub">Account Engagement / パーソナライズドコンテンツ | 閲覧スコア連動</div>
             </div>
           </div>
-          <div class="ae-art">
-            <div class="ae-art-thumb">⚡</div>
-            <div class="ae-art-body">
-              <div class="ae-art-tag">📌 BCP・防災</div>
-              <div class="ae-art-ttl">72時間対応の蓄電池BCPソリューション｜法人向け事例集</div>
-              <div class="ae-art-meta">スポンサー企業A · 2026/06/18 · 読了7分</div>
-            </div>
-          </div>
-          <div class="ae-art">
-            <div class="ae-art-thumb">📋</div>
-            <div class="ae-art-body">
-              <div class="ae-art-tag">📌 補助金・制度</div>
-              <div class="ae-art-ttl">2026年度 省エネ設備補助金 申請期限まもなく｜申請手順まとめ</div>
-              <div class="ae-art-meta">経済産業省情報 · 2026/06/15 · 読了4分</div>
+          <!-- エンゲージメントスコア円グラフ -->
+          <div class="ae2-score-wrap">
+            <div class="ae2-score-label">エンゲージメント</div>
+            <div class="ae2-score-ring">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="6"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="#69d98b" stroke-width="6"
+                  stroke-dasharray="163.36" stroke-dashoffset="40.84" stroke-linecap="round"/>
+              </svg>
+              <div class="ae2-score-num">75</div>
             </div>
           </div>
         </div>
-        <div class="ae-notice">
+
+        <!-- エンゲージメントメーター -->
+        <div class="ae2-engage" style="margin-bottom:18px;">
+          <div class="ae2-engage-label">🔥 関心スコア</div>
+          <div class="ae2-meter-track"><div class="ae2-meter-fill" data-w="75" id="ae2-meter"></div></div>
+          <div class="ae2-meter-val">75 / 100</div>
+        </div>
+
+        <!-- 注目記事（ヒーロー） -->
+        <div class="ae2-hero" onclick="showArticle('a1')">
+          <img class="ae2-hero-img"
+            src="https://www.ttplan.co.jp/common/img/solution/004/pic_solution_corporation.jpg"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+            alt="太陽光ソリューション">
+          <div class="ae2-hero-img-bg" style="display:none;">☀️</div>
+          <div class="ae2-hero-body">
+            <div class="ae2-hero-tag">🏆 あなたへのおすすめNo.1</div>
+            <div class="ae2-hero-title">初期費用ゼロ！PPA方式で始める太陽光発電ガイド</div>
+            <div class="ae2-hero-excerpt">東京電力グループ協賛企業が提供するPPA（電力購入契約）方式なら、設備投資なしで再エネを導入できます。法人向け最新プランと補助金の組み合わせで、最大ROIを実現する方法を解説します。</div>
+            <div class="ae2-hero-meta">
+              <span class="ae2-hero-meta-l">東電タウンプランニング · 2026/06/20 · 読了6分</span>
+              <button class="ae2-hero-cta">詳しく見る →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2カラム記事グリッド -->
+        <div class="ae2-grid">
+          <div class="ae2-card" onclick="showArticle('a2')">
+            <img class="ae2-card-img"
+              src="https://www.ttplan.co.jp/common/img/solution/004/pic_solution_localgovernment.jpg"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              alt="BCP">
+            <div class="ae2-card-img-bg" style="display:none;background:linear-gradient(135deg,#1a237e,#1565c0);">⚡</div>
+            <div class="ae2-card-body">
+              <div class="ae2-card-tag">📌 BCP・防災</div>
+              <div class="ae2-card-title">72時間対応BCPソリューション事例集</div>
+              <div class="ae2-card-meta">2026/06/18 · 読了7分</div>
+            </div>
+          </div>
+          <div class="ae2-card" onclick="showArticle('a3')">
+            <div class="ae2-card-img-bg" style="background:linear-gradient(135deg,#e65100,#ff8f00);">📋</div>
+            <div class="ae2-card-body">
+              <div class="ae2-card-tag">📌 補助金・制度</div>
+              <div class="ae2-card-title">2026年度 省エネ補助金 申請ガイド</div>
+              <div class="ae2-card-meta">2026/06/15 · 読了4分</div>
+            </div>
+          </div>
+          <div class="ae2-card" onclick="showArticle('a4')">
+            <div class="ae2-card-img-bg" style="background:linear-gradient(135deg,#1a4d2a,#4caf50);">🌿</div>
+            <div class="ae2-card-body">
+              <div class="ae2-card-tag">📌 脱炭素</div>
+              <div class="ae2-card-title">Scope2削減でESG評価を高める方法</div>
+              <div class="ae2-card-meta">2026/06/12 · 読了5分</div>
+            </div>
+          </div>
+          <div class="ae2-card" onclick="showArticle('a5')">
+            <div class="ae2-card-img-bg" style="background:linear-gradient(135deg,#4a148c,#7b1fa2);">🔋</div>
+            <div class="ae2-card-body">
+              <div class="ae2-card-tag">📌 EV・充電</div>
+              <div class="ae2-card-title">EV充電インフラ導入完全ガイド2026</div>
+              <div class="ae2-card-meta">2026/06/10 · 読了5分</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- メール通知 -->
+        <div class="ae2-notice">
           <strong>📧 メール送信済み（Account Engagement 自動配信）</strong><br>
-          「太陽光＋蓄電池 補助金活用ガイド（田中様専用パーソナライズ版）」を登録メールアドレス宛に送信しました。
+          「太陽光＋蓄電池 補助金活用ガイド（田中様専用パーソナライズ版）」を登録メールアドレス宛に送信しました。<br>
+          次回開封時にスコアリングが更新されます。
+        </div>
+      </div>
+
+      <!-- ===== 記事詳細パネル群 ===== -->
+
+      <!-- 記事1: PPA太陽光 -->
+      <div class="cp-detail" id="cp-detail-a1">
+        <div class="detail-back" onclick="backToAE()">← おすすめ一覧に戻る</div>
+        <img class="detail-hero-img"
+          src="https://www.ttplan.co.jp/common/img/solution/004/pic_solution_corporation.jpg"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+          alt="">
+        <div class="detail-hero-img-bg" style="display:none;background:linear-gradient(135deg,#1a4d2a,#2b9e4e);">☀️</div>
+        <div class="detail-body">
+          <div class="detail-tag">🏆 おすすめNo.1 · 太陽光・蓄電池</div>
+          <div class="detail-title">初期費用ゼロ！PPA方式で始める太陽光発電ガイド</div>
+          <div class="detail-meta">
+            <span>東電タウンプランニング</span>
+            <span>2026年6月20日</span>
+            <span class="detail-meta-badge">読了 6分</span>
+          </div>
+          <div class="detail-lead">
+            PPA（Power Purchase Agreement：電力購入契約）方式を使えば、太陽光発電設備の初期費用ゼロで再エネを導入できます。東京電力グループの協賛企業が、御社施設に最適なプランをご提案します。
+          </div>
+          <div class="detail-section-title">PPAとは？</div>
+          <div class="detail-text">
+            PPA方式では、発電事業者が無償で設備を設置し、発電した電力を相場より安い単価で企業に供給します。契約期間（通常10〜20年）中の設備保守は事業者が負担するため、<strong>企業リスクをほぼゼロに抑えながら脱炭素を実現</strong>できます。
+          </div>
+          <div class="detail-section-title">御社シミュレーション結果</div>
+          <table class="detail-table">
+            <thead><tr><th>項目</th><th>PPA方式</th><th>自己負担方式</th></tr></thead>
+            <tbody>
+              <tr><td>初期費用</td><td style="color:#2b9e4e;font-weight:700;">0円</td><td style="text-align:right;">約1,050万円</td></tr>
+              <tr><td>年間削減額</td><td style="text-align:right;">約67万円/年</td><td style="text-align:right;">約84万円/年</td></tr>
+              <tr><td>CO₂削減</td><td style="text-align:right;">約13t/年</td><td style="text-align:right;">約15.2t/年</td></tr>
+              <tr><td>設備管理</td><td style="color:#2b9e4e;font-weight:700;text-align:right;">事業者負担</td><td style="text-align:right;">自社負担</td></tr>
+            </tbody>
+          </table>
+          <div class="detail-section-title">GXとまちづくりへの貢献</div>
+          <div class="detail-text">
+            東電タウンプランニングが提供するMiraE+プラットフォームでは、「くらしを支える、いのちを守る、まちを創る」をコンセプトに、脱炭素とレジリエンス強化を同時に実現するソリューションを提供しています。御社のBCP対策と組み合わせることで、さらなる効果が期待できます。
+          </div>
+          <div class="detail-img-side">
+            <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&q=80" alt="太陽光パネル">
+          </div>
+          <div class="detail-cta-wrap">
+            <div class="detail-cta-title">まずは無料相談から。御社に最適なプランをご提案します。</div>
+            <div class="detail-cta-btns">
+              <button class="detail-cta-btn-p">📋 無料相談を申し込む</button>
+              <button class="detail-cta-btn-n">📄 資料をダウンロード</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 記事2: BCP -->
+      <div class="cp-detail" id="cp-detail-a2">
+        <div class="detail-back" onclick="backToAE()">← おすすめ一覧に戻る</div>
+        <img class="detail-hero-img"
+          src="https://www.ttplan.co.jp/common/img/solution/004/pic_solution_localgovernment.jpg"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+          alt="">
+        <div class="detail-hero-img-bg" style="display:none;background:linear-gradient(135deg,#1a237e,#1565c0);">⚡</div>
+        <div class="detail-body">
+          <div class="detail-tag">📌 BCP・防災</div>
+          <div class="detail-title">72時間対応の蓄電池BCPソリューション｜法人向け事例集</div>
+          <div class="detail-meta">
+            <span>スポンサー企業A</span>
+            <span>2026年6月18日</span>
+            <span class="detail-meta-badge">読了 7分</span>
+          </div>
+          <div class="detail-lead">
+            大規模災害時に72時間以上の自立運転を可能にする蓄電池システム。東京電力グループの知見と協賛企業の最新技術を組み合わせた、次世代BCPソリューションの全容をご紹介します。
+          </div>
+          <div class="detail-section-title">なぜ72時間か？</div>
+          <div class="detail-text">
+            政府のBCP指針では「発災後72時間は自力での事業継続が必要」とされています。蓄電池＋太陽光の組み合わせで、系統電力が途絶しても重要業務を継続できる環境を構築します。
+          </div>
+          <div class="detail-section-title">導入事例：製造業A社（従業員300名）</div>
+          <table class="detail-table">
+            <thead><tr><th>項目</th><th>導入前</th><th>導入後</th></tr></thead>
+            <tbody>
+              <tr><td>停電対応時間</td><td style="text-align:right;">約4時間（UPS）</td><td style="text-align:right;color:#2b9e4e;font-weight:700;">80時間以上</td></tr>
+              <tr><td>対応可能業務</td><td style="text-align:right;">サーバー室のみ</td><td style="text-align:right;color:#2b9e4e;font-weight:700;">全基幹業務</td></tr>
+              <tr><td>CO₂削減</td><td style="text-align:right;">－</td><td style="text-align:right;color:#2b9e4e;font-weight:700;">28t/年</td></tr>
+            </tbody>
+          </table>
+          <div class="detail-cta-wrap">
+            <div class="detail-cta-title">御社のBCP計画を一緒に見直しませんか？</div>
+            <div class="detail-cta-btns">
+              <button class="detail-cta-btn-p">🛡️ BCP診断を申し込む</button>
+              <button class="detail-cta-btn-n">📄 事例集をダウンロード</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 記事3: 補助金 -->
+      <div class="cp-detail" id="cp-detail-a3">
+        <div class="detail-back" onclick="backToAE()">← おすすめ一覧に戻る</div>
+        <div class="detail-hero-img-bg" style="height:220px;background:linear-gradient(135deg,#e65100,#ff8f00);font-size:9rem;display:flex;align-items:center;justify-content:center;">📋</div>
+        <div class="detail-body">
+          <div class="detail-tag">📌 補助金・制度</div>
+          <div class="detail-title">2026年度 省エネ設備補助金 完全申請ガイド</div>
+          <div class="detail-meta">
+            <span>経済産業省情報</span>
+            <span>2026年6月15日</span>
+            <span class="detail-meta-badge" style="background:#fff3e0;color:#e65100;">⚠️ 期限迫る</span>
+          </div>
+          <div class="detail-lead">
+            2026年度の省エネ補助金の申請期限は<strong>2026年7月31日</strong>です。御社の太陽光・蓄電池導入に活用できる補助金制度をまとめました。
+          </div>
+          <div class="detail-section-title">活用できる主な補助金（2026年度）</div>
+          <table class="detail-table">
+            <thead><tr><th>制度名</th><th>対象</th><th>補助率</th></tr></thead>
+            <tbody>
+              <tr><td>省エネ設備導入補助金</td><td>全業種</td><td>1/3〜1/2</td></tr>
+              <tr><td>再エネ設備補助（経産省）</td><td>法人</td><td>最大30%</td></tr>
+              <tr><td>BCP対応蓄電池補助</td><td>中小企業</td><td>最大50%</td></tr>
+              <tr><td>東京都グリーン補助</td><td>都内法人</td><td>最大2/3</td></tr>
+            </tbody>
+          </table>
+          <div class="detail-text">MiraE+では補助金申請の代行サポートも承っております。申請書類の作成から提出まで専任スタッフが対応いたします。</div>
+          <div class="detail-cta-wrap">
+            <div class="detail-cta-title" style="color:#e65100;">⚠️ 申請期限：2026年7月31日</div>
+            <div class="detail-cta-btns">
+              <button class="detail-cta-btn-p" style="background:#e65100;">📝 補助金申請を相談する</button>
+              <button class="detail-cta-btn-n">📄 補助金一覧を見る</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 記事4-5: 簡易詳細 -->
+      <div class="cp-detail" id="cp-detail-a4">
+        <div class="detail-back" onclick="backToAE()">← おすすめ一覧に戻る</div>
+        <div class="detail-hero-img-bg" style="height:220px;background:linear-gradient(135deg,#1a4d2a,#4caf50);font-size:9rem;display:flex;align-items:center;justify-content:center;">🌿</div>
+        <div class="detail-body">
+          <div class="detail-tag">📌 脱炭素・ESG</div>
+          <div class="detail-title">Scope2削減でESG評価を高める方法｜実践的アプローチ</div>
+          <div class="detail-meta"><span>東電タウンプランニング</span><span>2026年6月12日</span><span class="detail-meta-badge">読了 5分</span></div>
+          <div class="detail-lead">温室効果ガス排出量のScope2（購入電力由来）を削減することで、ESG評価の向上と投資家からの信頼獲得が実現できます。MiraE+が提供するソリューションで、脱炭素目標を達成しましょう。</div>
+          <div class="detail-section-title">GXをベースにした東電TPのサポート</div>
+          <div class="detail-text">東電タウンプランニングは「GXをベースに災害に強いまちづくりをサポートする」というコンセプトのもと、再エネをつくる・貯める・使いこなすソリューションを総合的に提供しています。御社のScope2削減計画を一緒に設計します。</div>
+          <div class="detail-cta-wrap">
+            <div class="detail-cta-title">脱炭素ロードマップを一緒に作りましょう</div>
+            <div class="detail-cta-btns">
+              <button class="detail-cta-btn-p">🌿 脱炭素相談を申し込む</button>
+              <button class="detail-cta-btn-n">📄 Scope2削減ガイドを見る</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cp-detail" id="cp-detail-a5">
+        <div class="detail-back" onclick="backToAE()">← おすすめ一覧に戻る</div>
+        <div class="detail-hero-img-bg" style="height:220px;background:linear-gradient(135deg,#4a148c,#7b1fa2);font-size:9rem;display:flex;align-items:center;justify-content:center;">🔋</div>
+        <div class="detail-body">
+          <div class="detail-tag">📌 EV・充電インフラ</div>
+          <div class="detail-title">EV充電インフラ導入完全ガイド2026｜補助金・設置・運用まで</div>
+          <div class="detail-meta"><span>スポンサー企業B</span><span>2026年6月10日</span><span class="detail-meta-badge">読了 5分</span></div>
+          <div class="detail-lead">社用車のEV化と充電インフラの整備は、脱炭素経営の柱のひとつ。MiraE+の協賛企業が提供するワンストップEVサービスで、補助金活用から設置・運用管理まで一括対応します。</div>
+          <div class="detail-section-title">土地・建物活用との組み合わせ</div>
+          <div class="detail-text">遊休地や駐車場をEV充電スタンドとして活用することで、収益向上と脱炭素を同時に実現。東電タウンプランニングの土地活用ノウハウと組み合わせた提案が可能です。</div>
+          <div class="detail-cta-wrap">
+            <div class="detail-cta-title">EVインフラ導入のご相談はMiraE+へ</div>
+            <div class="detail-cta-btns">
+              <button class="detail-cta-btn-p">🔋 EV導入を相談する</button>
+              <button class="detail-cta-btn-n">📄 導入事例を見る</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -705,10 +1004,15 @@ function doCase(){
 function doRecommend(){
   locked = true;
   if(!document.getElementById('ag-panel').classList.contains('aw-mode')) expandAW();
-  addBot('<p>田中様のご関心に合わせたコンテンツをお届けします。右側でご確認ください。</p>'
+  addBot('<p>田中様の閲覧スコアをもとに、最適なコンテンツをお届けします。右側でご確認ください。</p>'
     +'<p style="font-size:1.2rem;color:#888;margin-top:4px;">パーソナライズ資料はメールでもお送りしました（Account Engagement連携）。</p>');
-  showAWLoading('Account Engagement からコンテンツを取得中...', 'パーソナライズ処理を行っています', 2000, ()=>{
+  showAWLoading('Account Engagement からコンテンツを取得中...', 'パーソナライズ処理・スコアリングを行っています', 2000, ()=>{
     showCP('cp-4');
+    // エンゲージメントメーター アニメーション
+    setTimeout(()=>{
+      const m = document.getElementById('ae2-meter');
+      if(m){ m.style.width = m.getAttribute('data-w') + '%'; }
+    }, 300);
     locked = false;
   });
 }
@@ -796,6 +1100,56 @@ function showTyping(ms, cb){
 
 function escHtml(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ===== 記事詳細への遷移（AW内切替） =====
+function showArticle(id){
+  // ローディング 1秒（軽めのコンテンツ取得）
+  const zone = document.getElementById('aw-zone');
+  document.getElementById('aw-loading-text').textContent = '記事を読み込み中...';
+  document.getElementById('aw-loading-sub').textContent = 'コンテンツを取得しています';
+  document.querySelectorAll('.cp, .cp-detail').forEach(el=>{
+    el.classList.remove('on');
+    if(el.classList.contains('cp-detail')) el.style.display='none';
+  });
+  document.getElementById('aw-loading').classList.add('on');
+  setTimeout(()=>{
+    document.getElementById('aw-loading').classList.remove('on');
+    const target = document.getElementById('cp-detail-'+id);
+    if(target){
+      target.style.display = 'block';
+      target.classList.add('on');
+      zone.scrollTop = 0;
+    }
+  }, 1000);
+  // チャット側にも一言
+  addBot('<p>「'+getArticleTitle(id)+'」の詳細をご覧ください。</p>');
+}
+
+function getArticleTitle(id){
+  const titles = {
+    a1:'初期費用ゼロ！PPA方式で始める太陽光発電ガイド',
+    a2:'72時間対応の蓄電池BCPソリューション事例集',
+    a3:'2026年度 省エネ補助金 申請ガイド',
+    a4:'Scope2削減でESG評価を高める方法',
+    a5:'EV充電インフラ導入完全ガイド2026',
+  };
+  return titles[id] || '記事';
+}
+
+function backToAE(){
+  document.querySelectorAll('.cp-detail').forEach(el=>{
+    el.classList.remove('on');
+    el.style.display='none';
+  });
+  document.getElementById('aw-loading-text').textContent = 'おすすめ一覧に戻ります...';
+  document.getElementById('aw-loading-sub').textContent = '';
+  document.getElementById('aw-loading').classList.add('on');
+  setTimeout(()=>{
+    document.getElementById('aw-loading').classList.remove('on');
+    showCP('cp-4');
+    document.getElementById('aw-zone').scrollTop = 0;
+  }, 600);
 }
 </script>
 </body>
