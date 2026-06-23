@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【公式】MiraE+（ミライー）| みらい共創プラットフォーム</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ===== リセット ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 62.5%; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.6rem;
+  color: #333;
+  background: #fff;
+  /* チャットパネルが開いたときにレイアウトをずらす */
+  transition: padding-right 0.35s ease;
+}
+body.panel-open {
+  padding-right: 420px;
+}
+a { color: #03b845; text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; }
+ul, li { list-style: none; }
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+
+/* ===== ヘッダー ===== */
+.l-header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  box-shadow: 0 2px 6px rgba(0,0,0,.07);
+}
+.l-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 70px;
+}
+.l-header__logo img {
+  height: 36px;
+  width: auto;
+}
+/* ロゴが画像読み込めない場合のフォールバック */
+.l-header__logo-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 2.2rem;
+  color: #008a32;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.l-header__logo-text span {
+  font-size: 1.1rem;
+  color: #666;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+}
+.l-gnav { display: flex; align-items: center; }
+.l-gnav__list { display: flex; gap: 0; align-items: center; }
+.l-gnav__item { position: relative; }
+.l-gnav__link {
+  display: block;
+  padding: 0 1.4rem;
+  font-size: 1.4rem;
+  color: #333;
+  font-weight: 500;
+  line-height: 70px;
+  white-space: nowrap;
+  transition: color .2s;
+  background: none;
+  border: none;
+}
+.l-gnav__link:hover, .l-gnav__link.-current { color: #008a32; }
+.l-gnav__link.-current {
+  border-bottom: 3px solid #008a32;
+}
+.l-gnav__contact-btn {
+  background: #008a32;
+  color: #fff;
+  font-size: 1.3rem;
+  padding: 8px 18px;
+  border-radius: 4px;
+  font-weight: 700;
+  transition: background .2s;
+}
+.l-gnav__contact-btn:hover { background: #006826; }
+
+/* ログインユーザーバッジ */
+.l-header__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 1px solid #e0e0e0;
+}
+.l-header__user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #008a32;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.l-header__user-info { line-height: 1.3; }
+.l-header__user-name { font-size: 1.3rem; font-weight: 700; color: #333; }
+.l-header__user-org { font-size: 1.1rem; color: #888; }
+.l-header__login-badge {
+  background: #e6f7ec;
+  color: #008a32;
+  font-size: 1.0rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* Agentforceトリガーボタン（ヘッダー内） */
+.af-trigger-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #0c7b4e, #03b845);
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 20px;
+  margin-left: 12px;
+  box-shadow: 0 2px 8px rgba(3,184,69,.3);
+  transition: all .2s;
+  white-space: nowrap;
+}
+.af-trigger-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(3,184,69,.4);
+}
+.af-trigger-icon {
+  width: 18px; height: 18px;
+  background: rgba(255,255,255,.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+
+/* ===== ヒーロー・メインビジュアル ===== */
+.top-mv {
+  background: linear-gradient(135deg, #05622a 0%, #008a32 50%, #03b845 100%);
+  padding: 60px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.top-mv::before {
+  content: '';
+  position: absolute;
+  right: -80px; top: -80px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.07);
+}
+.top-mv__inner {
+  max-width: 1220px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+.top-mv__text { flex: 1; color: #fff; }
+.top-mv__heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 4.0rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.top-mv__heading em {
+  display: block;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 2.0rem;
+  font-weight: 700;
+  font-style: normal;
+  color: #c0f5d0;
+}
+.top-mv__lead {
+  font-size: 1.5rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,.9);
+  margin-bottom: 24px;
+}
+
+/* Agentforce先読み提案バナー（ヒーロー内） */
+.af-proactive-banner {
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  backdrop-filter: blur(4px);
+  max-width: 560px;
+}
+.af-proactive-icon {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.0rem;
+  flex-shrink: 0;
+}
+.af-proactive-text { flex: 1; }
+.af-proactive-label {
+  font-size: 1.0rem;
+  font-weight: 700;
+  color: #c0f5d0;
+  letter-spacing: .1em;
+  margin-bottom: 4px;
+}
+.af-proactive-msg {
+  font-size: 1.4rem;
+  line-height: 1.65;
+  color: rgba(255,255,255,.95);
+  margin-bottom: 10px;
+}
+.af-proactive-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.af-proactive-btn {
+  background: rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.4);
+  color: #fff;
+  font-size: 1.3rem;
+  padding: 5px 14px;
+  border-radius: 14px;
+  transition: background .15s;
+  font-family: inherit;
+  cursor: pointer;
+}
+.af-proactive-btn:hover { background: rgba(255,255,255,.35); }
+
+/* Service Cloud通知バー */
+.sc-notification {
+  background: #e6f4ea;
+  border-bottom: 1px solid #b2dfbb;
+  padding: 10px 20px;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+.sc-notification-icon { color: #008a32; font-size: 1.6rem; }
+.sc-notification a { color: #008a32; font-weight: 700; }
+
+/* ===== メインコンテンツ ===== */
+.l-main { max-width: 1220px; margin: 0 auto; padding: 60px 20px; }
+
+/* セクションヘッダー共通 */
+.c-heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: #1a3c2b;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.c-heading::after {
+  display: block;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #008a32;
+  margin-top: 6px;
+}
+.c-section { margin-bottom: 72px; }
+
+/* ---悩みボタン--- */
+.c-image-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 40px;
+}
+.c-image-btn {
+  background: #fff;
+  border: 2px solid #e0ede4;
+  border-radius: 12px;
+  padding: 20px 24px;
+  text-align: center;
+  width: 180px;
+  transition: all .25s;
+  cursor: pointer;
+}
+.c-image-btn:hover, .c-image-btn.active {
+  border-color: #008a32;
+  box-shadow: 0 4px 12px rgba(0,138,50,.15);
+  transform: translateY(-2px);
+}
+.c-image-btn__icon { font-size: 3.6rem; margin-bottom: 8px; }
+.c-image-btn__text { font-size: 1.3rem; font-weight: 700; color: #333; line-height: 1.4; }
+
+/* ---ソリューションパーツ--- */
+.case-item-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 40px;
+}
+.case-item-list__item {
+  border: 1px solid #e0ede4;
+  border-radius: 10px;
+  padding: 24px 16px;
+  text-align: center;
+  transition: all .25s;
+  cursor: pointer;
+  position: relative;
+}
+.case-item-list__item:hover {
+  border-color: #008a32;
+  box-shadow: 0 4px 14px rgba(0,138,50,.15);
+  transform: translateY(-2px);
+}
+.case-item-list__item.recommended {
+  border-color: #03b845;
+  background: linear-gradient(to bottom, #f0fbf4, #fff);
+}
+.case-item-list__badge {
+  position: absolute;
+  top: -8px; right: 8px;
+  background: #ff6b00;
+  color: #fff;
+  font-size: 1.0rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.case-item-list__icon { font-size: 4.0rem; margin-bottom: 10px; }
+.case-item-list__name { font-size: 1.4rem; font-weight: 700; color: #1a3c2b; margin-bottom: 6px; }
+.case-item-list__desc { font-size: 1.2rem; color: #666; line-height: 1.5; }
+
+/* ---ニュース--- */
+.top-news {
+  background: #f3f8f4;
+  border-radius: 20px;
+  padding: 50px 60px;
+  margin-bottom: 72px;
+}
+.top-news__inner {
+  display: grid;
+  grid-template-columns: 26% 74%;
+  grid-template-rows: auto auto;
+  max-width: 1100px;
+  margin: 0 auto;
+  gap: 20px;
+}
+.top-news__heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 5.0rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #1a3c2b;
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+}
+.top-news__heading::after {
+  display: block;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #008a32;
+  content: "新着ニュース";
+}
+.top-news__list {
+  grid-row: 1 / 3;
+  grid-column: 2 / 3;
+}
+.p-news { }
+.p-news li {
+  border-bottom: 1px solid #d0e6d5;
+  padding: 14px 0;
+}
+.p-news li:last-child { border-bottom: none; }
+.c-news__date { font-family: 'Poppins', sans-serif; font-weight: 500; color: #828482; font-size: 1.3rem; margin-bottom: 4px; }
+.c-news__text a { color: #1a3c2b; font-size: 1.4rem; }
+.c-news__text a:hover { color: #008a32; }
+
+/* ===== フッター ===== */
+.l-footer {
+  background: #1a3c2b;
+  color: #fff;
+  padding: 40px 20px 20px;
+  margin-top: 40px;
+}
+.l-footer__inner {
+  max-width: 1220px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+}
+.l-footer__logo-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.l-footer__address { font-size: 1.2rem; color: rgba(255,255,255,.7); margin-bottom: 12px; }
+.footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-nav a { color: rgba(255,255,255,.7); font-size: 1.2rem; }
+.footer-nav a:hover { color: #fff; }
+.l-footer__bottom { text-align: center; margin-top: 30px; font-size: 1.2rem; color: rgba(255,255,255,.5); border-top: 1px solid rgba(255,255,255,.15); padding-top: 20px; }
+
+/* ===================================================================
+   AGENTFORCE チャットパネル
+   アダプティブウェブ: チャットの進行に合わせてWebパネルが動的に切替わる
+   =================================================================== */
+.af-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0,0,0,.14);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+}
+.af-panel.is-open { transform: translateX(0); }
+
+/* パネルヘッダー */
+.af-panel__header {
+  background: linear-gradient(135deg, #05622a, #008a32);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.af-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.af-panel__title-icon {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+}
+.af-panel__subtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,.75);
+  font-weight: 400;
+}
+.af-panel__close {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border-radius: 6px;
+  width: 28px; height: 28px;
+  font-size: 1.6rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.af-panel__close:hover { background: rgba(255,255,255,.3); }
+
+/* コンテキストバー（ログインユーザー情報） */
+.af-context {
+  background: #f0fbf4;
+  border-bottom: 1px solid #b2dfbb;
+  padding: 8px 16px;
+  font-size: 1.2rem;
+  color: #1a3c2b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.af-context-dot {
+  width: 8px; height: 8px;
+  background: #03b845;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ===== アダプティブウェブ エリア =====
+   チャット進行に合わせてここが動的切替わる  */
+.af-adaptive-area {
+  background: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+}
+.af-adaptive-area.is-visible {
+  max-height: 300px;
+  opacity: 1;
+}
+.af-adaptive-inner {
+  padding: 12px 16px;
+}
+.af-adaptive-label {
+  font-size: 1.0rem;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: .08em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.af-adaptive-label::before {
+  content: '';
+  width: 3px; height: 12px;
+  background: #008a32;
+  border-radius: 2px;
+}
+
+/* シミュレーションカード */
+.sim-card {
+  background: #fff;
+  border: 1px solid #c8e6d0;
+  border-left: 4px solid #008a32;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.sim-card__header {
+  background: linear-gradient(90deg, #05622a, #008a32);
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.sim-card__body { padding: 10px 14px; }
+.sim-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 1.3rem;
+}
+.sim-row:last-child { border-bottom: none; }
+.sim-row__label { color: #666; }
+.sim-row__value { font-weight: 700; color: #1a3c2b; }
+.sim-row__value.green { color: #008a32; }
+.sim-card__actions {
+  padding: 8px 14px;
+  border-top: 1px solid #e8e8e8;
+  display: flex;
+  gap: 8px;
+}
+.btn-primary {
+  background: #008a32;
+  color: #fff;
+  font-size: 1.3rem;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: background .15s;
+}
+.btn-primary:hover { background: #006826; }
+.btn-neutral {
+  background: #fff;
+  color: #008a32;
+  border: 1px solid #008a32;
+  font-size: 1.3rem;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-neutral:hover { background: #f0fbf4; }
+
+/* ケース作成カード */
+.case-card {
+  background: #f0fbf4;
+  border: 1px solid #b2dfbb;
+  border-left: 4px solid #008a32;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.case-card__title { font-weight: 700; color: #008a32; font-size: 1.3rem; margin-bottom: 8px; }
+.case-card__row { font-size: 1.3rem; color: #444; margin-bottom: 4px; }
+.case-card__row span { font-weight: 700; }
+
+/* おすすめコンテンツカード */
+.rec-card {
+  background: #fff;
+  border: 1px solid #e0ede4;
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.rec-card__icon { font-size: 2.6rem; flex-shrink: 0; }
+.rec-card__body { flex: 1; }
+.rec-card__tag { font-size: 1.1rem; color: #008a32; font-weight: 700; margin-bottom: 2px; }
+.rec-card__title { font-size: 1.3rem; font-weight: 700; color: #1a3c2b; line-height: 1.4; }
+.rec-card__meta { font-size: 1.1rem; color: #999; margin-top: 2px; }
+
+/* ===== 会話エリア ===== */
+.af-conversation {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  scroll-behavior: smooth;
+}
+
+/* ステップ（チャットターン）— 初期は非表示 */
+.af-step {
+  display: none;
+}
+.af-step.is-active {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: step-in .35s ease-out both;
+}
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* メッセージ */
+.af-msg {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.af-msg.user { flex-direction: row-reverse; }
+
+.af-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.af-avatar.bot  { background: #008a32; }
+.af-avatar.user { background: #546e7a; font-size: 1.2rem; font-weight: 700; color: #fff; }
+
+.af-bubble {
+  max-width: 82%;
+  font-size: 1.4rem;
+  line-height: 1.65;
+  color: #1a1a1a;
+}
+.af-bubble.bot {
+  background: #f3f8f4;
+  border: 1px solid #d0e6d5;
+  border-radius: 2px 10px 10px 10px;
+  padding: 10px 14px;
+}
+.af-bubble.user {
+  background: #008a32;
+  color: #fff;
+  border-radius: 10px 2px 10px 10px;
+  padding: 10px 14px;
+}
+.af-bubble p { margin: 0 0 6px; }
+.af-bubble p:last-child { margin-bottom: 0; }
+
+/* タイピング */
+.af-typing {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 0;
+}
+.af-typing span {
+  width: 7px; height: 7px;
+  background: #a5c5ae;
+  border-radius: 50%;
+  animation: dot-bounce 1.2s infinite ease-in-out;
+}
+.af-typing span:nth-child(2) { animation-delay: .2s; }
+.af-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes dot-bounce {
+  0%,60%,100% { transform: translateY(0); opacity: .4; }
+  30%          { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ===== 進む矢印ボタン ===== */
+.af-next-wrap {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border-top: 1px solid #e8f0eb;
+  background: #fafcfb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.af-step-indicator {
+  font-size: 1.2rem;
+  color: #888;
+  white-space: nowrap;
+}
+.af-next-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #008a32;
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+  box-shadow: 0 3px 10px rgba(0,138,50,.3);
+  white-space: nowrap;
+}
+.af-next-btn:hover {
+  background: #006826;
+  transform: translateX(2px);
+  box-shadow: 0 4px 14px rgba(0,138,50,.4);
+}
+.af-next-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.af-next-arrow {
+  font-size: 1.8rem;
+  line-height: 1;
+  transition: transform .2s;
+}
+.af-next-btn:hover .af-next-arrow { transform: translateX(3px); }
+
+/* おすすめ質問 */
+.af-suggestions {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  background: #f8fcf9;
+  border-top: 1px solid #e0ede4;
+}
+.af-suggestions-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: .08em;
+  margin-bottom: 6px;
+}
+.af-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 1.3rem;
+  color: #008a32;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background .15s;
+}
+.af-suggestion:hover { background: #f0fbf4; }
+.af-suggestion::before { content: "▸"; font-size: 1.1rem; }
+
+/* 入力エリア */
+.af-input-area {
+  flex-shrink: 0;
+  padding: 12px 16px;
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+}
+.af-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.af-input {
+  flex: 1;
+  border: 1px solid #c9e5d1;
+  border-radius: 20px;
+  padding: 9px 16px;
+  font-size: 1.4rem;
+  font-family: inherit;
+  outline: none;
+  background: #f8fcf9;
+}
+.af-input:focus {
+  border-color: #008a32;
+  box-shadow: 0 0 0 3px rgba(0,138,50,.12);
+  background: #fff;
+}
+.af-send-btn {
+  width: 38px; height: 38px;
+  background: #008a32;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  color: #fff;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.af-send-btn:hover { background: #006826; }
+.af-poweredby {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #aaa;
+  margin-top: 6px;
+}
+
+/* ===== フローティングボタン ===== */
+.af-fab {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 62px; height: 62px;
+  background: linear-gradient(135deg, #05622a, #03b845);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(3,184,69,.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 250;
+  transition: transform .2s, box-shadow .2s;
+  font-size: 2.6rem;
+  color: #fff;
+}
+.af-fab:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(3,184,69,.55); }
+.af-fab-label {
+  font-size: 0.9rem;
+  font-family: 'Noto Sans JP', sans-serif;
+  line-height: 1;
+  margin-top: 2px;
+}
+.af-fab-badge {
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 16px; height: 16px;
+  background: #ff3b30;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+}
+
+/* ===== ユーティリティ ===== */
+.text-center { text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- ===== Service Cloud通知バー ===== -->
+<div class="sc-notification">
+  <span class="sc-notification-icon">✅</span>
+  <strong>お知らせ：</strong>先日ご依頼の「現地調査（Case #00123）」の担当者が決定しました。
+  <a href="#" style="margin-left:8px;">進捗を確認する →</a>
+</div>
+
+<!-- ===== ヘッダー ===== -->
+<header class="l-header">
+  <div class="l-header__inner">
+    <!-- ロゴ -->
+    <div class="l-header__logo">
+      <div class="l-header__logo-text">
+        MiraE<sup style="font-size:.6em;color:#008a32">+</sup>
+        <span>みらい共創プラットフォーム</span>
+      </div>
+    </div>
+
+    <!-- グローバルナビ -->
+    <nav class="l-gnav">
+      <ul class="l-gnav__list">
+        <li class="l-gnav__item"><button class="l-gnav__link -current">自治体のお客さま</button></li>
+        <li class="l-gnav__item"><button class="l-gnav__link">法人のお客さま</button></li>
+        <li class="l-gnav__item"><button class="l-gnav__link">ソリューション事例</button></li>
+        <li class="l-gnav__item"><button class="l-gnav__link">製品・サービス一覧</button></li>
+        <li class="l-gnav__item"><button class="l-gnav__link">お役立ちリンク集</button></li>
+        <li class="l-gnav__item">
+          <div class="l-gnav__btn">
+            <button class="l-gnav__contact-btn">お問い合わせ</button>
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- ログインユーザー情報 -->
+    <div class="l-header__user">
+      <div class="l-header__user-avatar">田</div>
+      <div class="l-header__user-info">
+        <div class="l-header__user-name">田中 誠一 様</div>
+        <div class="l-header__user-org">株式会社TTグリーンエナジー</div>
+      </div>
+      <span class="l-header__login-badge">法人会員 ✓</span>
+      <!-- Agentforceトリガー -->
+      <button class="af-trigger-btn" onclick="openPanel()">
+        <span class="af-trigger-icon">🤖</span>
+        Agentforce
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== ヒーロー ===== -->
+<section class="top-mv">
+  <div class="top-mv__inner">
+    <div class="top-mv__text">
+      <h1 class="top-mv__heading">
+        MiraE<sup style="font-size:.5em">+</sup>
+        <em>みらい共創プラットフォーム</em>
+      </h1>
+      <p class="top-mv__lead">
+        くらしを支える、いのちを守る、まちを創る。<br>
+        脱炭素・BCP・土地活用など、自治体・法人さまのご要望に<br>
+        東電タウンプランニングが多様なスポンサー企業と連携して応えます。
+      </p>
+
+      <!-- Agentforce先読み提案バナー -->
+      <div class="af-proactive-banner">
+        <div class="af-proactive-icon">🤖</div>
+        <div class="af-proactive-text">
+          <div class="af-proactive-label">✦ AGENTFORCE からのご提案</div>
+          <div class="af-proactive-msg">
+            田中様、おかえりなさい！前回ご覧いただいた「BCP向け非常用電源」の続きとして、スポンサー企業より<strong style="color:#c0f5d0">「太陽光＋蓄電池パッケージ」</strong>の新プランが届いています。御社施設向けの初期試算もご用意できます。
+          </div>
+          <div class="af-proactive-actions">
+            <button class="af-proactive-btn" onclick="openPanel()">詳細を確認する</button>
+            <button class="af-proactive-btn" onclick="openPanel()">試算を見る</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== メインコンテンツ ===== -->
+<main class="l-main">
+
+  <!-- お悩みセクション -->
+  <section class="c-section">
+    <h2 class="c-heading">こんなお悩みやご要望、ありませんか？<br><span style="font-size:1.5rem;font-weight:500;color:#008a32;font-family:'Noto Sans JP'">まずはお気軽にご相談ください。</span></h2>
+    <ul class="c-image-btns">
+      <li class="c-image-btn" onclick="openPanel()">
+        <div class="c-image-btn__icon">🌱</div>
+        <div class="c-image-btn__text">環境貢献をはじめたい</div>
+      </li>
+      <li class="c-image-btn" onclick="openPanel()">
+        <div class="c-image-btn__icon">🛡️</div>
+        <div class="c-image-btn__text">脱炭素と安心安全をつなげたい</div>
+      </li>
+      <li class="c-image-btn" onclick="openPanel()">
+        <div class="c-image-btn__icon">🌏</div>
+        <div class="c-image-btn__text">脱炭素で地域を活性化したい</div>
+      </li>
+      <li class="c-image-btn" onclick="openPanel()">
+        <div class="c-image-btn__icon">⚡</div>
+        <div class="c-image-btn__text">脱炭素関連業務を負担軽減したい</div>
+      </li>
+      <li class="c-image-btn" onclick="openPanel()">
+        <div class="c-image-btn__icon">📚</div>
+        <div class="c-image-btn__text">地域で環境教育を広めたい</div>
+      </li>
+      <li class="c-image-btn" onclick="openPanel()">
+        <div class="c-image-btn__icon">💬</div>
+        <div class="c-image-btn__text">その他</div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ソリューションパーツ -->
+  <section class="c-section">
+    <h2 class="c-heading">ソリューションパーツ</h2>
+    <ul class="case-item-list">
+      <li class="case-item-list__item recommended" onclick="openPanel()">
+        <span class="case-item-list__badge">おすすめ</span>
+        <div class="case-item-list__icon">☀️</div>
+        <div class="case-item-list__name">太陽光＋蓄電池</div>
+        <div class="case-item-list__desc">初期費用ゼロのPPA方式も対応。施設規模シミュレーション提供</div>
+      </li>
+      <li class="case-item-list__item recommended" onclick="openPanel()">
+        <span class="case-item-list__badge">閲覧済</span>
+        <div class="case-item-list__icon">⚡</div>
+        <div class="case-item-list__name">BCP・非常用電源</div>
+        <div class="case-item-list__desc">停電時でも業務継続。ディーゼルから電力貯蔵への移行支援</div>
+      </li>
+      <li class="case-item-list__item" onclick="openPanel()">
+        <div class="case-item-list__icon">🌿</div>
+        <div class="case-item-list__name">カーボンニュートラル</div>
+        <div class="case-item-list__desc">Scope2削減計画の策定・認証取得まで一括サポート</div>
+      </li>
+      <li class="case-item-list__item" onclick="openPanel()">
+        <div class="case-item-list__icon">🏗️</div>
+        <div class="case-item-list__name">土地・建物活用</div>
+        <div class="case-item-list__desc">遊休地を収益化。太陽光・EV充電スタンドへの転換提案</div>
+      </li>
+      <li class="case-item-list__item" onclick="openPanel()">
+        <div class="case-item-list__icon">🔋</div>
+        <div class="case-item-list__name">EVインフラ整備</div>
+        <div class="case-item-list__desc">駐車場・社有車のEV化対応。補助金申請サポート込み</div>
+      </li>
+      <li class="case-item-list__item" onclick="openPanel()">
+        <div class="case-item-list__icon">🛡️</div>
+        <div class="case-item-list__name">防災・レジリエンス</div>
+        <div class="case-item-list__desc">自治体連携型の災害対応計画。マイクログリッド構築支援</div>
+      </li>
+      <li class="case-item-list__item" onclick="openPanel()">
+        <div class="case-item-list__icon">🌾</div>
+        <div class="case-item-list__name">農業ITサポート</div>
+        <div class="case-item-list__desc">スマート農業・農地活用ソリューションのご提案</div>
+      </li>
+      <li class="case-item-list__item" onclick="openPanel()">
+        <div class="case-item-list__icon">💡</div>
+        <div class="case-item-list__name">省エネ診断・改修</div>
+        <div class="case-item-list__desc">施設の省エネ診断から設備改修・補助金申請まで一貫対応</div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ニュース -->
+  <div class="top-news">
+    <div class="top-news__inner">
+      <h2 class="top-news__heading">News</h2>
+      <div class="top-news__list">
+        <ul class="p-news">
+          <li>
+            <p class="c-news__date">2026年6月4日</p>
+            <p class="c-news__text"><a href="#">新たなソリューション事例を追加しました（東電タウンプランニングが提案する防災ソリューション）</a></p>
+          </li>
+          <li>
+            <p class="c-news__date">2026年6月2日</p>
+            <p class="c-news__text"><a href="#">新たなソリューション事例を追加しました（グリーン電力証書・グリーン熱証書等環境価値の活用）</a></p>
+          </li>
+          <li>
+            <p class="c-news__date">2026年3月9日</p>
+            <p class="c-news__text"><a href="#">久喜市さまと系統用蓄電事業の実現に向けた共創推進に関する連携協定を締結いたしました</a></p>
+          </li>
+        </ul>
+        <div style="margin-top:16px;"><a href="#" style="font-size:1.4rem;">すべてを見る →</a></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== フッター ===== -->
+<footer class="l-footer">
+  <div class="l-footer__inner">
+    <div>
+      <div class="l-footer__logo-text">MiraE+</div>
+      <p class="l-footer__address">〒105-0022 東京都港区海岸1-11-1 ニューピア竹芝ノースタワー</p>
+      <div class="footer-nav">
+        <a href="#">ご利用にあたって</a>
+        <a href="#">プライバシーポリシー</a>
+      </div>
+    </div>
+  </div>
+  <div class="l-footer__bottom">© 東電タウンプランニング株式会社</div>
+</footer>
+
+<!-- ===== フローティングボタン ===== -->
+<button class="af-fab" onclick="openPanel()" id="af-fab" title="Agentforceに相談する">
+  <span>🤖</span>
+  <span class="af-fab-label">AI相談</span>
+  <span class="af-fab-badge">1</span>
+</button>
+
+
+<!-- ===================================================================
+     AGENTFORCE チャットパネル
+     =================================================================== -->
+<aside class="af-panel" id="af-panel">
+
+  <!-- ヘッダー -->
+  <header class="af-panel__header">
+    <div class="af-panel__title">
+      <div class="af-panel__title-icon">🤖</div>
+      <div>
+        <div>Agentforce（MiraE+）</div>
+        <div class="af-panel__subtitle">Experience Cloud × Service Cloud × Account Engagement</div>
+      </div>
+    </div>
+    <button class="af-panel__close" onclick="closePanel()">✕</button>
+  </header>
+
+  <!-- コンテキストバー（ログイン情報） -->
+  <div class="af-context">
+    <span class="af-context-dot"></span>
+    田中 誠一様 | 株式会社TTグリーンエナジー | 法人会員 | 閲覧履歴：BCP・太陽光
+  </div>
+
+  <!-- ★ アダプティブウェブエリア（会話に応じて動的切替） ★ -->
+  <div class="af-adaptive-area" id="af-adaptive">
+    <div class="af-adaptive-inner">
+      <div class="af-adaptive-label" id="af-adaptive-label">コンテンツ</div>
+      <div id="af-adaptive-content"></div>
+    </div>
+  </div>
+
+  <!-- 会話エリア -->
+  <div class="af-conversation" id="af-conv">
+
+    <!-- Step1: ウェルカム＋先読み提案 -->
+    <div class="af-step is-active" id="step-1">
+      <div class="af-msg">
+        <div class="af-avatar bot">🌱</div>
+        <div class="af-bubble bot">
+          <p>田中様、おかえりなさい！</p>
+          <p>前回ご覧いただいた「BCP向け非常用電源」の続きとして、スポンサー企業より<strong>「太陽光＋蓄電池パッケージ」</strong>の新プランが届いています。</p>
+          <p>御社の施設情報（本社ビル・約3,200㎡）をもとにした初期試算もご用意できます。ご確認しますか？</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step2: FAQ + 個人化回答（シミュレーション埋込） -->
+    <div class="af-step" id="step-2">
+      <div class="af-msg user">
+        <div class="af-avatar user">田</div>
+        <div class="af-bubble user">
+          <p>太陽光パネルを設置した場合、どれくらいコストがかかりますか？</p>
+        </div>
+      </div>
+      <div class="af-msg">
+        <div class="af-avatar bot">🌱</div>
+        <div class="af-bubble bot">
+          <p>一般的には100〜300万円程度（10kWシステム）ですが、田中様の施設情報をもとにスポンサー企業Aが試算しました。詳細は上部のパネルでご確認いただけます。</p>
+          <p>補助金を活用すると初期費用を約30%削減できます。現地調査もご依頼いただけます。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step3: 現地調査依頼 → Service Cloud Case作成 -->
+    <div class="af-step" id="step-3">
+      <div class="af-msg user">
+        <div class="af-avatar user">田</div>
+        <div class="af-bubble user">
+          <p>現地調査をお願いしたいです。</p>
+        </div>
+      </div>
+      <div class="af-msg">
+        <div class="af-avatar bot">🌱</div>
+        <div class="af-bubble bot">
+          <p>承知しました。Service Cloudにケースを作成し、担当者を手配しました。上部のパネルで進捗をご確認いただけます。</p>
+          <p style="font-size:1.2rem;color:#888;margin-top:6px;">2営業日以内に担当の山田よりご連絡いたします。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step4: Account Engagement おすすめコンテンツ -->
+    <div class="af-step" id="step-4">
+      <div class="af-msg">
+        <div class="af-avatar bot">🌱</div>
+        <div class="af-bubble bot">
+          <p>また、田中様のご関心に合わせて関連コンテンツをご用意しました。上部のパネルでご覧いただけます。</p>
+          <p>本日のご相談をもとに、パーソナライズされた資料をメールでもお送りします（Account Engagement連携）。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- おすすめ質問（最終ステップ後表示） -->
+  <div class="af-suggestions" id="af-suggestions" style="display:none;">
+    <div class="af-suggestions-label">続けて質問する</div>
+    <div class="af-suggestion">BCP対策の具体的な事例を教えてください</div>
+    <div class="af-suggestion">補助金の申請手続きを教えてください</div>
+    <div class="af-suggestion">ケース #00123 の進捗を確認したい</div>
+  </div>
+
+  <!-- 進む矢印ボタン -->
+  <div class="af-next-wrap" id="af-next-wrap">
+    <span class="af-step-indicator" id="af-step-indicator">ステップ 1 / 4</span>
+    <button class="af-next-btn" id="af-next-btn" onclick="nextStep()">
+      次へ進む <span class="af-next-arrow">→</span>
+    </button>
+  </div>
+
+  <!-- 入力エリア（最終ステップ後） -->
+  <div class="af-input-area" id="af-input-area" style="display:none;">
+    <div class="af-input-row">
+      <input type="text" class="af-input" id="af-input" placeholder="質問や依頼を入力してください…" onkeydown="if(event.key==='Enter')sendMsg()" />
+      <button class="af-send-btn" onclick="sendMsg()">➤</button>
+    </div>
+    <div class="af-poweredby">Powered by Agentforce × Experience Cloud × Service Cloud</div>
+  </div>
+
+</aside>
+
+<script>
+// ===== アダプティブウェブのコンテンツ定義 =====
+const adaptiveContent = {
+  // Step1: 先読み提案 → BCP事例カード
+  1: {
+    label: 'おすすめソリューション（閲覧履歴より）',
+    html: `
+      <div class="rec-card">
+        <div class="rec-card__icon">⚡</div>
+        <div class="rec-card__body">
+          <div class="rec-card__tag">BCP・太陽光</div>
+          <div class="rec-card__title">太陽光＋蓄電池パッケージ NEW — 御社施設向け初期試算あり</div>
+          <div class="rec-card__meta">スポンサー企業A | 2026年6月最新プラン</div>
+        </div>
+      </div>
+    `
+  },
+  // Step2: FAQ回答 → シミュレーション結果カード
+  2: {
+    label: '施設別シミュレーション結果（パーソナライズ）',
+    html: `
+      <div class="sim-card">
+        <div class="sim-card__header">⚡ 太陽光＋蓄電池 試算｜本社ビル（3,200㎡）</div>
+        <div class="sim-card__body">
+          <div class="sim-row">
+            <span class="sim-row__label">推奨システム容量</span>
+            <span class="sim-row__value">30kW＋蓄電池 20kWh</span>
+          </div>
+          <div class="sim-row">
+            <span class="sim-row__label">初期費用（概算）</span>
+            <span class="sim-row__value">約 1,050万円</span>
+          </div>
+          <div class="sim-row">
+            <span class="sim-row__label">年間電気代削減</span>
+            <span class="sim-row__value green">約 84万円/年</span>
+          </div>
+          <div class="sim-row">
+            <span class="sim-row__label">補助金適用後</span>
+            <span class="sim-row__value green">約 735万円（▲30%）</span>
+          </div>
+          <div class="sim-row">
+            <span class="sim-row__label">CO₂削減量</span>
+            <span class="sim-row__value green">約 15t-CO₂/年</span>
+          </div>
+        </div>
+        <div class="sim-card__actions">
+          <button class="btn-primary">詳細レポートを受け取る</button>
+          <button class="btn-neutral">相談する</button>
+        </div>
+      </div>
+    `
+  },
+  // Step3: 現地調査依頼 → Service Cloudケース作成
+  3: {
+    label: 'Service Cloud — ケース作成完了',
+    html: `
+      <div class="case-card">
+        <div class="case-card__title">✅ Service Cloud にケースを作成しました</div>
+        <div class="case-card__row"><span>Case番号：</span>#00123</div>
+        <div class="case-card__row"><span>件名：</span>太陽光パネル設置 現地調査ご依頼</div>
+        <div class="case-card__row"><span>担当者：</span>山田 太郎（東電タウンプランニング）</div>
+        <div class="case-card__row"><span>対応予定：</span>2営業日以内にご連絡</div>
+        <div class="case-card__row"><span>ステータス：</span><span style="color:#f57c00;">対応中</span></div>
+      </div>
+    `
+  },
+  // Step4: Account Engagement おすすめコンテンツ
+  4: {
+    label: 'Account Engagement — あなたへのおすすめ記事',
+    html: `
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="rec-card">
+          <div class="rec-card__icon">☀️</div>
+          <div class="rec-card__body">
+            <div class="rec-card__tag">太陽光・蓄電池</div>
+            <div class="rec-card__title">初期費用ゼロ！PPA方式で太陽光を導入する方法</div>
+            <div class="rec-card__meta">東電タウンプランニング · 2026/06/20</div>
+          </div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-card__icon">📋</div>
+          <div class="rec-card__body">
+            <div class="rec-card__tag">補助金・制度</div>
+            <div class="rec-card__title">2026年度 省エネ設備補助金 申請期限まもなく</div>
+            <div class="rec-card__meta">経済産業省情報 · 2026/06/15</div>
+          </div>
+        </div>
+      </div>
+    `
+  }
+};
+
+// ===== 状態管理 =====
+let currentStep = 1;
+const TOTAL_STEPS = 4;
+
+// ===== パネル開閉 =====
+function openPanel() {
+  document.getElementById('af-panel').classList.add('is-open');
+  document.getElementById('af-fab').style.display = 'none';
+  document.body.classList.add('panel-open');
+  // Step1のアダプティブコンテンツを表示
+  showAdaptive(1);
+}
+
+function closePanel() {
+  document.getElementById('af-panel').classList.remove('is-open');
+  document.getElementById('af-fab').style.display = 'flex';
+  document.body.classList.remove('panel-open');
+}
+
+// ===== アダプティブウェブ切替 =====
+function showAdaptive(step) {
+  const area    = document.getElementById('af-adaptive');
+  const label   = document.getElementById('af-adaptive-label');
+  const content = document.getElementById('af-adaptive-content');
+
+  if (!adaptiveContent[step]) return;
+
+  // フェードアウト → 内容差替 → フェードイン
+  area.style.opacity = '0';
+  setTimeout(() => {
+    label.textContent = adaptiveContent[step].label;
+    content.innerHTML = adaptiveContent[step].html;
+    area.classList.add('is-visible');
+    area.style.opacity = '1';
+  }, 150);
+}
+
+// ===== 右矢印で次のステップへ =====
+function nextStep() {
+  if (currentStep >= TOTAL_STEPS) return;
+
+  // 現在のステップを維持しつつ次のステップを追加表示
+  currentStep++;
+
+  // 次のステップを表示
+  const nextEl = document.getElementById('step-' + currentStep);
+  if (nextEl) {
+    nextEl.classList.add('is-active');
+    // スクロールを下に
+    const conv = document.getElementById('af-conv');
+    setTimeout(() => { conv.scrollTop = conv.scrollHeight; }, 50);
+  }
+
+  // アダプティブウェブのコンテンツを切替
+  showAdaptive(currentStep);
+
+  // ステップインジケーター更新
+  document.getElementById('af-step-indicator').textContent = `ステップ ${currentStep} / ${TOTAL_STEPS}`;
+
+  // 最終ステップ到達時
+  if (currentStep >= TOTAL_STEPS) {
+    document.getElementById('af-next-wrap').style.display = 'none';
+    document.getElementById('af-suggestions').style.display = 'block';
+    document.getElementById('af-input-area').style.display = 'block';
+  }
+}
+
+// ===== 自由入力送信 =====
+function sendMsg() {
+  const input = document.getElementById('af-input');
+  const text  = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  const conv = document.getElementById('af-conv');
+
+  // ユーザーメッセージ
+  const userDiv = document.createElement('div');
+  userDiv.style.cssText = 'display:flex;gap:8px;flex-direction:row-reverse;animation:step-in .3s ease-out both;';
+  userDiv.innerHTML = `
+    <div class="af-avatar user" style="width:32px;height:32px;border-radius:50%;background:#546e7a;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff;flex-shrink:0;">田</div>
+    <div class="af-bubble user" style="max-width:82%;font-size:1.4rem;line-height:1.65;background:#008a32;color:#fff;border-radius:10px 2px 10px 10px;padding:10px 14px;"><p style="margin:0">${text}</p></div>
+  `;
+  conv.appendChild(userDiv);
+  conv.scrollTop = conv.scrollHeight;
+
+  // タイピング
+  const typingDiv = document.createElement('div');
+  typingDiv.style.cssText = 'display:flex;gap:8px;align-items:flex-start;animation:step-in .3s ease-out both;';
+  typingDiv.innerHTML = `
+    <div style="width:32px;height:32px;border-radius:50%;background:#008a32;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🌱</div>
+    <div style="background:#f3f8f4;border:1px solid #d0e6d5;border-radius:2px 10px 10px 10px;padding:10px 14px;">
+      <span class="af-typing"><span></span><span></span><span></span></span>
+    </div>
+  `;
+  conv.appendChild(typingDiv);
+  conv.scrollTop = conv.scrollHeight;
+}
+</script>
+
+</body>
+</html>
