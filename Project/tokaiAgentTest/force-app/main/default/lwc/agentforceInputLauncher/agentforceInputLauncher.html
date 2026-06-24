@@ -1,0 +1,27 @@
+<template>
+    <div class="launcher-container">
+        <div class="launcher-header">
+            <div class="agent-avatar">
+                <lightning-icon icon-name="utility:einstein" size="large" alternative-text="Agentforce"></lightning-icon>
+            </div>
+            <h1 class="launcher-title">{titleText}</h1>
+        </div>
+
+        <div class="input-area">
+            <div class="input-wrapper">
+                <span class="input-icon">✦</span>
+                <input
+                    type="text"
+                    class="agent-input"
+                    placeholder={placeholderText}
+                    value={inputText}
+                    oninput={handleInput}
+                    onkeydown={handleKeydown}
+                />
+                <button class="send-button" onclick={handleSubmit} aria-label="送信">
+                    <lightning-icon icon-name="utility:send" size="x-small" alternative-text="送信"></lightning-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
