@@ -785,191 +785,244 @@ body.slack-scope{font-family:"Lato",-apple-system,sans-serif;font-size:15px;line
     <!-- コンテンツ切替エリア -->
     <div class="browser-content-area" id="s2a-screen">
 
-      <!-- phone-step 0: メール受信ボックス -->
-      <div class="phone-step is-current" id="ps0">
-        <div class="mail-app-bar">
-          <span class="mail-app-bar-title">受信トレイ</span>
-          <i data-lucide="search" class="mail-app-icon"></i>
-          <i data-lucide="edit-3" class="mail-app-icon"></i>
-        </div>
-        <div class="mail-list-item unread">
-          <div class="mail-list-av">CBS</div>
-          <div style="width:6px;flex-shrink:0;margin-top:6px;"><div class="mail-unread-dot"></div></div>
-          <div class="mail-list-body">
-            <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">CBSケータリング</span><span class="mail-list-time">今日</span></div>
-            <div class="mail-list-subj">【50周年特別プラン】グランドパレス東京様へ</div>
-            <div class="mail-list-prev">創立50周年が近づいてまいりました。特別な記念パーティーに…</div>
+      <!-- browser-step 0: Gmail 受信ボックス -->
+      <div class="browser-step is-current" id="ps0">
+        <div class="gmail-shell">
+          <div class="gmail-sidebar">
+            <button class="gmail-compose-btn">
+              <svg style="width:24px;height:24px;" viewBox="0 0 24 24"><path fill="#4285F4" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              作成
+            </button>
+            <div class="gmail-nav-item active">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              受信トレイ <span class="gmail-nav-unread">3</span>
+            </div>
+            <div class="gmail-nav-item">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+              スター付き
+            </div>
+            <div class="gmail-nav-item">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M4 6h16v2H4zm2 5h12v2H6zm3 5h6v2H9z"/></svg>
+              送信済み
+            </div>
           </div>
-        </div>
-        <div class="mail-list-item">
-          <div class="mail-list-av" style="background:#1264A3;">SF</div>
-          <div class="mail-list-body">
-            <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">Salesforce</span><span class="mail-list-time">昨日</span></div>
-            <div class="mail-list-subj">案件ステータス更新通知</div>
-            <div class="mail-list-prev">グランドパレス東京様の案件が更新されました</div>
-          </div>
-        </div>
-        <div class="mail-list-item">
-          <div class="mail-list-av" style="background:#2EB67D;">田</div>
-          <div class="mail-list-body">
-            <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">田中 誠</span><span class="mail-list-time">昨日</span></div>
-            <div class="mail-list-subj">Re: 創立50周年パーティーの件</div>
-            <div class="mail-list-prev">メニューの詳細について確認させてください…</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- phone-step 1: メール本文 -->
-      <div class="phone-step" id="ps1">
-        <div class="mail-view">
-          <div class="mail-view-bar">
-            <span class="mail-view-back">‹</span>
-            <span class="mail-view-subj">【50周年特別プラン】グランドパレス東京様へ</span>
-          </div>
-          <div class="mail-view-body">
-            <div class="mail-email-card">
-              <div class="mail-email-header">
-                <div class="mail-email-logo">CBS ケータリング</div>
-                <div class="mail-email-tagline">日本一の仕出しケータリング</div>
-              </div>
-              <div class="mail-email-content">
-                <div class="mail-email-greeting">
-                  田辺 誠一郎 様<br><br>
-                  グランドパレス東京様の <strong>創立50周年</strong> が近づいてまいりました。<br><br>
-                  昨年の記念パーティーでは大変ご好評いただきありがとうございました。今年の <strong>50周年</strong> という特別な節目に向け、旬菜亭のプレミアムコースをご用意いたしました。
-                </div>
-                <div style="background:#F5F0FF;border-radius:8px;padding:10px;margin:8px 0;font-size:12px;">
-                  ✨ <strong>50周年記念 特別プランのご提案</strong><br>
-                  • 旬菜亭 VIP御膳コース（¥20,000/名〜）<br>
-                  • 伊勢海老・特選黒毛和牛のフルコース<br>
-                  • 500名様まで対応可能
-                </div>
-                <button class="mail-cta-btn">ポータルで詳細を確認・お申込み →</button>
-                <div class="mail-ai-note">
-                  🤖 <strong>AI自動配信</strong>: Account Engagementが過去の施工実績から最適なタイミングを予測し自動送信しました。
-                </div>
-              </div>
+          <div class="gmail-main">
+            <div class="gmail-toolbar">
+              <button title="選択">☐</button>
+              <button title="更新">↺</button>
+              <button title="その他">⋮</button>
+            </div>
+            <div class="gmail-row unread">
+              <span class="gmail-star active">★</span>
+              <span class="gmail-from">CBSケータリング <span class="gmail-badge">NEW</span></span>
+              <span class="gmail-subject-preview"><span class="subj">【50周年特別プラン】グランドパレス東京様へ</span><span class="prev"> — 創立50周年が近づいてまいりました。特別な記念パーティーにふさわしいプランを…</span></span>
+              <span class="gmail-date">今日</span>
+            </div>
+            <div class="gmail-row">
+              <span class="gmail-star">☆</span>
+              <span class="gmail-from">Salesforce</span>
+              <span class="gmail-subject-preview"><span class="subj">案件ステータス更新通知</span><span class="prev"> — グランドパレス東京様の案件がプランナー確認中に更新されました</span></span>
+              <span class="gmail-date">昨日</span>
+            </div>
+            <div class="gmail-row">
+              <span class="gmail-star">☆</span>
+              <span class="gmail-from">田中 誠</span>
+              <span class="gmail-subject-preview"><span class="subj">Re: 創立50周年パーティーの件</span><span class="prev"> — メニューの詳細について確認させてください。魚介コースを中心に…</span></span>
+              <span class="gmail-date">昨日</span>
+            </div>
+            <div class="gmail-row">
+              <span class="gmail-star">☆</span>
+              <span class="gmail-from">鈴木 梓</span>
+              <span class="gmail-subject-preview"><span class="subj">スタッフ手配の件</span><span class="prev"> — 7月18日の人員について確認があります</span></span>
+              <span class="gmail-date">2日前</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- phone-step 2: ECポータル TOP（リッチUI） -->
-      <div class="phone-step" id="ps2">
-        <!-- ECへの遷移フラッシュ演出 -->
-        <div style="background:linear-gradient(135deg,#4A154B,#ECB22E);height:3px;"></div>
-        <!-- EC ナビ -->
-        <nav style="background:#4A154B;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5;">
-          <span style="color:white;font-weight:900;font-size:14px;display:flex;align-items:center;gap:6px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:#2EB67D;display:inline-block;"></span>
-            CBS オーダーポータル
-          </span>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="background:#ECB22E;color:#1a1a1a;border-radius:10px;padding:2px 7px;font-size:10px;font-weight:900;">VIP</span>
-            <span style="background:rgba(255,255,255,.2);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">田</span>
-          </div>
-        </nav>
-        <!-- EC リッチヒーロー -->
-        <div class="ec-hero-v2">
-          <div class="ec-hero-v2-tag">
-            <span style="width:6px;height:6px;border-radius:50%;background:#2EB67D;display:inline-block;"></span>
-            Experience Cloud
-          </div>
-          <div class="ec-hero-v2-name">田辺 誠一郎 様</div>
-          <div class="ec-hero-v2-co">グランドパレス東京 — ご来訪ありがとうございます</div>
-          <div class="ec-hero-v2-stats">
-            <div class="ec-stat-card"><div class="ec-stat-num">5年</div><div class="ec-stat-lbl">ご利用実績</div></div>
-            <div class="ec-stat-card"><div class="ec-stat-num">★4.9</div><div class="ec-stat-lbl">満足度</div></div>
-            <div class="ec-stat-card"><div class="ec-stat-num">2件</div><div class="ec-stat-lbl">進行中</div></div>
-          </div>
-        </div>
-        <!-- コンテンツ -->
-        <div style="padding:14px 16px;">
-          <!-- AI提案バナー -->
-          <div class="ec-ai-banner">
-            <div class="ec-ai-banner-icon">✨</div>
-            <div class="ec-ai-banner-body">
-              <strong>50周年特別プランをご用意しました</strong><br>
-              昨年の記念パーティーデータをもとに、最適なプランをAIが提案しています。
-              <span class="ec-ai-banner-btn">特別プランを見る →</span>
+      <!-- browser-step 1: Gmail メール本文 -->
+      <div class="browser-step" id="ps1">
+        <div class="gmail-email-view">
+          <div class="gmail-email-subj">【50周年特別プラン】グランドパレス東京様へ</div>
+          <div class="gmail-email-meta">
+            <div class="gmail-email-av">CBS</div>
+            <div class="gmail-email-from-detail">
+              <div class="gmail-email-from-name">CBSケータリング <span style="font-size:12px;color:#5F6368;font-weight:400;">&lt;info@cbs-catering.co.jp&gt;</span></div>
+              <div class="gmail-email-from-addr">宛先: 田辺 誠一郎 &lt;tanabe@grandpalace.co.jp&gt;</div>
             </div>
+            <div class="gmail-email-date">今日 8:00</div>
           </div>
-          <!-- 進行中案件 -->
-          <div style="font-size:13px;font-weight:700;color:#444;margin:14px 0 8px;display:flex;justify-content:space-between;align-items:center;">
-            進行中の案件 <a href="#" style="font-size:12px;color:#1264A3;">すべて見る</a>
-          </div>
-          <div class="ec-card-v2">
-            <div class="ec-card-v2-accent" style="background:linear-gradient(to right,#4A154B,#ECB22E);"></div>
-            <div style="margin-top:4px;">
-              <div class="ec-card-v2-lbl">🔥 最新 · 注目</div>
-              <div class="ec-card-v2-ttl">創立50周年記念パーティー（500名様）</div>
-              <div class="ec-card-v2-meta">実施予定: 2027年7月18日 ／ 担当: 田中 誠</div>
-              <div class="ec-progress-bar"><div class="ec-progress-fill" style="width:65%;"></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#706e6b;">
-                <span>進捗 65%</span>
-                <span style="background:#FFF3CD;color:#856404;border-radius:8px;padding:2px 7px;font-weight:700;">プランナー確認中</span>
+          <div class="html-mail-body">
+            <div class="html-mail-header">
+              <div class="html-mail-logo">CBS ケータリング</div>
+              <div class="html-mail-tag">日本一の仕出しケータリング | Account Engagement 自動配信</div>
+            </div>
+            <div class="html-mail-content">
+              <div class="html-mail-greeting">
+                田辺 誠一郎 様<br><br>
+                グランドパレス東京様の <strong>創立50周年</strong> が近づいてまいりました。昨年の創立49周年では大変ご好評をいただき（満足度 ★★★★★）、誠にありがとうございました。<br><br>
+                今年の <strong>50周年</strong> という特別な節目に向け、旬菜亭のプレミアムコースをはじめとした <strong>特別プラン</strong> をご用意いたしました。
+              </div>
+              <div class="html-mail-offer">
+                <strong>✨ 50周年記念 特別プランのご提案</strong>
+                <ul style="margin:8px 0 0;padding-left:18px;">
+                  <li>旬菜亭 VIP御膳コース（¥20,000/名〜）</li>
+                  <li>伊勢海老・特選黒毛和牛のフルコース</li>
+                  <li>500名様まで対応可能</li>
+                  <li>専任プランナーが担当いたします</li>
+                </ul>
+              </div>
+              <button class="html-mail-cta">顧客専用ポータルで詳細を確認・お申込み →</button>
+              <div class="html-mail-ai-note">
+                <span>🤖</span>
+                <span><strong>AI自動配信（Account Engagement）</strong>: 過去の施工実績から7月が最適タイミングと予測し、自動送信しました。</span>
               </div>
             </div>
           </div>
-          <div class="ec-card-v2">
-            <div class="ec-card-v2-accent" style="background:linear-gradient(to right,#2EB67D,#36C5F0);"></div>
-            <div style="margin-top:4px;">
-              <div class="ec-card-v2-lbl">✅ 過去実績</div>
-              <div class="ec-card-v2-ttl">創立49周年ガラパーティー（480名様）</div>
-              <div class="ec-card-v2-meta">2026年7月20日 完了</div>
-              <div style="margin-top:4px;font-size:11px;color:#2EB67D;font-weight:700;">★★★★★ 満足度 5.0</div>
+        </div>
+      </div>
+
+      <!-- browser-step 2: EC PC版 TOP -->
+      <div class="browser-step" id="ps2">
+        <div style="display:flex;flex-direction:column;height:100%;">
+          <nav class="ec-pc-nav">
+            <div class="ec-pc-nav-logo">
+              <span style="width:10px;height:10px;border-radius:50%;background:#2EB67D;display:inline-block;"></span>
+              CBS オーダーポータル
+              <span style="background:#ECB22E;color:#1a1a1a;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:900;margin-left:6px;">Experience Cloud</span>
+            </div>
+            <div class="ec-pc-nav-items">
+              <a href="#" class="active">マイページ</a>
+              <a href="#">注文履歴</a>
+              <a href="#">新規注文</a>
+              <a href="#">お問い合わせ</a>
+            </div>
+            <div class="ec-pc-nav-user">
+              <div class="ec-pc-nav-av">田</div>
+              <span>田辺 誠一郎 様</span>
+            </div>
+          </nav>
+          <div class="ec-pc-hero">
+            <div class="ec-pc-hero-tag">
+              <span style="width:6px;height:6px;border-radius:50%;background:#2EB67D;display:inline-block;"></span>
+              Experience Cloud — メールからシームレスに遷移
+            </div>
+            <div class="ec-pc-hero-greeting">おかえりなさい</div>
+            <div class="ec-pc-hero-name">田辺 誠一郎 様</div>
+            <div class="ec-pc-hero-co">グランドパレス東京 — VIP顧客 | ご利用5年目</div>
+            <div class="ec-pc-hero-stats">
+              <div class="ec-pc-stat"><div class="ec-pc-stat-num">5年</div><div class="ec-pc-stat-lbl">ご利用実績</div></div>
+              <div class="ec-pc-stat"><div class="ec-pc-stat-num">★4.9</div><div class="ec-pc-stat-lbl">満足度</div></div>
+              <div class="ec-pc-stat"><div class="ec-pc-stat-num">¥9.5M</div><div class="ec-pc-stat-lbl">累計取引額</div></div>
+              <div class="ec-pc-stat"><div class="ec-pc-stat-num">2件</div><div class="ec-pc-stat-lbl">進行中</div></div>
             </div>
           </div>
-          <button class="ec-btn-v2 ec-btn-primary">💬 見積内容の変更・お問い合わせ</button>
-        </div>
-      </div>
-
-      <!-- phone-step 3: フォーム入力 -->
-      <div class="phone-step" id="ps3">
-        <div style="background:#4A154B;padding:10px 16px;display:flex;align-items:center;gap:10px;">
-          <span style="color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;">‹</span>
-          <span style="color:white;font-weight:700;font-size:15px;">お問い合わせ・変更依頼</span>
-        </div>
-        <div style="padding:14px 16px 40px;">
-          <div style="font-size:12px;color:#706e6b;margin-bottom:10px;font-family:'Lato',sans-serif;background:#F0F8FF;border-radius:8px;padding:8px 10px;">
-            🔗 入力内容はSalesforceに自動登録され、担当プランナーへ即座に通知されます。
-          </div>
-          <div class="ec-form-field">
-            <label class="ec-form-lbl">案件名</label>
-            <input class="ec-form-input filled" type="text" value="創立50周年記念パーティー" readonly />
-          </div>
-          <div class="ec-form-field">
-            <label class="ec-form-lbl">お問い合わせ種別</label>
-            <select class="ec-form-input"><option>見積内容の変更・確認</option></select>
-          </div>
-          <div class="ec-form-field">
-            <label class="ec-form-lbl">ご要望・詳細</label>
-            <textarea class="ec-form-ta filled" readonly>500名様の予算の都合で、今期は1名様12,000円でのお見積りをお願いできますでしょうか。昨年は15,000円でお願いしていたのですが…。ご検討のほどよろしくお願いいたします。</textarea>
-          </div>
-          <button class="ec-btn-v2 ec-btn-primary">送信する（Salesforceに自動登録）</button>
-        </div>
-      </div>
-
-      <!-- phone-step 4: 送信完了 -->
-      <div class="phone-step" id="ps4">
-        <div style="padding:20px 16px 40px;">
-          <div style="background:linear-gradient(135deg,#D4EDDA,#B7DFBA);border:1px solid #28A745;border-radius:14px;padding:22px;text-align:center;">
-            <div style="font-size:2.5rem;margin-bottom:8px;">✅</div>
-            <div style="font-weight:900;color:#155724;font-size:17px;margin-bottom:6px;">送信が完了しました</div>
-            <div style="font-size:12px;color:#155724;line-height:1.6;">担当プランナー（田中 誠）へ<br>即座に通知されました。</div>
-          </div>
-          <div style="margin-top:14px;background:linear-gradient(135deg,#E8F4FD,#D6EAF8);border:1px solid #1b96ff;border-radius:12px;padding:12px 14px;font-size:12px;font-family:'Lato',sans-serif;color:#032d60;display:flex;gap:8px;align-items:flex-start;">
-            <span style="font-size:18px;flex-shrink:0;">🔗</span>
-            <div><strong>Salesforce 自動連携完了</strong><br>「見積変更要求 ¥12,000/名」がケースとして立ち上がり、担当者のタイムラインに記録されました。</div>
-          </div>
-          <div style="margin-top:10px;background:#FFF9C4;border:1px solid #ECB22E;border-radius:12px;padding:10px 12px;font-size:11px;font-family:'Lato',sans-serif;color:#444;">
-            📊 このデータが <strong>楽楽販売との比較</strong> に使われ、社長のSlackへアラートが届く源泉になります。
+          <div class="ec-pc-body" style="flex:1;overflow-y:auto;">
+            <div class="ec-pc-main">
+              <div class="ec-pc-section-title">進行中の案件 <a href="#">すべて見る</a></div>
+              <div class="ec-pc-card">
+                <div class="ec-pc-card-accent" style="background:linear-gradient(to right,#4A154B,#ECB22E);"></div>
+                <div class="ec-pc-card-body">
+                  <div class="ec-pc-card-lbl">🔥 最新 · 要確認</div>
+                  <div class="ec-pc-card-ttl">創立50周年記念パーティー（500名様）</div>
+                  <div class="ec-pc-card-meta">実施予定: 2027年7月18日 ／ 担当: 田中 誠</div>
+                  <div class="ec-pc-card-progress"><div class="ec-pc-card-progress-fill" style="width:65%;"></div></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#706e6b;margin-bottom:12px;">
+                    <span>進捗 65%</span>
+                    <span style="background:#FFF3CD;color:#856404;border-radius:8px;padding:3px 10px;font-weight:700;">プランナー確認中</span>
+                  </div>
+                  <div style="display:flex;gap:8px;">
+                    <button style="background:#4A154B;color:white;border:none;border-radius:6px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;">詳細を確認</button>
+                    <button style="background:white;color:#4A154B;border:2px solid #4A154B;border-radius:6px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;">見積変更を依頼</button>
+                  </div>
+                </div>
+              </div>
+              <div class="ec-pc-card">
+                <div class="ec-pc-card-accent" style="background:linear-gradient(to right,#2EB67D,#36C5F0);"></div>
+                <div class="ec-pc-card-body">
+                  <div class="ec-pc-card-lbl">✅ 過去実績</div>
+                  <div class="ec-pc-card-ttl">創立49周年ガラパーティー（480名様）</div>
+                  <div class="ec-pc-card-meta">2026年7月20日 完了 ／ 満足度: ★★★★★</div>
+                </div>
+              </div>
+            </div>
+            <div class="ec-pc-aside">
+              <div class="ec-pc-ai-banner">
+                <div class="ec-pc-ai-icon">✨</div>
+                <div class="ec-pc-ai-body">
+                  <strong>50周年特別プランのご提案</strong><br>
+                  昨年の記念パーティーデータをもとに、最適なプランをAIが提案しています。
+                  <div class="ec-pc-ai-btn">特別プランを見る →</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-    </div><!-- /phone-screen -->
-  </div><!-- /phone-frame -->
+      <!-- browser-step 3: EC フォーム -->
+      <div class="browser-step" id="ps3">
+        <div style="display:flex;flex-direction:column;height:100%;">
+          <nav class="ec-pc-nav">
+            <div class="ec-pc-nav-logo"><span style="width:10px;height:10px;border-radius:50%;background:#2EB67D;display:inline-block;"></span> CBS オーダーポータル</div>
+            <div class="ec-pc-nav-items"><a href="#" class="active">お問い合わせ</a></div>
+            <div class="ec-pc-nav-user"><div class="ec-pc-nav-av">田</div><span>田辺 誠一郎 様</span></div>
+          </nav>
+          <div style="flex:1;overflow-y:auto;padding:28px 48px;">
+            <div style="font-size:13px;color:#032d60;margin-bottom:16px;background:#F0F8FF;border-radius:8px;padding:10px 14px;">
+              🔗 入力内容はSalesforceに自動登録され、担当プランナーへ即座に通知されます。
+            </div>
+            <div class="ec-pc-form-card">
+              <div class="ec-pc-form-title">見積変更・お問い合わせ</div>
+              <div class="ec-pc-form-sub">ご要望をご入力ください。担当プランナーが確認後、折り返しご連絡いたします。</div>
+              <div class="ec-pc-form-grid">
+                <div class="ec-pc-form-field">
+                  <label class="ec-pc-form-lbl">案件名</label>
+                  <input class="ec-pc-form-input" type="text" value="創立50周年記念パーティー" readonly />
+                </div>
+                <div class="ec-pc-form-field">
+                  <label class="ec-pc-form-lbl">お問い合わせ種別</label>
+                  <select class="ec-pc-form-input"><option>見積内容の変更・確認</option></select>
+                </div>
+                <div class="ec-pc-form-field full">
+                  <label class="ec-pc-form-lbl">ご要望・詳細</label>
+                  <textarea class="ec-pc-form-ta" readonly>500名様の予算の都合で、今期は1名様¥12,000でのお見積りをお願いできますでしょうか。昨年は¥15,000でお願いしていたのですが、今期は予算圧縮の事情があり、ご検討のほどよろしくお願いいたします。</textarea>
+                </div>
+              </div>
+              <button class="ec-pc-submit-btn">送信する（Salesforceに自動登録）</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- browser-step 4: 送信完了 -->
+      <div class="browser-step" id="ps4">
+        <div style="display:flex;flex-direction:column;height:100%;">
+          <nav class="ec-pc-nav">
+            <div class="ec-pc-nav-logo"><span style="width:10px;height:10px;border-radius:50%;background:#2EB67D;display:inline-block;"></span> CBS オーダーポータル</div>
+          </nav>
+          <div style="flex:1;overflow-y:auto;padding:28px 48px;">
+            <div class="ec-pc-done">
+              <div class="ec-pc-done-icon">✅</div>
+              <div>
+                <div style="font-weight:900;color:#155724;font-size:22px;margin-bottom:6px;">送信が完了しました</div>
+                <div style="font-size:14px;color:#155724;line-height:1.7;">担当プランナー（田中 誠）へ即座に通知されました。<br>Salesforceに案件レコードとして自動登録されました。</div>
+              </div>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:16px;">
+              <div style="flex:1;background:linear-gradient(135deg,#E8F4FD,#D6EAF8);border:1px solid #1b96ff;border-radius:12px;padding:16px;font-size:13px;color:#032d60;">
+                🔗 <strong>Salesforce 自動連携完了</strong><br><br>「見積変更要求 ¥12,000/名」がケースとして立ち上がり、担当者のタイムラインに記録されました。
+              </div>
+              <div style="flex:1;background:#FFF9C4;border:1px solid #ECB22E;border-radius:12px;padding:16px;font-size:13px;color:#444;">
+                📊 <strong>楽楽販売との比較でアラート生成</strong><br><br>このデータが過去実績（¥15,000）と比較され、社長のSlackへリスクアラートが届く源泉になります。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /browser-content-area -->
+  </div><!-- /pc-window -->
 </div><!-- /scene2a -->
 
 <!-- =====================================================
@@ -1181,152 +1234,254 @@ body.slack-scope{font-family:"Lato",-apple-system,sans-serif;font-size:15px;line
 </div><!-- /scene2c -->
 
 <!-- =====================================================
-  SCENE 3: SF レコード + Slack 埋め込みパネル
-  0=レコードヘッダー+Slackパネル枠
-  1=現場のSlack生会話
-  2=Agentforce AI 3行要約
-  3=経緯ナレッジ検索 + 締めの一言
+  SCENE 3: フル Slack チャンネル画面（/slack-mockup スキル準拠）
+  0=チャンネル + Agentforceピン留めバナー（背景に会話）
+  1=田中の投稿（単価¥12,000・競合）
+  2=鈴木の投稿（スタッフ3名不足）
+  3=Agentforce Bot が3行要約カード + ナレッジ検索結果を投稿
 ===================================================== -->
-<div id="scene3" class="scene sf-scene">
-  <header class="sf-header">
-    <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce"/>
-    <div class="sf-header-search"><div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon_x-small"/><input type="search" placeholder="グランドパレス東京" class="slds-input"></div></div></div>
-    <div class="sf-header-actions">
-      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/></button>
-      <button class="sf-fav-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt=""/><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;"/></button>
-      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt=""/></button>
-      <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt=""/></button><span class="sf-notify-dot"></span></span>
-      <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:.5rem;"><img src="https://ui-avatars.com/api/?name=山田&background=032d60&color=fff" alt="山田社長"></span>
+<div id="scene3" class="scene slack-dm-scene" style="background:#1a1a2e;">
+  <div style="width:min(1240px,98vw);height:min(820px,94vh);border-radius:10px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7);display:flex;flex-direction:column;">
+    <!-- OS titlebar -->
+    <div style="height:28px;background:#2D2D2D;display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;">
+      <span style="width:12px;height:12px;border-radius:50%;background:#FF5F57;display:inline-block;"></span>
+      <span style="width:12px;height:12px;border-radius:50%;background:#FEBC2E;display:inline-block;"></span>
+      <span style="width:12px;height:12px;border-radius:50%;background:#28C840;display:inline-block;"></span>
+      <span style="flex:1;text-align:center;color:#999;font-size:11px;font-family:'Lato',sans-serif;">Slack — シービーサービス</span>
     </div>
-  </header>
-  <div class="sf-nav">
-    <div class="sf-app-dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <span class="sf-app-name">CBSケータリング</span>
-    <nav><ul>
-      <li><a href="#">ホーム</a></li>
-      <li class="is-active"><a href="#">取引先 ▾</a></li>
-      <li><a href="#">案件管理 ▾</a></li>
-      <li><a href="#">ダッシュボード ▾</a></li>
-    </ul></nav>
-  </div>
+    <!-- Slack アプリ -->
+    <div class="slk-app" style="flex:1;overflow:hidden;">
+      <!-- Topbar -->
+      <header class="slk-topbar">
+        <div class="slk-topbar-lr">
+          <button class="slk-ibtn"><i data-lucide="chevron-left"></i></button>
+          <button class="slk-ibtn"><i data-lucide="chevron-right"></i></button>
+        </div>
+        <div class="slk-topbar-search"><i data-lucide="search" style="width:14px;height:14px;"></i><span>シービーサービスを検索</span></div>
+        <div class="slk-topbar-lr r">
+          <button class="slk-ibtn"><i data-lucide="bell"></i></button>
+          <button class="slk-ibtn"><i data-lucide="help-circle"></i></button>
+          <div class="slk-av user" style="width:24px;height:24px;font-size:11px;border-radius:4px;">社</div>
+        </div>
+      </header>
+      <!-- Sidebar -->
+      <nav class="slk-sidebar">
+        <div class="slk-ws-hdr"><span class="slk-ws-name">シービーサービス</span><span class="slk-status"></span></div>
+        <div class="slk-sec">
+          <div class="slk-item"><i data-lucide="home"></i>ホーム</div>
+          <div class="slk-item"><i data-lucide="message-square"></i>DM</div>
+        </div>
+        <div class="slk-sec">
+          <div class="slk-sec-lbl"><i data-lucide="chevron-down"></i>チャンネル</div>
+          <div class="slk-item"><i data-lucide="hash"></i>general</div>
+          <div class="slk-item"><i data-lucide="hash"></i>旬菜亭_現場</div>
+          <div class="slk-item"><i data-lucide="hash"></i>cb_プランナー</div>
+          <div class="slk-item active"><i data-lucide="hash"></i>グランドパレス東京_案件</div>
+          <div class="slk-item"><i data-lucide="hash"></i>受注チーム</div>
+          <div class="slk-item"><i data-lucide="hash"></i>経営会議<span class="slk-badge">1</span></div>
+        </div>
+        <div class="slk-sec">
+          <div class="slk-sec-lbl"><i data-lucide="chevron-down"></i>ダイレクトメッセージ</div>
+          <div class="slk-item">
+            <div class="slk-av bot" style="width:16px;height:16px;border-radius:3px;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:10px;height:10px;"/></div>
+            経営コンソールBot<span class="slk-badge">1</span>
+          </div>
+          <div class="slk-item"><span class="slk-presence on"></span>田中 誠</div>
+          <div class="slk-item"><span class="slk-presence on"></span>鈴木 梓</div>
+        </div>
+      </nav>
+      <!-- チャンネル メイン -->
+      <div class="slk-main">
+        <!-- チャンネルヘッダー -->
+        <div class="slk-channel-header">
+          <div>
+            <div class="slk-channel-header-title">
+              <i data-lucide="hash" style="width:18px;height:18px;"></i>
+              グランドパレス東京_案件
+            </div>
+            <div class="slk-channel-header-meta">4名のメンバー ・ Salesforce レコードチャンネル連携済み</div>
+          </div>
+          <div class="slk-channel-header-actions">
+            <button class="slk-channel-header-btn"><i data-lucide="users" style="width:14px;height:14px;"></i> 4</button>
+            <button class="slk-channel-header-btn"><i data-lucide="pin" style="width:14px;height:14px;"></i> ピン留め</button>
+            <button class="slk-channel-header-btn">
+              <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:14px;height:14px;filter:brightness(0)saturate(100%)invert(30%)sepia(100%)saturate(500%)hue-rotate(195deg);" />
+              Agentforce
+            </button>
+          </div>
+        </div>
 
-  <!-- SF左(2/3) + Slackパネル右(1/3) -->
-  <div style="flex:1;overflow:hidden;display:grid;grid-template-columns:1fr 400px;">
+        <!-- ピン留めバナー（Agentforceアラート） -->
+        <div class="slk-pin-banner">
+          <i data-lucide="pin" style="width:14px;height:14px;color:#E01E5A;"></i>
+          <strong style="color:#E01E5A;">⚠ Agentforceアラート:</strong>
+          このチャンネルの会話から「見積単価▼20% / スタッフ3名不足」を検知 → 社長のSlackへ通知済み ✓
+        </div>
 
-    <!-- SF 左ペイン -->
-    <div style="overflow-y:auto;padding:1rem;background:#f3f3f3;">
+        <!-- メッセージエリア -->
+        <div class="slk-msgs" id="s3-msgs">
 
-      <!-- step0: レコードヘッダー + タブ -->
-      <div data-step="0" data-scene="3">
-        <div class="slds-page-header slds-m-bottom_small">
-          <div class="slds-page-header__row">
-            <div class="slds-page-header__col-title">
-              <div class="slds-media">
-                <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-account"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_medium"/></span></div>
-                <div class="slds-media__body">
-                  <p class="slds-text-title">取引先 — Slack × Salesforce 統合ビュー</p>
-                  <h1 class="slds-page-header__title">グランドパレス東京</h1>
-                  <p class="slds-text-body_small" style="color:#ba0517;font-weight:700;">⚠ Agentforce リスクアラート検知中 — 見積単価▼20% / スタッフ3名不足</p>
+          <!-- day divider -->
+          <div class="slk-day-divider"><div class="line"></div><div class="label">昨日</div><div class="line"></div></div>
+
+          <!-- 過去メッセージ（step0から常時表示） -->
+          <div class="slk-msg">
+            <div class="slk-av"><img src="https://randomuser.me/api/portraits/men/4.jpg" alt=""/></div>
+            <div class="slk-mbody">
+              <div class="slk-mhd"><span class="slk-mname">田中 誠</span><span class="slk-mtime">15:30</span></div>
+              <div class="slk-mtext">グランドパレス東京様の件、来週の打ち合わせ前に一度情報整理しておきましょう</div>
+            </div>
+          </div>
+          <div class="slk-msg">
+            <div class="slk-av"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt=""/></div>
+            <div class="slk-mbody">
+              <div class="slk-mhd"><span class="slk-mname">鈴木 梓</span><span class="slk-mtime">15:45</span></div>
+              <div class="slk-mtext">了解です。今年は50周年で気合い入ってる感じでしたね</div>
+              <div class="slk-reactions">
+                <button class="slk-reaction mine">👍 <span>3</span></button>
+                <button class="slk-reaction">🎉 <span>2</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- step1: 田中の投稿（競合・単価） -->
+          <div data-step="1" data-scene="3">
+            <div class="slk-msg">
+              <div class="slk-av"><img src="https://randomuser.me/api/portraits/men/4.jpg" alt=""/></div>
+              <div class="slk-mbody">
+                <div class="slk-mhd"><span class="slk-mname">田中 誠</span><span class="slk-mtime">16:02</span></div>
+                <div class="slk-mtext">グランドパレスの件、先方から連絡来ました。<br>
+                  「<strong>今期は予算圧縮で1名様¥12,000でお願いしたい</strong>」とのこと。<br>
+                  競合他社が入り込んでるらしく、このままだとその単価で受けるしかないかもです😥<br>
+                  過去は¥15,000だったので、単価が20%も下がることに…
+                </div>
+                <div class="slk-reactions">
+                  <button class="slk-reaction">😰 <span>2</span></button>
                 </div>
               </div>
             </div>
-            <div class="slds-page-header__col-actions"><ul class="slds-button-group-list"><li><button class="slds-button slds-button_neutral">活動を記録</button></li><li><button class="slds-button slds-button_brand">緊急タスクを作成</button></li></ul></div>
           </div>
-        </div>
-        <div class="alert-box slds-m-bottom_small">
-          <span style="font-size:1.25rem;flex-shrink:0;">⚠️</span>
-          <div style="font-size:.875rem;">
-            <strong style="color:#E01E5A;">リスク案件: 創立50周年記念パーティー（500名）</strong><br>
-            楽楽販売連携: 見積単価¥12,000（前回比▼20%） ／ Slack検知: スタッフ3名不足の会話 — 昨日16:00
-          </div>
-        </div>
-        <div class="slds-tabs_default">
-          <ul class="slds-tabs_default__nav" role="tablist">
-            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#">詳細</a></li>
-            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#">活動</a></li>
-            <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#">
-              <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;"/>Slack連携（現場の声）
-            </a></li>
-            <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#">Agentforce 要約</a></li>
-          </ul>
-        </div>
-      </div>
 
-      <!-- step3: 経緯ナレッジ検索 -->
-      <div data-step="3" data-scene="3">
-        <div class="slds-m-top_small">
-          <article class="slds-card slds-p-around_medium">
-            <h3 class="slds-text-heading_small slds-m-bottom_small">🔍 現場の知恵・プロセス経緯 — 全社ナレッジとして検索可能</h3>
-            <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:.5rem;padding:.75rem 1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem;">
-              <span style="font-size:1.1rem;">🔍</span>
-              <span style="color:#0070d2;font-size:.875rem;font-weight:700;">「競合 単価交渉 ホテル 過去対応」で検索</span>
-              <span style="margin-left:auto;font-size:.75rem;color:#666;">3件ヒット</span>
+          <!-- step2: 鈴木の投稿（スタッフ不足） -->
+          <div data-step="2" data-scene="3">
+            <div class="slk-msg">
+              <div class="slk-av"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt=""/></div>
+              <div class="slk-mbody">
+                <div class="slk-mhd"><span class="slk-mname">鈴木 梓</span><span class="slk-mtime">16:15</span></div>
+                <div class="slk-mtext">
+                  <span class="slk-mention">@田中 誠</span> それと確認なんですが、当日の<strong style="color:#E01E5A;">サービススタッフが3名足りないかもしれない</strong>って状況です。<br>
+                  サポートスタッフ㈲に今から当たってみますが、土日なので難しいかも…
+                </div>
+              </div>
             </div>
-            <div class="sf-row">
-              <div class="sf-col-1-3"><div style="border:1px solid #dddbda;border-radius:.5rem;padding:.75rem;"><div style="font-size:.75rem;font-weight:700;color:#444;margin-bottom:.25rem;">2025年 ヒルトン東京 同様事例</div><div style="font-size:.8rem;color:#444;line-height:1.5;">過去3年実績と品質保証書を提示→単価維持で受注成功</div><div style="margin-top:.5rem;"><span class="sbadge sb-green">受注成功</span></div></div></div>
-              <div class="sf-col-1-3"><div style="border:1px solid #dddbda;border-radius:.5rem;padding:.75rem;"><div style="font-size:.75rem;font-weight:700;color:#444;margin-bottom:.25rem;">2024年 帝国ホテル 人員不足対応</div><div style="font-size:.8rem;color:#444;line-height:1.5;">派遣C社・D社への並行打診で3名確保</div><div style="margin-top:.5rem;"><span class="sbadge sb-blue">ノウハウあり</span></div></div></div>
-              <div class="sf-col-1-3"><div style="border:2px solid #E01E5A;border-radius:.5rem;padding:.75rem;background:#fff5f7;"><div style="font-size:.75rem;font-weight:700;color:#E01E5A;margin-bottom:.25rem;">⚠ 2023年 失注ケース（教訓）</div><div style="font-size:.8rem;color:#444;line-height:1.5;">単価妥協+スタッフ減員→クレーム→翌年失注</div><div style="margin-top:.5rem;"><span class="sbadge sb-red">要注意</span></div></div></div>
+            <div class="slk-msg">
+              <div class="slk-av"><img src="https://randomuser.me/api/portraits/men/4.jpg" alt=""/></div>
+              <div class="slk-mbody">
+                <div class="slk-mhd"><span class="slk-mname">田中 誠</span><span class="slk-mtime">16:28</span></div>
+                <div class="slk-mtext">単価を下げてスタッフ不足で回したらクオリティが落ちる…来年の受注にも響く。<br><strong>競合が入り込んでいるからこの単価で受けるしかない</strong>、みたいな状況なのがつらいですね</div>
+              </div>
             </div>
-            <div style="margin-top:.75rem;background:#e8f4fd;border:1px solid #1b96ff;border-radius:.5rem;padding:.75rem 1rem;font-size:.875rem;">
-              💡 <strong>これがシービーサービス様の「圧倒的王座」の源泉です。</strong><br>
-              現場の会話がSlackに、Slackの知恵がSalesforceに。他社には絶対に真似できない、御社だけの<strong>経営資産</strong>が蓄積されています。
+            <div class="slk-msg">
+              <div class="slk-av"><img src="https://randomuser.me/api/portraits/women/12.jpg" alt=""/></div>
+              <div class="slk-mbody">
+                <div class="slk-mhd"><span class="slk-mname">山本 花</span><span class="slk-mtime">17:01</span></div>
+                <div class="slk-mtext">
+                  <span class="slk-mention">@鈴木 梓</span> 派遣B社にも聞いてみます！<br>
+                  単価の件は、過去3年の実績データを見せながら田辺部長と話した方が説得しやすいかもですよ
+                </div>
+                <div class="slk-reactions">
+                  <button class="slk-reaction mine">💡 <span>4</span></button>
+                  <button class="slk-reaction">👏 <span>3</span></button>
+                </div>
+              </div>
             </div>
-          </article>
-        </div>
-      </div>
-    </div><!-- /SF左ペイン -->
+          </div>
 
-    <!-- Slack 右パネル -->
-    <div class="scene3-slack-panel">
-      <div class="s3-slack-hdr">
-        <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="Slack" style="width:18px;height:18px;"/>
-        <div>
-          <div class="s3-slack-hdr-title">#グランドパレス東京_案件</div>
-          <div class="s3-slack-hdr-meta">4名のメンバー — Salesforceに自動スクラップ済み</div>
-        </div>
-      </div>
+          <!-- step3: Agentforce Bot の3行要約 + ナレッジ検索結果 -->
+          <div data-step="3" data-scene="3">
+            <div class="slk-day-divider"><div class="line"></div><div class="label">今日</div><div class="line"></div></div>
+            <!-- Agentforce自動スクラップ通知 -->
+            <div class="slk-msg bot-highlight">
+              <div class="slk-av bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/></div>
+              <div class="slk-mbody">
+                <div class="slk-mhd"><span class="slk-mname bn">Agentforce Bot</span><span class="slk-btag">BOT</span><span class="slk-mtime">今日 8:00</span></div>
+                <div class="slk-mtext">
+                  <p>昨日のスレッドをSalesforce「グランドパレス東京」レコードに<strong>自動スクラップ</strong>しました ✓<br>
+                  さらに、会話の内容を分析して <strong>3行の要約テキスト</strong> を自動生成しました。</p>
+                </div>
+                <!-- 3行要約カード -->
+                <div class="slk-knowledge-card">
+                  <div class="slk-knowledge-card-hdr">
+                    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:12px;height:12px;vertical-align:middle;filter:brightness(0)saturate(100%)invert(25%)sepia(100%)saturate(500%)hue-rotate(195deg);margin-right:4px;"/>
+                    Agentforce — Slack スレッド自動要約（3行）
+                  </div>
+                  <div class="slk-knowledge-card-body">
+                    <div class="slk-knowledge-card-title">グランドパレス東京 案件 — 経緯サマリー</div>
+                    <div style="font-size:13px;color:#1D1C1D;line-height:1.7;">
+                      <strong style="color:#1264A3;">① 単価交渉リスク</strong><br>
+                      競合他社の参入により¥12,000/名（前回比▼20%）への引下げ要求が発生。過去実績データを活用した価値訴求が必要。<br><br>
+                      <strong style="color:#1264A3;">② 現場オペレーションリスク</strong><br>
+                      当日サービススタッフが3名不足。土日のため確保難の可能性。協力会社B社への並行打診を開始済み。<br><br>
+                      <strong style="color:#E01E5A;">③ LTV保護の観点（最重要）</strong><br>
+                      年間取引額¥12.5M。単価妥協＋クオリティ低下による来期の失注リスクが高く、経営レベルでの早急な判断を推奨。
+                    </div>
+                    <!-- 過去ナレッジ検索結果 -->
+                    <div style="margin-top:12px;font-size:12px;font-weight:700;color:#444;margin-bottom:6px;">🔍 類似案件ナレッジ（「競合 単価交渉 ホテル」で自動検索）</div>
+                    <div class="slk-knowledge-card-row">
+                      <div class="slk-knowledge-item success">
+                        <div class="ki-title" style="color:#155724;">✅ 2025年 ヒルトン東京</div>
+                        <div class="ki-text">過去3年実績と品質保証書を提示→単価維持で受注成功</div>
+                      </div>
+                      <div class="slk-knowledge-item info">
+                        <div class="ki-title" style="color:#004085;">📋 2024年 帝国ホテル</div>
+                        <div class="ki-text">B社・C社並行打診でスタッフ3名確保。タスクテンプレあり</div>
+                      </div>
+                      <div class="slk-knowledge-item danger">
+                        <div class="ki-title" style="color:#E01E5A;">⚠ 2023年 失注ケース</div>
+                        <div class="ki-text">単価妥協+スタッフ減員→クレーム→翌年失注。要注意パターン</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="slk-mtext" style="margin-top:8px;">
+                  <p style="background:linear-gradient(135deg,#f0f8ff,#e8f0fb);border:1px solid #1b96ff;border-radius:8px;padding:10px 14px;font-size:13px;color:#032d60;">
+                    💡 <strong>これがシービーサービス様の「圧倒的王座」の源泉です。</strong><br>
+                    業務を構造化するSalesforce × コミュニケーションを加速するSlack。現場の『会話情報』がすべて会社の知恵として検索・活用可能になります。他社には絶対に真似できない経営基盤です。
+                  </p>
+                </div>
+                <div class="slk-reactions">
+                  <button class="slk-reaction mine">💪 <span>5</span></button>
+                  <button class="slk-reaction">🏆 <span>4</span></button>
+                  <button class="slk-reaction">🔍 <span>3</span></button>
+                </div>
+              </div>
+            </div>
 
-      <!-- step1: 現場の生の会話 -->
-      <div class="s3-slack-msgs">
-        <div data-step="1" data-scene="3">
-          <div class="s3-smsg">
-            <div class="s3-sav"><img src="https://randomuser.me/api/portraits/men/4.jpg" alt=""/></div>
-            <div class="s3-sbody"><span class="s3-sname">田中 誠</span><span class="s3-stime">昨日 16:02</span><div class="s3-stext">グランドパレスの件、先方から単価¥12,000でと連絡きました。競合が入り込んでるらしく…このままだと受けるしかないかもです😥</div></div>
+            <!-- Composer -->
+            <div class="slk-composer" style="padding:8px 20px 16px;">
+              <div class="slk-box">
+                <div class="slk-toolbar">
+                  <button><strong>B</strong></button><button><em>I</em></button>
+                  <div class="sep"></div>
+                  <button><i data-lucide="link" style="width:14px;height:14px;"></i></button>
+                </div>
+                <div class="slk-input">#グランドパレス東京_案件にメッセージを送信...</div>
+                <div class="slk-actions">
+                  <div class="l">
+                    <button><i data-lucide="plus"></i></button>
+                    <button><i data-lucide="smile"></i></button>
+                    <button><i data-lucide="at-sign"></i></button>
+                  </div>
+                  <button class="slk-send"><i data-lucide="send" style="width:14px;height:14px;"></i></button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="s3-smsg">
-            <div class="s3-sav"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt=""/></div>
-            <div class="s3-sbody"><span class="s3-sname">鈴木 梓</span><span class="s3-stime">昨日 16:15</span><div class="s3-stext">確認なんですが、当日のサービススタッフが<strong style="color:#E01E5A;"> 3名足りないかもしれない</strong>って状況です。サポート㈲に今から当たりますが土日なので…</div></div>
-          </div>
-          <div class="s3-smsg">
-            <div class="s3-sav"><img src="https://randomuser.me/api/portraits/men/4.jpg" alt=""/></div>
-            <div class="s3-sbody"><span class="s3-sname">田中 誠</span><span class="s3-stime">昨日 16:28</span><div class="s3-stext">単価下げてスタッフ不足で回したらクオリティが落ちて来年にも響く…。管理職に相談した方がよさそうですね</div></div>
-          </div>
-          <div class="s3-smsg">
-            <div class="s3-sav"><img src="https://randomuser.me/api/portraits/women/12.jpg" alt=""/></div>
-            <div class="s3-sbody"><span class="s3-sname">山本 花</span><span class="s3-stime">昨日 17:01</span><div class="s3-stext"><span class="s3-smention">@鈴木 梓</span> 派遣B社にも聞いてみます！単価の件、過去実績を見せながら田辺部長と話した方が説得しやすいかも</div></div>
-          </div>
-          <div class="s3-smsg" style="background:#F0F8FF;">
-            <div class="s3-sav" style="background:#4A154B;display:flex;align-items:center;justify-content:center;border-radius:4px;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:16px;height:16px;filter:brightness(0)invert(1);"/></div>
-            <div class="s3-sbody"><span class="s3-sname" style="color:#4A154B;">Agentforce Bot</span><span class="s3-stag">BOT</span><span class="s3-stime">昨日 17:02</span><div class="s3-stext" style="color:#444;">このスレッドをSalesforce「グランドパレス東京」レコードに自動スクラップしました ✓</div></div>
-          </div>
-        </div>
-      </div>
 
-      <!-- step2: AI要約 -->
-      <div class="s3-ai-summary">
-        <div data-step="2" data-scene="3">
-          <div class="s3-ai-title">
-            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:13px;height:13px;filter:brightness(0)saturate(100%)invert(25%)sepia(100%)saturate(500%)hue-rotate(195deg);"/>
-            Agentforce — Slack スレッド自動要約（3行）
-          </div>
-          <div class="s3-ai-item"><strong>① 単価交渉リスク</strong> 競合参入により¥12,000/名（▼20%）の引下げ要求。過去実績データを活用した説得戦略が必要。</div>
-          <div class="s3-ai-item"><strong>② 現場オペリスク</strong> 当日スタッフ3名不足。土日のため確保難の可能性。代替手段の並行検討を推奨。</div>
-          <div class="s3-ai-item" style="border-color:#E01E5A;background:#FFF5F7;"><strong style="color:#E01E5A;">③ LTV保護</strong> 年間取引¥12.5M。単価妥協とクオリティ低下で来期損失リスク高。社長レベルの介入を推奨。</div>
-        </div>
-      </div>
-
-    </div><!-- /Slackパネル -->
-  </div><!-- /grid -->
+        </div><!-- /slk-msgs -->
+      </div><!-- /slk-main -->
+    </div><!-- /slk-app -->
+  </div><!-- /window -->
 </div><!-- /scene3 -->
 
 <!-- ===== HUD ===== -->
@@ -1345,7 +1500,7 @@ const SCENES = [
   { id:'scene2a', name:'メール → EC ポータル',           steps:5,  onReveal:aS2a, skipReveal:true  },
   { id:'scene2b', name:'SF Service Cloud（プランナー）', steps:3,  onReveal:aS2b, skipReveal:false },
   { id:'scene2c', name:'SF Sales Cloud（受注チーム）',   steps:3,  onReveal:aS2c, skipReveal:false },
-  { id:'scene3',  name:'SF × Slack 統合ビュー',         steps:4,  onReveal:aS3,  skipReveal:false },
+  { id:'scene3',  name:'Slack #グランドパレス東京_案件',  steps:4,  onReveal:aS3,  skipReveal:false },
 ];
 let curScene=0, curStep=0, autoT=null;
 
@@ -1415,31 +1570,35 @@ function aS1(step){
   }
   if(step===3){autoT=setTimeout(()=>{if(curScene===0&&curStep===3)advance();},1800);}
 }
-// Scene 2a: phone-step の切り替え（重ね表示）
+// Scene 2a: browser-step 切り替え + URL/バッジ更新
 function aS2a(step){
-  // 全phone-stepを非表示にして指定ステップだけ表示
   ['ps0','ps1','ps2','ps3','ps4'].forEach((id,i)=>{
     const el=document.getElementById(id);
     if(!el) return;
-    if(i===step){
-      el.classList.add('is-current');
-      el.scrollTop=0;
-    } else {
-      el.classList.remove('is-current');
-    }
+    if(i===step){ el.classList.add('is-current'); el.scrollTop=0; }
+    else { el.classList.remove('is-current'); }
   });
-  // バッジテキストをステップごとに変更
   const badge=document.getElementById('s2a-badge');
-  if(badge){
-    const labels=[
-      '📱 顧客スマートフォン — メールアプリ（受信トレイ）',
-      '📧 Account Engagement AI自動配信メール — リンクをタップ',
-      '✨ Experience Cloud ポータル — メールからシームレスに遷移',
-      '💬 ポータルから問い合わせ入力 — Salesforceに自動連携',
-      '✅ 送信完了 — Salesforceにケースとして自動登録'
-    ];
-    badge.textContent=labels[step]||labels[0];
-  }
+  const urlEl=document.getElementById('s2a-url-text');
+  const titleEl=document.getElementById('s2a-url');
+  const labels=[
+    '💻 顧客PC — Gmail 受信トレイ（AI自動配信メール着信）',
+    '📧 Account Engagement 自動配信メールを開封 — リンクをクリック',
+    '✨ Experience Cloud ポータル — Gmail からシームレスに遷移！',
+    '💬 ポータルから見積変更を入力 — Salesforce に自動登録',
+    '✅ 送信完了 — Salesforce ケースとして即時記録'
+  ];
+  const urls=[
+    'mail.google.com/mail/u/0/#inbox',
+    'mail.google.com/mail/u/0/#inbox',
+    'grandpalace.cbs-catering.my.site.com/portal',
+    'grandpalace.cbs-catering.my.site.com/portal/inquiry',
+    'grandpalace.cbs-catering.my.site.com/portal/complete'
+  ];
+  const urlShort=['mail.google.com','mail.google.com','grandpalace.cbs-catering.my.site.com/portal','grandpalace.cbs-catering.my.site.com/portal/inquiry','grandpalace.cbs-catering.my.site.com/portal/complete'];
+  if(badge) badge.textContent=labels[step]||labels[0];
+  if(titleEl) titleEl.textContent=urls[step]||urls[0];
+  if(urlEl) urlEl.textContent=urlShort[step]||urlShort[0];
 }
 function aS2b(step){}
 // Scene 2c: 棒グラフアニメ
