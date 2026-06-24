@@ -519,3 +519,636 @@ body{margin:0;background:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,"S
     </div><!-- /slack-body -->
   </div><!-- /slack-window -->
 </div><!-- /scene1 -->
+
+<!-- =====================================================
+  SCENE 2: データの源泉 ― Salesforce 現場活用
+  Steps:
+    0 = SFヘッダー + CBケータリング Experience Cloud ポータル
+    1 = 自動追客（Account Engagement）カード
+    2 = プランナー Service Cloud 画面（案件管理）
+    3 = 旬菜亭 営業活動タイムライン
+    4 = ターゲット選定 棒グラフ
+===================================================== -->
+<div id="scene2" class="scene sf-scene">
+  <!-- Salesforce ヘッダー -->
+  <header class="sf-header">
+    <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+    <div class="sf-header-search">
+      <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon_x-small" />
+        <input type="search" placeholder="検索..." class="slds-input">
+      </div></div>
+    </div>
+    <div class="sf-header-actions">
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></button>
+      <button class="sf-fav-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" /><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;" /></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></button>
+      <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" /></button><span class="sf-notify-dot"></span></span>
+      <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:.5rem;"><img src="https://ui-avatars.com/api/?name=山田&background=032d60&color=fff" alt="山田社長"></span>
+    </div>
+  </header>
+  <div class="sf-nav">
+    <div class="sf-app-dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <span class="sf-app-name">CBSケータリング</span>
+    <nav><ul>
+      <li><a href="#">ホーム</a></li>
+      <li class="is-active"><a href="#">取引先 ▾</a></li>
+      <li><a href="#">案件管理 ▾</a></li>
+      <li><a href="#">Service Cloud ▾</a></li>
+      <li><a href="#">Experience Cloud ▾</a></li>
+      <li><a href="#">ダッシュボード ▾</a></li>
+    </ul></nav>
+  </div>
+
+  <div class="sf-main" style="overflow-y:auto;flex:1;">
+
+    <!-- step0: Experience Cloud ポータル -->
+    <div data-step="0" data-scene="2">
+      <div class="slds-page-header slds-m-bottom_small">
+        <div class="slds-page-header__row">
+          <div class="slds-page-header__col-title">
+            <div class="slds-media">
+              <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-account"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_medium" /></span></div>
+              <div class="slds-media__body">
+                <p class="slds-text-title">CBケータリング — 顧客利便性向上</p>
+                <h1 class="slds-page-header__title">顧客ポータル（Experience Cloud）</h1>
+                <p class="slds-text-body_small slds-text-color_weak">顧客がWebから直接注文・変更を行い、LTVを最大化する仕組み</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- EC ポータル風フレーム -->
+      <div class="ec-frame">
+        <div class="ec-browser-bar">
+          <span style="font-size:14px;">←</span><span style="font-size:14px;">→</span><span style="font-size:14px;">↺</span>
+          <div class="ec-url-bar">🔒 <span>cbs-catering.my.site.com/portal</span> — 顧客専用ポータル</div>
+        </div>
+        <div style="background:white;padding:1.5rem;">
+          <div style="background:#4a154b;padding:1rem 1.5rem;border-radius:8px;display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <span style="color:white;font-size:1.25rem;font-weight:900;">CBSケータリング オーダーポータル</span>
+            <span style="margin-left:auto;background:#2eb67d;color:white;font-size:.75rem;padding:3px 10px;border-radius:4px;font-weight:700;">ログイン中: グランドパレス東京 様</span>
+          </div>
+          <div class="sf-row">
+            <div class="sf-col-1-3">
+              <div style="border:1px solid #e0d0f0;border-radius:8px;padding:1rem;background:#faf5ff;cursor:pointer;">
+                <div style="font-size:1.5rem;margin-bottom:.5rem;">📝</div>
+                <div style="font-weight:700;color:#4a154b;margin-bottom:.25rem;">新規注文・お見積り</div>
+                <div style="font-size:.8125rem;color:#666;">イベント日程・人数・メニュー希望を入力</div>
+              </div>
+            </div>
+            <div class="sf-col-1-3">
+              <div style="border:1px solid #e0d0f0;border-radius:8px;padding:1rem;background:#faf5ff;cursor:pointer;">
+                <div style="font-size:1.5rem;margin-bottom:.5rem;">📋</div>
+                <div style="font-weight:700;color:#4a154b;margin-bottom:.25rem;">進行中の案件確認</div>
+                <div style="font-size:.8125rem;color:#666;"><span class="sbadge sb-yellow">進行中 2件</span></div>
+              </div>
+            </div>
+            <div class="sf-col-1-3">
+              <div style="border:1px solid #e0d0f0;border-radius:8px;padding:1rem;background:#faf5ff;cursor:pointer;">
+                <div style="font-size:1.5rem;margin-bottom:.5rem;">💬</div>
+                <div style="font-weight:700;color:#4a154b;margin-bottom:.25rem;">お問い合わせ・要望</div>
+                <div style="font-size:.8125rem;color:#666;">自動でSalesforceケースに登録</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:.75rem 1rem;font-size:.875rem;">
+            💡 <strong>AIからの提案：</strong> グランドパレス東京様は毎年7月に大型イベントを開催されています。今年もご利用をお待ちしております。
+            <a href="#" style="color:#0070d2;margin-left:.5rem;">特別プランを見る →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- step1: 自動追客 -->
+    <div data-step="1" data-scene="2">
+      <div class="slds-m-top_small">
+        <article class="slds-card">
+          <div class="slds-card__header">
+            <h3 class="slds-card__header-title">
+              <span class="slds-icon_container slds-icon-standard-email" style="width:1.5rem;height:1.5rem;margin-right:.5rem;"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/email.svg" alt="" style="width:1.25rem;height:1.25rem;" /></span>
+              自動追客（Account Engagement） — AIによる最適タイミング配信
+            </h3>
+          </div>
+          <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead><tr><th>対象顧客</th><th>予測イベント需要</th><th>配信タイミング</th><th>メール開封率</th><th>ポータル誘致</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><a href="#">グランドパレス東京</a></td>
+                <td><span class="sbadge sb-purple">創立記念 7月</span></td>
+                <td>6月第1週（AI推奨）</td>
+                <td><strong style="color:#2e844a;">68%</strong></td>
+                <td><span class="sbadge sb-green">誘致済</span></td>
+              </tr>
+              <tr>
+                <td><a href="#">東京ヒルトン</a></td>
+                <td><span class="sbadge sb-blue">年末パーティー 12月</span></td>
+                <td>10月第3週（AI推奨）</td>
+                <td><strong>42%</strong></td>
+                <td><span class="sbadge sb-yellow">検討中</span></td>
+              </tr>
+              <tr>
+                <td><a href="#">丸の内フォーラム</a></td>
+                <td><span class="sbadge sb-purple">株主総会 3月</span></td>
+                <td>1月第2週（AI推奨）</td>
+                <td><strong>55%</strong></td>
+                <td><span class="sbadge sb-green">誘致済</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </div>
+
+    <!-- step2: Service Cloud プランナー画面 -->
+    <div data-step="2" data-scene="2">
+      <div class="slds-m-top_small slds-page-header">
+        <div class="slds-page-header__row">
+          <div class="slds-page-header__col-title">
+            <div class="slds-media">
+              <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-case"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/case.svg" alt="" class="slds-icon slds-icon_medium" /></span></div>
+              <div class="slds-media__body">
+                <p class="slds-text-title">Service Cloud — プランナー画面</p>
+                <h1 class="slds-page-header__title">グランドパレス東京 創立50周年記念パーティー</h1>
+                <p class="slds-text-body_small slds-text-color_weak">案件番号: CBS-2027-00847 ／ 担当: 田中 誠 ／ 実施日: 2027年7月18日</p>
+              </div>
+            </div>
+          </div>
+          <div class="slds-page-header__col-actions">
+            <ul class="slds-button-group-list">
+              <li><button class="slds-button slds-button_neutral">発注書を出力</button></li>
+              <li><button class="slds-button slds-button_brand">ステータス更新</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sf-row slds-m-top_small">
+        <div class="sf-col-1-4"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-text-color_weak">案件金額</p><p style="font-size:1.4rem;font-weight:700;">¥7,200,000</p><p class="slds-text-body_small" style="color:#856404;font-weight:700;">⚠ 見積単価▼20%</p></article></div>
+        <div class="sf-col-1-4"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-text-color_weak">規模</p><p style="font-size:1.4rem;font-weight:700;">500名</p><p class="slds-text-body_small slds-text-color_weak">¥12,000/名（過去¥15,000）</p></article></div>
+        <div class="sf-col-1-4"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-text-color_weak">スタッフ手配</p><p style="font-size:1.4rem;font-weight:700;color:#ba0517;">22名/25名</p><p class="slds-text-body_small" style="color:#ba0517;font-weight:700;">⚠ 3名不足</p></article></div>
+        <div class="sf-col-1-4"><article class="slds-card slds-p-around_medium"><p class="slds-text-title slds-text-color_weak">実施まで</p><p style="font-size:1.4rem;font-weight:700;">24日</p><p class="slds-text-body_small slds-text-color_weak">2027-07-18</p></article></div>
+      </div>
+    </div>
+
+    <!-- step3: 旬菜亭 営業タイムライン -->
+    <div data-step="3" data-scene="2">
+      <div class="slds-m-top_small">
+        <div class="slds-page-header slds-m-bottom_small">
+          <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+              <div class="slds-media">
+                <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-opportunity"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/opportunity.svg" alt="" class="slds-icon slds-icon_medium" /></span></div>
+                <div class="slds-media__body">
+                  <p class="slds-text-title">旬菜亭 — 受注チーム主導の営業管理</p>
+                  <h1 class="slds-page-header__title">営業活動タイムライン（脱・属人化）</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sf-row">
+          <div class="sf-col-2-3">
+            <article class="slds-card slds-p-around_medium">
+              <h3 class="slds-text-heading_small slds-m-bottom_small">活動履歴 — これまでは営業の頭の中にしかなかったノウハウ</h3>
+              <ul class="sf-tl">
+                <li class="sf-tl-item"><span class="sf-tl-icon sf-tl-call"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/log_a_call.svg" alt="" /></span><div class="sf-tl-body"><a href="#">グランドパレス東京 田辺部長 アポ獲得</a><div class="sf-tl-meta">鈴木 梓 — 6/10 10:30 ／ 「毎年7月に500名規模の式典あり。今年は50周年で特に力を入れたい」と確認</div></div></li>
+                <li class="sf-tl-item"><span class="sf-tl-icon sf-tl-email"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/email.svg" alt="" /></span><div class="sf-tl-body"><a href="#">特別プラン提案書を送付</a><div class="sf-tl-meta">田中 誠 — 6/15 14:00 ／ 開封確認済み（Account Engagement）</div></div></li>
+                <li class="sf-tl-item"><span class="sf-tl-icon sf-tl-task"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/task.svg" alt="" /></span><div class="sf-tl-body"><a href="#">見積単価の再交渉（要注意）</a><div class="sf-tl-meta">鈴木 梓 — 6/20 ／ 先方から「予算圧縮で¥12,000/名で調整してほしい」と連絡。競合他社が入り込んでいる可能性あり</div></div></li>
+                <li class="sf-tl-item"><span class="sf-tl-icon sf-tl-event"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/event.svg" alt="" /></span><div class="sf-tl-body"><a href="#">会場下見・スタッフ確認（予定）</a><div class="sf-tl-meta">田中 誠 — 6/25 13:00 ／ スタッフ3名不足につき協力会社に打診予定</div></div></li>
+              </ul>
+            </article>
+          </div>
+          <div class="sf-col-1-3">
+            <article class="slds-card slds-p-around_medium">
+              <h3 class="slds-text-heading_small slds-m-bottom_small">顧客ノウハウ（型化）</h3>
+              <dl>
+                <dt class="slds-text-body_small slds-text-color_weak">好む料理傾向</dt><dd class="slds-m-bottom_x-small">魚介コース・和牛ステーション</dd>
+                <dt class="slds-text-body_small slds-text-color_weak">価格感度</dt><dd class="slds-m-bottom_x-small"><span class="sbadge sb-yellow">中（交渉あり）</span></dd>
+                <dt class="slds-text-body_small slds-text-color_weak">キーパーソン</dt><dd class="slds-m-bottom_x-small">田辺 誠一郎（総務部長）</dd>
+                <dt class="slds-text-body_small slds-text-color_weak">競合リスク</dt><dd class="slds-m-bottom_x-small"><span class="sbadge sb-red">高</span></dd>
+                <dt class="slds-text-body_small slds-text-color_weak">年間取引実績</dt><dd>¥12,500,000</dd>
+              </dl>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- step4: ターゲット選定 棒グラフ -->
+    <div data-step="4" data-scene="2">
+      <div class="slds-m-top_small">
+        <article class="slds-card slds-p-around_medium">
+          <h3 class="slds-text-heading_small slds-m-bottom_small">受注チーム別 営業リソース配置（データ基づく最適化）</h3>
+          <div class="sf-row">
+            <div class="sf-col-1-2">
+              <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">誰が・どこに・どれだけ動いているか</p>
+              <div class="sf-bar-row"><div class="sf-bar-label">鈴木 梓</div><div class="sf-bar-track"><div class="sf-bar-fill" style="--w:88%;background:#9050e9;" id="s2b1"></div><span class="sf-bar-val">大手17社</span></div></div>
+              <div class="sf-bar-row"><div class="sf-bar-label">田中 誠</div><div class="sf-bar-track"><div class="sf-bar-fill" style="--w:72%;background:#0176d3;" id="s2b2"></div><span class="sf-bar-val">中堅14社</span></div></div>
+              <div class="sf-bar-row"><div class="sf-bar-label">山本 花</div><div class="sf-bar-track"><div class="sf-bar-fill" style="--w:55%;background:#2e844a;" id="s2b3"></div><span class="sf-bar-val">新規11社</span></div></div>
+              <div class="sf-bar-row"><div class="sf-bar-label">佐藤 健</div><div class="sf-bar-track"><div class="sf-bar-fill" style="--w:40%;background:#fe9339;" id="s2b4"></div><span class="sf-bar-val">育成8社</span></div></div>
+            </div>
+            <div class="sf-col-1-2">
+              <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">Agentforce 推奨リソース配置</p>
+              <div class="ai-summary">
+                <div class="ai-summary-hdr">
+                  <div class="ai-icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></div>
+                  <div class="ai-title">Agentforce インサイト</div>
+                </div>
+                <div class="ai-body">
+                  鈴木 梓 担当の大手セグメントの受注率が<strong>42%</strong>と最高。グランドパレス東京のような高リスク案件に集中投下を推奨します。<br><br>
+                  山本 花 担当の新規13社はリードが温まっており、来期のパイプライン候補として<strong>優先フォロー</strong>を推奨。
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+  </div><!-- /sf-main -->
+</div><!-- /scene2 -->
+
+<!-- =====================================================
+  SCENE 3: Slack × Salesforce 統合 ― 現場の知恵を資産化
+  Steps:
+    0 = SFレコード（グランドパレス東京）+ Slack スレッドタブ
+    1 = Slackスレッド（現場のドタバタ会話）が表示される
+    2 = Agentforce AI 3行要約カード
+    3 = 「なぜその単価になったか」経緯ナレッジが検索可能な状態
+===================================================== -->
+<div id="scene3" class="scene sf-scene">
+  <header class="sf-header">
+    <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce" />
+    <div class="sf-header-search">
+      <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon_x-small" />
+        <input type="search" placeholder="グランドパレス東京" class="slds-input">
+      </div></div>
+    </div>
+    <div class="sf-header-actions">
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></button>
+      <button class="sf-fav-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/favorite.svg" alt="" /><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" style="width:10px;height:10px;" /></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt="" /></button>
+      <span class="sf-notify-wrap"><button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt="" /></button><span class="sf-notify-dot"></span></span>
+      <span class="slds-avatar slds-avatar_circle slds-avatar_small" style="margin-left:.5rem;"><img src="https://ui-avatars.com/api/?name=山田&background=032d60&color=fff" alt="山田社長"></span>
+    </div>
+  </header>
+  <div class="sf-nav">
+    <div class="sf-app-dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <span class="sf-app-name">CBSケータリング</span>
+    <nav><ul>
+      <li><a href="#">ホーム</a></li>
+      <li class="is-active"><a href="#">取引先 ▾</a></li>
+      <li><a href="#">案件管理 ▾</a></li>
+      <li><a href="#">ダッシュボード ▾</a></li>
+    </ul></nav>
+  </div>
+
+  <div class="sf-main" style="overflow-y:auto;flex:1;">
+
+    <!-- step0: レコードヘッダー + タブ -->
+    <div data-step="0" data-scene="3">
+      <div class="slds-page-header slds-m-bottom_small">
+        <div class="slds-page-header__row">
+          <div class="slds-page-header__col-title">
+            <div class="slds-media">
+              <div class="slds-media__figure"><span class="slds-icon_container slds-icon-standard-account"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/account.svg" alt="" class="slds-icon slds-icon_medium" /></span></div>
+              <div class="slds-media__body">
+                <p class="slds-text-title">取引先 — Slack チャンネル連携</p>
+                <h1 class="slds-page-header__title">グランドパレス東京</h1>
+                <p class="slds-text-body_small" style="color:#ba0517;font-weight:700;">⚠ Agentforce リスクアラート検知中 — 見積単価▼20% / スタッフ3名不足</p>
+              </div>
+            </div>
+          </div>
+          <div class="slds-page-header__col-actions">
+            <ul class="slds-button-group-list">
+              <li><button class="slds-button slds-button_neutral">活動を記録</button></li>
+              <li><button class="slds-button slds-button_brand">緊急タスクを作成</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- タブ -->
+      <div class="slds-tabs_default">
+        <ul class="slds-tabs_default__nav" role="tablist">
+          <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#">詳細</a></li>
+          <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#">関連</a></li>
+          <li class="slds-tabs_default__item slds-is-active" role="presentation"><a class="slds-tabs_default__link" href="#">
+            <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;" />
+            Slack チャンネル（現場の会話）
+          </a></li>
+          <li class="slds-tabs_default__item" role="presentation"><a class="slds-tabs_default__link" href="#">Agentforce 要約</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- step1: Slackスレッド（現場の会話） -->
+    <div data-step="1" data-scene="3">
+      <article class="slds-card sf-slack-embed" style="margin-top:.5rem;">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #e1e1e1;">
+          <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="Slack" style="width:20px;height:20px;" />
+          <span style="font-weight:900;font-size:14px;">#グランドパレス東京_案件</span>
+          <span style="font-size:12px;color:#616061;margin-left:4px;">4名のメンバー</span>
+          <span style="margin-left:auto;font-size:11px;color:#616061;">Salesforceに自動スクラップ済み</span>
+        </div>
+        <div class="smsg">
+          <img class="sav" src="https://ui-avatars.com/api/?name=田中+誠&background=9050e9&color=fff" alt="" />
+          <div class="sbody"><span class="sname">田中 誠</span><span class="stime">昨日 16:02</span><div class="stext">グランドパレスの件、先方から見積り単価¥12,000でと連絡来ました。競合が入り込んでるらしく…このままだと受けるしかないかもです😥</div></div>
+        </div>
+        <div class="smsg">
+          <img class="sav" src="https://ui-avatars.com/api/?name=鈴木+梓&background=1b96ff&color=fff" alt="" />
+          <div class="sbody"><span class="sname">鈴木 梓</span><span class="stime">昨日 16:15</span><div class="stext">それと確認なんですが、当日のサービススタッフが<strong style="color:#e01e5a;">3名足りないかもしれない</strong>って状況です。サポートスタッフ㈲に今から当たりますが、土日なので難しいかも…</div></div>
+        </div>
+        <div class="smsg">
+          <img class="sav" src="https://ui-avatars.com/api/?name=田中+誠&background=9050e9&color=fff" alt="" />
+          <div class="sbody"><span class="sname">田中 誠</span><span class="stime">昨日 16:28</span><div class="stext">単価下げてスタッフ不足で回したら、クオリティが落ちて来年の受注にも響く…。管理職に相談した方がよさそうですね</div></div>
+        </div>
+        <div class="smsg">
+          <img class="sav" src="https://ui-avatars.com/api/?name=山本+花&background=2eb67d&color=fff" alt="" />
+          <div class="sbody"><span class="sname">山本 花</span><span class="stime">昨日 17:01</span><div class="stext"><span class="smention">@鈴木 梓</span> 派遣会社B社にも聞いてみます！あと単価の件、過去の実績データを見せながら田辺部長と話した方が説得しやすいかも</div></div>
+        </div>
+      </article>
+    </div>
+
+    <!-- step2: Agentforce AI 3行要約 -->
+    <div data-step="2" data-scene="3">
+      <div class="slds-m-top_small ai-summary">
+        <div class="ai-summary-hdr">
+          <div class="ai-icon"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></div>
+          <div>
+            <div class="ai-title">Agentforce — Slack スレッド自動要約（3行）</div>
+            <div style="font-size:.75rem;color:#444;">#グランドパレス東京_案件 の過去48時間を分析</div>
+          </div>
+          <span class="slds-badge slds-badge_lightest" style="margin-left:auto;">自動生成</span>
+        </div>
+        <div class="ai-body">
+          <strong>① 単価交渉リスク</strong> 競合他社の参入により、先方から¥12,000/名（前回比▼20%）への単価引き下げ要求が発生。過去実績データを活用した説得戦略が必要。<br><br>
+          <strong>② 現場オペリスク</strong> 当日サービススタッフが3名不足。協力会社への即時打診が着手されているが、土日のため確保難の可能性あり。代替手段の並行検討を推奨。<br><br>
+          <strong>③ LTV保護の観点</strong> グランドパレス東京様の年間取引実績は¥12.5M。単価妥協とクオリティ低下による来期損失リスクが高く、上位判断（管理職レベル）での介入を推奨。
+        </div>
+        <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="slds-button slds-button_brand">社長にエスカレーション</button>
+          <button class="slds-button slds-button_neutral">対応プランを作成</button>
+          <button class="slds-button slds-button_neutral">類似案件の過去対応を検索</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- step3: 経緯ナレッジ 検索可能 -->
+    <div data-step="3" data-scene="3">
+      <div class="slds-m-top_small">
+        <article class="slds-card slds-p-around_medium">
+          <h3 class="slds-text-heading_small slds-m-bottom_small">
+            🔍 現場の知恵・プロセス経緯 ― 全社ナレッジとして検索可能
+          </h3>
+          <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:.5rem;padding:.75rem 1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem;">
+            <span style="font-size:1.25rem;">🔍</span>
+            <span style="color:#0070d2;font-size:.875rem;font-weight:700;">「競合 単価交渉 ホテル 過去対応」で検索</span>
+            <span style="margin-left:auto;font-size:.75rem;color:#666;">3件ヒット</span>
+          </div>
+          <div class="sf-row">
+            <div class="sf-col-1-3">
+              <div style="border:1px solid #dddbda;border-radius:.5rem;padding:.75rem;">
+                <div style="font-size:.75rem;font-weight:700;color:#444;margin-bottom:.25rem;">2025年 ヒルトン東京 同様の事例</div>
+                <div style="font-size:.8125rem;color:#444;line-height:1.5;">競合参入時、過去3年の実績データと品質保証書を提示→単価維持で受注成功</div>
+                <div style="margin-top:.5rem;"><span class="sbadge sb-green">受注成功</span></div>
+              </div>
+            </div>
+            <div class="sf-col-1-3">
+              <div style="border:1px solid #dddbda;border-radius:.5rem;padding:.75rem;">
+                <div style="font-size:.75rem;font-weight:700;color:#444;margin-bottom:.25rem;">2024年 帝国ホテル 人員不足対応</div>
+                <div style="font-size:.8125rem;color:#444;line-height:1.5;">派遣会社C社・D社への並行打診パターンで3名確保。タスクテンプレート活用</div>
+                <div style="margin-top:.5rem;"><span class="sbadge sb-blue">ノウハウあり</span></div>
+              </div>
+            </div>
+            <div class="sf-col-1-3">
+              <div style="border:2px solid #e01e5a;border-radius:.5rem;padding:.75rem;background:#fff5f5;">
+                <div style="font-size:.75rem;font-weight:700;color:#e01e5a;margin-bottom:.25rem;">⚠ 2023年 失注ケース（教訓）</div>
+                <div style="font-size:.8125rem;color:#444;line-height:1.5;">単価妥協+スタッフ減員→当日クレーム→翌年失注。判断の遅れが致命的だった</div>
+                <div style="margin-top:.5rem;"><span class="sbadge sb-red">要注意パターン</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:.75rem;background:#e8f4fd;border:1px solid #1b96ff;border-radius:.5rem;padding:.75rem 1rem;font-size:.875rem;">
+            💡 <strong>これがシービーサービスの「圧倒的王座」の源泉です。</strong><br>
+            現場の会話がSlackに、Slackの知恵がSalesforceに。他社には絶対に真似できない、御社だけの<strong>経営資産</strong>が蓄積されています。
+          </div>
+        </article>
+      </div>
+    </div>
+
+  </div><!-- /sf-main -->
+</div><!-- /scene3 -->
+
+<!-- HUD -->
+<div class="hud" id="hud">
+  <span class="hud-label" id="hud-label">Scene 1/3</span>
+  <div class="hud-dots" id="hud-dots"></div>
+  <span class="hud-keys"><kbd>←</kbd> 戻る &nbsp;<kbd>→</kbd> 進む</span>
+</div>
+
+<script>
+// ============================================================
+// 定義: シーン & ステップ
+// ============================================================
+const SCENES = [
+  {
+    id: 'scene1',
+    name: 'Slack 経営コンソール',
+    steps: 5,
+    onReveal: function(i){ animateS1(i); }
+  },
+  {
+    id: 'scene2',
+    name: 'Salesforce 現場活用',
+    steps: 5,
+    onReveal: function(i){ animateS2(i); }
+  },
+  {
+    id: 'scene3',
+    name: 'Slack × SF 統合',
+    steps: 4,
+    onReveal: function(i){ animateS3(i); }
+  }
+];
+
+let curScene = 0;
+let curStep  = 0;
+let typing3Timer = null;
+
+// ============================================================
+// HUD 初期化
+// ============================================================
+function initHUD() {
+  const dots = document.getElementById('hud-dots');
+  dots.innerHTML = '';
+  SCENES.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.className = 'hud-dot';
+    d.dataset.si = i;
+    dots.appendChild(d);
+  });
+  refreshHUD();
+}
+
+function refreshHUD() {
+  const sc = SCENES[curScene];
+  document.getElementById('hud-label').textContent =
+    `Scene ${curScene+1}/${SCENES.length} — ${sc.name}  [${curStep+1}/${sc.steps}]`;
+  document.querySelectorAll('.hud-dot').forEach((d, i) => {
+    d.classList.remove('active','done');
+    if (i < curScene)  d.classList.add('done');
+    if (i === curScene) d.classList.add('active');
+  });
+}
+
+// ============================================================
+// シーン切替
+// ============================================================
+function activateScene(idx) {
+  SCENES.forEach((sc, i) => {
+    document.getElementById(sc.id).classList.toggle('is-active', i === idx);
+  });
+}
+
+// 全ステップ非表示
+function resetScene(id) {
+  document.querySelectorAll(`#${id} [data-step]`).forEach(el => {
+    el.classList.remove('step-on');
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(12px)';
+  });
+}
+
+// 0〜upTo まで表示
+function revealUpTo(sceneId, upTo) {
+  document.querySelectorAll(`#${sceneId} [data-step]`).forEach(el => {
+    const s = parseInt(el.dataset.step);
+    if (s <= upTo) {
+      el.classList.add('step-on');
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    } else {
+      el.classList.remove('step-on');
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(12px)';
+    }
+  });
+}
+
+// ============================================================
+// 進む / 戻る
+// ============================================================
+function advance() {
+  const sc = SCENES[curScene];
+  if (curStep < sc.steps - 1) {
+    curStep++;
+    revealUpTo(sc.id, curStep);
+    sc.onReveal(curStep);
+    refreshHUD();
+    scrollToLatest(sc.id);
+  } else if (curScene < SCENES.length - 1) {
+    resetScene(sc.id);
+    curScene++;
+    curStep = 0;
+    activateScene(curScene);
+    revealUpTo(SCENES[curScene].id, 0);
+    SCENES[curScene].onReveal(0);
+    refreshHUD();
+    window.scrollTo(0, 0);
+  }
+}
+
+function retreat() {
+  if (curStep > 0) {
+    curStep--;
+    revealUpTo(SCENES[curScene].id, curStep);
+    refreshHUD();
+  } else if (curScene > 0) {
+    resetScene(SCENES[curScene].id);
+    curScene--;
+    curStep = SCENES[curScene].steps - 1;
+    activateScene(curScene);
+    revealUpTo(SCENES[curScene].id, curStep);
+    refreshHUD();
+    window.scrollTo(0, 0);
+  }
+}
+
+function scrollToLatest(sceneId) {
+  const visible = [...document.querySelectorAll(`#${sceneId} [data-step].step-on`)];
+  if (!visible.length) return;
+  const last = visible[visible.length - 1];
+  setTimeout(() => last.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+}
+
+// ============================================================
+// キーボード
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); advance(); }
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); retreat(); }
+});
+
+// ============================================================
+// Scene1 アニメーション
+// ============================================================
+function animateS1(step) {
+  if (step === 1) {
+    // 棒グラフ伸長
+    setTimeout(() => {
+      const el = document.getElementById('bc1');
+      if (el) el.classList.add('grow');
+    }, 300);
+    // プログレスリング
+    setTimeout(() => {
+      const ring = document.getElementById('ring1');
+      if (ring) ring.style.strokeDashoffset = '63'; // 226*(1-0.72)=63.3
+    }, 500);
+  }
+  if (step === 3) {
+    // タイピング1.8s後に自動で step4 を表示
+    clearTimeout(typing3Timer);
+    typing3Timer = setTimeout(() => {
+      if (curScene === 0 && curStep === 3) {
+        advance(); // step4 へ自動進行
+      }
+    }, 1800);
+  }
+}
+
+// ============================================================
+// Scene2 アニメーション
+// ============================================================
+function animateS2(step) {
+  if (step === 4) {
+    setTimeout(() => {
+      ['s2b1','s2b2','s2b3','s2b4'].forEach((id, i) => {
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) el.classList.add('grow');
+        }, i * 100);
+      });
+    }, 200);
+  }
+}
+
+// ============================================================
+// Scene3 アニメーション（特になし）
+// ============================================================
+function animateS3(step) {}
+
+// ============================================================
+// 初期化
+// ============================================================
+(function init() {
+  initHUD();
+  activateScene(0);
+  SCENES.forEach(sc => resetScene(sc.id));
+  revealUpTo('scene1', 0);
+  SCENES[0].onReveal(0);
+})();
+</script>
+</body>
+</html>
