@@ -4,35 +4,11 @@
             <div class="agent-avatar">
                 <lightning-icon icon-name="utility:einstein" size="large" alternative-text="Agentforce"></lightning-icon>
             </div>
-            <h1 class="launcher-title">Agentforce がお手伝いします</h1>
+            <h1 class="launcher-title">{titleText}</h1>
         </div>
-
-        <div class="input-area">
-            <div class="input-wrapper">
-                <span class="input-icon">✦</span>
-                <input
-                    type="text"
-                    class="agent-input"
-                    placeholder="Agentforce に質問する..."
-                    value={inputText}
-                    oninput={handleInput}
-                    onkeydown={handleKeydown}
-                />
-                <button
-                    class="send-button send-button-active"
-                    onclick={launchAgent}
-                    aria-label="Agentforceを起動">
-                    <lightning-icon icon-name="utility:send" size="x-small" alternative-text="送信"></lightning-icon>
-                </button>
-            </div>
-        </div>
-
-        <template if:true={showSuggestions}>
-            <div class="suggestions">
-                <template for:each={suggestions} for:item="s">
-                    <button key={s} class="suggestion-chip" onclick={handleSuggestion} data-text={s}>{s}</button>
-                </template>
-            </div>
-        </template>
+        <button class="launch-button" onclick={launchAgent}>
+            <lightning-icon icon-name="utility:einstein" size="small" alternative-text="Agentforce"></lightning-icon>
+            <span>Agent を起動する</span>
+        </button>
     </div>
 </template>
