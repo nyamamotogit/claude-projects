@@ -295,7 +295,8 @@ body.slack-scope{font-family:"Lato",-apple-system,sans-serif;font-size:15px;line
 /* ============================================================
    Scene 2-2, 2-3, 3: Salesforce画面
    ============================================================ */
-.sf-scene{background:#f3f3f3;display:flex;flex-direction:column;overflow:hidden;}
+.sf-scene{background:#f3f3f3;flex-direction:column;overflow:hidden;}
+/* display は .scene.is-active.sf-scene で管理するので sf-scene 単体では指定しない */
 .sf-header{background:white;height:3rem;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;border-bottom:1px solid #c9c9c9;flex-shrink:0;}
 .sf-cloud-logo{width:32px;height:auto;}
 .sf-header-search{width:38%;max-width:30rem;}
