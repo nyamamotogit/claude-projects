@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBS Headless 360 デモ | シービーサービス社長向け</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+
+<style>
+/* ===== グローバルリセット ===== */
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;}
+
+/* ===== シーン切替コンテナ ===== */
+.scene{display:none;width:100vw;height:100vh;}
+.scene.is-active{display:block;}
+
+/* ===== HUD ===== */
+.hud{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:.75rem;background:rgba(3,45,96,.92);backdrop-filter:blur(10px);border-radius:2rem;padding:.45rem 1.25rem;box-shadow:0 4px 24px rgba(0,0,0,.4);pointer-events:none;}
+.hud-label{color:#a8c4e5;font-size:.7rem;font-weight:700;letter-spacing:.06em;white-space:nowrap;}
+.hud-dots{display:flex;gap:5px;align-items:center;}
+.hud-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .25s;}
+.hud-dot.done{background:rgba(255,255,255,.55);}
+.hud-dot.active{background:#1b96ff;width:20px;border-radius:4px;}
+.hud-keys{color:rgba(255,255,255,.4);font-size:.65rem;white-space:nowrap;}
+.hud-keys kbd{background:rgba(255,255,255,.15);border-radius:3px;padding:1px 4px;font-size:.6rem;}
+
+/* ===== ステップ表示制御 ===== */
+[data-step]{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease;}
+[data-step].step-on{opacity:1;transform:translateY(0);}
+
+/* ============================================================
+   SCENE 1: Slack DM — 社長専用経営コンソールBot
+   ============================================================ */
+:root {
+  --slack-aubergine: #4A154B;
+  --slack-aubergine-dark: #350D36;
+  --slack-aubergine-text: #FFFFFF;
+  --slack-aubergine-text-dim: rgba(255,255,255,0.7);
+  --slack-green:  #2EB67D;
+  --slack-red:    #E01E5A;
+  --slack-bg:     #FFFFFF;
+  --slack-bg-hover: #F8F8F8;
+  --slack-text:   #1D1C1D;
+  --slack-text-dim: #616061;
+  --slack-border: #E1E1E1;
+  --slack-link:   #1264A3;
+  --slack-sidebar-w: 260px;
+  --slack-header-h: 44px;
+}
+body.slack-scope{font-family:"Lato",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.46;color:var(--slack-text);background:var(--slack-bg);}
+.slack-scope a{color:var(--slack-link);text-decoration:none;}
+.slack-scope button{font-family:inherit;}
+
+/* Slackアプリ全体グリッド */
+.slack-app{display:grid;grid-template-columns:var(--slack-sidebar-w) 1fr;grid-template-rows:var(--slack-header-h) 1fr;height:100vh;}
+
+/* Workspace Header */
+.slack-topbar{grid-column:1/-1;background:var(--slack-aubergine-dark);color:var(--slack-aubergine-text);display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:var(--slack-header-h);}
+.slack-topbar-left,.slack-topbar-right{display:flex;align-items:center;gap:6px;flex:1;}
+.slack-topbar-right{justify-content:flex-end;}
+.slack-topbar-search{flex:0 1 600px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;height:28px;display:flex;align-items:center;gap:6px;padding:0 10px;color:var(--slack-aubergine-text-dim);font-size:13px;}
+.slack-topbar-icon-btn{background:transparent;border:none;color:var(--slack-aubergine-text);width:28px;height:28px;border-radius:4px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.slack-topbar-icon-btn:hover{background:rgba(255,255,255,.15);}
+.slack-topbar-icon-btn i{width:16px;height:16px;}
+
+/* Sidebar */
+.slack-sidebar{background:var(--slack-aubergine);color:var(--slack-aubergine-text);overflow-y:auto;padding:8px 0;}
+.slack-ws-header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:8px;}
+.slack-ws-name{font-weight:900;font-size:18px;}
+.slack-ws-status{width:8px;height:8px;border-radius:50%;background:var(--slack-green);}
+.slack-sidebar-section{margin-top:10px;}
+.slack-sidebar-label{padding:4px 16px;color:var(--slack-aubergine-text-dim);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.slack-sidebar-item{padding:4px 16px 4px 22px;display:flex;align-items:center;gap:8px;color:var(--slack-aubergine-text-dim);font-size:14px;cursor:pointer;text-decoration:none;}
+.slack-sidebar-item:hover{background:var(--slack-aubergine-dark);color:white;}
+.slack-sidebar-item.active{background:#1164A3;color:white;font-weight:700;}
+.slack-sidebar-item.unread{color:white;font-weight:700;}
+.slack-sidebar-item .presence{width:8px;height:8px;border-radius:50%;background:transparent;border:1.5px solid var(--slack-aubergine-text-dim);}
+.slack-sidebar-item .presence.online{background:var(--slack-green);border-color:var(--slack-green);}
+.slack-sidebar-badge{margin-left:auto;background:#E01E5A;color:white;font-weight:700;font-size:11px;min-width:18px;height:18px;border-radius:9px;padding:0 5px;display:inline-flex;align-items:center;justify-content:center;}
+
+/* DM メインエリア */
+.slack-main{display:flex;flex-direction:column;overflow:hidden;background:white;}
+.slack-dm-header{height:var(--slack-header-h);border-bottom:1px solid var(--slack-border);display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0;}
+.slack-dm-header-title{font-weight:900;font-size:18px;display:flex;align-items:center;gap:8px;}
+.slack-dm-header-meta{font-size:13px;color:var(--slack-text-dim);}
+.slack-dm-header-right{margin-left:auto;display:flex;gap:6px;align-items:center;}
+.slack-dm-header-btn{background:transparent;border:1px solid var(--slack-border);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:4px;color:var(--slack-text);}
+.slack-dm-header-btn:hover{background:var(--slack-bg-hover);}
+
+/* メッセージスクロール */
+.slack-messages{flex:1;overflow-y:auto;padding:12px 0 0;}
+.slack-messages::-webkit-scrollbar{width:6px;}
+.slack-messages::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px;}
+
+/* メッセージ */
+.slack-msg{display:flex;gap:10px;padding:6px 20px;position:relative;}
+.slack-msg:hover{background:var(--slack-bg-hover);}
+.slack-av{width:36px;height:36px;border-radius:4px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.slack-av img{width:100%;height:100%;object-fit:cover;}
+.slack-av.bot{background:var(--slack-aubergine);}
+.slack-av.bot img{width:22px;height:22px;filter:brightness(0)invert(1);}
+.slack-av.user{background:#1264A3;color:white;font-weight:900;font-size:14px;}
+.slack-msg-body{flex:1;min-width:0;}
+.slack-msg-head{display:flex;align-items:baseline;gap:8px;margin-bottom:2px;}
+.slack-msg-name{font-weight:900;color:var(--slack-text);}
+.slack-msg-name.bot-name{color:#7B2D8B;}
+.slack-msg-bot-tag{background:#7B2D8B;color:white;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;letter-spacing:.04em;}
+.slack-msg-time{font-size:12px;color:var(--slack-text-dim);}
+.slack-msg-text{color:var(--slack-text);font-size:15px;}
+.slack-msg-text p{margin:0 0 4px;}
+.slack-msg-text strong{color:var(--slack-text);font-weight:700;}
+.slack-msg-text em{color:var(--slack-text-dim);font-style:normal;}
+
+/* ユーザーメッセージ（右寄せ） */
+.slack-msg.user-msg{flex-direction:row-reverse;}
+.slack-msg.user-msg .slack-msg-body{text-align:left;}
+.slack-msg.user-msg .slack-msg-head{flex-direction:row-reverse;}
+.slack-msg.user-msg .slack-av{margin-left:0;}
+
+/* メンション */
+.slack-mention{background:#FDEAF1;color:#1264A3;padding:0 2px;border-radius:3px;font-weight:700;}
+
+/* Botリッチカード */
+.bot-card{background:#F8F8F8;border:1px solid var(--slack-border);border-left:4px solid var(--slack-aubergine);border-radius:4px;padding:12px 16px;margin-top:6px;max-width:600px;}
+.bot-card.alert{border-left-color:#E01E5A;background:#FFF5F7;}
+.bot-card.success{border-left-color:#2EB67D;background:#F5FFF8;}
+.bot-card-title{font-weight:900;font-size:14px;margin-bottom:8px;color:var(--slack-text);}
+.bot-card-body{font-size:13px;color:var(--slack-text);line-height:1.6;}
+.bot-card-body strong{color:var(--slack-text);}
+.bot-card-divider{height:1px;background:var(--slack-border);margin:8px 0;}
+.bot-alert-badge{display:inline-flex;align-items:center;gap:4px;background:#E01E5A;color:white;font-size:11px;font-weight:700;padding:2px 7px;border-radius:3px;margin-bottom:6px;}
+
+/* Bot ボタングループ */
+.bot-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.bot-btn{background:white;border:1px solid #DDDBDA;border-radius:4px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--slack-text);cursor:pointer;transition:background .15s;}
+.bot-btn:hover{background:#F0F0F0;}
+.bot-btn.primary{background:var(--slack-aubergine);color:white;border-color:var(--slack-aubergine);}
+.bot-btn.primary:hover{background:#611F69;}
+.bot-btn.danger{border-color:#E01E5A;color:#E01E5A;}
+.bot-btn.danger:hover{background:#FFF0F3;}
+
+/* CSS棒グラフ（bot内） */
+.bot-chart{margin:10px 0;}
+.bot-chart-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;}
+.bot-chart-label{width:90px;color:var(--slack-text-dim);flex-shrink:0;}
+.bot-chart-track{flex:1;height:20px;background:#EDEDEC;border-radius:3px;position:relative;overflow:hidden;}
+.bot-chart-fill{height:100%;border-radius:3px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1);}
+.bot-chart-fill.grow{width:var(--w);}
+.bot-chart-fill.c-purple{background:linear-gradient(to right,#4A154B,#9050e9);}
+.bot-chart-fill.c-green{background:linear-gradient(to right,#1B6B43,#2EB67D);}
+.bot-chart-val{position:absolute;right:6px;top:2px;font-weight:700;font-size:11px;color:var(--slack-text);}
+
+/* プログレスリング */
+.prog-ring{position:relative;width:80px;height:80px;flex-shrink:0;}
+.prog-ring svg{transform:rotate(-90deg);}
+.prog-ring .r-bg{fill:none;stroke:#EDEDEC;stroke-width:8;}
+.prog-ring .r-fill{fill:none;stroke:#2EB67D;stroke-width:8;stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);}
+.prog-ring .r-fill.grow{stroke-dashoffset:var(--offset);}
+.prog-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.prog-num{font-weight:900;font-size:17px;color:var(--slack-text);line-height:1;}
+.prog-unit{font-size:10px;color:var(--slack-text-dim);margin-top:2px;}
+
+/* タイピングインジケーター */
+.typing-row{display:flex;align-items:center;gap:10px;padding:6px 20px;}
+.typing-dots{display:inline-flex;gap:3px;background:#F0F0F0;border-radius:12px;padding:8px 12px;}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:#999;animation:tbounce 1.2s infinite ease-in-out;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes tbounce{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
+.typing-label{font-size:12px;color:var(--slack-text-dim);}
+
+/* Composer */
+.slack-composer{padding:8px 20px 18px;flex-shrink:0;}
+.slack-composer-box{border:1px solid #B8B8B8;border-radius:8px;background:white;}
+.slack-composer-toolbar{display:flex;align-items:center;gap:2px;padding:4px 8px;border-bottom:1px solid var(--slack-border);}
+.slack-composer-toolbar button{background:transparent;border:none;padding:4px 6px;border-radius:4px;cursor:pointer;color:var(--slack-text-dim);display:inline-flex;align-items:center;font-size:12px;font-weight:700;}
+.slack-composer-toolbar button:hover{background:#F0F0F0;color:var(--slack-text);}
+.slack-composer-toolbar button i{width:14px;height:14px;}
+.slack-composer-toolbar .sep{width:1px;height:14px;background:var(--slack-border);margin:0 4px;}
+.slack-composer-input{padding:10px 12px;min-height:42px;color:var(--slack-text-dim);font-size:15px;font-family:inherit;}
+.slack-composer-actions{display:flex;align-items:center;gap:4px;padding:4px 6px 6px;}
+.slack-composer-actions .left{display:flex;gap:2px;flex:1;}
+.slack-composer-actions button{background:transparent;border:none;padding:6px;border-radius:4px;cursor:pointer;color:var(--slack-text-dim);display:inline-flex;align-items:center;}
+.slack-composer-actions button i{width:16px;height:16px;}
+.slack-composer-actions button:hover{background:#F0F0F0;}
+.slack-send-btn{background:#2EB67D!important;color:white!important;border-radius:4px!important;}
+.slack-send-btn:hover{background:#258F60!important;}
+
+/* ============================================================
+   SCENE 2-1: Experience Cloud スマホポータル
+   ============================================================ */
+.ec-scene{background:#F0F4F8;display:flex;align-items:center;justify-content:center;}
+.ec-device{width:390px;height:844px;background:white;border-radius:40px;box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden;display:flex;flex-direction:column;border:8px solid #1a1a1a;position:relative;}
+.ec-device-notch{height:34px;background:#1a1a1a;border-radius:0 0 20px 20px;width:130px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10;}
+.ec-screen{flex:1;overflow-y:auto;padding-top:34px;}
+.ec-screen::-webkit-scrollbar{display:none;}
+/* EC ナビ */
+.ec-nav{background:#4A154B;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:34px;z-index:5;}
+.ec-nav-logo{color:white;font-weight:900;font-size:15px;}
+.ec-nav-user{background:rgba(255,255,255,.2);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+/* EC コンテンツ */
+.ec-hero{background:linear-gradient(135deg,#4A154B,#611F69);padding:20px 16px;color:white;}
+.ec-hero-greet{font-size:13px;opacity:.8;margin-bottom:4px;}
+.ec-hero-name{font-size:20px;font-weight:900;margin-bottom:8px;}
+.ec-hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border-radius:20px;padding:4px 10px;font-size:12px;}
+.ec-section{padding:16px;}
+.ec-section-title{font-size:13px;font-weight:700;color:#444;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.ec-section-title a{font-size:12px;color:#1264A3;}
+.ec-card{background:white;border:1px solid #E8E8E8;border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.ec-card-label{font-size:11px;font-weight:700;color:#706e6b;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+.ec-card-title{font-size:14px;font-weight:900;color:#1D1C1D;margin-bottom:6px;}
+.ec-card-meta{font-size:12px;color:#706e6b;}
+.ec-status{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;}
+.ec-status-orange{background:#FFF3CD;color:#856404;}
+.ec-status-green{background:#D4EDDA;color:#155724;}
+.ec-status-blue{background:#CCE5FF;color:#004085;}
+.ec-action-btn{width:100%;background:#4A154B;color:white;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.ec-action-btn.secondary{background:white;color:#4A154B;border:2px solid #4A154B;}
+/* EC 問い合わせフォーム */
+.ec-form-field{margin-bottom:12px;}
+.ec-form-label{font-size:12px;font-weight:700;color:#444;margin-bottom:4px;display:block;}
+.ec-form-input{width:100%;border:1px solid #DDDBDA;border-radius:6px;padding:8px 10px;font-size:14px;font-family:inherit;color:#1D1C1D;}
+.ec-form-textarea{width:100%;border:1px solid #DDDBDA;border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;color:#1D1C1D;min-height:80px;resize:none;}
+.ec-form-input.filled,.ec-form-textarea.filled{background:#F8F8F8;color:#1D1C1D;}
+
+/* ============================================================
+   SCENE 2-2: Salesforce Service Cloud
+   ============================================================ */
+.sf-scene{background:#f3f3f3;display:flex;flex-direction:column;overflow:hidden;}
+.sf-header{background:white;height:3rem;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;border-bottom:1px solid #c9c9c9;flex-shrink:0;}
+.sf-cloud-logo{width:32px;height:auto;}
+.sf-header-search{width:38%;max-width:30rem;}
+.sf-header-actions{display:flex;align-items:center;gap:.4rem;}
+.sf-icon-btn{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:.25rem;cursor:pointer;background:transparent;border:none;padding:0;}
+.sf-icon-btn img,.slds-input__icon{width:18px;height:18px;filter:brightness(0)saturate(100%)invert(43%)sepia(13%)saturate(295%)hue-rotate(180deg)brightness(95%)contrast(85%);}
+.sf-fav-btn{display:inline-flex;align-items:center;gap:3px;padding:0 8px;height:2rem;background:#1b96ff;border-radius:.25rem;border:none;cursor:pointer;}
+.sf-fav-btn img{width:13px;height:13px;filter:brightness(0)invert(1)!important;}
+.sf-notify-wrap{position:relative;display:inline-flex;}
+.sf-notify-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:#ea001e;border-radius:50%;border:1.5px solid white;}
+.sf-nav{background:white;border-bottom:1px solid #dddbda;padding:0 1rem;display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
+.sf-nav nav ul{display:flex;gap:.5rem;list-style:none;padding:0;margin:0;}
+.sf-nav nav ul li{display:flex;align-items:center;padding:0 .25rem;font-size:.875rem;}
+.sf-nav nav ul li.is-active{border-bottom:3px solid #1589ee;}
+.sf-nav nav ul li.is-active a{color:#0070d2;font-weight:700;}
+.sf-nav nav ul li a{color:#444;text-decoration:none;padding:.5rem 0;}
+.sf-app-dots{display:grid;grid-template-columns:repeat(3,4px);grid-template-rows:repeat(3,4px);gap:3px;cursor:pointer;}
+.sf-app-dots span{width:4px;height:4px;background:#54698d;border-radius:1px;}
+.sf-app-name{font-size:1rem;font-weight:700;color:#181818;padding:.5rem 0;margin-right:.75rem;}
+.sf-main-area{flex:1;overflow-y:auto;padding:1rem;max-width:1440px;margin:0 auto;width:100%;}
+.sf-row{display:flex;gap:.75rem;flex-wrap:wrap;}
+.sf-col-1-4{flex:0 0 calc(25% - .5625rem);}
+.sf-col-1-3{flex:0 0 calc(33.333% - .5rem);}
+.sf-col-1-2{flex:0 0 calc(50% - .375rem);}
+.sf-col-2-3{flex:0 0 calc(66.666% - .375rem);}
+.sf-col-1-1{flex:0 0 100%;}
+
+/* SF タイムライン */
+.sf-tl{list-style:none;padding:0;margin:0;}
+.sf-tl-item{display:flex;align-items:flex-start;gap:.75rem;padding:.5rem 0;}
+.sf-tl-icon{flex:0 0 2rem;height:2rem;border-radius:.25rem;display:inline-flex;align-items:center;justify-content:center;}
+.sf-tl-call{background:#056764;} .sf-tl-email{background:#b0adab;} .sf-tl-task{background:#04844b;} .sf-tl-event{background:#cc6cdd;}
+.sf-tl-icon img{width:1.25rem;height:1.25rem;filter:brightness(0)invert(1);}
+.sf-tl-body{flex:1;min-width:0;line-height:1.4;}
+.sf-tl-body a{color:#0070d2;text-decoration:none;font-weight:700;}
+.sf-tl-meta{font-size:.8rem;color:#444;margin-top:.2rem;}
+
+/* バッジ */
+.sbadge{display:inline-block;padding:2px 8px;border-radius:.75rem;font-size:.75rem;font-weight:700;}
+.sb-red{background:#f8d7da;color:#721c24;} .sb-green{background:#d4edda;color:#155724;} .sb-yellow{background:#fff3cd;color:#856404;} .sb-blue{background:#cce5ff;color:#004085;} .sb-purple{background:#e2d9f3;color:#4a154b;}
+
+/* 棒グラフ */
+.sf-bar-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.45rem;font-size:.8125rem;}
+.sf-bar-label{width:7rem;color:#444;flex-shrink:0;}
+.sf-bar-track{flex:1;height:1.25rem;background:#f3f3f3;border-radius:.25rem;position:relative;}
+.sf-bar-fill{height:1.25rem;border-radius:.25rem;width:0;transition:width .9s cubic-bezier(.4,0,.2,1);}
+.sf-bar-fill.grow{width:var(--w);}
+.sf-bar-val{position:absolute;right:.4rem;top:.1875rem;color:#181818;font-size:.7rem;}
+
+/* Agentforce インサイト */
+.af-insight{background:linear-gradient(135deg,#f0f8ff,#e8f0fb);border:1px solid #1b96ff;border-radius:.5rem;padding:1rem;}
+.af-insight-hdr{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;}
+.af-icon{width:26px;height:26px;background:#0070d2;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.af-icon img{width:14px;height:14px;filter:brightness(0)invert(1);}
+.af-title{font-weight:700;color:#032d60;font-size:.9rem;}
+.af-body{font-size:.875rem;color:#181818;line-height:1.65;}
+.af-body strong{color:#032d60;}
+
+/* ============================================================
+   SCENE 3: Salesforce レコード + Slack 埋め込みパネル
+   ============================================================ */
+.scene3-layout{display:grid;grid-template-columns:1fr 380px;grid-template-rows:auto 1fr;height:100%;overflow:hidden;}
+.scene3-sf{overflow-y:auto;padding:1rem;}
+.scene3-slack-panel{background:white;border-left:1px solid #E1E1E1;display:flex;flex-direction:column;overflow:hidden;}
+.scene3-slack-hdr{background:white;border-bottom:1px solid #E1E1E1;padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.scene3-slack-hdr-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;}
+.scene3-slack-hdr-meta{font-size:12px;color:#616061;}
+.scene3-slack-msgs{flex:1;overflow-y:auto;padding:8px 0;}
+.scene3-slack-msgs::-webkit-scrollbar{width:4px;}
+.scene3-slack-msgs::-webkit-scrollbar-thumb{background:rgba(0,0,0,.12);border-radius:2px;}
+.scene3-smsg{display:flex;gap:8px;padding:5px 12px;font-size:13px;}
+.scene3-smsg:hover{background:#F8F8F8;}
+.scene3-sav{width:28px;height:28px;border-radius:4px;flex-shrink:0;overflow:hidden;}
+.scene3-sav img{width:100%;height:100%;object-fit:cover;}
+.scene3-sbody{flex:1;min-width:0;}
+.scene3-sname{font-weight:900;font-size:13px;color:#1D1C1D;}
+.scene3-stime{font-size:11px;color:#616061;margin-left:5px;}
+.scene3-stext{color:#1D1C1D;font-size:13px;line-height:1.5;}
+.scene3-stag{background:#F1F1F1;color:#616061;border-radius:3px;padding:1px 4px;font-size:10px;font-weight:700;letter-spacing:.04em;margin-left:5px;}
+.scene3-smention{background:rgba(29,155,209,.1);color:#1264A3;border-radius:3px;padding:0 2px;font-weight:700;}
+.scene3-ai-summary{border-top:1px solid #E1E1E1;padding:12px;flex-shrink:0;background:#F8F8F8;}
+.scene3-ai-title{font-size:11px;font-weight:700;color:#444;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.scene3-ai-item{font-size:12px;color:#1D1C1D;line-height:1.6;padding:6px 10px;background:white;border-radius:4px;border:1px solid #E1E1E1;margin-bottom:6px;}
+.scene3-ai-item strong{color:#032d60;}
+
+/* アラートハイライト */
+.alert-box{background:#FFF5F7;border:1.5px solid #E01E5A;border-radius:.5rem;padding:.75rem 1rem;display:flex;gap:.75rem;align-items:flex-start;}
+.alert-box-icon{font-size:1.25rem;flex-shrink:0;}
+</style>
+</head>
+<body class="slack-scope">

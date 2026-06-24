@@ -38,51 +38,62 @@ export default class AgentforceLauncher extends LightningElement {
     launchAgent() {
         const message = this.inputText.trim();
 
-        // 入力欄をリセット
         this.inputText = '';
         const input = this.template.querySelector('.agent-input');
         if (input) input.value = '';
 
-        // Lightning ナビゲーションバーの標準 Agentforce ボタンを探してクリック
-        const copilotBtn = this._findCopilotButton();
+        // Shadow DOM を再帰的に辿って Agentforce ナビボタンを探してクリック
+        const copilotBtn = this._deepFind(document, this._isCopilotButton);
         if (copilotBtn) {
             copilotBtn.click();
             if (message) {
                 this._sendMessageWhenReady(message);
             }
+        } else {
+            console.warn('[AgentforceLauncher] Agentforce button not found in DOM');
         }
     }
 
-    _findCopilotButton() {
-        // 優先順に標準 Agentforce ナビボタンを探す
-        const selectors = [
-            'runtime_einstein_copilot-copilot-panel-launcher button',
-            'runtime_einstein_copilot-header-button button',
-            'button[title="Agentforce"]',
-            'button[aria-label="Agentforce"]',
-            'one-app-nav-bar-item-root[data-id*="copilot"] button',
-            'one-app-nav-bar-item-root[data-id*="Copilot"] button',
-            'one-app-nav-bar-item-root[data-id*="einstein"] button',
-            'li[data-id*="copilot"] button',
-        ];
-        for (const sel of selectors) {
-            const el = document.querySelector(sel);
-            if (el) return el;
-        }
-        return null;
+    // Shadow DOM を再帰的に探索して条件に合う最初の要素を返す
+    _deepFind(root, predicate) {
+        const walker = (node) => {
+            if (node.nodeType === Node.ELEMENT_NODE && predicate(node)) return node;
+            // shadow root があれば潜る
+            if (node.shadowRoot) {
+                const found = walker(node.shadowRoot);
+                if (found) return found;
+            }
+            for (const child of node.children || []) {
+                const found = walker(child);
+                if (found) return found;
+            }
+            return null;
+        };
+        return walker(root);
+    }
+
+    _isCopilotButton(el) {
+        if (el.tagName !== 'BUTTON') return false;
+        const title = (el.title || '').toLowerCase();
+        const label = (el.getAttribute('aria-label') || '').toLowerCase();
+        const text  = (el.textContent || '').toLowerCase();
+        return title.includes('agentforce') || title.includes('copilot') || title.includes('einstein') ||
+               label.includes('agentforce') || label.includes('copilot') ||
+               text.includes('agentforce');
     }
 
     _sendMessageWhenReady(message, attempt = 0) {
         if (attempt > 20) return;
         setTimeout(() => {
-            const textarea = document.querySelector(
-                'runtime_einstein_copilot-copilot-conversation-input textarea,' +
-                'textarea[placeholder*="タスク"],' +
-                'textarea[placeholder*="質問"],' +
-                'textarea[placeholder*="Ask"]'
+            const textarea = this._deepFind(document, (el) =>
+                el.tagName === 'TEXTAREA' && (
+                    (el.placeholder || '').includes('タスク') ||
+                    (el.placeholder || '').includes('質問') ||
+                    (el.placeholder || '').includes('Ask') ||
+                    (el.placeholder || '').includes('Help')
+                )
             );
             if (textarea) {
-                // ネイティブ setter でフレームワークの state も更新
                 const setter = Object.getOwnPropertyDescriptor(
                     window.HTMLTextAreaElement.prototype, 'value'
                 ).set;
@@ -90,10 +101,13 @@ export default class AgentforceLauncher extends LightningElement {
                 textarea.dispatchEvent(new Event('input', { bubbles: true }));
                 textarea.dispatchEvent(new Event('change', { bubbles: true }));
                 setTimeout(() => {
-                    const sendBtn = document.querySelector(
-                        'runtime_einstein_copilot-copilot-conversation-input button[type="submit"],' +
-                        'runtime_einstein_copilot-copilot-conversation-input button[title="送信"],' +
-                        'runtime_einstein_copilot-copilot-conversation-input button[title="Send"]'
+                    const sendBtn = this._deepFind(textarea.getRootNode(), (el) =>
+                        el.tagName === 'BUTTON' && (
+                            el.type === 'submit' ||
+                            (el.title || '').includes('送信') ||
+                            (el.title || '').includes('Send') ||
+                            (el.getAttribute('aria-label') || '').includes('送信')
+                        )
                     );
                     if (sendBtn) sendBtn.click();
                 }, 300);
