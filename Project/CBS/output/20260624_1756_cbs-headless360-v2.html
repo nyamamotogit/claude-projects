@@ -15,7 +15,12 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;}
 
 /* ===== シーン切替 ===== */
 .scene{display:none;width:100vw;height:100vh;}
-.scene.is-active{display:block;}
+/* Slackシーン: center配置 */
+.scene.is-active.slack-dm-scene{display:flex;align-items:center;justify-content:center;background:#1a1a2e;}
+/* スマホシーン: center配置 */
+.scene.is-active.mobile-scene{display:flex;align-items:center;justify-content:center;flex-direction:column;}
+/* SFシーン: column配置（ヘッダー+ナビ+コンテンツを縦積み） */
+.scene.is-active.sf-scene{display:flex;flex-direction:column;}
 
 /* ===== HUD ===== */
 .hud{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:.75rem;background:rgba(3,45,96,.92);backdrop-filter:blur(10px);border-radius:2rem;padding:.45rem 1.25rem;box-shadow:0 4px 24px rgba(0,0,0,.4);pointer-events:none;}
@@ -178,11 +183,51 @@ body.slack-scope{font-family:"Lato",-apple-system,sans-serif;font-size:15px;line
 /* ============================================================
    Scene 2-1: スマホ（メール → EC ポータル）
    ============================================================ */
-.mobile-scene{background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;gap:60px;}
-.phone-frame{width:375px;height:812px;background:white;border-radius:44px;box-shadow:0 40px 100px rgba(0,0,0,.6);overflow:hidden;display:flex;flex-direction:column;border:8px solid #1a1a1a;position:relative;}
+.mobile-scene{background:linear-gradient(135deg,#1a1a2e,#16213e);gap:60px;flex-direction:column;}
+.phone-frame{width:375px;height:min(812px,88vh);background:white;border-radius:44px;box-shadow:0 40px 100px rgba(0,0,0,.6);overflow:hidden;display:flex;flex-direction:column;border:8px solid #1a1a1a;position:relative;flex-shrink:0;}
 .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:130px;height:30px;background:#1a1a1a;border-radius:0 0 20px 20px;z-index:10;}
-.phone-screen{flex:1;overflow-y:auto;padding-top:30px;}
+/* phone-screen内のステップは重ね表示 → 矢印で切り替え */
+.phone-screen{flex:1;overflow:hidden;padding-top:30px;position:relative;}
 .phone-screen::-webkit-scrollbar{display:none;}
+.phone-step{position:absolute;inset:0;padding-top:0;overflow-y:auto;background:white;opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;transform:translateX(30px);}
+.phone-step::-webkit-scrollbar{display:none;}
+.phone-step.is-current{opacity:1;pointer-events:auto;transform:translateX(0);}
+
+/* EC遷移アニメーション */
+@keyframes ec-slide-in{from{opacity:0;transform:scale(.96) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.ec-transition-badge{background:linear-gradient(135deg,#ECB22E,#FF8C00);color:white;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:900;font-family:'Lato',sans-serif;text-align:center;animation:ec-slide-in .5s ease;box-shadow:0 4px 16px rgba(236,178,46,.4);}
+
+/* EC リッチヒーロー */
+.ec-hero-v2{background:linear-gradient(135deg,#4A154B 0%,#7C3085 40%,#1264A3 100%);padding:24px 18px 20px;color:white;position:relative;overflow:hidden;}
+.ec-hero-v2::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);}
+.ec-hero-v2::after{content:'';position:absolute;bottom:-30px;left:-20px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.04);}
+.ec-hero-v2-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;margin-bottom:10px;}
+.ec-hero-v2-name{font-size:22px;font-weight:900;margin-bottom:4px;line-height:1.2;}
+.ec-hero-v2-co{font-size:13px;opacity:.85;margin-bottom:14px;}
+.ec-hero-v2-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.ec-stat-card{background:rgba(255,255,255,.12);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 10px;text-align:center;}
+.ec-stat-num{font-size:18px;font-weight:900;line-height:1;}
+.ec-stat-lbl{font-size:10px;opacity:.8;margin-top:2px;}
+
+/* EC カードリッチ */
+.ec-card-v2{background:white;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;position:relative;}
+.ec-card-v2-accent{position:absolute;top:0;left:0;right:0;height:3px;}
+.ec-card-v2-lbl{font-size:10px;font-weight:700;color:#706e6b;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:4px;}
+.ec-card-v2-ttl{font-size:15px;font-weight:900;color:#1D1C1D;margin-bottom:6px;}
+.ec-card-v2-meta{font-size:12px;color:#706e6b;}
+.ec-progress-bar{height:5px;background:#E8E8E8;border-radius:3px;overflow:hidden;margin:8px 0 4px;}
+.ec-progress-fill{height:100%;border-radius:3px;background:linear-gradient(to right,#4A154B,#9050e9);}
+
+/* AI提案バナー */
+.ec-ai-banner{background:linear-gradient(135deg,#FFF8E1,#FFF3CD);border:1px solid #ECB22E;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
+.ec-ai-banner-icon{font-size:20px;flex-shrink:0;}
+.ec-ai-banner-body{flex:1;font-size:12px;color:#444;line-height:1.6;}
+.ec-ai-banner-btn{display:inline-block;background:#4A154B;color:white;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;margin-top:6px;}
+
+/* action btn v2 */
+.ec-btn-v2{width:100%;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Lato',sans-serif;}
+.ec-btn-primary{background:linear-gradient(135deg,#4A154B,#611F69);color:white;box-shadow:0 4px 14px rgba(74,21,75,.3);}
+.ec-btn-secondary{background:white;color:#4A154B;border:2px solid #4A154B;}
 
 /* メールアプリ */
 .mail-app-bar{background:white;padding:10px 16px 8px;border-bottom:1px solid #E8E8E8;display:flex;align-items:center;gap:10px;}
@@ -337,7 +382,7 @@ body.slack-scope{font-family:"Lato",-apple-system,sans-serif;font-size:15px;line
   0=初期メニュー  1=ビジョン進捗返答（グラフ）
   2=社長の質問    3=タイピング（自動1.8s）  4=リスクアラート
 ===================================================== -->
-<div id="scene1" class="scene is-active" style="background:#1a1a2e;">
+<div id="scene1" class="scene is-active slack-dm-scene" style="background:#1a1a2e;">
   <div style="display:flex;align-items:center;justify-content:center;height:100%;padding:16px;">
     <div style="width:min(1240px,98vw);height:min(820px,94vh);border-radius:10px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7);display:flex;flex-direction:column;">
       <!-- OS titlebar -->
@@ -547,157 +592,200 @@ body.slack-scope{font-family:"Lato",-apple-system,sans-serif;font-size:15px;line
   2=ECポータル TOP（遷移後）  3=問い合わせフォーム入力  4=送信完了
 ===================================================== -->
 <div id="scene2a" class="scene mobile-scene">
-  <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
-    <div style="background:rgba(74,21,75,.9);color:white;border-radius:20px;padding:6px 20px;font-size:13px;font-weight:700;font-family:'Lato',sans-serif;">
-      📱 顧客スマートフォン — メールアプリ → Experience Cloud ポータルへ遷移
-    </div>
-    <div class="phone-frame">
-      <div class="phone-notch"></div>
-      <div class="phone-screen" id="s2a-screen">
-
-        <!-- step0: メール受信ボックス -->
-        <div data-step="0" data-scene="2a">
-          <div class="mail-app-bar">
-            <span class="mail-app-bar-title">受信トレイ</span>
-            <i data-lucide="search" class="mail-app-icon"></i>
-            <i data-lucide="edit-3" class="mail-app-icon"></i>
-          </div>
-          <!-- 未読メール（AI配信） -->
-          <div class="mail-list-item unread">
-            <div class="mail-list-av">CBS</div>
-            <div style="width:6px;flex-shrink:0;margin-top:6px;"><div class="mail-unread-dot"></div></div>
-            <div class="mail-list-body">
-              <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">CBSケータリング</span><span class="mail-list-time">今日</span></div>
-              <div class="mail-list-subj">【50周年特別プラン】グランドパレス東京様へ</div>
-              <div class="mail-list-prev">創立50周年が近づいてまいりました。特別な記念パーティーに…</div>
-            </div>
-          </div>
-          <div class="mail-list-item">
-            <div class="mail-list-av" style="background:#1264A3;">SF</div>
-            <div class="mail-list-body">
-              <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">Salesforce</span><span class="mail-list-time">昨日</span></div>
-              <div class="mail-list-subj">案件ステータス更新通知</div>
-              <div class="mail-list-prev">グランドパレス東京様の案件が更新されました</div>
-            </div>
-          </div>
-          <div class="mail-list-item">
-            <div class="mail-list-av" style="background:#2EB67D;">田</div>
-            <div class="mail-list-body">
-              <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">田中 誠</span><span class="mail-list-time">昨日</span></div>
-              <div class="mail-list-subj">Re: 創立50周年パーティーの件</div>
-              <div class="mail-list-prev">メニューの詳細について確認させてください…</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- step1: メール本文 -->
-        <div data-step="1" data-scene="2a">
-          <div class="mail-view">
-            <div class="mail-view-bar">
-              <span class="mail-view-back">‹</span>
-              <span class="mail-view-subj">【50周年特別プラン】グランドパレス東京様へ</span>
-            </div>
-            <div class="mail-view-body">
-              <div class="mail-email-card">
-                <div class="mail-email-header">
-                  <div class="mail-email-logo">CBS ケータリング</div>
-                  <div class="mail-email-tagline">日本一の仕出しケータリング</div>
-                </div>
-                <div class="mail-email-content">
-                  <div class="mail-email-greeting">
-                    田辺 誠一郎 様<br><br>
-                    グランドパレス東京様の <strong>創立50周年</strong> が近づいてまいりました。<br><br>
-                    昨年の記念パーティーでは大変ご好評をいただき、誠にありがとうございました。<br><br>
-                    今年の <strong>創立50周年</strong> という特別な節目に向け、旬菜亭のプレミアムコースをはじめとした <strong>特別プラン</strong> をご用意いたしました。
-                  </div>
-                  <div style="background:#F5F0FF;border-radius:8px;padding:10px;margin:8px 0;font-size:12px;">
-                    ✨ <strong>特別プランのご提案</strong><br>
-                    • 旬菜亭 VIP御膳コース（¥20,000/名〜）<br>
-                    • 伊勢海老・特選黒毛和牛のフルコース<br>
-                    • 500名様まで対応可能
-                  </div>
-                  <button class="mail-cta-btn">ポータルで詳細を確認・お申込み →</button>
-                  <div class="mail-ai-note">
-                    🤖 <strong>AIによる自動配信</strong>: Account Engagementが過去の施工実績から最適なタイミングを予測し、自動送信しました。
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- step2: ECポータルTOP（遷移後） -->
-        <div data-step="2" data-scene="2a">
-          <nav class="ec-nav">
-            <span class="ec-nav-logo">CBS オーダーポータル</span>
-            <span class="ec-nav-user">田</span>
-          </nav>
-          <div class="ec-hero">
-            <div class="ec-hero-greet">メールからのご来訪ありがとうございます</div>
-            <div class="ec-hero-name">田辺 誠一郎 様</div>
-            <div class="ec-hero-badge"><span style="width:8px;height:8px;border-radius:50%;background:#2EB67D;display:inline-block;"></span>グランドパレス東京 — VIP顧客</div>
-          </div>
-          <div class="ec-section">
-            <div class="ec-section-ttl">進行中の案件 <a href="#">すべて見る</a></div>
-            <div class="ec-card">
-              <div class="ec-card-lbl">最新</div>
-              <div class="ec-card-ttl">創立50周年記念パーティー（500名様）</div>
-              <div class="ec-card-meta">実施予定: 2027年7月18日 ／ 担当: 田中 誠</div>
-              <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;">
-                <span class="ec-status ec-st-or">プランナー確認中</span>
-                <span style="font-size:11px;color:#706e6b;">見積額 ¥7,200,000</span>
-              </div>
-            </div>
-            <div style="background:#FFF9C4;border:1px solid #ECB22E;border-radius:8px;padding:10px;font-size:12px;font-family:'Lato',sans-serif;">
-              💡 <strong>AIからの提案：</strong>昨年の50周年は魚介コースをご注文。今年の特別プランもご検討ください。
-              <a href="#" style="color:#1264A3;display:block;margin-top:4px;font-weight:700;">特別プランを見る →</a>
-            </div>
-          </div>
-          <div class="ec-section" style="padding-top:0;">
-            <button class="ec-action-btn">💬 見積内容の変更・お問い合わせ</button>
-          </div>
-        </div>
-
-        <!-- step3: フォーム入力 -->
-        <div data-step="3" data-scene="2a" style="padding-bottom:40px;">
-          <div style="background:#4A154B;padding:10px 16px;display:flex;align-items:center;gap:10px;">
-            <span style="color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;">‹</span>
-            <span style="color:white;font-weight:700;font-size:15px;">お問い合わせ・変更依頼</span>
-          </div>
-          <div style="padding:14px;">
-            <div style="font-size:12px;color:#706e6b;margin-bottom:10px;font-family:'Lato',sans-serif;">入力内容はSalesforceに自動登録され、担当プランナーへ即座に通知されます。</div>
-            <div class="ec-form-field">
-              <label class="ec-form-lbl">案件名</label>
-              <input class="ec-form-input filled" type="text" value="創立50周年記念パーティー" readonly />
-            </div>
-            <div class="ec-form-field">
-              <label class="ec-form-lbl">お問い合わせ種別</label>
-              <select class="ec-form-input"><option>見積内容の変更・確認</option></select>
-            </div>
-            <div class="ec-form-field">
-              <label class="ec-form-lbl">ご要望・詳細</label>
-              <textarea class="ec-form-ta filled" readonly>500名様の予算の都合で、今期は1名様12,000円でのお見積りをお願いできますでしょうか。昨年は15,000円でお願いしていたのですが…。ご検討のほどよろしくお願いいたします。</textarea>
-            </div>
-            <button class="ec-action-btn">送信する（Salesforceに自動登録）</button>
-          </div>
-        </div>
-
-        <!-- step4: 送信完了 -->
-        <div data-step="4" data-scene="2a" style="padding:16px 16px 40px;">
-          <div class="ec-done-box">
-            <div style="font-size:2rem;margin-bottom:8px;">✅</div>
-            <div style="font-weight:900;color:#155724;font-size:15px;margin-bottom:6px;">送信が完了しました</div>
-            <div style="font-size:12px;color:#155724;">担当プランナー（田中 誠）へ即座に通知されました。<br>Salesforceに案件レコードとして自動登録されました。</div>
-          </div>
-          <div style="margin-top:14px;background:#E8F4FD;border:1px solid #1b96ff;border-radius:8px;padding:10px;font-size:11px;font-family:'Lato',sans-serif;color:#032d60;">
-            🔗 <strong>Salesforce 自動連携完了</strong><br>
-            「見積変更要求 ¥12,000/名」がケースとして立ち上がり、担当者のタイムラインに記録されました。
-          </div>
-        </div>
-
-      </div><!-- /phone-screen -->
-    </div><!-- /phone-frame -->
+  <!-- 上部説明バッジ -->
+  <div class="ec-transition-badge" id="s2a-badge">
+    📱 顧客スマートフォン — メールアプリ → Experience Cloud ポータルへ遷移
   </div>
+
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-screen" id="s2a-screen">
+
+      <!-- phone-step 0: メール受信ボックス -->
+      <div class="phone-step is-current" id="ps0">
+        <div class="mail-app-bar">
+          <span class="mail-app-bar-title">受信トレイ</span>
+          <i data-lucide="search" class="mail-app-icon"></i>
+          <i data-lucide="edit-3" class="mail-app-icon"></i>
+        </div>
+        <div class="mail-list-item unread">
+          <div class="mail-list-av">CBS</div>
+          <div style="width:6px;flex-shrink:0;margin-top:6px;"><div class="mail-unread-dot"></div></div>
+          <div class="mail-list-body">
+            <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">CBSケータリング</span><span class="mail-list-time">今日</span></div>
+            <div class="mail-list-subj">【50周年特別プラン】グランドパレス東京様へ</div>
+            <div class="mail-list-prev">創立50周年が近づいてまいりました。特別な記念パーティーに…</div>
+          </div>
+        </div>
+        <div class="mail-list-item">
+          <div class="mail-list-av" style="background:#1264A3;">SF</div>
+          <div class="mail-list-body">
+            <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">Salesforce</span><span class="mail-list-time">昨日</span></div>
+            <div class="mail-list-subj">案件ステータス更新通知</div>
+            <div class="mail-list-prev">グランドパレス東京様の案件が更新されました</div>
+          </div>
+        </div>
+        <div class="mail-list-item">
+          <div class="mail-list-av" style="background:#2EB67D;">田</div>
+          <div class="mail-list-body">
+            <div style="display:flex;justify-content:space-between;"><span class="mail-list-from">田中 誠</span><span class="mail-list-time">昨日</span></div>
+            <div class="mail-list-subj">Re: 創立50周年パーティーの件</div>
+            <div class="mail-list-prev">メニューの詳細について確認させてください…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- phone-step 1: メール本文 -->
+      <div class="phone-step" id="ps1">
+        <div class="mail-view">
+          <div class="mail-view-bar">
+            <span class="mail-view-back">‹</span>
+            <span class="mail-view-subj">【50周年特別プラン】グランドパレス東京様へ</span>
+          </div>
+          <div class="mail-view-body">
+            <div class="mail-email-card">
+              <div class="mail-email-header">
+                <div class="mail-email-logo">CBS ケータリング</div>
+                <div class="mail-email-tagline">日本一の仕出しケータリング</div>
+              </div>
+              <div class="mail-email-content">
+                <div class="mail-email-greeting">
+                  田辺 誠一郎 様<br><br>
+                  グランドパレス東京様の <strong>創立50周年</strong> が近づいてまいりました。<br><br>
+                  昨年の記念パーティーでは大変ご好評いただきありがとうございました。今年の <strong>50周年</strong> という特別な節目に向け、旬菜亭のプレミアムコースをご用意いたしました。
+                </div>
+                <div style="background:#F5F0FF;border-radius:8px;padding:10px;margin:8px 0;font-size:12px;">
+                  ✨ <strong>50周年記念 特別プランのご提案</strong><br>
+                  • 旬菜亭 VIP御膳コース（¥20,000/名〜）<br>
+                  • 伊勢海老・特選黒毛和牛のフルコース<br>
+                  • 500名様まで対応可能
+                </div>
+                <button class="mail-cta-btn">ポータルで詳細を確認・お申込み →</button>
+                <div class="mail-ai-note">
+                  🤖 <strong>AI自動配信</strong>: Account Engagementが過去の施工実績から最適なタイミングを予測し自動送信しました。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- phone-step 2: ECポータル TOP（リッチUI） -->
+      <div class="phone-step" id="ps2">
+        <!-- ECへの遷移フラッシュ演出 -->
+        <div style="background:linear-gradient(135deg,#4A154B,#ECB22E);height:3px;"></div>
+        <!-- EC ナビ -->
+        <nav style="background:#4A154B;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5;">
+          <span style="color:white;font-weight:900;font-size:14px;display:flex;align-items:center;gap:6px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:#2EB67D;display:inline-block;"></span>
+            CBS オーダーポータル
+          </span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="background:#ECB22E;color:#1a1a1a;border-radius:10px;padding:2px 7px;font-size:10px;font-weight:900;">VIP</span>
+            <span style="background:rgba(255,255,255,.2);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">田</span>
+          </div>
+        </nav>
+        <!-- EC リッチヒーロー -->
+        <div class="ec-hero-v2">
+          <div class="ec-hero-v2-tag">
+            <span style="width:6px;height:6px;border-radius:50%;background:#2EB67D;display:inline-block;"></span>
+            Experience Cloud
+          </div>
+          <div class="ec-hero-v2-name">田辺 誠一郎 様</div>
+          <div class="ec-hero-v2-co">グランドパレス東京 — ご来訪ありがとうございます</div>
+          <div class="ec-hero-v2-stats">
+            <div class="ec-stat-card"><div class="ec-stat-num">5年</div><div class="ec-stat-lbl">ご利用実績</div></div>
+            <div class="ec-stat-card"><div class="ec-stat-num">★4.9</div><div class="ec-stat-lbl">満足度</div></div>
+            <div class="ec-stat-card"><div class="ec-stat-num">2件</div><div class="ec-stat-lbl">進行中</div></div>
+          </div>
+        </div>
+        <!-- コンテンツ -->
+        <div style="padding:14px 16px;">
+          <!-- AI提案バナー -->
+          <div class="ec-ai-banner">
+            <div class="ec-ai-banner-icon">✨</div>
+            <div class="ec-ai-banner-body">
+              <strong>50周年特別プランをご用意しました</strong><br>
+              昨年の記念パーティーデータをもとに、最適なプランをAIが提案しています。
+              <span class="ec-ai-banner-btn">特別プランを見る →</span>
+            </div>
+          </div>
+          <!-- 進行中案件 -->
+          <div style="font-size:13px;font-weight:700;color:#444;margin:14px 0 8px;display:flex;justify-content:space-between;align-items:center;">
+            進行中の案件 <a href="#" style="font-size:12px;color:#1264A3;">すべて見る</a>
+          </div>
+          <div class="ec-card-v2">
+            <div class="ec-card-v2-accent" style="background:linear-gradient(to right,#4A154B,#ECB22E);"></div>
+            <div style="margin-top:4px;">
+              <div class="ec-card-v2-lbl">🔥 最新 · 注目</div>
+              <div class="ec-card-v2-ttl">創立50周年記念パーティー（500名様）</div>
+              <div class="ec-card-v2-meta">実施予定: 2027年7月18日 ／ 担当: 田中 誠</div>
+              <div class="ec-progress-bar"><div class="ec-progress-fill" style="width:65%;"></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#706e6b;">
+                <span>進捗 65%</span>
+                <span style="background:#FFF3CD;color:#856404;border-radius:8px;padding:2px 7px;font-weight:700;">プランナー確認中</span>
+              </div>
+            </div>
+          </div>
+          <div class="ec-card-v2">
+            <div class="ec-card-v2-accent" style="background:linear-gradient(to right,#2EB67D,#36C5F0);"></div>
+            <div style="margin-top:4px;">
+              <div class="ec-card-v2-lbl">✅ 過去実績</div>
+              <div class="ec-card-v2-ttl">創立49周年ガラパーティー（480名様）</div>
+              <div class="ec-card-v2-meta">2026年7月20日 完了</div>
+              <div style="margin-top:4px;font-size:11px;color:#2EB67D;font-weight:700;">★★★★★ 満足度 5.0</div>
+            </div>
+          </div>
+          <button class="ec-btn-v2 ec-btn-primary">💬 見積内容の変更・お問い合わせ</button>
+        </div>
+      </div>
+
+      <!-- phone-step 3: フォーム入力 -->
+      <div class="phone-step" id="ps3">
+        <div style="background:#4A154B;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+          <span style="color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;">‹</span>
+          <span style="color:white;font-weight:700;font-size:15px;">お問い合わせ・変更依頼</span>
+        </div>
+        <div style="padding:14px 16px 40px;">
+          <div style="font-size:12px;color:#706e6b;margin-bottom:10px;font-family:'Lato',sans-serif;background:#F0F8FF;border-radius:8px;padding:8px 10px;">
+            🔗 入力内容はSalesforceに自動登録され、担当プランナーへ即座に通知されます。
+          </div>
+          <div class="ec-form-field">
+            <label class="ec-form-lbl">案件名</label>
+            <input class="ec-form-input filled" type="text" value="創立50周年記念パーティー" readonly />
+          </div>
+          <div class="ec-form-field">
+            <label class="ec-form-lbl">お問い合わせ種別</label>
+            <select class="ec-form-input"><option>見積内容の変更・確認</option></select>
+          </div>
+          <div class="ec-form-field">
+            <label class="ec-form-lbl">ご要望・詳細</label>
+            <textarea class="ec-form-ta filled" readonly>500名様の予算の都合で、今期は1名様12,000円でのお見積りをお願いできますでしょうか。昨年は15,000円でお願いしていたのですが…。ご検討のほどよろしくお願いいたします。</textarea>
+          </div>
+          <button class="ec-btn-v2 ec-btn-primary">送信する（Salesforceに自動登録）</button>
+        </div>
+      </div>
+
+      <!-- phone-step 4: 送信完了 -->
+      <div class="phone-step" id="ps4">
+        <div style="padding:20px 16px 40px;">
+          <div style="background:linear-gradient(135deg,#D4EDDA,#B7DFBA);border:1px solid #28A745;border-radius:14px;padding:22px;text-align:center;">
+            <div style="font-size:2.5rem;margin-bottom:8px;">✅</div>
+            <div style="font-weight:900;color:#155724;font-size:17px;margin-bottom:6px;">送信が完了しました</div>
+            <div style="font-size:12px;color:#155724;line-height:1.6;">担当プランナー（田中 誠）へ<br>即座に通知されました。</div>
+          </div>
+          <div style="margin-top:14px;background:linear-gradient(135deg,#E8F4FD,#D6EAF8);border:1px solid #1b96ff;border-radius:12px;padding:12px 14px;font-size:12px;font-family:'Lato',sans-serif;color:#032d60;display:flex;gap:8px;align-items:flex-start;">
+            <span style="font-size:18px;flex-shrink:0;">🔗</span>
+            <div><strong>Salesforce 自動連携完了</strong><br>「見積変更要求 ¥12,000/名」がケースとして立ち上がり、担当者のタイムラインに記録されました。</div>
+          </div>
+          <div style="margin-top:10px;background:#FFF9C4;border:1px solid #ECB22E;border-radius:12px;padding:10px 12px;font-size:11px;font-family:'Lato',sans-serif;color:#444;">
+            📊 このデータが <strong>楽楽販売との比較</strong> に使われ、社長のSlackへアラートが届く源泉になります。
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /phone-screen -->
+  </div><!-- /phone-frame -->
 </div><!-- /scene2a -->
 
 <!-- =====================================================
@@ -1069,11 +1157,11 @@ body.slack-scope{font-family:"Lato",-apple-system,sans-serif;font-size:15px;line
 lucide.createIcons();
 
 const SCENES = [
-  { id:'scene1',  name:'Slack 経営コンソール',           steps:5, onReveal:aS1 },
-  { id:'scene2a', name:'メール → EC ポータル',           steps:5, onReveal:aS2a },
-  { id:'scene2b', name:'SF Service Cloud（プランナー）', steps:3, onReveal:aS2b },
-  { id:'scene2c', name:'SF Sales Cloud（受注チーム）',   steps:3, onReveal:aS2c },
-  { id:'scene3',  name:'SF × Slack 統合ビュー',         steps:4, onReveal:aS3 },
+  { id:'scene1',  name:'Slack 経営コンソール',           steps:5,  onReveal:aS1,  skipReveal:false },
+  { id:'scene2a', name:'メール → EC ポータル',           steps:5,  onReveal:aS2a, skipReveal:true  },
+  { id:'scene2b', name:'SF Service Cloud（プランナー）', steps:3,  onReveal:aS2b, skipReveal:false },
+  { id:'scene2c', name:'SF Sales Cloud（受注チーム）',   steps:3,  onReveal:aS2c, skipReveal:false },
+  { id:'scene3',  name:'SF × Slack 統合ビュー',         steps:4,  onReveal:aS3,  skipReveal:false },
 ];
 let curScene=0, curStep=0, autoT=null;
 
@@ -1094,33 +1182,41 @@ function refreshHUD(){
   });
 }
 function activateScene(i){SCENES.forEach((sc,j)=>document.getElementById(sc.id).classList.toggle('is-active',i===j));}
-function resetScene(id){document.querySelectorAll(`#${id} [data-step]`).forEach(el=>{el.classList.remove('step-on');el.style.opacity='0';el.style.transform='translateY(10px)';});}
-function revealUpTo(id,upTo){
-  document.querySelectorAll(`#${id} [data-step]`).forEach(el=>{
+function resetScene(sc){
+  if(sc.skipReveal) return; // phone-step管理シーンはスキップ
+  document.querySelectorAll(`#${sc.id} [data-step]`).forEach(el=>{el.classList.remove('step-on');el.style.opacity='0';el.style.transform='translateY(10px)';});
+}
+function revealUpTo(sc,upTo){
+  if(sc.skipReveal) return; // phone-step管理シーンはJS側でonRevealが担当
+  document.querySelectorAll(`#${sc.id} [data-step]`).forEach(el=>{
     const s=parseInt(el.dataset.step);
     if(s<=upTo){el.classList.add('step-on');el.style.opacity='1';el.style.transform='translateY(0)';}
     else{el.classList.remove('step-on');el.style.opacity='0';el.style.transform='translateY(10px)';}
   });
 }
-function scrollLast(id){
-  const els=[...document.querySelectorAll(`#${id} [data-step].step-on`)];
+function scrollLast(sc){
+  if(sc.skipReveal) return;
+  const els=[...document.querySelectorAll(`#${sc.id} [data-step].step-on`)];
   if(els.length) setTimeout(()=>els[els.length-1].scrollIntoView({behavior:'smooth',block:'nearest'}),80);
 }
 function advance(){
   clearTimeout(autoT);
   const sc=SCENES[curScene];
-  if(curStep<sc.steps-1){curStep++;revealUpTo(sc.id,curStep);sc.onReveal(curStep);refreshHUD();scrollLast(sc.id);}
+  if(curStep<sc.steps-1){curStep++;revealUpTo(sc,curStep);sc.onReveal(curStep);refreshHUD();scrollLast(sc);}
   else if(curScene<SCENES.length-1){
-    resetScene(sc.id);curScene++;curStep=0;activateScene(curScene);
-    revealUpTo(SCENES[curScene].id,0);SCENES[curScene].onReveal(0);refreshHUD();window.scrollTo(0,0);
+    resetScene(sc);curScene++;curStep=0;activateScene(curScene);
+    const nsc=SCENES[curScene];
+    revealUpTo(nsc,0);nsc.onReveal(0);refreshHUD();window.scrollTo(0,0);
   }
 }
 function retreat(){
   clearTimeout(autoT);
-  if(curStep>0){curStep--;revealUpTo(SCENES[curScene].id,curStep);refreshHUD();}
+  const sc=SCENES[curScene];
+  if(curStep>0){curStep--;revealUpTo(sc,curStep);sc.onReveal(curStep);refreshHUD();}
   else if(curScene>0){
-    resetScene(SCENES[curScene].id);curScene--;curStep=SCENES[curScene].steps-1;activateScene(curScene);
-    revealUpTo(SCENES[curScene].id,curStep);refreshHUD();window.scrollTo(0,0);
+    resetScene(sc);curScene--;curStep=SCENES[curScene].steps-1;activateScene(curScene);
+    const psc=SCENES[curScene];
+    revealUpTo(psc,curStep);psc.onReveal(curStep);refreshHUD();window.scrollTo(0,0);
   }
 }
 document.addEventListener('keydown',e=>{
@@ -1135,10 +1231,31 @@ function aS1(step){
   }
   if(step===3){autoT=setTimeout(()=>{if(curScene===0&&curStep===3)advance();},1800);}
 }
-// Scene 2a: スマホ内スクロール
+// Scene 2a: phone-step の切り替え（重ね表示）
 function aS2a(step){
-  const scr=document.getElementById('s2a-screen');
-  if(scr) setTimeout(()=>scr.scrollTo({top:0,behavior:'smooth'}),100);
+  // 全phone-stepを非表示にして指定ステップだけ表示
+  ['ps0','ps1','ps2','ps3','ps4'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    if(i===step){
+      el.classList.add('is-current');
+      el.scrollTop=0;
+    } else {
+      el.classList.remove('is-current');
+    }
+  });
+  // バッジテキストをステップごとに変更
+  const badge=document.getElementById('s2a-badge');
+  if(badge){
+    const labels=[
+      '📱 顧客スマートフォン — メールアプリ（受信トレイ）',
+      '📧 Account Engagement AI自動配信メール — リンクをタップ',
+      '✨ Experience Cloud ポータル — メールからシームレスに遷移',
+      '💬 ポータルから問い合わせ入力 — Salesforceに自動連携',
+      '✅ 送信完了 — Salesforceにケースとして自動登録'
+    ];
+    badge.textContent=labels[step]||labels[0];
+  }
 }
 function aS2b(step){}
 // Scene 2c: 棒グラフアニメ
@@ -1151,8 +1268,8 @@ function aS3(step){}
 
 (function init(){
   initHUD();activateScene(0);
-  SCENES.forEach(sc=>resetScene(sc.id));
-  revealUpTo('scene1',0);SCENES[0].onReveal(0);
+  SCENES.forEach(sc=>resetScene(sc));
+  revealUpTo(SCENES[0],0);SCENES[0].onReveal(0);
 })();
 </script>
 </body>
