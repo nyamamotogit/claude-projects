@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__HomePage</target>
+        <target>lightning__AppPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__HomePage,lightning__AppPage">
+            <property name="titleText" type="String" label="タイトルテキスト" default="Agentforce がお手伝いします"/>
+            <property name="placeholderText" type="String" label="入力欄のプレースホルダー" default="Agentforce に質問する..."/>
+            <property name="showSuggestions" type="Boolean" label="サジェストチップを表示" default="false"/>
+            <property name="suggestionList" type="String" label="サジェスト候補（カンマ区切り）" default="休暇申請の方法は？,経費精算のやり方,社内規程を教えて"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

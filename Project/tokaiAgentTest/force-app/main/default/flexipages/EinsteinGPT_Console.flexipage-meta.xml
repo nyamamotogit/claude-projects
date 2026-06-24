@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>einsteinInteractivePage</componentName>
+                <identifier>c_einsteinInteractivePage</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>einsteinConsole</componentName>
+                <identifier>c_einsteinConsole</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>one</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <masterLabel>EinsteinGPT</masterLabel>
+    <template>
+        <name>einsteinGPTPageTemplate</name>
+    </template>
+    <type>AppPage</type>
+</FlexiPage>

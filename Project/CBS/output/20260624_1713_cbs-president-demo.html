@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>シービーサービス 社長向けデモ | CBS × Salesforce × Slack</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+/* ===== reset ===== */
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;background:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;overflow:hidden;height:100vh;}
+
+/* ===== シーン共通 ===== */
+.scene{display:none;width:100vw;height:100vh;overflow:hidden;}
+.scene.is-active{display:flex;flex-direction:column;}
+
+/* ===== HUD（下部インジケーター） ===== */
+.hud{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:.75rem;background:rgba(3,45,96,.9);backdrop-filter:blur(10px);border-radius:2rem;padding:.45rem 1.25rem;box-shadow:0 4px 20px rgba(0,0,0,.35);}
+.hud-label{color:#a8c4e5;font-size:.7rem;font-weight:700;letter-spacing:.06em;white-space:nowrap;}
+.hud-dots{display:flex;gap:5px;align-items:center;}
+.hud-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .25s;}
+.hud-dot.done{background:rgba(255,255,255,.55);}
+.hud-dot.active{background:#1b96ff;width:18px;border-radius:4px;}
+.hud-keys{color:rgba(255,255,255,.45);font-size:.65rem;margin-left:.25rem;white-space:nowrap;}
+.hud-keys kbd{background:rgba(255,255,255,.15);border-radius:3px;padding:1px 4px;font-size:.6rem;}
+
+/* ===== ステップ表示制御 ===== */
+[data-step]{opacity:0;transform:translateY(12px);transition:opacity .4s ease,transform .4s ease;pointer-events:none;}
+[data-step].step-on{opacity:1;transform:translateY(0);pointer-events:auto;}
+
+/* ===================================================
+   SCENE 1: Slack デスクトップ
+   =================================================== */
+.slack-scene{background:#1a1a2e;align-items:center;justify-content:center;}
+
+/* OS ウィンドウフレーム */
+.slack-window{width:min(1280px,98vw);height:min(820px,94vh);border-radius:10px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7);display:flex;flex-direction:column;background:#1d1c1d;}
+.slack-titlebar{height:28px;background:#2d2d2d;display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;}
+.slack-titlebar-dot{width:12px;height:12px;border-radius:50%;}
+.slack-titlebar-dot.red{background:#ff5f57;} .slack-titlebar-dot.yellow{background:#febc2e;} .slack-titlebar-dot.green{background:#28c840;}
+.slack-titlebar-title{flex:1;text-align:center;color:#999;font-size:11px;}
+.slack-body{flex:1;display:flex;overflow:hidden;}
+
+/* サイドバー */
+.slack-sidebar{width:240px;background:#3f0e40;display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+.slack-ws-header{padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.1);}
+.slack-ws-name{color:white;font-weight:900;font-size:14px;}
+.slack-ws-status{width:8px;height:8px;background:#2eb67d;border-radius:50%;flex-shrink:0;}
+.slack-sidebar-search{padding:6px 10px;}
+.slack-sidebar-search-input{background:rgba(255,255,255,.1);border:none;border-radius:4px;padding:5px 10px;color:white;font-size:13px;width:100%;outline:none;}
+.slack-sidebar-search-input::placeholder{color:rgba(255,255,255,.5);}
+.slack-sidebar-section{padding:6px 0;}
+.slack-sidebar-label{padding:4px 16px;font-size:11px;font-weight:700;color:rgba(255,255,255,.55);letter-spacing:.06em;text-transform:uppercase;}
+.slack-sidebar-item{padding:4px 16px;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:4px;margin:0 8px;color:rgba(255,255,255,.7);font-size:13px;}
+.slack-sidebar-item:hover{background:rgba(255,255,255,.1);}
+.slack-sidebar-item.active{background:rgba(255,255,255,.15);color:white;font-weight:700;}
+.slack-sidebar-item .item-dot{width:8px;height:8px;border-radius:50%;background:#2eb67d;flex-shrink:0;}
+.slack-sidebar-item .item-hash{color:rgba(255,255,255,.45);font-size:15px;width:16px;text-align:center;}
+.slack-sidebar-unread{margin-left:auto;background:#cd2553;color:white;border-radius:9999px;font-size:10px;font-weight:700;padding:1px 6px;min-width:16px;text-align:center;}
+
+/* メインコンテンツ */
+.slack-main{flex:1;display:flex;flex-direction:column;background:#1d1c1d;overflow:hidden;}
+.slack-main-header{height:49px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;}
+.slack-main-header-name{color:white;font-weight:900;font-size:15px;}
+.slack-main-header-meta{color:rgba(255,255,255,.45);font-size:12px;}
+.slack-main-header-actions{margin-left:auto;display:flex;gap:8px;}
+.slack-main-header-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:4px;padding:4px 10px;color:rgba(255,255,255,.7);font-size:12px;cursor:pointer;}
+.slack-main-header-btn:hover{background:rgba(255,255,255,.15);}
+
+/* メッセージエリア */
+.slack-messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:4px;}
+.slack-messages::-webkit-scrollbar{width:6px;}
+.slack-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px;}
+
+/* メッセージ行 */
+.slack-msg{display:flex;gap:10px;padding:4px 0;align-items:flex-start;}
+.slack-msg:hover .slack-msg-actions{opacity:1;}
+.slack-av{width:36px;height:36px;border-radius:6px;flex-shrink:0;object-fit:cover;}
+.slack-av-bot{width:36px;height:36px;border-radius:6px;flex-shrink:0;background:#4a154b;display:flex;align-items:center;justify-content:center;}
+.slack-av-bot img{width:22px;height:22px;filter:brightness(0)invert(1);}
+.slack-av-user{width:36px;height:36px;border-radius:6px;flex-shrink:0;background:#1264a3;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:14px;}
+.slack-msg-body{flex:1;min-width:0;}
+.slack-msg-header{display:flex;align-items:baseline;gap:8px;margin-bottom:2px;}
+.slack-msg-name{font-weight:900;color:white;font-size:14px;}
+.slack-msg-name.bot{color:#e8d9f0;}
+.slack-msg-time{color:rgba(255,255,255,.4);font-size:11px;}
+.slack-msg-bot-badge{background:#7b2d8b;color:white;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;letter-spacing:.04em;}
+.slack-msg-text{color:#d1d2d3;font-size:14px;line-height:1.5;}
+.slack-msg-text p{margin:0 0 4px;}
+.slack-msg-text strong{color:white;}
+.slack-msg-text a{color:#1d9bd1;text-decoration:none;}
+.slack-msg-text .mention{background:rgba(29,155,209,.15);color:#1d9bd1;border-radius:3px;padding:0 3px;font-weight:700;}
+
+/* ボットメニューボタン */
+.slack-btn-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.slack-btn{background:white;border:1px solid #dddbda;border-radius:4px;padding:7px 14px;font-size:13px;font-weight:700;color:#1d1c1d;cursor:pointer;transition:background .15s;}
+.slack-btn:hover{background:#f8f8f8;}
+.slack-btn.primary{background:#4a154b;color:white;border-color:#4a154b;}
+.slack-btn.primary:hover{background:#611f69;}
+.slack-btn.danger{background:#fff;border-color:#e01e5a;color:#e01e5a;}
+
+/* ボットカード（リッチメッセージ） */
+.slack-bot-card{background:#222529;border:1px solid rgba(255,255,255,.12);border-left:4px solid #4a154b;border-radius:4px;padding:12px 16px;margin-top:6px;max-width:580px;}
+.slack-bot-card.alert{border-left-color:#e01e5a;}
+.slack-bot-card.success{border-left-color:#2eb67d;}
+.slack-bot-card-title{font-weight:900;color:white;font-size:14px;margin-bottom:6px;}
+.slack-bot-card-text{color:#ababad;font-size:13px;line-height:1.6;}
+.slack-bot-card-text strong{color:white;}
+.slack-bot-card-divider{height:1px;background:rgba(255,255,255,.1);margin:8px 0;}
+
+/* CSS棒グラフ（bot内） */
+.bot-chart{margin:10px 0;}
+.bot-chart-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;}
+.bot-chart-label{width:80px;color:#ababad;flex-shrink:0;}
+.bot-chart-track{flex:1;height:18px;background:rgba(255,255,255,.08);border-radius:3px;position:relative;overflow:hidden;}
+.bot-chart-fill{height:100%;border-radius:3px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1);}
+.bot-chart-fill.grow{width:var(--w);}
+.bot-chart-fill.purple{background:linear-gradient(to right,#4a154b,#9050e9);}
+.bot-chart-fill.green{background:linear-gradient(to right,#1b6b43,#2eb67d);}
+.bot-chart-fill.blue{background:linear-gradient(to right,#0a3a6e,#1264a3);}
+.bot-chart-val{position:absolute;right:6px;top:1px;color:white;font-size:11px;font-weight:700;}
+
+/* CSS プログレス円 */
+.bot-progress-ring{position:relative;width:80px;height:80px;flex-shrink:0;}
+.bot-progress-ring svg{transform:rotate(-90deg);}
+.bot-progress-ring .ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:8;}
+.bot-progress-ring .ring-fill{fill:none;stroke:#2eb67d;stroke-width:8;stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);}
+.bot-progress-ring .ring-fill.grow{stroke-dashoffset:var(--offset);}
+.bot-progress-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.bot-progress-num{color:white;font-weight:900;font-size:16px;line-height:1;}
+.bot-progress-unit{color:#ababad;font-size:9px;margin-top:2px;}
+
+/* アラートバッジ */
+.slack-alert-badge{display:inline-flex;align-items:center;gap:5px;background:#e01e5a;color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;}
+
+/* タイピングインジケーター */
+.slack-typing{display:flex;align-items:center;gap:10px;padding:6px 0;}
+.slack-typing-av{width:36px;height:36px;border-radius:6px;background:#4a154b;display:flex;align-items:center;justify-content:center;}
+.slack-typing-av img{width:20px;height:20px;filter:brightness(0)invert(1);}
+.slack-typing-dots{display:inline-flex;gap:3px;background:#2d2d2d;border-radius:12px;padding:8px 12px;}
+.slack-typing-dots span{width:6px;height:6px;border-radius:50%;background:#888;animation:slack-bounce 1.2s infinite ease-in-out;}
+.slack-typing-dots span:nth-child(2){animation-delay:.2s;}
+.slack-typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes slack-bounce{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
+
+/* 入力欄 */
+.slack-input-area{padding:10px 16px 14px;flex-shrink:0;}
+.slack-input-box{background:#222529;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:0;overflow:hidden;}
+.slack-input-toolbar{display:flex;gap:2px;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.08);}
+.slack-input-toolbar button{width:26px;height:26px;background:transparent;border:none;cursor:pointer;border-radius:3px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:12px;font-weight:700;}
+.slack-input-toolbar button:hover{background:rgba(255,255,255,.1);color:white;}
+.slack-input-text{padding:10px 14px;color:#d1d2d3;font-size:14px;min-height:38px;display:flex;align-items:center;}
+.slack-input-text.has-text{color:white;}
+.slack-input-bottom{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;}
+.slack-input-bottom-icons{display:flex;gap:4px;}
+.slack-input-bottom-icons button{width:28px;height:28px;background:transparent;border:none;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:14px;}
+.slack-input-bottom-icons button:hover{background:rgba(255,255,255,.1);color:white;}
+.slack-send-btn{width:30px;height:30px;background:#4a154b;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.slack-send-btn:hover{background:#611f69;}
+.slack-send-btn img{width:14px;height:14px;filter:brightness(0)invert(1);}
+
+/* ===================================================
+   SCENE 2/3: Salesforce画面
+   =================================================== */
+.sf-scene{background:#f3f3f3;overflow-y:auto;}
+.sf-header{background:white;height:3rem;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;border-bottom:1px solid #c9c9c9;position:sticky;top:0;z-index:200;flex-shrink:0;}
+.sf-cloud-logo{width:32px;height:auto;}
+.sf-header-search{width:40%;max-width:32rem;}
+.sf-header-actions{display:flex;align-items:center;gap:.4rem;}
+.sf-icon-btn{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:.25rem;cursor:pointer;background:transparent;border:none;padding:0;}
+.sf-icon-btn img,.slds-input__icon{width:18px;height:18px;filter:brightness(0)saturate(100%)invert(43%)sepia(13%)saturate(295%)hue-rotate(180deg)brightness(95%)contrast(85%);}
+.sf-fav-btn{display:inline-flex;align-items:center;gap:3px;padding:0 8px;height:2rem;background:#1b96ff;border-radius:.25rem;border:none;cursor:pointer;}
+.sf-fav-btn img{width:13px;height:13px;filter:brightness(0)invert(1)!important;}
+.sf-notify-wrap{position:relative;display:inline-flex;}
+.sf-notify-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:#ea001e;border-radius:50%;border:1.5px solid white;}
+.sf-nav{background:white;border-bottom:1px solid #dddbda;padding:0 1rem;display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
+.sf-nav nav ul{display:flex;gap:.5rem;list-style:none;padding:0;margin:0;}
+.sf-nav nav ul li{display:flex;align-items:center;padding:0 .25rem;font-size:.875rem;}
+.sf-nav nav ul li.is-active{border-bottom:3px solid #1589ee;}
+.sf-nav nav ul li.is-active a{color:#0070d2;font-weight:700;}
+.sf-nav nav ul li a{color:#444;text-decoration:none;padding:.5rem 0;}
+.sf-app-dots{display:grid;grid-template-columns:repeat(3,4px);grid-template-rows:repeat(3,4px);gap:3px;cursor:pointer;}
+.sf-app-dots span{width:4px;height:4px;background:#54698d;border-radius:1px;}
+.sf-app-name{font-size:1.05rem;font-weight:700;color:#181818;padding:.5rem 0;margin-right:.75rem;}
+.sf-main{max-width:1440px;margin:0 auto;padding:1rem;flex:1;}
+.sf-row{display:flex;gap:.75rem;flex-wrap:wrap;}
+.sf-col-1-4{flex:0 0 calc(25% - .5625rem);}
+.sf-col-1-3{flex:0 0 calc(33.333% - .5rem);}
+.sf-col-1-2{flex:0 0 calc(50% - .375rem);}
+.sf-col-2-3{flex:0 0 calc(66.666% - .375rem);}
+.sf-col-3-4{flex:0 0 calc(75% - .1875rem);}
+.sf-col-1-1{flex:0 0 100%;}
+
+/* Experience Cloud ポータルフレーム */
+.ec-frame{border:2px solid #1b96ff;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);}
+.ec-browser-bar{background:#f1f3f4;padding:6px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #ddd;}
+.ec-url-bar{flex:1;background:white;border:1px solid #ccc;border-radius:20px;padding:3px 12px;font-size:12px;color:#444;display:flex;align-items:center;gap:6px;}
+.ec-url-bar span{color:#1a73e8;}
+
+/* タイムライン */
+.sf-tl{list-style:none;padding:0;margin:0;}
+.sf-tl-item{display:flex;align-items:flex-start;gap:.75rem;padding:.5rem 0;}
+.sf-tl-icon{flex:0 0 2rem;height:2rem;border-radius:.25rem;display:inline-flex;align-items:center;justify-content:center;}
+.sf-tl-call{background:#056764;} .sf-tl-email{background:#b0adab;} .sf-tl-task{background:#04844b;} .sf-tl-event{background:#cc6cdd;}
+.sf-tl-icon img{width:1.25rem;height:1.25rem;filter:brightness(0)invert(1);}
+.sf-tl-body{flex:1;min-width:0;line-height:1.4;}
+.sf-tl-body a{color:#0070d2;text-decoration:none;font-weight:700;}
+.sf-tl-meta{font-size:.8rem;color:#444;margin-top:.2rem;}
+
+/* バッジ類 */
+.sbadge{display:inline-block;padding:2px 8px;border-radius:.75rem;font-size:.75rem;font-weight:700;}
+.sb-red{background:#f8d7da;color:#721c24;} .sb-green{background:#d4edda;color:#155724;} .sb-yellow{background:#fff3cd;color:#856404;} .sb-blue{background:#cce5ff;color:#004085;} .sb-purple{background:#e2d9f3;color:#4a154b;}
+
+/* 棒グラフ */
+.sf-bar-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.45rem;font-size:.8125rem;}
+.sf-bar-label{width:7.5rem;color:#444;flex-shrink:0;}
+.sf-bar-track{flex:1;height:1.25rem;background:#f3f3f3;border-radius:.25rem;position:relative;}
+.sf-bar-fill{height:1.25rem;border-radius:.25rem;width:0;transition:width .9s cubic-bezier(.4,0,.2,1);}
+.sf-bar-fill.grow{width:var(--w);}
+.sf-bar-val{position:absolute;right:.4rem;top:.1875rem;color:#181818;font-size:.7rem;}
+
+/* Slackスレッド埋め込み（Scene3用） */
+.sf-slack-embed{font-family:"Lato",-apple-system,sans-serif;color:#1d1c1d;font-size:14px;line-height:1.5;}
+.sf-slack-embed .smsg{display:flex;gap:10px;padding:6px 12px;}
+.sf-slack-embed .smsg:hover{background:#f8f8f8;}
+.sf-slack-embed .sav{width:32px;height:32px;border-radius:6px;flex-shrink:0;object-fit:cover;}
+.sf-slack-embed .sbody{flex:1;min-width:0;}
+.sf-slack-embed .sname{font-weight:900;color:#1d1c1d;font-size:13px;}
+.sf-slack-embed .stime{color:#616061;font-size:11px;margin-left:6px;}
+.sf-slack-embed .stext{color:#1d1c1d;font-size:13px;}
+.sf-slack-embed .stag{background:#f1f1f1;color:#616061;border-radius:3px;padding:1px 5px;font-size:10px;font-weight:700;letter-spacing:.04em;margin-left:6px;}
+.sf-slack-embed .smention{background:rgba(29,155,209,.1);color:#1264a3;border-radius:3px;padding:0 2px;font-weight:700;}
+
+/* AIサマリーカード */
+.ai-summary{background:linear-gradient(135deg,#f0f8ff,#e8f0fb);border:1px solid #1b96ff;border-radius:.5rem;padding:1rem;}
+.ai-summary-hdr{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;}
+.ai-icon{width:26px;height:26px;background:#0070d2;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-icon img{width:14px;height:14px;filter:brightness(0)invert(1);}
+.ai-title{font-weight:700;color:#032d60;font-size:.9rem;}
+.ai-body{font-size:.875rem;color:#181818;line-height:1.65;}
+.ai-body strong{color:#032d60;}
+
+/* フェードイン汎用 */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fadeUp .5s ease forwards;}
+
+/* Scene3 レコードハイライト */
+.alert-highlight{background:#fff5f5;border:2px solid #e01e5a;border-radius:.5rem;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;}
+.alert-icon{font-size:1.5rem;flex-shrink:0;}
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- =====================================================
+  SCENE 1: Slack デスクトップ 経営コンソール
+  Steps:
+    0 = Slackウィンドウ + Bot初期メニュー
+    1 = 「2027年度ビジョン進捗」ボタン押下 → Bot返答（グラフ）
+    2 = 社長の質問入力（失注リスク）
+    3 = Botがタイピング中
+    4 = Botがリスクアラート返答
+===================================================== -->
+<div id="scene1" class="scene slack-scene is-active">
+  <div class="slack-window">
+    <!-- タイトルバー -->
+    <div class="slack-titlebar">
+      <span class="slack-titlebar-dot red"></span>
+      <span class="slack-titlebar-dot yellow"></span>
+      <span class="slack-titlebar-dot green"></span>
+      <span class="slack-titlebar-title">Slack — シービーサービス</span>
+    </div>
+    <div class="slack-body">
+
+      <!-- サイドバー -->
+      <div class="slack-sidebar">
+        <div class="slack-ws-header">
+          <span class="slack-ws-status"></span>
+          <span class="slack-ws-name">シービーサービス</span>
+        </div>
+        <div class="slack-sidebar-search">
+          <input class="slack-sidebar-search-input" type="text" placeholder="🔍  シービーサービスを検索" readonly />
+        </div>
+        <div class="slack-sidebar-section">
+          <div class="slack-sidebar-item"><span style="font-size:14px;">🏠</span> ホーム</div>
+          <div class="slack-sidebar-item"><span style="font-size:14px;">💬</span> DM</div>
+          <div class="slack-sidebar-item"><span style="font-size:14px;">🔔</span> アクティビティ</div>
+        </div>
+        <div class="slack-sidebar-section">
+          <div class="slack-sidebar-label">ダイレクトメッセージ</div>
+          <div class="slack-sidebar-item active">
+            <span class="item-dot"></span>
+            <span>社長専用 経営コンソールBot</span>
+          </div>
+          <div class="slack-sidebar-item">
+            <span class="item-dot" style="background:#888;"></span>
+            <span>田中 誠（旬菜亭）</span>
+          </div>
+          <div class="slack-sidebar-item">
+            <span class="item-dot"></span>
+            <span>佐藤 健一（CBS PM）</span>
+          </div>
+        </div>
+        <div class="slack-sidebar-section">
+          <div class="slack-sidebar-label">チャンネル</div>
+          <div class="slack-sidebar-item"><span class="item-hash">#</span>general</div>
+          <div class="slack-sidebar-item"><span class="item-hash">#</span>旬菜亭_現場<span class="slack-sidebar-unread">3</span></div>
+          <div class="slack-sidebar-item"><span class="item-hash">#</span>cb_プランナー</div>
+          <div class="slack-sidebar-item"><span class="item-hash">#</span>グランドパレス東京_案件<span class="slack-sidebar-unread">7</span></div>
+          <div class="slack-sidebar-item"><span class="item-hash">#</span>受注チーム</div>
+          <div class="slack-sidebar-item"><span class="item-hash">#</span>経営会議</div>
+        </div>
+      </div>
+
+      <!-- メインエリア -->
+      <div class="slack-main">
+        <div class="slack-main-header">
+          <div class="slack-av-bot" style="width:28px;height:28px;border-radius:5px;">
+            <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:18px;height:18px;" />
+          </div>
+          <span class="slack-main-header-name">社長専用 経営コンソールBot</span>
+          <span class="slack-main-header-meta">Agentforce powered by Salesforce</span>
+          <div class="slack-main-header-actions">
+            <button class="slack-main-header-btn">☎ 通話</button>
+            <button class="slack-main-header-btn">🔍 検索</button>
+          </div>
+        </div>
+
+        <div class="slack-messages" id="slack-messages">
+
+          <!-- step0: Bot初期メニュー -->
+          <div data-step="0" data-scene="1">
+            <div class="slack-msg">
+              <div class="slack-av-bot">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+              </div>
+              <div class="slack-msg-body">
+                <div class="slack-msg-header">
+                  <span class="slack-msg-name bot">経営コンソールBot</span>
+                  <span class="slack-msg-bot-badge">BOT</span>
+                  <span class="slack-msg-time">今日 8:01</span>
+                </div>
+                <div class="slack-msg-text">
+                  <p>おはようございます、社長！本日も最新の経営状況をお届けします。確認したい項目をお選びください。</p>
+                </div>
+                <div class="slack-btn-group">
+                  <button class="slack-btn primary" id="vision-btn" onclick="step1Click()">📊 【最新】2027年度事業ビジョン進捗</button>
+                  <button class="slack-btn">⚠️ 失注リスク・現場トラブル確認</button>
+                  <button class="slack-btn">📅 今週の重要アクション一覧</button>
+                  <button class="slack-btn">💰 リアルタイム売上サマリー</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- step1: ビジョン進捗返答 -->
+          <div data-step="1" data-scene="1">
+            <!-- 社長のボタン押下メッセージ -->
+            <div class="slack-msg" style="flex-direction:row-reverse;">
+              <div class="slack-av-user">社</div>
+              <div class="slack-msg-body" style="text-align:right;margin-right:10px;">
+                <div class="slack-msg-header" style="justify-content:flex-end;">
+                  <span class="slack-msg-time">今日 8:03</span>
+                  <span class="slack-msg-name">山田 社長</span>
+                </div>
+                <div class="slack-msg-text" style="text-align:left;"><p>📊 【最新】2027年度事業ビジョン進捗</p></div>
+              </div>
+            </div>
+            <!-- Bot返答 -->
+            <div class="slack-msg">
+              <div class="slack-av-bot">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+              </div>
+              <div class="slack-msg-body">
+                <div class="slack-msg-header">
+                  <span class="slack-msg-name bot">経営コンソールBot</span>
+                  <span class="slack-msg-bot-badge">BOT</span>
+                  <span class="slack-msg-time">今日 8:03</span>
+                </div>
+                <div class="slack-msg-text">
+                  <p>社長、お疲れ様です！現在のビジョン達成進捗です。<br>本日現在の着地見込み、および <strong>楽楽販売</strong> から同期された最新確定売上データを集計しました。</p>
+                </div>
+                <div class="slack-bot-card success">
+                  <div class="slack-bot-card-title">📊 2027年度 事業ビジョン進捗レポート</div>
+                  <div class="slack-bot-card-text">
+                    <strong>【CBケータリング】全国売上</strong>
+                  </div>
+                  <div class="bot-chart" style="margin-top:8px;">
+                    <div class="bot-chart-row">
+                      <div class="bot-chart-label">今期実績</div>
+                      <div class="bot-chart-track"><div class="bot-chart-fill purple" style="--w:74%;" id="bc1"></div><span class="bot-chart-val">14.8億円</span></div>
+                    </div>
+                    <div class="bot-chart-row">
+                      <div class="bot-chart-label">2030年目標</div>
+                      <div class="bot-chart-track"><div class="bot-chart-fill" style="--w:100%;background:rgba(255,255,255,.15);width:100%;"></div><span class="bot-chart-val">20億円</span></div>
+                    </div>
+                  </div>
+                  <div class="slack-bot-card-text" style="margin-top:4px;">基準年比 <strong style="color:#2eb67d;">1.7倍のペース</strong>で順調に推移 ✅</div>
+                  <div class="slack-bot-card-divider"></div>
+                  <div class="slack-bot-card-text"><strong>【旬菜亭】首都圏大手セグメントカバレッジ</strong></div>
+                  <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+                    <div class="bot-progress-ring">
+                      <svg width="80" height="80" viewBox="0 0 80 80">
+                        <circle class="ring-bg" cx="40" cy="40" r="36"/>
+                        <circle class="ring-fill" id="ring1" cx="40" cy="40" r="36" style="--offset:63;"/>
+                      </svg>
+                      <div class="bot-progress-center"><span class="bot-progress-num">72%</span><span class="bot-progress-unit">達成</span></div>
+                    </div>
+                    <div class="slack-bot-card-text">
+                      前期比 <strong style="color:#2eb67d;">+15ポイント</strong> 向上<br>
+                      対象セグメント: 首都圏 年商50億以上の企業<br>
+                      残り 28% = 約 <strong>41社</strong> がアプローチ未着手
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- step2: 社長の質問 -->
+          <div data-step="2" data-scene="1">
+            <div class="slack-msg" style="flex-direction:row-reverse;">
+              <div class="slack-av-user">社</div>
+              <div class="slack-msg-body" style="text-align:right;margin-right:10px;">
+                <div class="slack-msg-header" style="justify-content:flex-end;">
+                  <span class="slack-msg-time">今日 8:07</span>
+                  <span class="slack-msg-name">山田 社長</span>
+                </div>
+                <div class="slack-msg-text" style="text-align:left;"><p>今クォーターで、失注リスクのある大型案件や、現場でトラブルになりそうな案件はある？</p></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- step3: タイピング -->
+          <div data-step="3" data-scene="1" id="s1-typing">
+            <div class="slack-typing">
+              <div class="slack-typing-av">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+              </div>
+              <div class="slack-typing-dots"><span></span><span></span><span></span></div>
+              <span style="color:rgba(255,255,255,.4);font-size:12px;margin-left:6px;">Salesforce・楽楽販売・Slackを横断分析中...</span>
+            </div>
+          </div>
+
+          <!-- step4: リスクアラート返答 -->
+          <div data-step="4" data-scene="1">
+            <div class="slack-msg">
+              <div class="slack-av-bot">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" />
+              </div>
+              <div class="slack-msg-body">
+                <div class="slack-msg-header">
+                  <span class="slack-msg-name bot">経営コンソールBot</span>
+                  <span class="slack-msg-bot-badge">BOT</span>
+                  <span class="slack-msg-time">今日 8:07</span>
+                </div>
+                <div class="slack-msg-text">
+                  <p>Salesforce上の活動データ、および現場Slackチャンネルの熱量（ネガティブワード・不穏な動きの検知）から <strong>1件</strong> を抽出しました。</p>
+                </div>
+                <div class="slack-bot-card alert">
+                  <div class="slack-bot-card-title">
+                    <span class="slack-alert-badge">⚠ RISK ALERT</span>
+                    &nbsp;【旬菜亭】グランドパレス東京様
+                  </div>
+                  <div class="slack-bot-card-text">
+                    500名規模 創立50周年記念パーティーの件
+                    <div style="margin:8px 0;display:flex;flex-direction:column;gap:6px;">
+                      <div style="background:rgba(224,30,90,.1);border-radius:4px;padding:8px 10px;">
+                        <strong style="color:#e01e5a;">💴 単価低下アラート（楽楽販売データ連携）</strong><br>
+                        過去実績単価 <strong>¥15,000/名</strong> → 今期見積 <strong style="color:#e01e5a;">¥12,000/名</strong>（<strong style="color:#e01e5a;">▼20%低下</strong>）
+                      </div>
+                      <div style="background:rgba(224,30,90,.1);border-radius:4px;padding:8px 10px;">
+                        <strong style="color:#e01e5a;">👥 現場人員不足シグナル（Slackチャンネル検知）</strong><br>
+                        <span class="smention" style="background:rgba(29,155,209,.15);color:#1d9bd1;border-radius:3px;padding:0 2px;font-weight:700;">#グランドパレス東京_案件</span> にて昨日16:00<br>
+                        「当日のサービススタッフが<strong style="color:#e01e5a;"> 3名足りないかもしれない</strong>」という会話を検知
+                      </div>
+                    </div>
+                    推奨アクション: 田中プランナーへの確認 / 協力会社スタッフ確保の即時着手
+                  </div>
+                  <div class="slack-btn-group" style="margin-top:10px;">
+                    <button class="slack-btn danger">🔍 案件詳細を Salesforce で確認</button>
+                    <button class="slack-btn">📞 田中プランナーに連絡</button>
+                    <button class="slack-btn">📋 対応タスクを作成</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /slack-messages -->
+
+        <!-- 入力欄 -->
+        <div class="slack-input-area">
+          <div class="slack-input-box">
+            <div class="slack-input-toolbar">
+              <button><strong>B</strong></button>
+              <button><em>I</em></button>
+              <button><u>U</u></button>
+              <button style="text-decoration:line-through;">S</button>
+              <button style="font-size:10px;width:auto;padding:0 4px;">リンク</button>
+              <button>≡</button>
+              <button>・</button>
+            </div>
+            <div class="slack-input-text" id="slack-input-display">経営コンソールBotへのメッセージ...</div>
+            <div class="slack-input-bottom">
+              <div class="slack-input-bottom-icons">
+                <button title="追加">＋</button>
+                <button title="絵文字">😊</button>
+                <button title="@メンション">@</button>
+                <button title="ファイル">📎</button>
+              </div>
+              <button class="slack-send-btn">
+                <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/forward.svg" alt="送信" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /slack-main -->
+    </div><!-- /slack-body -->
+  </div><!-- /slack-window -->
+</div><!-- /scene1 -->
