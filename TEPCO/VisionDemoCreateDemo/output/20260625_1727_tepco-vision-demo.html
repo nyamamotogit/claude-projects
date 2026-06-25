@@ -490,7 +490,7 @@ table.equip-table tr.row-danger td{background:#fef2f2}
 /* ===== PHASE3: Mobile ===== */
 #scene-phase3{
   background:#1a0a2e;display:flex;align-items:center;justify-content:center;
-  overflow:hidden;position:relative
+  overflow:hidden
 }
 .mobile-bg-orb1{position:absolute;width:500px;height:500px;border-radius:50%;background:#1a0a2e;filter:blur(60px);opacity:0.5;top:-100px;left:-100px}
 .mobile-bg-orb2{position:absolute;width:400px;height:400px;border-radius:50%;background:#0d1b3e;filter:blur(60px);opacity:0.5;bottom:-80px;right:-80px}
@@ -631,7 +631,7 @@ table.equip-table tr.row-danger td{background:#fef2f2}
 /* ===== ENDING ===== */
 #scene-ending{
   background:#050a14;display:flex;align-items:center;justify-content:center;
-  overflow:hidden;position:relative
+  overflow:hidden
 }
 .ending-content{position:relative;z-index:10;text-align:center;max-width:800px;padding:2rem}
 .ending-title{
@@ -1173,11 +1173,14 @@ let currentScene = 0;
 const TOTAL_SCENES = 5;
 const sceneIds = ['scene-opening','scene-phase1','scene-phase2','scene-phase3','scene-ending'];
 
-// Phase1 animation state
+// Per-scene "substep" counters
+// scene 2 (Slack):  slackStep 0..N-1 = show one message per → key
+// scene 3 (Mobile): mobileStep 0..N-1 = open chat / show msgs / tableau / sap / approve
+let slackStep = 0;
+let mobileStep = 0;
+
 let phase1Initialized = false;
-// Phase2 animation state
 let phase2Initialized = false;
-// Phase3 animation state
 let phase3Initialized = false;
 
 function goToScene(idx) {
@@ -1189,19 +1192,83 @@ function goToScene(idx) {
     s.classList.toggle('active', i === idx);
   });
   currentScene = idx;
-  // Initialize on first visit
   if (idx === 1 && !phase1Initialized) { initPhase1(); phase1Initialized = true; }
   if (idx === 2 && !phase2Initialized) { initPhase2(); phase2Initialized = true; }
   if (idx === 3 && !phase3Initialized) { initPhase3(); phase3Initialized = true; }
 }
 
-function nextScene() { goToScene(currentScene + 1); }
-function prevScene() { goToScene(currentScene - 1); }
+function advanceRight() {
+  // Scene 2: step through Slack messages one by one
+  if (currentScene === 2) {
+    if (slackStep < SLACK_MSGS.length) {
+      showSlackMsg(slackStep);
+      slackStep++;
+      updateNavHint();
+      return;
+    }
+    goToScene(currentScene + 1);
+    return;
+  }
+  // Scene 3: step through mobile sub-steps
+  if (currentScene === 3) {
+    if (!advanceMobile()) {
+      updateNavHint();
+      return;
+    }
+    goToScene(currentScene + 1);
+    return;
+  }
+  goToScene(currentScene + 1);
+  updateNavHint();
+}
+
+function advanceLeft() {
+  if (currentScene === 2) {
+    if (slackStep > 0) {
+      slackStep = 0;
+      document.getElementById('slack-messages').innerHTML = '';
+      updateNavHint();
+      return;
+    }
+  }
+  if (currentScene === 3) {
+    if (mobileStep > 0) {
+      resetMobile();
+      updateNavHint();
+      return;
+    }
+  }
+  goToScene(currentScene - 1);
+  updateNavHint();
+}
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight') nextScene();
-  if (e.key === 'ArrowLeft')  prevScene();
+  if (e.key === 'ArrowRight') advanceRight();
+  if (e.key === 'ArrowLeft')  advanceLeft();
 });
+
+// ================================================================
+// NAV HINT
+// ================================================================
+const SCENE_HINTS = [
+  '→ キーでデモ開始',
+  '→ でSlackへ / ← で戻る',
+  '→ キーでメッセージを1件ずつ表示 / ← で最初に戻る',
+  '→ キーでシナリオを1ステップずつ進行',
+  '← キーでシナリオを再確認',
+];
+function updateNavHint() {
+  const hint = document.getElementById('nav-hint');
+  if (hint) {
+    const scene2hint = (currentScene === 2)
+      ? `<kbd>←</kbd> 最初に戻る &nbsp;|&nbsp; メッセージ表示 <kbd>→</kbd> &nbsp;(${slackStep}/${SLACK_MSGS.length})`
+      : (currentScene === 3)
+      ? `<kbd>←</kbd> リセット &nbsp;|&nbsp; 次のステップ <kbd>→</kbd> &nbsp;(step ${mobileStep})`
+      : `<kbd>←</kbd> 戻る &nbsp;|&nbsp; 進む <kbd>→</kbd>`;
+    hint.innerHTML = scene2hint;
+  }
+}
+
 
 // ================================================================
 // PARTICLES (Opening)
@@ -1359,118 +1426,177 @@ function onApprove() {
 }
 
 // ================================================================
-// PHASE2 — Slack messages
+// PHASE2 — Slack messages (→ key advances one at a time)
 // ================================================================
-function initPhase2() {
-  const container = document.getElementById('slack-messages');
-  const msgs = [
-    {
-      avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:05',
-      text:'🚨 <span class="slack-mention">@現場チーム</span> <span class="slack-mention">@中央給電指令所</span> <span class="slack-mention">@経企</span> 新豊洲変電所1号トランスに重大異常を検知。<strong style="color:#fbbf24">本チャンネルは自動生成されました。</strong>',
-      botTag: true
-    },
-    {
-      avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:05',
-      text:'',
-      card: {
-        title:'対応ステータス — 自動実行済みアクション',
-        body:'① SAP 部品仮引当: TEP-8832 ✅<br>② AWS 系統迂回: 辰巳経由ルート確保 ✅<br>③ M365 マニュアル抽出: TR保全手順書v4.2.pdf ✅<br>④ Work Order: WO-2026-NT-0892 作成 ✅<br>⑤ Teams メーカー招集: ABBジャパン ✅'
-      }
-    },
-    {
-      avatar:'TN', avatarBg:'#1a6ca8', name:'Tableau Next Bot', time:'17:06',
-      text:'📊 リクエストに応じROI比較を生成しました。',
-      tableau: true, botTag: true
-    },
-    {
-      avatar:'田', avatarBg:'#7c3aed', name:'田中 保全（現場リーダー）', time:'17:07',
-      text:'現場確認中。トランス室の温度は室温+8℃。外観に異常なし。作業手順書を確認してすぐ動きます。'
-    },
-    {
-      avatar:'中', avatarBg:'#059669', name:'中村 中給（中央給電指令所）', time:'17:07',
-      text:'辰巳経由の迂回準備完了。いつでも系統切替可能。<span class="slack-mention">@田中</span> 現場状況を随時共有してください。'
-    },
-    {
-      avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:08',
-      text:'⚠️ 分析の結果、<strong style="color:#fbbf24">経営判断が必要と判断</strong>しました。停電リスク（損失84〜120億円）に対し、緊急予算5.2億円の執行承認が必要です。<br><span class="slack-mention">@関 常務</span> にエスカレーションを送信します。',
-      botTag: true
-    },
-  ];
+const SLACK_MSGS = [
+  {
+    avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:05',
+    text:'🚨 <span class="slack-mention">@現場チーム</span> <span class="slack-mention">@中央給電指令所</span> <span class="slack-mention">@経企</span> 新豊洲変電所1号トランスに重大異常を検知。<strong style="color:#fbbf24">本チャンネルは自動生成されました。</strong>',
+    botTag: true
+  },
+  {
+    avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:05',
+    text:'',
+    botTag: true,
+    card: {
+      title:'対応ステータス — 自動実行済みアクション',
+      body:'① SAP 部品仮引当: TEP-8832 ✅<br>② AWS 系統迂回: 辰巳経由ルート確保 ✅<br>③ M365 マニュアル抽出: TR保全手順書v4.2.pdf ✅<br>④ Work Order: WO-2026-NT-0892 作成 ✅<br>⑤ Teams メーカー招集: ABBジャパン ✅'
+    }
+  },
+  {
+    avatar:'TN', avatarBg:'#1a6ca8', name:'Tableau Next Bot', time:'17:06',
+    text:'📊 リクエストに応じROI比較を生成しました。',
+    tableau: true, botTag: true
+  },
+  {
+    avatar:'田', avatarBg:'#7c3aed', name:'田中 保全（現場リーダー）', time:'17:07',
+    text:'現場確認中。トランス室の温度は室温+8℃。外観に異常なし。作業手順書を確認してすぐ動きます。'
+  },
+  {
+    avatar:'中', avatarBg:'#059669', name:'中村 中給（中央給電指令所）', time:'17:07',
+    text:'辰巳経由の迂回準備完了。いつでも系統切替可能。<span class="slack-mention">@田中</span> 現場状況を随時共有してください。'
+  },
+  {
+    avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:08',
+    text:'⚠️ 分析の結果、<strong style="color:#fbbf24">経営判断が必要と判断</strong>しました。停電リスク（損失84〜120億円）に対し、緊急予算5.2億円の執行承認が必要です。<br><span class="slack-mention">@関 常務</span> にエスカレーションをSlack DMで送信します。→キーを押すとPhase3へ。',
+    botTag: true
+  },
+];
 
-  let delay = 200;
-  msgs.forEach(m => {
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.className = 'slack-msg';
-      let cardHtml = '';
-      if (m.card) {
-        cardHtml = `<div class="slack-card">
-          <div class="slack-card-title">${m.card.title}</div>
-          <div class="slack-card-body">${m.card.body}</div>
-          <div style="margin-top:0.5rem;display:flex;gap:0.5rem">
-            <button class="slack-card-btn primary">Work Order を開く</button>
-            <button class="slack-card-btn secondary">マニュアルを確認</button>
-          </div></div>`;
-      }
-      if (m.tableau) {
-        cardHtml = `<div class="tableau-card">
-          <div class="tableau-card-header">
-            <span class="tableau-logo">T</span>
-            Tableau Next — ROI比較レポート
-          </div>
-          <div class="roi-compare">
-            <div class="roi-col">
-              <div class="roi-col-label">停電時の想定損失</div>
-              <div class="roi-col-value red">84〜120億</div>
-              <div class="roi-col-sub">社会的影響含む</div>
-            </div>
-            <div class="roi-col better">
-              <div class="roi-col-label">緊急対応コスト</div>
-              <div class="roi-col-value green">5.2億</div>
-              <div class="roi-col-sub">ROI +188%</div>
-            </div>
-          </div>
-          <div style="font-size:0.75rem;color:rgba(255,255,255,0.5)">推奨: 緊急対応を即時実施。意思決定期限まで残り <strong style="color:#fbbf24">4時間</strong></div>
-          <div style="margin-top:0.5rem">
-            <button class="slack-card-btn primary">詳細ダッシュボードを開く</button>
-          </div></div>`;
-      }
-      el.innerHTML = `
-        <div class="slack-msg-avatar" style="background:${m.avatarBg}">${m.avatar}</div>
-        <div class="slack-msg-body">
-          <div class="slack-msg-header">
-            <span class="slack-msg-name">${m.name}</span>
-            ${m.botTag ? '<span class="slack-bot-tag">BOT</span>' : ''}
-            <span class="slack-msg-time">${m.time}</span>
-          </div>
-          <div class="slack-msg-text">${m.text}</div>
-          ${cardHtml}
-        </div>`;
-      container.appendChild(el);
-      void el.offsetWidth;
-      el.classList.add('show');
-      container.scrollTop = container.scrollHeight;
-    }, delay);
-    delay += 700;
-  });
+function buildSlackMsgEl(m) {
+  let cardHtml = '';
+  if (m.card) {
+    cardHtml = `<div class="slack-card">
+      <div class="slack-card-title">${m.card.title}</div>
+      <div class="slack-card-body">${m.card.body}</div>
+      <div style="margin-top:0.5rem;display:flex;gap:0.5rem">
+        <button class="slack-card-btn primary">Work Order を開く</button>
+        <button class="slack-card-btn secondary">マニュアルを確認</button>
+      </div></div>`;
+  }
+  if (m.tableau) {
+    cardHtml = `<div class="tableau-card">
+      <div class="tableau-card-header">
+        <span class="tableau-logo">T</span>
+        Tableau Next — ROI比較レポート
+      </div>
+      <div class="roi-compare">
+        <div class="roi-col">
+          <div class="roi-col-label">停電時の想定損失</div>
+          <div class="roi-col-value red">84〜120億</div>
+          <div class="roi-col-sub">社会的影響含む</div>
+        </div>
+        <div class="roi-col better">
+          <div class="roi-col-label">緊急対応コスト</div>
+          <div class="roi-col-value green">5.2億</div>
+          <div class="roi-col-sub">ROI +188%</div>
+        </div>
+      </div>
+      <div style="font-size:0.75rem;color:rgba(255,255,255,0.5)">推奨: 緊急対応を即時実施。意思決定期限まで残り <strong style="color:#fbbf24">4時間</strong></div>
+      <div style="margin-top:0.5rem">
+        <button class="slack-card-btn primary">詳細ダッシュボードを開く</button>
+      </div></div>`;
+  }
+  const el = document.createElement('div');
+  el.className = 'slack-msg';
+  el.innerHTML = `
+    <div class="slack-msg-avatar" style="background:${m.avatarBg}">${m.avatar}</div>
+    <div class="slack-msg-body">
+      <div class="slack-msg-header">
+        <span class="slack-msg-name">${m.name}</span>
+        ${m.botTag ? '<span class="slack-bot-tag">BOT</span>' : ''}
+        <span class="slack-msg-time">${m.time}</span>
+      </div>
+      <div class="slack-msg-text">${m.text}</div>
+      ${cardHtml}
+    </div>`;
+  return el;
+}
+
+function showSlackMsg(idx) {
+  const container = document.getElementById('slack-messages');
+  const el = buildSlackMsgEl(SLACK_MSGS[idx]);
+  container.appendChild(el);
+  void el.offsetWidth;
+  el.classList.add('show');
+  container.scrollTop = container.scrollHeight;
+}
+
+function initPhase2() {
+  // Show hint in nav
+  updateNavHint();
 }
 
 // ================================================================
-// PHASE3 — Mobile
+// PHASE3 — Mobile  (→ key advances step by step)
 // ================================================================
+// Steps:
+//  0: show DM list (3 DMs appear)
+//  1: open Agentforce chat + show bot msg 1
+//  2: show bot msg 2
+//  3: show user reply + Tableau button
+//  4: open Tableau view
+//  5: show SAP overlay
+//  6: approve SAP → show completion + effects panel items 1
+//  7: effects panel item 2
+//  8: effects panel item 3  → then → goes to next scene
+
+const MOBILE_EFFECTS = [
+  { icon:'⚡', bg:'#1e3a5f', title:'Agentforce がエスカレーション判断', sub:'停電リスク vs コスト比較 → 経営承認が必要と自律判断' },
+  { icon:'📊', bg:'#1a3a2a', title:'Tableau Next VIPビュー を提示', sub:'都心3D停電ヒートマップ + ROI比較をワンタップ確認' },
+  { icon:'✅', bg:'#3a2a10', title:'SAP 緊急予算をワンタップ承認', sub:'5.2億円の執行承認 → 60秒で全システムへ展開' },
+];
+
+const PHONE_DMS = [
+  { avatar:'AF', bg:'#0070d2', name:'Agentforce', preview:'⚠️ 緊急エスカレーション: 新豊洲TR1 経営承認が必要です', time:'17:08', unread:1 },
+  { avatar:'田', bg:'#7c3aed', name:'田中 保全', preview:'現場確認中。外観異常なし。手順書確認します', time:'17:07', unread:0 },
+  { avatar:'TN', bg:'#1a6ca8', name:'Tableau Next', preview:'ROI比較レポートを生成しました', time:'17:06', unread:0 },
+];
+
+const PHONE_CHAT_MSGS = [
+  { role:'bot', text:'🚨 関常務、緊急エスカレーションです。<br>新豊洲変電所1号トランスに重大異常を検知。72時間以内故障確率<strong>85%</strong>。停電時の損失は<strong>84〜120億円</strong>と試算されます。' },
+  { role:'bot', text:'緊急対応コストは<strong>5.2億円</strong>（ROI +188%）。<br>Tableau VIPビューでコスト比較と影響ヒートマップをご確認ください。' },
+  { role:'user', text:'確認した。Tableauを見る' },
+];
+
 function initPhase3() {
-  // DM list
+  updateNavHint();
+}
+
+// Returns false if step was consumed, true if scene should advance
+function advanceMobile() {
+  const step = mobileStep;
+  mobileStep++;
+
+  if (step === 0) { showPhoneDMs(); return false; }
+  if (step === 1) { openChatView(); addPhoneChatMsg(0); return false; }
+  if (step === 2) { addPhoneChatMsg(1); return false; }
+  if (step === 3) { addPhoneChatMsg(2); addTableauBtn(); return false; }
+  if (step === 4) { openTableauView(); return false; }
+  if (step === 5) { openSapOverlay(); return false; }
+  if (step === 6) { doSapApprove(); return false; }
+  if (step === 7) { addEffectItem(0); addEffectItem(1); addEffectItem(2); return false; }
+  return true; // step 8+ → advance scene
+}
+
+function resetMobile() {
+  mobileStep = 0;
+  document.getElementById('phone-dm-list').innerHTML = '';
+  document.getElementById('phone-chat-messages').innerHTML = '';
+  document.getElementById('phone-chat-view').classList.remove('open');
+  document.getElementById('phone-tableau-view').classList.remove('open');
+  document.getElementById('sap-overlay').classList.remove('open');
+  document.getElementById('phase3-effects').innerHTML = '';
+  sapApproved = false;
+}
+
+function showPhoneDMs() {
   const dmList = document.getElementById('phone-dm-list');
-  const dms = [
-    { avatar:'AF', bg:'#0070d2', name:'Agentforce', preview:'⚠️ 緊急エスカレーション: 新豊洲TR1 経営承認が必要です', time:'17:08', unread:1 },
-    { avatar:'田', bg:'#7c3aed', name:'田中 保全', preview:'現場確認中。外観異常なし。手順書確認します', time:'17:07', unread:0 },
-    { avatar:'TN', bg:'#1a6ca8', name:'Tableau Next', preview:'ROI比較レポートを生成しました', time:'17:06', unread:0 },
-  ];
-  dms.forEach((dm, i) => {
+  PHONE_DMS.forEach((dm, i) => {
     setTimeout(() => {
       const el = document.createElement('div');
       el.className = 'phone-dm-item';
-      el.onclick = () => openChatView();
+      el.onclick = () => { mobileStep = Math.max(mobileStep, 1); advanceMobile(); };
       el.innerHTML = `
         <div class="phone-dm-avatar" style="background:${dm.bg}">${dm.avatar}</div>
         <div style="flex:1;min-width:0">
@@ -1484,75 +1610,39 @@ function initPhase3() {
       dmList.appendChild(el);
       void el.offsetWidth;
       el.classList.add('show');
-    }, i * 300 + 400);
-  });
-
-  // Effects panel
-  const effects = [
-    { icon:'⚡', bg:'#1e3a5f', title:'Agentforce がエスカレーション判断', sub:'停電リスク vs コスト比較 → 経営承認が必要と自律判断' },
-    { icon:'📊', bg:'#1a3a2a', title:'Tableau Next VIPビュー を提示', sub:'都心3D停電ヒートマップ + ROI比較をワンタップ確認' },
-    { icon:'✅', bg:'#3a2a10', title:'SAP 緊急予算をワンタップ承認', sub:'5.2億円の執行承認 → 60秒で全システムへ展開' },
-  ];
-  const panel = document.getElementById('phase3-effects');
-  effects.forEach((ef, i) => {
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.className = 'phase3-effect-item';
-      el.innerHTML = `
-        <div class="phase3-effect-icon" style="background:${ef.bg}">${ef.icon}</div>
-        <div>
-          <div class="phase3-effect-title">${ef.title}</div>
-          <div class="phase3-effect-sub">${ef.sub}</div>
-        </div>`;
-      panel.appendChild(el);
-      void el.offsetWidth;
-      el.classList.add('show');
-    }, i * 500 + 600);
+    }, i * 250);
   });
 }
 
 function openChatView() {
   document.getElementById('phone-chat-view').classList.add('open');
-  initPhoneChatMessages();
 }
 function closeChatView() {
   document.getElementById('phone-chat-view').classList.remove('open');
 }
 
-let phoneMsgsInit = false;
-function initPhoneChatMessages() {
-  if (phoneMsgsInit) return;
-  phoneMsgsInit = true;
+function addPhoneChatMsg(idx) {
   const container = document.getElementById('phone-chat-messages');
-  const msgs = [
-    { role:'bot', text:'🚨 関常務、緊急エスカレーションです。\n新豊洲変電所1号トランスに重大異常を検知。72時間以内故障確率85%。停電時の損失は84〜120億円と試算されます。' },
-    { role:'bot', text:'緊急対応コストは5.2億円。ROI +188%の判断です。\nTableau VIPビューでコスト比較と影響ヒートマップをご確認ください。' },
-    { role:'user', text:'確認した。Tableauを見る' },
-  ];
-  let delay = 400;
-  msgs.forEach(m => {
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.className = `phone-msg-${m.role}`;
-      el.innerHTML = `<div class="phone-msg-bubble">${m.text.replace(/\n/g,'<br>')}</div>`;
-      container.appendChild(el);
-      void el.offsetWidth;
-      el.classList.add('show');
-      container.scrollTop = container.scrollHeight;
-    }, delay);
-    delay += 900;
-  });
-  // Show Tableau link button
-  setTimeout(() => {
-    const btn = document.createElement('div');
-    btn.className = 'phone-msg-bot show';
-    btn.innerHTML = `<div class="phone-msg-bubble" style="background:#e0f0ff">
-      <span style="font-size:0.75rem;color:#1a6ca8;font-weight:700">📊 Tableau Next — VIPビューを開く</span><br>
-      <button style="margin-top:0.375rem;padding:0.375rem 0.75rem;background:#1a6ca8;color:#fff;font-size:0.75rem;font-weight:600;border:none;border-radius:0.375rem;cursor:pointer" onclick="openTableauView()">ダッシュボードを確認する →</button>
-    </div>`;
-    container.appendChild(btn);
-    container.scrollTop = container.scrollHeight;
-  }, delay + 300);
+  const m = PHONE_CHAT_MSGS[idx];
+  const el = document.createElement('div');
+  el.className = `phone-msg-${m.role}`;
+  el.innerHTML = `<div class="phone-msg-bubble">${m.text}</div>`;
+  container.appendChild(el);
+  void el.offsetWidth;
+  el.classList.add('show');
+  container.scrollTop = container.scrollHeight;
+}
+
+function addTableauBtn() {
+  const container = document.getElementById('phone-chat-messages');
+  const btn = document.createElement('div');
+  btn.className = 'phone-msg-bot show';
+  btn.innerHTML = `<div class="phone-msg-bubble" style="background:#e0f0ff">
+    <span style="font-size:0.75rem;color:#1a6ca8;font-weight:700">📊 Tableau Next — VIPビューを開く</span><br>
+    <span style="font-size:0.72rem;color:#555">→キーを押すとダッシュボードを表示します</span>
+  </div>`;
+  container.appendChild(btn);
+  container.scrollTop = container.scrollHeight;
 }
 
 function openTableauView() {
@@ -1561,28 +1651,24 @@ function openTableauView() {
 function closeTableauView() {
   document.getElementById('phone-tableau-view').classList.remove('open');
 }
+
 function openSapOverlay() {
   document.getElementById('sap-overlay').classList.add('open');
 }
 
 let sapApproved = false;
-function onSapApprove() {
+function doSapApprove() {
   if (sapApproved) return;
   sapApproved = true;
   const btn = document.getElementById('sap-approve-btn');
   btn.textContent = '⏳ SAP へ送信中...';
   btn.style.background = '#0070d2';
-
   setTimeout(() => {
-    btn.textContent = '✅ 承認完了 — 全システムへ展開中';
+    btn.textContent = '✅ 承認完了';
     btn.style.background = '#04844b';
-
-    // Close overlays
     setTimeout(() => {
       document.getElementById('sap-overlay').classList.remove('open');
       document.getElementById('phone-tableau-view').classList.remove('open');
-
-      // Add final confirmation message in chat
       const container = document.getElementById('phone-chat-messages');
       const el = document.createElement('div');
       el.className = 'phone-msg-bot show';
@@ -1593,11 +1679,29 @@ function onSapApprove() {
       </div>`;
       container.appendChild(el);
       container.scrollTop = container.scrollHeight;
-
-      // Global toast
       showToast('✅ SAP承認完了 — 全6システムへの展開が開始されました', '#04844b');
-    }, 1500);
-  }, 1800);
+    }, 1200);
+  }, 1500);
+}
+
+function onSapApprove() {
+  doSapApprove();
+}
+
+function addEffectItem(idx) {
+  const ef = MOBILE_EFFECTS[idx];
+  const panel = document.getElementById('phase3-effects');
+  const el = document.createElement('div');
+  el.className = 'phase3-effect-item';
+  el.innerHTML = `
+    <div class="phase3-effect-icon" style="background:${ef.bg}">${ef.icon}</div>
+    <div>
+      <div class="phase3-effect-title">${ef.title}</div>
+      <div class="phase3-effect-sub">${ef.sub}</div>
+    </div>`;
+  panel.appendChild(el);
+  void el.offsetWidth;
+  el.classList.add('show');
 }
 </script>
 </body>
