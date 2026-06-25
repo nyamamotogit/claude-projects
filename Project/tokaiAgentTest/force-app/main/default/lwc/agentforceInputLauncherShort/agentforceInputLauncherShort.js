@@ -1,11 +1,10 @@
 import { LightningElement, api, track } from 'lwc';
 import { open, execute } from 'lightning/accApi';
 
-const BOT_ID = '0XxGA000000GrVe0AK';
-
 export default class AgentforceInputLauncherShort extends LightningElement {
     @api titleText = 'Agentforce がお手伝いします';
     @api placeholderText = 'Agentforce に質問する...';
+    @api botId;
 
     @track inputText = '';
 
@@ -27,9 +26,9 @@ export default class AgentforceInputLauncherShort extends LightningElement {
         if (input) input.value = '';
 
         if (message) {
-            await execute(message, BOT_ID);
+            await execute(message, this.botId);
         } else {
-            await open(BOT_ID);
+            await open(this.botId);
         }
     }
 }

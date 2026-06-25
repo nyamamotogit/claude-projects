@@ -10,6 +10,7 @@
         <targetConfig targets="lightning__HomePage,lightning__AppPage">
             <property name="titleText" type="String" label="タイトルテキスト" default="Agentforce がお手伝いします"/>
             <property name="placeholderText" type="String" label="入力欄のプレースホルダー" default="Agentforce に質問する..."/>
+            <property name="botId" type="String" label="起動するAgent" datasource="apex://EmployeeAgentPicklist"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
