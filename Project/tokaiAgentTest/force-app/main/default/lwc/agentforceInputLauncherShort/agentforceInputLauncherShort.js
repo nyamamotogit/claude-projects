@@ -1,7 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import { open, execute } from 'lightning/accApi';
 
-const BOT_ID = '0XxId000000PNAVKA4';
+const BOT_ID = '0XxGA000000GrVe0AK';
 
 export default class AgentforceInputLauncherShort extends LightningElement {
     @api titleText = 'Agentforce がお手伝いします';
