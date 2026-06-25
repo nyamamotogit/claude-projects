@@ -11,7 +11,9 @@ global class EmployeeAgentPicklist extends VisualEditor.DynamicPickList {
             WHERE AgentType = 'AgentforceEmployeeAgent'
             ORDER BY MasterLabel ASC
         ]) {
-            rows.addRow(new VisualEditor.DataRow(bot.MasterLabel, bot.Id));
+            // value に Id を直接入れるとApp Builderの検証で弾かれるため
+            // DeveloperName を value として渡し、LWC側でIdに変換する
+            rows.addRow(new VisualEditor.DataRow(bot.MasterLabel, bot.DeveloperName));
         }
         return rows;
     }
