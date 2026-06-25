@@ -1,0 +1,97 @@
+.launcher-container {
+    background: linear-gradient(135deg, #0d2e8a 0%, #1a47cc 50%, #2463eb 100%);
+    border-radius: 16px;
+    padding: 16px 20px;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    box-shadow: 0 8px 32px rgba(36, 99, 235, 0.35);
+}
+
+.launcher-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.agent-avatar {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 35% 35%, #7fb3ff, #2463eb, #0d2e8a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px rgba(127, 179, 255, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.agent-avatar lightning-icon {
+    --lwc-colorTextIconDefault: #ffffff;
+}
+
+.launcher-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    letter-spacing: -0.01em;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50px;
+    padding: 8px 8px 8px 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    gap: 8px;
+}
+
+.input-icon {
+    color: #2463eb;
+    font-size: 1rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.agent-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    min-width: 0;
+}
+
+.agent-input::placeholder {
+    color: #9ba8c0;
+}
+
+.send-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #2463eb;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(36, 99, 235, 0.4);
+}
+
+.send-button:hover {
+    background: #1a47cc;
+    transform: scale(1.05);
+}
+
+.send-button lightning-icon {
+    --lwc-colorTextIconDefault: #ffffff;
+    pointer-events: none;
+}
