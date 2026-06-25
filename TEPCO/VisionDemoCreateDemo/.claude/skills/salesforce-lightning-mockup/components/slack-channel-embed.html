@@ -1,0 +1,569 @@
+<!--
+  Slack チャンネル埋め込み (Chatter の代わり)
+  ===========================================================================
+
+  Salesforce レコードページの中央タブに「Slack チャンネル」を置いて、
+  Slack のレコードチャンネル UI をそのまま埋め込んで見せるためのスニペット。
+  すべての CSS クラスは `sf-slack-*` プレフィックスで完結しており、
+  `<body class="slds-scope">` の下にそのまま貼っても SLDS と干渉しない。
+
+  使い方（3 ステップ）:
+  1. <head> 内 <style> に下の「① CSS」ブロックを貼る
+  2. レコードページの中央 `slds-tabs_default__nav` に
+     <li class="slds-tabs_default__item slds-is-active">
+       <a class="slds-tabs_default__link" href="#">Slack チャンネル</a>
+     </li>
+     を追加して active にする (他のタブの is-active を外す)
+  3. 既存の `slds-tabs_default__content` 部分を下の「② HTML 本体」に置き換える
+     （または別タブパネルとして併存させる）
+
+  含まれる要素:
+  - Slack ロゴ + 「Slack チャンネル」見出し + メンバー数バッジ
+  - スレッド要約行 (○件の返信 / 最終返信)
+  - メッセージ (アバター + 表示名 + 時刻 + 本文 + @メンション + フロートアクション)
+  - 添付カード (Tableau Next ダッシュボードのプレビュー想定)
+  - フッターバナー (○エージェント はこのチャンネルに含まれる)
+
+  Slack ロゴは Super Tiny Icons の単一 SVG (CDN) を <img> で読み込む。
+  フォントは Lato が使えると Slack に近いが、無くてもシステムフォントで動く。
+-->
+
+<!-- ============== ① <head> 内 <style> に追加する CSS ============== -->
+<style>
+  /* ----- スコープ全体（フォント・色） ----- */
+  .sf-slack {
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    color: #1d1c1d;
+    font-size: 15px;
+    line-height: 1.46;
+  }
+  .sf-slack a { color: #1264a3; text-decoration: none; }
+  .sf-slack a:hover { text-decoration: underline; }
+
+  /* ----- ヘッダー (Slack ロゴ + タイトル + メンバー数) ----- */
+  .sf-slack-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+  }
+  .sf-slack-header-left {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 22px; font-weight: 900; color: #1d1c1d;
+  }
+  .sf-slack-logo {
+    width: 28px; height: 28px;
+  }
+  .sf-slack-members {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid #dddbda; border-radius: 9999px;
+    padding: 4px 10px; font-size: 13px; color: #1d1c1d;
+    background: white; cursor: pointer;
+  }
+  .sf-slack-members .icon {
+    width: 14px; height: 14px;
+    filter: brightness(0) saturate(100%) invert(20%);
+  }
+  .sf-slack-members .caret {
+    width: 10px; height: 10px;
+    filter: brightness(0) saturate(100%) invert(20%);
+  }
+
+  /* ----- スレッド要約行 (○件の返信) ----- */
+  .sf-slack-thread-summary {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 16px 12px 64px;
+    font-size: 13px;
+  }
+  .sf-slack-thread-avatars {
+    display: inline-flex;
+  }
+  .sf-slack-thread-avatars img {
+    width: 22px; height: 22px; border-radius: 4px;
+    border: 2px solid white;
+    margin-right: -6px;
+  }
+  .sf-slack-thread-summary a {
+    color: #1264a3; font-weight: 700;
+  }
+  .sf-slack-thread-summary .meta {
+    color: #616061;
+  }
+
+  /* ----- メッセージ ----- */
+  .sf-slack-msg {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 8px 16px;
+  }
+  .sf-slack-msg:hover { background: #f8f8f8; }
+  .sf-slack-avatar {
+    width: 36px; height: 36px; border-radius: 6px;
+    flex-shrink: 0; object-fit: cover;
+  }
+  .sf-slack-body { flex: 1; min-width: 0; }
+  .sf-slack-author-row {
+    display: flex; align-items: baseline; gap: 8px;
+    margin-bottom: 2px;
+  }
+  .sf-slack-author {
+    font-weight: 900; color: #1d1c1d; font-size: 15px;
+  }
+  .sf-slack-time {
+    color: #616061; font-size: 12px;
+  }
+  .sf-slack-text {
+    color: #1d1c1d; font-size: 15px;
+  }
+  .sf-slack-text p { margin: 0 0 4px; }
+
+  /* メンション (@Tableau Next Agentforce in Slack 等) */
+  .sf-slack-mention {
+    background: rgba(29, 155, 209, 0.1);
+    color: #1264a3;
+    border-radius: 3px;
+    padding: 0 2px;
+    font-weight: 700;
+  }
+  .sf-slack-mention:hover { text-decoration: none; background: rgba(29, 155, 209, 0.2); }
+
+  /* スレッド返信表示 (1 件の返信 24 日前) */
+  .sf-slack-replies {
+    margin-top: 6px;
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid transparent; border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    background: white;
+  }
+  .sf-slack-replies:hover {
+    border-color: #dddbda; background: white;
+  }
+  .sf-slack-replies img {
+    width: 20px; height: 20px; border-radius: 4px;
+  }
+  .sf-slack-replies .count {
+    color: #1264a3; font-weight: 700; font-size: 13px;
+  }
+  .sf-slack-replies .since {
+    color: #616061; font-size: 13px;
+  }
+
+  /* メッセージ右上のフロートアクション (絵文字 / 吹き出し / ▾) */
+  .sf-slack-actions {
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    display: inline-flex; align-items: center;
+    background: white;
+    border: 1px solid #dddbda;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  .sf-slack-actions button {
+    width: 32px; height: 32px;
+    background: transparent; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-right: 1px solid #f1f1f1;
+  }
+  .sf-slack-actions button:last-child { border-right: none; }
+  .sf-slack-actions button:hover { background: #f8f8f8; }
+  .sf-slack-actions img {
+    width: 16px; height: 16px;
+    filter: brightness(0) saturate(100%) invert(40%);
+  }
+
+  /* ----- 添付カード (Tableau Next 等) ----- */
+  .sf-slack-card {
+    margin-top: 8px;
+    border: 1px solid #dddbda;
+    border-left: 4px solid #1264a3;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 520px;
+    background: white;
+  }
+  .sf-slack-card-header {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #616061;
+  }
+  .sf-slack-card-body {
+    padding: 0 12px 12px;
+  }
+  .sf-slack-card-source {
+    font-size: 12px; color: #616061; margin-bottom: 2px;
+  }
+  .sf-slack-card-title {
+    font-size: 15px; font-weight: 700; color: #1264a3;
+    margin-bottom: 4px;
+  }
+  .sf-slack-card-meta {
+    font-size: 12px; color: #616061; margin-bottom: 8px;
+  }
+  .sf-slack-card-preview {
+    background: linear-gradient(135deg, #1f4e8c 0%, #1264a3 100%);
+    border-radius: 4px;
+    height: 110px;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: flex-end; padding: 8px;
+    color: white;
+  }
+  .sf-slack-card-preview::before {
+    content: "商談分析";
+    position: absolute; top: 8px; left: 12px;
+    color: rgba(255,255,255,0.85);
+    font-size: 11px; font-weight: 700;
+  }
+  .sf-slack-card-preview .bars {
+    display: flex; align-items: flex-end; gap: 6px; height: 70px;
+  }
+  .sf-slack-card-preview .bar {
+    width: 18px; background: rgba(255,255,255,0.85); border-radius: 2px;
+  }
+
+  /* ----- フッターバナー (○エージェント はこのチャンネルに含まれる) ----- */
+  .sf-slack-footer-banner {
+    margin-top: 12px;
+    padding: 10px 16px;
+    background: #f4f4f4;
+    border-top: 1px solid #e1e1e1;
+    color: #1264a3;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sf-slack-footer-banner .agent-icon {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #1264a3; color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900;
+  }
+  .sf-slack-footer-banner .meta {
+    color: #616061;
+  }
+
+  /* ----- インラインスレッド (メッセージの直下に展開) ----- */
+  .sf-slack-thread-inline {
+    display: none;
+    margin: 4px 16px 12px;
+    padding-top: 4px;
+  }
+  .sf-slack-thread-inline.is-open { display: block; }
+  .sf-slack-thread-divider {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0;
+    font-size: 13px; color: #616061;
+  }
+  .sf-slack-thread-divider::after {
+    content: ""; flex: 1; height: 1px; background: #e1e1e1;
+  }
+  .sf-slack-agent-tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 6px;
+    background: #f1f1f1;
+    color: #616061;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .sf-slack-quote {
+    border-left: 3px solid #dddbda;
+    padding: 4px 0 4px 12px;
+    margin: 4px 0;
+    color: #1d1c1d;
+  }
+  .sf-slack-thread-input {
+    margin-top: 12px;
+    border: 1px solid #dddbda;
+    border-radius: 8px;
+    background: white;
+  }
+  .sf-slack-thread-input-mention {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sf-slack-thread-input-mention .info-icon {
+    width: 14px; height: 14px;
+    filter: brightness(0) saturate(100%) invert(40%) sepia(94%) saturate(2231%) hue-rotate(186deg) brightness(91%) contrast(86%);
+  }
+  .sf-slack-thread-input-mention a { color: #1264a3; font-weight: 700; }
+  .sf-slack-thread-input-toolbar {
+    display: flex; align-items: center; gap: 4px;
+    padding: 6px 10px;
+    border-bottom: 1px solid #f1f1f1;
+    background: #fafafa;
+  }
+  .sf-slack-thread-input-toolbar button {
+    width: 28px; height: 28px;
+    background: transparent; border: none; cursor: pointer;
+    border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #616061;
+  }
+  .sf-slack-thread-input-toolbar button:hover { background: #f1f1f1; }
+  .sf-slack-thread-input-toolbar img {
+    width: 14px; height: 14px;
+    filter: brightness(0) saturate(100%) invert(40%);
+  }
+  .sf-slack-thread-input-toolbar .sep {
+    width: 1px; height: 18px; background: #e1e1e1; margin: 0 4px;
+  }
+  .sf-slack-thread-input-text {
+    padding: 12px;
+    color: #616061;
+    font-size: 14px;
+  }
+  .sf-slack-thread-input-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 10px;
+    border-top: 1px solid #f1f1f1;
+  }
+  .sf-slack-thread-input-bottom-left {
+    display: flex; gap: 4px;
+  }
+  .sf-slack-thread-input-bottom-left button {
+    width: 28px; height: 28px;
+    background: transparent; border: none; cursor: pointer;
+    border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sf-slack-thread-input-bottom-left button:hover { background: #f1f1f1; }
+  .sf-slack-thread-input-bottom-left img {
+    width: 16px; height: 16px;
+    filter: brightness(0) saturate(100%) invert(40%);
+  }
+  .sf-slack-send-btn {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    background: #f1f1f1;
+    border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sf-slack-send-btn img {
+    width: 14px; height: 14px;
+    filter: brightness(0) saturate(100%) invert(60%);
+  }
+</style>
+
+<!-- ============== ② HTML 本体（slds-tabs_default__content の中身として貼る） ============== -->
+<article class="slds-card sf-slack">
+
+  <!-- ヘッダー -->
+  <header class="sf-slack-header">
+    <div class="sf-slack-header-left">
+      <img class="sf-slack-logo" src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons@master/images/svg/slack.svg" alt="Slack" />
+      <span>Slack チャンネル</span>
+    </div>
+    <button class="sf-slack-members" type="button">
+      <img class="icon" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" />
+      <span>3</span>
+      <img class="caret" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" />
+    </button>
+  </header>
+
+  <!-- 最初の投稿 (親メッセージ) -->
+  <div class="sf-slack-msg">
+    <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+    <div class="sf-slack-body">
+      <div class="sf-slack-author-row">
+        <span class="sf-slack-author">田中 健二</span>
+        <span class="sf-slack-time">5月18日 11:54</span>
+      </div>
+      <div class="sf-slack-text">
+        <p><a class="sf-slack-mention" href="#">@Tableau Next Agentforce in Slack</a></p>
+        <p>次のダッシュボードを参考にして失注理由を多い順に並べて</p>
+      </div>
+      <!-- 「3 件の会話」: クリックで直下のスレッドが inline 展開 -->
+      <div class="sf-slack-replies" onclick="sfSlackToggleThread(this)">
+        <span class="sf-slack-thread-avatars" style="margin-right:4px;">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="background:#1264a3;" />
+          <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+          <img src="https://randomuser.me/api/portraits/men/90.jpg" alt="" />
+        </span>
+        <span class="count">3 件の会話</span>
+        <span class="since">最終返信: 24 日前</span>
+      </div>
+    </div>
+    <div class="sf-slack-actions">
+      <button title="リアクション"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/like.svg" alt="" /></button>
+      <button title="スレッドで返信"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/reply.svg" alt="" /></button>
+      <button title="その他"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" /></button>
+    </div>
+  </div>
+
+  <!-- インラインスレッド (3 件の会話 をクリックで開閉) -->
+  <div class="sf-slack-thread-inline">
+    <div class="sf-slack-thread-divider"><span>3 件の返信</span></div>
+
+    <!-- 返信 1: Tableau Next Agentforce -->
+    <div class="sf-slack-msg" style="padding-left:0; padding-right:0;">
+      <img class="sf-slack-avatar" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="background:#1264a3; padding:6px;" />
+      <div class="sf-slack-body">
+        <div class="sf-slack-author-row">
+          <span class="sf-slack-author">Tableau Next Agentforce in Slack</span>
+          <span class="sf-slack-agent-tag">AGENTFORCE</span>
+          <span class="sf-slack-time">5月18日 14:19</span>
+        </div>
+        <div class="sf-slack-text">
+          <p>失注理由を多い順に並べました。主要な要因と件数を一覧でご確認いただけます。</p>
+          <div class="sf-slack-quote">
+            <p>There are <strong>6 loss reasons</strong> sorted by frequency. The most common reasons are:</p>
+            <ul style="margin: 4px 0 4px 20px; padding: 0;">
+              <li><strong>顧客側のプロジェクト中止</strong> with <strong>10 cases</strong></li>
+              <li><strong>価格競争力不足</strong> with <strong>8 cases</strong></li>
+              <li><strong>納期遅延/供給不安</strong> with <strong>6 cases</strong></li>
+              <li><strong>予算不足</strong> and <strong>競合他社採用</strong>, each with <strong>5 cases</strong></li>
+              <li><strong>スペックアンマッチ</strong> with <strong>3 cases</strong></li>
+            </ul>
+          </div>
+          <div class="sf-slack-quote">
+            <p>This ranking highlights the key factors contributing to lost opportunities.</p>
+          </div>
+          <p><strong>Sources</strong><br>失注理由ごとに件数を集計し、多い順に並べました。失注理由フィールドを使い、全レコードを対象に集計・並び替えしています（制限なし）。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 返信 2: 田中健二 -->
+    <div class="sf-slack-msg" style="padding-left:0; padding-right:0;">
+      <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+      <div class="sf-slack-body">
+        <div class="sf-slack-author-row">
+          <span class="sf-slack-author">田中 健二</span>
+          <span class="sf-slack-time">5月18日 14:30</span>
+        </div>
+        <div class="sf-slack-text">
+          <p>ありがとうございます。プロジェクト中止と価格競争力が上位に来ているので、提案資料の差別化ポイントを優先して見直します。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 返信 3: 山田 太郎 -->
+    <div class="sf-slack-msg" style="padding-left:0; padding-right:0;">
+      <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/90.jpg" alt="" />
+      <div class="sf-slack-body">
+        <div class="sf-slack-author-row">
+          <span class="sf-slack-author">山田 太郎</span>
+          <span class="sf-slack-time">5月18日 16:00</span>
+        </div>
+        <div class="sf-slack-text">
+          <p>確認しました。次回の営業ミーティングでこの内容をもとに対策を議論しましょう。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- スレッド入力欄 -->
+    <div class="sf-slack-thread-input">
+      <div class="sf-slack-thread-input-mention">
+        <img class="info-icon" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/info.svg" alt="" />
+        <a href="#">エージェントにメンションする</a>
+        <span style="color:#616061;">返信の取得用</span>
+      </div>
+      <div class="sf-slack-thread-input-toolbar">
+        <button title="太字"><strong>B</strong></button>
+        <button title="斜体"><em>I</em></button>
+        <button title="下線"><u>U</u></button>
+        <button title="取り消し線" style="text-decoration:line-through;">S</button>
+        <span class="sep"></span>
+        <button title="リンク"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/link.svg" alt="" /></button>
+        <button title="番号付きリスト"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/number_input.svg" alt="" /></button>
+        <button title="箇条書き"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/list.svg" alt="" /></button>
+        <button title="引用"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/quote.svg" alt="" /></button>
+        <button title="コード"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/insert_tag_field.svg" alt="" /></button>
+      </div>
+      <div class="sf-slack-thread-input-text">返信...</div>
+      <div class="sf-slack-thread-input-bottom">
+        <div class="sf-slack-thread-input-bottom-left">
+          <button title="追加"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" /></button>
+          <button title="絵文字"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/emoji.svg" alt="" /></button>
+          <button title="メンション"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" /></button>
+        </div>
+        <button class="sf-slack-send-btn" title="送信">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/forward.svg" alt="" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- メッセージ 2 (添付カード付き) -->
+  <div class="sf-slack-msg">
+    <img class="sf-slack-avatar" src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+    <div class="sf-slack-body">
+      <div class="sf-slack-author-row">
+        <span class="sf-slack-author">田中 健二</span>
+        <span class="sf-slack-time">5月18日 12:25</span>
+      </div>
+      <div class="sf-slack-text">
+        <p><a class="sf-slack-mention" href="#">@Tableau Next Agentforce in Slack</a></p>
+        <p>次のダッシュボードを参考にして失注理由を多い順に並べて</p>
+        <p><a href="#">営業ダッシュボード</a></p>
+      </div>
+
+      <div class="sf-slack-card">
+        <div class="sf-slack-card-header">Tableau Next</div>
+        <div class="sf-slack-card-body">
+          <div class="sf-slack-card-source">営業ダッシュボード</div>
+          <div class="sf-slack-card-title">Filter</div>
+          <div class="sf-slack-card-meta">Details as of 2026-05-18 12:25:14</div>
+          <div class="sf-slack-card-preview">
+            <div class="bars">
+              <div class="bar" style="height: 60%;"></div>
+              <div class="bar" style="height: 80%;"></div>
+              <div class="bar" style="height: 45%;"></div>
+              <div class="bar" style="height: 95%;"></div>
+              <div class="bar" style="height: 30%;"></div>
+              <div class="bar" style="height: 70%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- フッターバナー -->
+  <div class="sf-slack-footer-banner">
+    <span class="agent-icon">2</span>
+    <strong>2 エージェント</strong>
+    <span class="meta">はこのチャンネルに含まれる - メンションされたときに返信します</span>
+  </div>
+
+</article>
+
+<!-- ============== ③ <body> の閉じタグ直前に貼る JavaScript ============== -->
+<script>
+  // 「○件の会話」クリックで、同じ .sf-slack-msg の直後にある .sf-slack-thread-inline を開閉
+  function sfSlackToggleThread(el) {
+    const msg = el.closest('.sf-slack-msg');
+    if (!msg) return;
+    const inline = msg.nextElementSibling;
+    if (inline && inline.classList.contains('sf-slack-thread-inline')) {
+      inline.classList.toggle('is-open');
+    }
+  }
+</script>
+
+<!-- ============== ③ レコードページのタブに統合する例 ============== -->
+<!--
+  <article class="slds-card">
+    <div class="slds-tabs_default">
+      <ul class="slds-tabs_default__nav" role="tablist">
+        <li class="slds-tabs_default__item" role="presentation">
+          <a class="slds-tabs_default__link" href="#" role="tab">詳細</a>
+        </li>
+        <li class="slds-tabs_default__item" role="presentation">
+          <a class="slds-tabs_default__link" href="#" role="tab">関連</a>
+        </li>
+        <li class="slds-tabs_default__item slds-is-active" role="presentation">
+          <a class="slds-tabs_default__link" href="#" role="tab">Slack チャンネル</a>
+        </li>
+      </ul>
+      <div class="slds-tabs_default__content slds-show" role="tabpanel">
+        ← ここに上の <article class="sf-slack"> ... </article> の中身を入れる
+      </div>
+    </div>
+  </article>
+-->

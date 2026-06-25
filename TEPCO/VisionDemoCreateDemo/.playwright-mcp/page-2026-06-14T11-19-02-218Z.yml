@@ -1,0 +1,408 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - generic [ref=e7]:
+        - button "商談" [ref=e8] [cursor=pointer]:
+          - generic [ref=e9]: 商談
+        - searchbox "Salesforce を検索..." [ref=e12]
+      - list [ref=e13]:
+        - listitem [ref=e14]:
+          - button "Agentforce" [ref=e15] [cursor=pointer]
+        - listitem [ref=e16]:
+          - generic [ref=e17]:
+            - button [ref=e18] [cursor=pointer]
+            - button [ref=e19] [cursor=pointer]
+        - listitem [ref=e20]:
+          - button [ref=e21] [cursor=pointer]
+        - listitem [ref=e22]:
+          - button [ref=e23] [cursor=pointer]
+        - listitem [ref=e24]:
+          - button [ref=e25] [cursor=pointer]
+        - listitem [ref=e26]:
+          - button "5" [ref=e27] [cursor=pointer]:
+            - generic: "5"
+        - listitem [ref=e28]:
+          - img "User" [ref=e30]
+  - generic [ref=e31]:
+    - generic [ref=e45]: 自動車部品 Sales
+    - navigation [ref=e46]:
+      - list [ref=e47]:
+        - listitem [ref=e48]:
+          - link "ホーム" [ref=e49] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e50]:
+          - link "取引先" [ref=e51] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e52]:
+          - link "取引先責任者" [ref=e53] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e54]:
+          - link "リード" [ref=e55] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e56] [cursor=pointer]:
+          - link "商談" [ref=e57]:
+            - /url: "#"
+        - listitem [ref=e58]:
+          - link "ケース" [ref=e59] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e60]:
+          - link "部品マスタ" [ref=e61] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e62]:
+          - link "ダッシュボード" [ref=e63] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e71]:
+          - paragraph [ref=e72]: 商談
+          - heading "2027 bZ シリーズ向け 駆動モータコイル一式" [level=1] [ref=e74]:
+            - generic [ref=e75]: 2027 bZ シリーズ向け 駆動モータコイル一式
+          - paragraph [ref=e76]:
+            - text: "取引先:"
+            - link "トヨタ自動車" [ref=e77] [cursor=pointer]:
+              - /url: "#"
+            - text: "· 車種: e-TNGA / bZ4X 後継 · SOP 2027/04"
+        - list [ref=e81]:
+          - listitem [ref=e82]:
+            - button "+ フォロー" [ref=e83] [cursor=pointer]
+          - listitem [ref=e84]:
+            - button "編集" [ref=e85] [cursor=pointer]
+          - listitem [ref=e86]:
+            - button "活動の記録" [ref=e87] [cursor=pointer]
+          - listitem [ref=e88]:
+            - button "受注としてマーク" [ref=e89] [cursor=pointer]
+      - list [ref=e92]:
+        - listitem [ref=e93]:
+          - generic [ref=e94]: 金額
+          - paragraph [ref=e95]:
+            - strong [ref=e96]: ¥185,000,000
+        - listitem [ref=e97]:
+          - generic [ref=e98]: 確度
+          - paragraph [ref=e99]:
+            - strong [ref=e100]: 75%
+        - listitem [ref=e101]:
+          - generic [ref=e102]: 完了予定日
+          - paragraph [ref=e103]: 2026/06/25 (残 11日)
+        - listitem [ref=e104]:
+          - generic [ref=e105]: 月産規模
+          - paragraph [ref=e106]: 8,500個
+        - listitem [ref=e107]:
+          - generic [ref=e108]: 所有者
+          - paragraph [ref=e109]:
+            - link "青島 哲也" [ref=e110] [cursor=pointer]:
+              - /url: "#"
+        - listitem [ref=e111]:
+          - generic [ref=e112]: Win 確率 (Agentforce)
+          - paragraph [ref=e113]:
+            - strong [ref=e114]: 82%
+    - article [ref=e115]:
+      - generic [ref=e117]:
+        - list [ref=e121]:
+          - listitem [ref=e122]:
+            - link "資格確認" [ref=e123] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e125]: 資格確認
+          - listitem [ref=e126]:
+            - link "ニーズ分析" [ref=e127] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e129]: ニーズ分析
+          - listitem [ref=e130]:
+            - link "価値提案" [ref=e131] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e133]: 価値提案
+          - listitem [ref=e134]:
+            - link "提案/見積" [ref=e135] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e137]: 提案/見積
+          - listitem [ref=e138]:
+            - link "交渉/レビュー" [ref=e139] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e140]: 交渉/レビュー
+          - listitem [ref=e141]:
+            - link "受注" [ref=e142] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e143]: 受注
+        - button "現ステージとしてマーク" [ref=e145] [cursor=pointer]
+    - generic [ref=e146]:
+      - article [ref=e148]:
+        - generic [ref=e149]:
+          - list [ref=e150]:
+            - listitem [ref=e151]:
+              - link "詳細" [ref=e152] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e153]:
+              - link "関連" [ref=e154] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e155]:
+              - link "商品 (見積)" [ref=e156] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e157]:
+              - link "技術仕様" [ref=e158] [cursor=pointer]:
+                - /url: "#"
+          - generic [ref=e159]:
+            - heading "商談情報" [level=3] [ref=e160]:
+              - generic [ref=e161]: 商談情報
+            - generic [ref=e163]:
+              - generic [ref=e164]:
+                - term [ref=e165]: 商談名
+                - definition [ref=e166]: 2027 bZ シリーズ向け 駆動モータコイル一式
+              - generic [ref=e167]:
+                - term [ref=e168]: 所有者
+                - definition [ref=e169]:
+                  - link "青島 哲也" [ref=e170] [cursor=pointer]:
+                    - /url: "#"
+              - generic [ref=e171]:
+                - term [ref=e172]: 取引先
+                - definition [ref=e173]:
+                  - link "トヨタ自動車" [ref=e174] [cursor=pointer]:
+                    - /url: "#"
+              - generic [ref=e175]:
+                - term [ref=e176]: プラットフォーム
+                - definition [ref=e177]: e-TNGA / bZ4X 後継
+              - generic [ref=e178]:
+                - term [ref=e179]: 部品番号
+                - definition [ref=e180]:
+                  - link "NMP-MC-72018" [ref=e181] [cursor=pointer]:
+                    - /url: "#"
+              - generic [ref=e182]:
+                - term [ref=e183]: 部品カテゴリ
+                - definition [ref=e184]: 駆動系 / モータコイル
+              - generic [ref=e185]:
+                - term [ref=e186]: 単価
+                - definition [ref=e187]: ¥21,765 / 個
+              - generic [ref=e188]:
+                - term [ref=e189]: 月産
+                - definition [ref=e190]: 8,500個
+              - generic [ref=e191]:
+                - term [ref=e192]: SOP
+                - definition [ref=e193]: 2027年4月
+              - generic [ref=e194]:
+                - term [ref=e195]: 5年累計売上
+                - definition [ref=e196]: ¥9.8 億 (見込)
+              - generic [ref=e197]:
+                - term [ref=e198]: 説明
+                - definition [ref=e199]:
+                  - text: トヨタ次期EV bZ4X 後継 e-TNGA プラットフォーム向け 駆動モータコイル一式。当社新工法 (高占積率コイル) により
+                  - strong [ref=e200]: 軽量化 -18% / 損失 -7%
+                  - text: を実現。デンソー社・アイシン社と最終バッティング中。
+            - heading "競合状況" [level=3] [ref=e201]:
+              - generic [ref=e202]: 競合状況
+            - table [ref=e204]:
+              - rowgroup [ref=e205]:
+                - row "競合 提案価格 差別化 状況" [ref=e206]:
+                  - columnheader "競合" [ref=e207]
+                  - columnheader "提案価格" [ref=e208]
+                  - columnheader "差別化" [ref=e209]
+                  - columnheader "状況" [ref=e210]
+              - rowgroup [ref=e211]:
+                - row "当社 (NMP) ¥21,765 軽量化 / 占積率 優勢" [ref=e212]:
+                  - rowheader "当社 (NMP)" [ref=e213]
+                  - cell "¥21,765" [ref=e214]
+                  - cell "軽量化 / 占積率" [ref=e215]
+                  - cell "優勢" [ref=e216]:
+                    - generic [ref=e217]: 優勢
+                - row "デンソー ¥20,890 (推定) 量産実績豊富 価格優位" [ref=e218]:
+                  - rowheader "デンソー" [ref=e219]
+                  - cell "¥20,890 (推定)" [ref=e220]
+                  - cell "量産実績豊富" [ref=e221]
+                  - cell "価格優位" [ref=e222]:
+                    - generic [ref=e223]: 価格優位
+                - row "アイシン ¥22,500 (推定) 系列内シナジー 劣勢" [ref=e224]:
+                  - rowheader "アイシン" [ref=e225]
+                  - cell "¥22,500 (推定)" [ref=e226]
+                  - cell "系列内シナジー" [ref=e227]
+                  - cell "劣勢" [ref=e228]
+      - generic [ref=e229]:
+        - article [ref=e230]:
+          - heading "活動 (3)" [level=2] [ref=e232]
+          - list [ref=e234]:
+            - listitem [ref=e235]:
+              - generic [ref=e237]:
+                - button "詳細を切り替え" [expanded] [ref=e239] [cursor=pointer]:
+                  - generic [ref=e240]: 詳細を切り替え
+                - generic [ref=e242]:
+                  - generic [ref=e243]:
+                    - heading "試作1次評価レビュー" [level=3] [ref=e244]:
+                      - link "試作1次評価レビュー" [ref=e245] [cursor=pointer]:
+                        - /url: "#"
+                        - strong [ref=e246]: 試作1次評価レビュー
+                    - paragraph [ref=e247]: 6月18日 13:00
+                  - paragraph [ref=e248]: 豊田市本社 / 中島 健一
+                  - article [ref=e249]:
+                    - list [ref=e250]:
+                      - listitem [ref=e251]:
+                        - generic [ref=e252]: 場所
+                        - generic [ref=e253]: 豊田市本社 / 第3会議室
+                      - listitem [ref=e254]:
+                        - generic [ref=e255]: 参加者
+                        - generic [ref=e256]:
+                          - link "中島 健一" [ref=e257] [cursor=pointer]:
+                            - /url: "#"
+                          - text: / 開発本部 5名
+                    - generic [ref=e258]:
+                      - text: 議題
+                      - paragraph [ref=e259]:
+                        - text: 試作1次の電磁特性レビュー、コイル占積率と発熱マージン、軽量化値の量産価格への織り込み可否。
+                        - strong [ref=e260]: NMP プロセスでのコスト試算と量産歩留まり目標 (≥ 95%)
+                        - text: を共有予定。
+            - listitem [ref=e261]:
+              - generic [ref=e263]:
+                - button "詳細を切り替え" [expanded] [ref=e265] [cursor=pointer]:
+                  - generic [ref=e266]: 詳細を切り替え
+                - generic [ref=e268]:
+                  - generic [ref=e269]:
+                    - heading "単価交渉 第3回" [level=3] [ref=e270]:
+                      - link "単価交渉 第3回" [ref=e271] [cursor=pointer]:
+                        - /url: "#"
+                        - strong [ref=e272]: 単価交渉 第3回
+                    - paragraph [ref=e273]: 6月10日
+                  - paragraph [ref=e274]:
+                    - text: 青島 哲也 が
+                    - link "中島 健一" [ref=e275] [cursor=pointer]:
+                      - /url: "#"
+                    - text: と通話
+                  - article [ref=e276]:
+                    - list [ref=e277]:
+                      - listitem [ref=e278]:
+                        - generic [ref=e279]: 通話相手
+                        - generic [ref=e280]:
+                          - link "中島 健一" [ref=e281] [cursor=pointer]:
+                            - /url: "#"
+                          - text: (購買部 主査)
+                      - listitem [ref=e282]:
+                        - generic [ref=e283]: 通話時間
+                        - generic [ref=e284]: 28 分
+                    - generic [ref=e285]:
+                      - text: 概要
+                      - paragraph [ref=e286]:
+                        - text: 提示価格 ¥21,765 に対して -3% (¥21,112) の打診。
+                        - strong [ref=e287]: デンソー社の参考価格 ¥20,890 を引き合いに出される
+                        - text: 。軽量化による車両航続距離寄与額の試算を 6/18 のレビューで提示し、価格差を相殺する方針で合意。
+            - listitem [ref=e288]:
+              - generic [ref=e290]:
+                - button "詳細を切り替え" [expanded] [ref=e292] [cursor=pointer]:
+                  - generic [ref=e293]: 詳細を切り替え
+                - generic [ref=e295]:
+                  - generic [ref=e296]:
+                    - heading "仕様書 v2.4 受領" [level=3] [ref=e297]:
+                      - link "仕様書 v2.4 受領" [ref=e298] [cursor=pointer]:
+                        - /url: "#"
+                        - strong [ref=e299]: 仕様書 v2.4 受領
+                    - paragraph [ref=e300]: 6月8日
+                  - paragraph [ref=e301]: "差出: 中島 健一 (トヨタ自動車)"
+                  - article [ref=e302]:
+                    - list [ref=e303]:
+                      - listitem [ref=e304]:
+                        - generic [ref=e305]: 差出
+                        - generic [ref=e306]: nakajima@toyota.example.co.jp
+                      - listitem [ref=e307]:
+                        - generic [ref=e308]: 添付
+                        - link "2027bZ_motor_spec_v2.4.pdf" [ref=e310] [cursor=pointer]:
+                          - /url: "#"
+                    - generic [ref=e311]:
+                      - text: 本文
+                      - paragraph [ref=e312]:
+                        - text: "改訂内容: 銅線径 φ0.85 → φ0.80 へ変更、絶縁等級 H クラス維持、許容温度 +5℃ 緩和。"
+                        - strong [ref=e313]: v2.3 比でコイル占積率を 78% に向上
+                        - text: 。試作評価への反映をお願いします。
+        - article [ref=e314]:
+          - heading "Agentforce サマリ" [level=2] [ref=e320]
+          - generic [ref=e321]:
+            - heading "Win確率 82% (過去類似5案件で4勝。類似商談を見る)" [level=2] [ref=e323]:
+              - text: Win確率
+              - strong [ref=e324]: 82%
+              - text: (過去類似5案件で4勝。
+              - link "類似商談を見る" [ref=e325] [cursor=pointer]:
+                - /url: "#"
+              - text: )
+            - heading "デンソー社価格優位 -4%。軽量化価値の金額換算 提案推奨" [level=2] [ref=e327]:
+              - text: デンソー社価格優位 -4%。
+              - strong [ref=e328]: 軽量化価値の金額換算
+              - text: 提案推奨
+            - button "Agentforce に類似商談を聞く" [ref=e330] [cursor=pointer]
+  - complementary [ref=e331]:
+    - generic [ref=e332]:
+      - generic [ref=e333]: SalesAgent
+      - generic [ref=e334]:
+        - button "新規セッション" [ref=e335] [cursor=pointer]
+        - button "ピン留め" [ref=e336] [cursor=pointer]
+        - button "閉じる" [ref=e337] [cursor=pointer]
+    - generic [ref=e338]:
+      - paragraph [ref=e342]: こんにちは、青島さん 👋 「2027 bZ 駆動モータコイル」商談を表示中です。何をお手伝いしますか?
+      - paragraph [ref=e346]: 過去の類似商談を教えて。価格交渉のヒントが欲しい。
+      - generic [ref=e349]:
+        - paragraph [ref=e350]:
+          - text: 過去 5 年の駆動系 OEM 商談から、
+          - strong [ref=e351]: 部品カテゴリ・OEM階層・金額帯
+          - text: が一致する
+          - strong [ref=e352]: 類似商談 5件
+          - text: を見つけました。
+        - generic [ref=e353]:
+          - generic [ref=e354]: レクサス LF-ZC 高精度ピストンリング
+          - generic [ref=e355]: トヨタ自動車 · 2025年受注 · 類似度 91%
+          - generic [ref=e356]:
+            - generic [ref=e357]:
+              - strong [ref=e358]: 金額
+              - text: ¥94.5M
+            - generic [ref=e359]: 受注
+            - strong [ref=e361]: 提案-3.2%
+        - generic [ref=e362]:
+          - generic [ref=e363]: CR-V e:FCEV 高耐熱ハーネス
+          - generic [ref=e364]: 本田技研 · 2025年受注 · 類似度 84%
+          - generic [ref=e365]:
+            - generic [ref=e366]:
+              - strong [ref=e367]: 金額
+              - text: ¥112M
+            - generic [ref=e368]: 受注
+            - strong [ref=e370]: 提案-2.5%
+        - generic [ref=e371]:
+          - generic [ref=e372]: 日産 アリア BMSセンサ
+          - generic [ref=e373]: 日産自動車 · 2026年受注 · 類似度 79%
+          - generic [ref=e374]:
+            - generic [ref=e375]:
+              - strong [ref=e376]: 金額
+              - text: ¥82M
+            - generic [ref=e377]: 受注
+            - strong [ref=e379]: 提案-1.8%
+        - generic [ref=e380]:
+          - generic [ref=e381]: マツダ CX-60 ECUハーネス
+          - generic [ref=e382]: マツダ · 2024年失注 · 類似度 76%
+          - generic [ref=e383]:
+            - generic [ref=e384]:
+              - strong [ref=e385]: 金額
+              - text: ¥28M
+            - generic [ref=e386]: 失注
+            - strong [ref=e388]: 価格差 +6.4%
+        - strong [ref=e389]: 💡 価格交渉のヒント
+        - paragraph [ref=e390]:
+          - text: 受注した3案件は
+          - strong [ref=e391]: 提案価格 -2.5% 以内
+          - text: に収めて勝っています。失注したマツダCX-60は競合比 +6.4% 高くなっていました。
+          - text: 本案件は現在デンソー比 +4% —
+          - strong [ref=e392]: 軽量化 -18% を金額換算
+          - text: (車両重量1kg軽量化 ≒ ¥1,200/台×24万台/年 = ¥288M/年の燃費価値) して
+          - strong [ref=e393]: 価値訴求
+          - text: するのが推奨パターンです。
+      - paragraph [ref=e397]: その軽量化のメリットを盛り込んだ提案メールのドラフトを書いて。
+      - generic [ref=e400]:
+        - paragraph [ref=e401]: 中島健一 様宛のメール下書きを作成しました。
+        - generic [ref=e402]:
+          - paragraph [ref=e403]:
+            - strong [ref=e404]: "件名:"
+            - text: bZ後継 駆動モータコイル — 軽量化価値のご提案 (NMP-MC-72018)
+          - paragraph [ref=e405]:
+            - text: 中島様
+            - text: 先日の単価交渉でお話の出ました件、当社新工法による
+            - strong [ref=e406]: 軽量化 -18%
+            - text: がもたらす TCO 価値を改めて整理いたしました...
+        - generic [ref=e407]:
+          - button "送信下書きを開く" [ref=e408] [cursor=pointer]
+          - button "編集" [ref=e409] [cursor=pointer]
+    - generic [ref=e410]:
+      - generic [ref=e411]: おすすめの質問
+      - generic [ref=e412] [cursor=pointer]: 📋 この商談の Win/Loss 要因を分析して
+      - generic [ref=e413] [cursor=pointer]: 📊 中島部長の過去メールから決裁スタイルを要約
+      - generic [ref=e414] [cursor=pointer]: 📅 競合最終提出日までのタスクを起票して
+    - textbox "タスクについて説明するか、質問する..." [ref=e416]

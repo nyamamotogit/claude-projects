@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEPCO × Agentforce | Vision Demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css">
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif}
+body{background:#0a0e1a}
+
+/* ===== SCENE SYSTEM ===== */
+.scene{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 0.6s ease}
+.scene.active{opacity:1;pointer-events:all}
+
+/* ===== NAV HINT ===== */
+#nav-hint{
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:1rem;
+  background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.15);border-radius:2rem;
+  padding:0.5rem 1.5rem;color:rgba(255,255,255,0.6);font-size:0.78rem;
+  z-index:9999;pointer-events:none;transition:opacity 0.4s
+}
+#nav-hint kbd{
+  background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);
+  border-radius:4px;padding:2px 8px;font-size:0.75rem;color:#fff
+}
+#scene-indicator{
+  position:fixed;bottom:4rem;left:50%;transform:translateX(-50%);
+  display:flex;gap:0.5rem;z-index:9999
+}
+#scene-indicator span{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,0.2);transition:all 0.3s;cursor:pointer
+}
+#scene-indicator span.active{background:#00d4ff;box-shadow:0 0 8px #00d4ff}
+
+/* ===== OPENING ===== */
+#scene-opening{
+  background:radial-gradient(ellipse at 30% 50%,#0d1b3e 0%,#050a14 60%),
+             radial-gradient(ellipse at 70% 50%,#1a0a2e 0%,transparent 60%);
+  background-color:#050a14;
+  display:flex;align-items:center;justify-content:center;overflow:hidden
+}
+.opening-canvas{position:absolute;inset:0}
+.opening-content{
+  position:relative;z-index:10;text-align:center;
+  animation:openingFadeIn 1.2s ease forwards
+}
+@keyframes openingFadeIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.opening-label{
+  font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;
+  color:#00d4ff;margin-bottom:1rem;
+  text-shadow:0 0 20px rgba(0,212,255,0.8)
+}
+.opening-title{
+  font-size:clamp(2.5rem,5vw,4.5rem);font-weight:800;
+  color:#ffffff;line-height:1.1;margin-bottom:0.5rem
+}
+.opening-title .highlight{
+  background:linear-gradient(135deg,#00d4ff,#7c3aed,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.opening-subtitle{
+  font-size:1.1rem;color:rgba(255,255,255,0.6);margin-bottom:3rem;
+  letter-spacing:0.05em
+}
+.opening-start-btn{
+  display:inline-flex;align-items:center;gap:0.75rem;
+  padding:0.875rem 2.5rem;font-size:1rem;font-weight:600;
+  background:linear-gradient(135deg,#0070d2,#7c3aed);
+  color:#fff;border:none;border-radius:0.5rem;cursor:pointer;
+  box-shadow:0 0 30px rgba(124,58,237,0.5);
+  transition:all 0.3s;letter-spacing:0.05em
+}
+.opening-start-btn:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(124,58,237,0.7)}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:0.3;
+  animation:orbFloat 8s ease-in-out infinite
+}
+.orb1{width:600px;height:600px;background:#0070d2;top:-200px;left:-200px;animation-delay:0s}
+.orb2{width:400px;height:400px;background:#7c3aed;bottom:-100px;right:-100px;animation-delay:3s}
+.orb3{width:300px;height:300px;background:#00d4ff;top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:1.5s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(20px,-20px) scale(1.05)}}
+.orb3{animation:orbFloat3 6s ease-in-out infinite}
+@keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(calc(-50% + 15px),calc(-50% - 15px)) scale(1.1)}}
+.particles{position:absolute;inset:0;overflow:hidden}
+.particle{
+  position:absolute;width:2px;height:2px;border-radius:50%;
+  background:#00d4ff;opacity:0;
+  animation:particleFly 4s linear infinite
+}
+@keyframes particleFly{
+  0%{opacity:0;transform:translateY(100vh) translateX(0)}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{opacity:0;transform:translateY(-10vh) translateX(var(--dx,20px))}
+}
+.opening-cards{
+  display:flex;gap:1.5rem;justify-content:center;margin-bottom:2.5rem;flex-wrap:wrap
+}
+.opening-card{
+  padding:0.75rem 1.25rem;background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);border-radius:0.5rem;
+  font-size:0.8rem;color:rgba(255,255,255,0.7);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;gap:0.5rem
+}
+.opening-card .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-blue{background:#00d4ff;box-shadow:0 0 8px #00d4ff}
+.dot-purple{background:#7c3aed;box-shadow:0 0 8px #7c3aed}
+.dot-gold{background:#f59e0b;box-shadow:0 0 8px #f59e0b}
+.dot-green{background:#10b981;box-shadow:0 0 8px #10b981}
+
+/* ===== SLDS SHELL (共通ヘッダー) ===== */
+.sf-header{
+  background:#fff;height:3rem;display:flex;align-items:center;
+  justify-content:space-between;padding:0 1rem;
+  border-bottom:1px solid #c9c9c9;position:relative;z-index:50;flex-shrink:0
+}
+.sf-header-search{width:40%;max-width:30rem}
+.sf-header-actions{display:flex;align-items:center;gap:0.5rem}
+.sf-cloud-logo{width:32px;height:auto}
+.sf-icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:2rem;height:2rem;border-radius:0.25rem;
+  cursor:pointer;background:transparent;border:none;padding:0
+}
+.sf-icon-btn:hover{background:#f3f3f3}
+.sf-icon-btn img{
+  width:18px;height:18px;
+  filter:brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%)
+}
+.sf-icon-btn.highlight-btn img{filter:none!important}
+.sf-icon-btn.highlight-btn{background:#fff7ed;border:1px solid #f59e0b;animation:iconPulse 2s ease-in-out infinite}
+@keyframes iconPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)}50%{box-shadow:0 0 0 6px rgba(245,158,11,0)}}
+.sf-favorite-btn{
+  display:inline-flex;align-items:center;gap:4px;padding:0 10px;height:2rem;
+  background:#1b96ff;border-radius:0.25rem;border:none;cursor:pointer
+}
+.sf-favorite-btn img{width:14px;height:14px;filter:brightness(0) invert(1)!important}
+.sf-notify-wrap{position:relative;display:inline-flex}
+.sf-notify-dot{
+  position:absolute;top:4px;right:4px;width:8px;height:8px;
+  background:#ea001e;border-radius:50%;border:1.5px solid white
+}
+.sf-context-bar{
+  background:#fff;border-bottom:1px solid #dddbda;
+  padding:0 1rem;display:flex;align-items:center;gap:0.5rem;flex-shrink:0
+}
+.sf-context-bar nav ul{display:flex;gap:0.5rem;list-style:none;padding:0;margin:0}
+.sf-context-bar nav ul li{
+  display:flex;align-items:center;
+  padding:0 0.25rem;font-size:0.875rem
+}
+.sf-context-bar nav ul li.is-active{border-bottom:3px solid #1589ee}
+.sf-context-bar nav ul li.is-active a{color:#0070d2;font-weight:700}
+.sf-context-bar nav ul li a{color:#444;text-decoration:none;padding:0.5rem 0}
+.sf-app-launcher{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:2rem;height:2rem;cursor:pointer
+}
+.sf-app-launcher-grid{
+  display:grid;grid-template-columns:repeat(3,4px);
+  grid-template-rows:repeat(3,4px);gap:3px
+}
+.sf-app-launcher-grid span{width:4px;height:4px;background:#54698d;border-radius:1px}
+.sf-app-name{font-size:1.125rem;font-weight:700;color:#181818;padding:0.5rem 0;margin-right:0.75rem}
+.slds-input__icon{
+  filter:brightness(0) saturate(100%) invert(43%) sepia(13%) saturate(295%) hue-rotate(180deg) brightness(95%) contrast(85%)
+}
+
+/* ===== PHASE1: Salesforce Dashboard ===== */
+#scene-phase1{
+  background:#f3f3f3;display:flex;flex-direction:column;overflow:hidden
+}
+.phase1-body{
+  display:flex;flex:1;overflow:hidden;gap:0;
+}
+.phase1-main{
+  flex:1;overflow-y:auto;padding:1rem;background:#f3f3f3;
+  display:flex;flex-direction:column;gap:0.75rem
+}
+.phase1-agent-panel{
+  width:380px;flex-shrink:0;background:#fff;
+  border-left:1px solid #dddbda;display:flex;flex-direction:column;
+  overflow:hidden
+}
+
+/* Page header */
+.sf-page-header{
+  background:#fff;border-bottom:1px solid #dddbda;
+  padding:0.75rem 1rem;
+}
+.sf-page-header-row{display:flex;align-items:center;justify-content:space-between}
+.sf-page-header-title-wrap{display:flex;align-items:center;gap:0.75rem}
+.sf-page-header-icon{
+  width:2.5rem;height:2.5rem;border-radius:0.375rem;
+  display:inline-flex;align-items:center;justify-content:center
+}
+.sf-page-header-icon.orange{background:linear-gradient(135deg,#f97316,#ea580c)}
+.sf-page-header-icon img{width:1.5rem;height:1.5rem;filter:brightness(0) invert(1)}
+.sf-page-header-title{font-size:1.25rem;font-weight:700;color:#181818}
+.sf-page-header-sub{font-size:0.8rem;color:#706e6b;margin-top:2px}
+.sf-page-header-actions{display:flex;gap:0.5rem}
+
+/* KPI cards row */
+.kpi-row{display:flex;gap:0.75rem}
+.kpi-card{
+  flex:1;background:#fff;border-radius:0.5rem;padding:1rem;
+  border:1px solid #e5e5e5;border-top:4px solid transparent;
+  position:relative;overflow:hidden
+}
+.kpi-card.warn{border-top-color:#f59e0b}
+.kpi-card.danger{border-top-color:#ef4444;animation:cardPulse 2s ease-in-out infinite}
+.kpi-card.ok{border-top-color:#10b981}
+.kpi-card.info{border-top-color:#0070d2}
+@keyframes cardPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}50%{box-shadow:0 0 0 4px rgba(239,68,68,0.15)}}
+.kpi-card-label{font-size:0.75rem;color:#706e6b;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.25rem}
+.kpi-card-value{font-size:1.75rem;font-weight:800;color:#181818;line-height:1}
+.kpi-card-value.red{color:#ef4444}
+.kpi-card-value.amber{color:#f59e0b}
+.kpi-card-value.green{color:#10b981}
+.kpi-card-sub{font-size:0.75rem;color:#706e6b;margin-top:0.25rem}
+.kpi-badge{
+  position:absolute;top:0.75rem;right:0.75rem;
+  font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:99px
+}
+.kpi-badge.alert{background:#fef3c7;color:#92400e}
+.kpi-badge.danger{background:#fee2e2;color:#991b1b;animation:badgePulse 1.5s ease-in-out infinite}
+@keyframes badgePulse{0%,100%{opacity:1}50%{opacity:0.6}}
+
+/* SVG Wave chart */
+.wave-card{background:#fff;border-radius:0.5rem;border:1px solid #e5e5e5;padding:1rem}
+.wave-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem}
+.wave-card-title{font-size:0.875rem;font-weight:700;color:#181818}
+.wave-card-meta{font-size:0.75rem;color:#706e6b}
+.wave-svg-wrap{width:100%;overflow:hidden;border-radius:0.375rem}
+
+/* Grid layout for main */
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+.main-grid-full{grid-column:1/-1}
+
+/* Equipment list */
+.equip-table-wrap{background:#fff;border-radius:0.5rem;border:1px solid #e5e5e5;overflow:hidden}
+.equip-table-header{
+  padding:0.75rem 1rem;border-bottom:1px solid #e5e5e5;
+  display:flex;align-items:center;justify-content:space-between
+}
+.equip-table-title{font-size:0.875rem;font-weight:700}
+table.equip-table{width:100%;border-collapse:collapse;font-size:0.8125rem}
+table.equip-table th{
+  background:#fafaf9;padding:0.5rem 0.75rem;
+  text-align:left;font-weight:600;color:#444;
+  border-bottom:1px solid #e5e5e5;font-size:0.75rem
+}
+table.equip-table td{padding:0.5rem 0.75rem;border-bottom:1px solid #f3f3f3;color:#181818}
+table.equip-table tr:hover td{background:#f9f9f9}
+table.equip-table tr.row-warn td{background:#fffbeb}
+table.equip-table tr.row-danger td{background:#fef2f2}
+.status-dot{
+  display:inline-flex;align-items:center;gap:0.375rem;
+  font-size:0.75rem;font-weight:600
+}
+.status-dot::before{
+  content:'';width:8px;height:8px;border-radius:50%;flex-shrink:0
+}
+.status-dot.green::before{background:#10b981}
+.status-dot.amber::before{background:#f59e0b;animation:badgePulse 1.5s infinite}
+.status-dot.red::before{background:#ef4444;animation:badgePulse 1s infinite}
+
+/* Agentforce Panel */
+.af-panel-header{
+  padding:0.75rem 1rem;border-bottom:1px solid #dddbda;
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0
+}
+.af-panel-title{
+  display:flex;align-items:center;gap:0.5rem;
+  font-size:0.9375rem;font-weight:700;color:#181818
+}
+.af-panel-title img{width:20px;height:20px;filter:none}
+.af-conversation{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem}
+.af-msg{display:flex;gap:0.625rem;opacity:0;transform:translateY(8px)}
+.af-msg.show{animation:msgIn 0.4s ease forwards}
+@keyframes msgIn{to{opacity:1;transform:translateY(0)}}
+.af-avatar{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center
+}
+.af-avatar.bot{background:#0070d2}
+.af-avatar.bot img{width:16px;height:16px;filter:brightness(0) invert(1)}
+.af-avatar.user{background:#b0b0b0}
+.af-avatar.user img{width:16px;height:16px;filter:brightness(0) invert(1)}
+.af-bubble{flex:1;font-size:0.8125rem;line-height:1.55;color:#181818}
+.af-bubble p{margin:0 0 0.25rem}
+.af-bubble strong{color:#0070d2}
+
+/* Orchestration steps */
+.orch-steps{
+  background:#f8faff;border:1px solid #d1e3ff;border-radius:0.5rem;
+  padding:0.75rem;margin-top:0.5rem;display:flex;flex-direction:column;gap:0.5rem
+}
+.orch-step{
+  display:flex;align-items:center;gap:0.625rem;
+  font-size:0.75rem;color:#444;opacity:0;transform:translateX(-8px)
+}
+.orch-step.show{animation:stepIn 0.3s ease forwards}
+@keyframes stepIn{to{opacity:1;transform:translateX(0)}}
+.orch-step-icon{
+  width:20px;height:20px;border-radius:50%;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:0.625rem;font-weight:700
+}
+.orch-step-icon.pending{background:#e5e7eb;color:#9ca3af}
+.orch-step-icon.running{background:#dbeafe;color:#2563eb;animation:spin 1s linear infinite}
+.orch-step-icon.done{background:#d1fae5;color:#059669}
+.orch-step-icon.spin{animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.orch-step-tag{
+  font-size:0.65rem;font-weight:700;padding:1px 6px;border-radius:99px;flex-shrink:0
+}
+.tag-aws{background:#ff9900;color:#fff}
+.tag-sap{background:#003366;color:#fff}
+.tag-m365{background:#0078d4;color:#fff}
+.tag-sf{background:#0070d2;color:#fff}
+.tag-teams{background:#464eb8;color:#fff}
+
+/* Approve button */
+.af-approve-wrap{padding:0.75rem 1rem;border-top:1px solid #dddbda;flex-shrink:0}
+.af-approve-btn{
+  width:100%;padding:0.625rem;background:linear-gradient(135deg,#04844b,#00685a);
+  color:#fff;font-size:0.875rem;font-weight:700;border:none;border-radius:0.375rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;
+  opacity:0;transition:all 0.3s
+}
+.af-approve-btn.show{opacity:1}
+.af-approve-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(4,132,75,0.4)}
+.af-approve-btn img{width:16px;height:16px;filter:brightness(0) invert(1)}
+.af-input-wrap{padding:0.75rem 1rem;border-top:1px solid #dddbda;flex-shrink:0}
+.af-input-row{display:flex;gap:0.5rem}
+.af-input{
+  flex:1;padding:0.5rem 0.75rem;border:1px solid #dddbda;border-radius:0.375rem;
+  font-size:0.8125rem
+}
+.af-input:focus{outline:none;border-color:#1589ee;box-shadow:0 0 3px #0070d2}
+.af-send-btn{
+  padding:0.5rem 0.75rem;background:#0070d2;color:#fff;border:none;
+  border-radius:0.375rem;cursor:pointer;font-size:0.75rem;font-weight:600
+}
+
+/* Typing indicator */
+.af-typing{display:inline-flex;gap:3px;padding:4px 0}
+.af-typing span{
+  width:6px;height:6px;background:#b0adab;border-radius:50%;
+  animation:typing 1.2s infinite ease-in-out
+}
+.af-typing span:nth-child(2){animation-delay:0.2s}
+.af-typing span:nth-child(3){animation-delay:0.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
+
+/* Toast */
+.sf-toast{
+  position:fixed;top:1rem;right:1rem;z-index:9998;
+  background:#04844b;color:#fff;padding:0.75rem 1.25rem;
+  border-radius:0.375rem;font-size:0.875rem;font-weight:600;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+  transform:translateX(120%);transition:transform 0.4s ease;
+  display:flex;align-items:center;gap:0.5rem;max-width:360px
+}
+.sf-toast.show{transform:translateX(0)}
+.sf-toast img{width:18px;height:18px;filter:brightness(0) invert(1)}
+
+/* ===== PHASE2: Slack ===== */
+#scene-phase2{
+  background:#1a1d21;display:flex;flex-direction:column;overflow:hidden
+}
+.slack-header{
+  background:#350d36;height:2.75rem;display:flex;align-items:center;
+  padding:0 1rem;gap:0.75rem;flex-shrink:0;border-bottom:1px solid #522653
+}
+.slack-logo{font-size:1.25rem}
+.slack-workspace{color:#fff;font-weight:700;font-size:0.9rem}
+.slack-body{display:flex;flex:1;overflow:hidden}
+.slack-sidebar{
+  width:220px;background:#3f0e40;flex-shrink:0;
+  padding:0.75rem 0;overflow-y:auto;color:rgba(255,255,255,0.7);font-size:0.8125rem
+}
+.slack-sidebar-section{margin-bottom:0.5rem}
+.slack-sidebar-label{
+  padding:0.25rem 1rem;font-size:0.7rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.4)
+}
+.slack-channel-item{
+  padding:0.3rem 1rem;cursor:pointer;display:flex;align-items:center;gap:0.4rem;
+  border-radius:0;transition:background 0.15s
+}
+.slack-channel-item:hover{background:rgba(255,255,255,0.08)}
+.slack-channel-item.active{background:rgba(255,255,255,0.12);color:#fff}
+.slack-channel-item .unread-dot{
+  margin-left:auto;width:8px;height:8px;border-radius:50%;
+  background:#ef4444;flex-shrink:0;animation:badgePulse 1.5s infinite
+}
+.slack-main{display:flex;flex:1;overflow:hidden}
+.slack-channel-pane{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.slack-channel-header{
+  background:#1a1d21;border-bottom:1px solid #2d2f33;
+  padding:0.75rem 1rem;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between
+}
+.slack-channel-name{color:#fff;font-weight:700;font-size:0.9375rem;display:flex;align-items:center;gap:0.375rem}
+.slack-channel-desc{color:rgba(255,255,255,0.5);font-size:0.75rem;margin-top:2px}
+.slack-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.125rem}
+.slack-msg{
+  display:flex;gap:0.625rem;padding:0.375rem 0.5rem;border-radius:0.375rem;
+  opacity:0;transform:translateY(6px)
+}
+.slack-msg.show{animation:msgIn 0.35s ease forwards}
+.slack-msg:hover{background:rgba(255,255,255,0.04)}
+.slack-msg-avatar{
+  width:30px;height:30px;border-radius:0.375rem;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:0.75rem;font-weight:700;color:#fff
+}
+.slack-msg-body{flex:1}
+.slack-msg-header{display:flex;align-items:baseline;gap:0.5rem;margin-bottom:0.125rem}
+.slack-msg-name{color:#fff;font-weight:700;font-size:0.85rem}
+.slack-msg-time{color:rgba(255,255,255,0.35);font-size:0.7rem}
+.slack-msg-text{color:rgba(255,255,255,0.85);font-size:0.85rem;line-height:1.5}
+.slack-mention{
+  background:rgba(29,155,240,0.15);color:#60cdff;
+  padding:1px 4px;border-radius:3px;font-weight:600
+}
+.slack-bot-tag{
+  display:inline-block;font-size:0.65rem;font-weight:700;
+  padding:1px 6px;border-radius:99px;background:#f59e0b;color:#fff;
+  vertical-align:middle;margin-left:4px
+}
+.slack-card{
+  background:#222529;border:1px solid #383a40;border-left:3px solid #0070d2;
+  border-radius:0.375rem;padding:0.75rem;margin-top:0.375rem;
+  max-width:520px
+}
+.slack-card-title{color:#fff;font-weight:700;font-size:0.875rem;margin-bottom:0.375rem}
+.slack-card-body{color:rgba(255,255,255,0.7);font-size:0.8125rem;line-height:1.5}
+.slack-card-row{display:flex;gap:1.5rem;margin-top:0.5rem}
+.slack-card-kpi{text-align:center}
+.slack-card-kpi-val{font-size:1.25rem;font-weight:800;color:#f59e0b}
+.slack-card-kpi-label{font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:2px}
+.slack-card-btn{
+  display:inline-flex;align-items:center;gap:0.375rem;
+  margin-top:0.625rem;padding:0.4rem 0.875rem;border-radius:0.25rem;
+  font-size:0.8rem;font-weight:600;border:none;cursor:pointer
+}
+.slack-card-btn.primary{background:#0070d2;color:#fff}
+.slack-card-btn.secondary{background:rgba(255,255,255,0.1);color:#fff}
+.slack-input-area{
+  padding:0.75rem 1rem;border-top:1px solid #2d2f33;flex-shrink:0
+}
+.slack-input-box{
+  background:#222529;border:1px solid #383a40;border-radius:0.5rem;
+  padding:0.625rem 1rem;color:rgba(255,255,255,0.5);font-size:0.8125rem
+}
+/* Tableau bot card */
+.tableau-card{
+  background:#1c2438;border:1px solid #2a3550;border-radius:0.5rem;
+  padding:0.875rem;margin-top:0.375rem;max-width:560px
+}
+.tableau-card-header{
+  display:flex;align-items:center;gap:0.5rem;
+  margin-bottom:0.625rem;color:#fff;font-weight:700;font-size:0.875rem
+}
+.tableau-logo{
+  background:linear-gradient(135deg,#1a6ca8,#0090e0);
+  width:22px;height:22px;border-radius:4px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:0.6rem;font-weight:900;color:#fff
+}
+.roi-compare{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin:0.5rem 0}
+.roi-col{background:rgba(255,255,255,0.04);border-radius:0.375rem;padding:0.625rem;text-align:center}
+.roi-col.better{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3)}
+.roi-col-label{font-size:0.7rem;color:rgba(255,255,255,0.5);margin-bottom:0.375rem}
+.roi-col-value{font-size:1.375rem;font-weight:800}
+.roi-col-value.red{color:#ef4444}
+.roi-col-value.green{color:#10b981}
+.roi-col-sub{font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:2px}
+
+/* ===== PHASE3: Mobile ===== */
+#scene-phase3{
+  background:#1a0a2e;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative
+}
+.mobile-bg-orb1{position:absolute;width:500px;height:500px;border-radius:50%;background:#1a0a2e;filter:blur(60px);opacity:0.5;top:-100px;left:-100px}
+.mobile-bg-orb2{position:absolute;width:400px;height:400px;border-radius:50%;background:#0d1b3e;filter:blur(60px);opacity:0.5;bottom:-80px;right:-80px}
+.mobile-scene-layout{display:flex;align-items:center;gap:5rem;position:relative;z-index:10}
+/* Phone frame */
+.phone-frame{
+  width:375px;height:812px;background:#fff;border-radius:3rem;
+  box-shadow:0 0 0 10px #1a1a1a,0 0 0 12px #333,0 30px 80px rgba(0,0,0,0.5),
+             0 0 60px rgba(0,212,255,0.15);
+  overflow:hidden;position:relative;display:flex;flex-direction:column;
+  flex-shrink:0
+}
+.phone-notch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:130px;height:30px;background:#1a1a1a;border-radius:0 0 1rem 1rem;
+  z-index:10
+}
+.phone-status-bar{
+  height:44px;background:#1c1c1e;display:flex;align-items:flex-end;
+  padding:0 1.25rem 0.375rem;color:#fff;font-size:0.8rem;flex-shrink:0
+}
+.phone-status-bar-left{font-weight:700}
+.phone-status-bar-right{margin-left:auto;display:flex;gap:0.375rem;align-items:center;font-size:0.7rem}
+
+/* Slack mobile */
+.phone-app-header{
+  background:#350d36;padding:0.75rem 1rem;
+  display:flex;align-items:center;gap:0.625rem;flex-shrink:0
+}
+.phone-app-title{color:#fff;font-weight:700;font-size:0.9375rem}
+.phone-body{flex:1;overflow-y:auto;background:#fff}
+.phone-dm-item{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.875rem 1rem;border-bottom:1px solid #f1f1f1;cursor:pointer;
+  opacity:0;transform:translateX(-8px)
+}
+.phone-dm-item.show{animation:msgIn 0.3s ease forwards}
+.phone-dm-avatar{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:0.875rem;font-weight:700;color:#fff
+}
+.phone-dm-name{font-weight:700;font-size:0.9rem;color:#1a1a1a}
+.phone-dm-preview{font-size:0.8rem;color:#6b6b6b;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.phone-dm-time{font-size:0.7rem;color:#9a9a9a;margin-left:auto;align-self:flex-start;margin-top:2px}
+.phone-dm-unread{
+  width:20px;height:20px;border-radius:50%;background:#ef4444;
+  color:#fff;font-size:0.65rem;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-left:auto;flex-shrink:0;animation:badgePulse 1.5s infinite
+}
+
+/* Phone chat view */
+.phone-chat-view{position:absolute;inset:0;background:#fff;transform:translateX(100%);transition:transform 0.4s ease;display:flex;flex-direction:column}
+.phone-chat-view.open{transform:translateX(0)}
+.phone-chat-header{
+  background:#fff;padding:0.75rem 1rem;border-bottom:1px solid #e5e5e5;
+  display:flex;align-items:center;gap:0.75rem;flex-shrink:0
+}
+.phone-back-btn{color:#007aff;font-size:0.875rem;cursor:pointer}
+.phone-chat-title{font-weight:700;font-size:0.9rem;flex:1;text-align:center}
+.phone-chat-messages{flex:1;overflow-y:auto;padding:1rem;background:#f5f5f7;display:flex;flex-direction:column;gap:0.75rem}
+.phone-msg-bot,.phone-msg-user{max-width:80%}
+.phone-msg-bot{align-self:flex-start}
+.phone-msg-user{align-self:flex-end}
+.phone-msg-bubble{
+  padding:0.625rem 0.875rem;border-radius:1rem;font-size:0.8rem;line-height:1.5
+}
+.phone-msg-bot .phone-msg-bubble{background:#fff;color:#1a1a1a;border-bottom-left-radius:0.25rem;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.phone-msg-user .phone-msg-bubble{background:#007aff;color:#fff;border-bottom-right-radius:0.25rem}
+.phone-msg-bot,.phone-msg-user{opacity:0;transform:translateY(8px)}
+.phone-msg-bot.show,.phone-msg-user.show{animation:msgIn 0.35s ease forwards}
+
+/* Tableau view in phone */
+.phone-tableau-view{position:absolute;inset:0;background:#fff;transform:translateX(100%);transition:transform 0.4s ease;display:flex;flex-direction:column}
+.phone-tableau-view.open{transform:translateX(0)}
+.phone-tableau-header{
+  background:#1a6ca8;padding:0.75rem 1rem;
+  display:flex;align-items:center;gap:0.625rem;color:#fff;flex-shrink:0
+}
+.phone-tableau-body{flex:1;overflow-y:auto;padding:1rem;background:#f0f4f8}
+
+/* SAP Approval overlay on phone */
+.sap-approve-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  background:#fff;border-top:1px solid #e5e5e5;
+  border-radius:1.5rem 1.5rem 0 0;padding:1.5rem;
+  transform:translateY(100%);transition:transform 0.4s ease;
+  box-shadow:0 -8px 30px rgba(0,0,0,0.15);z-index:20
+}
+.sap-approve-overlay.open{transform:translateY(0)}
+.sap-approve-title{font-size:0.9375rem;font-weight:700;color:#1a1a1a;margin-bottom:0.25rem}
+.sap-approve-sub{font-size:0.8rem;color:#6b6b6b;margin-bottom:1rem}
+.sap-approve-detail{
+  background:#f8f9fa;border-radius:0.5rem;padding:0.75rem;margin-bottom:1rem
+}
+.sap-detail-row{display:flex;justify-content:space-between;font-size:0.8rem;padding:0.25rem 0}
+.sap-detail-label{color:#6b6b6b}
+.sap-detail-value{font-weight:600;color:#1a1a1a}
+.sap-approve-btn{
+  width:100%;padding:0.875rem;background:linear-gradient(135deg,#04844b,#00685a);
+  color:#fff;font-size:1rem;font-weight:700;border:none;border-radius:0.625rem;
+  cursor:pointer;margin-bottom:0.625rem;
+  box-shadow:0 4px 16px rgba(4,132,75,0.3)
+}
+.sap-deny-btn{
+  width:100%;padding:0.75rem;background:transparent;
+  color:#6b6b6b;font-size:0.9rem;font-weight:600;border:1px solid #e5e5e5;
+  border-radius:0.625rem;cursor:pointer
+}
+
+/* Right panel for Phase3 */
+.phase3-info-panel{
+  max-width:520px;color:#fff
+}
+.phase3-step-label{
+  font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:#00d4ff;margin-bottom:0.75rem;font-weight:600
+}
+.phase3-title{font-size:2rem;font-weight:800;line-height:1.2;margin-bottom:0.75rem}
+.phase3-desc{font-size:0.9rem;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:1.5rem}
+.phase3-effects{display:flex;flex-direction:column;gap:0.75rem}
+.phase3-effect-item{
+  display:flex;align-items:flex-start;gap:0.75rem;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+  border-radius:0.5rem;padding:0.75rem;
+  opacity:0;transform:translateX(20px)
+}
+.phase3-effect-item.show{animation:effectIn 0.4s ease forwards}
+@keyframes effectIn{to{opacity:1;transform:translateX(0)}}
+.phase3-effect-icon{
+  width:32px;height:32px;border-radius:0.5rem;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;font-size:1rem
+}
+.phase3-effect-title{font-weight:700;font-size:0.875rem;color:#fff;margin-bottom:2px}
+.phase3-effect-sub{font-size:0.75rem;color:rgba(255,255,255,0.5)}
+
+/* ===== ENDING ===== */
+#scene-ending{
+  background:#050a14;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative
+}
+.ending-content{position:relative;z-index:10;text-align:center;max-width:800px;padding:2rem}
+.ending-title{
+  font-size:clamp(2rem,4vw,3.5rem);font-weight:800;color:#fff;
+  line-height:1.15;margin-bottom:1rem
+}
+.ending-title .g1{
+  background:linear-gradient(135deg,#00d4ff,#0070d2);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.ending-title .g2{
+  background:linear-gradient(135deg,#7c3aed,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.ending-sub{font-size:1rem;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:2.5rem}
+.ending-metrics{display:flex;gap:2rem;justify-content:center;margin-bottom:3rem;flex-wrap:wrap}
+.ending-metric{text-align:center}
+.ending-metric-val{font-size:2.5rem;font-weight:900;line-height:1}
+.ending-metric-val.c1{color:#00d4ff}
+.ending-metric-val.c2{color:#10b981}
+.ending-metric-val.c3{color:#f59e0b}
+.ending-metric-label{font-size:0.75rem;color:rgba(255,255,255,0.45);margin-top:0.375rem;letter-spacing:0.05em}
+.ending-cta{
+  font-size:0.9rem;color:rgba(255,255,255,0.4);
+  letter-spacing:0.1em;text-transform:uppercase
+}
+.ending-logo-row{
+  display:flex;align-items:center;justify-content:center;gap:1.5rem;
+  margin-bottom:2.5rem;flex-wrap:wrap
+}
+.ending-logo-badge{
+  padding:0.5rem 1.25rem;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);border-radius:0.5rem;
+  font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.7);
+  backdrop-filter:blur(8px)
+}
+
+/* Heatmap SVG in Phase3 */
+.heatmap-container{width:100%;height:140px;position:relative;border-radius:0.375rem;overflow:hidden;background:#1a2035;margin:0.75rem 0}
+.heatmap-city-label{position:absolute;font-size:0.65rem;color:rgba(255,255,255,0.7);pointer-events:none}
+</style>
+</head>
+<body class="slds-scope">
+
+<!-- SCENE INDICATOR -->
+<div id="scene-indicator">
+  <span class="active" onclick="goToScene(0)"></span>
+  <span onclick="goToScene(1)"></span>
+  <span onclick="goToScene(2)"></span>
+  <span onclick="goToScene(3)"></span>
+  <span onclick="goToScene(4)"></span>
+</div>
+
+<!-- NAV HINT -->
+<div id="nav-hint">
+  <kbd>←</kbd> 戻る &nbsp;|&nbsp; 進む <kbd>→</kbd>
+</div>
+
+<!-- ================================================================ -->
+<!-- SCENE 0: OPENING                                                  -->
+<!-- ================================================================ -->
+<div class="scene active" id="scene-opening">
+  <div class="opening-canvas">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="particles" id="particles"></div>
+  </div>
+  <div class="opening-content">
+    <div class="opening-label">Vision Demo for TEPCO HD — 関 常務 御覧</div>
+    <h1 class="opening-title">現場の入口は<br><span class="highlight">Salesforce のまま。</span><br>AI が、すべてを束ねる。</h1>
+    <p class="opening-subtitle">Agentforce × SAP × AWS × M365 — 予兆から経営判断まで、数分で。</p>
+    <div class="opening-cards">
+      <div class="opening-card"><span class="dot dot-blue"></span>Phase 1 — 予兆検知 &amp; 自動立案</div>
+      <div class="opening-card"><span class="dot dot-purple"></span>Phase 2 — 部門横断スウォーミング</div>
+      <div class="opening-card"><span class="dot dot-gold"></span>Phase 3 — 経営の決断</div>
+      <div class="opening-card"><span class="dot dot-green"></span>回避損失額 ¥15億</div>
+    </div>
+    <button class="opening-start-btn" onclick="nextScene()">デモを開始 →</button>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SCENE 1: PHASE1 — Salesforce + Agentforce                        -->
+<!-- ================================================================ -->
+<div class="scene" id="scene-phase1">
+  <!-- SLDS Header -->
+  <header class="sf-header">
+    <img class="sf-cloud-logo" src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/images/logo.svg" alt="Salesforce"/>
+    <div class="sf-header-search">
+      <div class="slds-form-element"><div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/search.svg" alt="" class="slds-icon slds-input__icon slds-icon-text-default slds-icon_x-small"/>
+        <input type="search" placeholder="検索..." class="slds-input">
+      </div></div>
+    </div>
+    <div class="sf-header-actions">
+      <button class="sf-icon-btn highlight-btn" id="af-toggle-btn" title="Agentforce" onclick="">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="filter:none!important;width:22px;height:22px"/>
+      </button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt=""/></button>
+      <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/setup.svg" alt=""/></button>
+      <span class="sf-notify-wrap">
+        <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/notification.svg" alt=""/></button>
+        <span class="sf-notify-dot"></span>
+      </span>
+      <span class="slds-avatar slds-avatar_circle slds-avatar_small"><img src="https://ui-avatars.com/api/?name=田中+保全&background=1B96FF&color=fff" alt=""/></span>
+    </div>
+  </header>
+  <div class="sf-context-bar">
+    <div class="sf-app-launcher"><div class="sf-app-launcher-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+    <span class="sf-app-name">設備保全管理</span>
+    <nav><ul>
+      <li><a href="#">ホーム</a></li>
+      <li class="is-active"><a href="#">設備カルテ ▾</a></li>
+      <li><a href="#">Work Order ▾</a></li>
+      <li><a href="#">IoTアラート ▾</a></li>
+      <li><a href="#">ダッシュボード ▾</a></li>
+    </ul></nav>
+  </div>
+
+  <!-- Page Header -->
+  <div class="sf-page-header">
+    <div class="sf-page-header-row">
+      <div class="sf-page-header-title-wrap">
+        <div class="sf-page-header-icon orange">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard/lightning.svg" alt=""/>
+        </div>
+        <div>
+          <div class="sf-page-header-title">設備カルテ — 新豊洲変電所 1号トランス</div>
+          <div class="sf-page-header-sub">設備ID: TKO-NT-TR-001 &nbsp;|&nbsp; 設置: 2009年3月 &nbsp;|&nbsp; 最終点検: 2026-03-14 &nbsp;|&nbsp; <strong style="color:#ef4444">⚠ IoTアラート検知中</strong></div>
+        </div>
+      </div>
+      <div class="sf-page-header-actions">
+        <button class="slds-button slds-button_neutral">Work Order作成</button>
+        <button class="slds-button slds-button_brand">Agentforceに相談</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="phase1-body">
+    <!-- Main content -->
+    <div class="phase1-main">
+      <!-- KPI row -->
+      <div class="kpi-row">
+        <div class="kpi-card danger">
+          <div class="kpi-badge danger">CRITICAL</div>
+          <div class="kpi-card-label">油中ガス濃度 (H₂)</div>
+          <div class="kpi-card-value red">847 ppm</div>
+          <div class="kpi-card-sub">基準値: ≤150 ppm &nbsp;▲ 前月比 +520%</div>
+        </div>
+        <div class="kpi-card danger">
+          <div class="kpi-badge danger">AI予測</div>
+          <div class="kpi-card-label">72時間以内の故障確率</div>
+          <div class="kpi-card-value red">85%</div>
+          <div class="kpi-card-sub">AWS IoT ML モデル (精度 92%)</div>
+        </div>
+        <div class="kpi-card warn">
+          <div class="kpi-badge alert">要確認</div>
+          <div class="kpi-card-label">巻線温度</div>
+          <div class="kpi-card-value amber">112°C</div>
+          <div class="kpi-card-sub">定格: 105°C &nbsp;▲ 上昇傾向</div>
+        </div>
+        <div class="kpi-card info">
+          <div class="kpi-card-label">停電影響エリア</div>
+          <div class="kpi-card-value" style="color:#0070d2;font-size:1.25rem">豊洲・東雲・有明</div>
+          <div class="kpi-card-sub">推定影響戸数: 約18,000戸</div>
+        </div>
+      </div>
+
+      <!-- Wave chart + Equipment table -->
+      <div class="main-grid">
+        <div class="wave-card">
+          <div class="wave-card-header">
+            <span class="wave-card-title">油中ガス濃度トレンド (H₂ / CO)</span>
+            <span class="wave-card-meta">AWS IoT — 過去7日</span>
+          </div>
+          <div class="wave-svg-wrap">
+            <svg viewBox="0 0 500 130" width="100%" height="130" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="waveGrad1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#ef4444" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <rect width="500" height="130" fill="#fafaf9" rx="4"/>
+              <!-- Grid lines -->
+              <line x1="0" y1="100" x2="500" y2="100" stroke="#e5e5e5" stroke-width="0.5"/>
+              <line x1="0" y1="70" x2="500" y2="70" stroke="#e5e5e5" stroke-width="0.5"/>
+              <line x1="0" y1="40" x2="500" y2="40" stroke="#e5e5e5" stroke-width="0.5"/>
+              <!-- Threshold line -->
+              <line x1="0" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,4"/>
+              <text x="4" y="88" font-size="8" fill="#f59e0b">基準値150ppm</text>
+              <!-- CO line -->
+              <polyline points="20,98 80,96 140,95 200,90 260,82 320,72 380,55 440,35 480,18"
+                stroke="#f59e0b" stroke-width="1.5" fill="none" opacity="0.7"/>
+              <!-- H2 area + line -->
+              <path d="M20,100 L80,99 L140,98 L200,95 L260,85 L320,68 L380,42 L440,20 L480,8 L500,5 L500,130 L0,130 Z"
+                fill="url(#waveGrad1)" opacity="0.6"/>
+              <polyline points="20,100 80,99 140,98 200,95 260,85 320,68 380,42 440,20 480,8"
+                stroke="#ef4444" stroke-width="2" fill="none"/>
+              <!-- Anomaly marker -->
+              <circle cx="480" cy="8" r="5" fill="#ef4444" opacity="0.9">
+                <animate attributeName="r" values="5;8;5" dur="1.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.5s" repeatCount="indefinite"/>
+              </circle>
+              <!-- Labels -->
+              <text x="20" y="128" font-size="8" fill="#999">6/18</text>
+              <text x="140" y="128" font-size="8" fill="#999">6/20</text>
+              <text x="260" y="128" font-size="8" fill="#999">6/22</text>
+              <text x="380" y="128" font-size="8" fill="#999">6/24</text>
+              <text x="460" y="128" font-size="8" fill="#ef4444" font-weight="bold">現在</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wave-card">
+          <div class="wave-card-header">
+            <span class="wave-card-title">系統迂回シミュレーション</span>
+            <span class="wave-card-meta">AWS 迂回シミュレーター</span>
+          </div>
+          <svg viewBox="0 0 480 130" width="100%" height="130" xmlns="http://www.w3.org/2000/svg">
+            <rect width="480" height="130" fill="#f0f4ff" rx="4"/>
+            <!-- Nodes -->
+            <circle cx="60" cy="65" r="18" fill="#0070d2" opacity="0.9"/>
+            <text x="60" y="69" text-anchor="middle" font-size="7" fill="#fff" font-weight="bold">新豊洲</text>
+            <circle cx="180" cy="30" r="14" fill="#04844b" opacity="0.9"/>
+            <text x="180" y="34" text-anchor="middle" font-size="6.5" fill="#fff">辰巳</text>
+            <circle cx="180" cy="100" r="14" fill="#ef4444" opacity="0.9">
+              <animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.2s" repeatCount="indefinite"/>
+            </circle>
+            <text x="180" y="104" text-anchor="middle" font-size="5.5" fill="#fff">1号T</text>
+            <circle cx="300" cy="65" r="18" fill="#0070d2" opacity="0.9"/>
+            <text x="300" y="69" text-anchor="middle" font-size="7" fill="#fff" font-weight="bold">有明</text>
+            <circle cx="420" cy="65" r="14" fill="#04844b" opacity="0.9"/>
+            <text x="420" y="69" text-anchor="middle" font-size="6.5" fill="#fff">東雲</text>
+            <!-- Normal lines -->
+            <line x1="78" y1="55" x2="166" y2="36" stroke="#0070d2" stroke-width="2"/>
+            <line x1="78" y1="75" x2="166" y2="94" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3" opacity="0.6"/>
+            <line x1="194" y1="30" x2="282" y2="58" stroke="#04844b" stroke-width="2.5" stroke-dasharray="6,3">
+              <animate attributeName="stroke-dashoffset" values="0;-18" dur="0.6s" repeatCount="indefinite"/>
+            </line>
+            <line x1="318" y1="65" x2="406" y2="65" stroke="#0070d2" stroke-width="2"/>
+            <!-- Detour label -->
+            <text x="220" y="28" font-size="8" fill="#04844b" font-weight="bold">迂回ルート（確保済）</text>
+            <text x="130" y="112" font-size="7" fill="#ef4444">切り離し対象</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Equipment table -->
+      <div class="equip-table-wrap">
+        <div class="equip-table-header">
+          <span class="equip-table-title">関連設備一覧 — 新豊洲変電所</span>
+          <span class="slds-badge">5件</span>
+        </div>
+        <table class="equip-table">
+          <thead><tr>
+            <th>設備名</th><th>種別</th><th>設置年</th><th>ステータス</th><th>最終IoT値</th><th>担当者</th>
+          </tr></thead>
+          <tbody>
+            <tr class="row-danger">
+              <td><strong>1号トランス</strong></td><td>変圧器</td><td>2009年</td>
+              <td><span class="status-dot red">CRITICAL</span></td>
+              <td>H₂: 847ppm ⚠</td><td>田中 保全</td>
+            </tr>
+            <tr class="row-warn">
+              <td>2号トランス</td><td>変圧器</td><td>2012年</td>
+              <td><span class="status-dot amber">WARNING</span></td>
+              <td>H₂: 210ppm</td><td>山田 一郎</td>
+            </tr>
+            <tr>
+              <td>遮断器 A</td><td>GIS</td><td>2015年</td>
+              <td><span class="status-dot green">正常</span></td>
+              <td>—</td><td>鈴木 次郎</td>
+            </tr>
+            <tr>
+              <td>遮断器 B</td><td>GIS</td><td>2015年</td>
+              <td><span class="status-dot green">正常</span></td>
+              <td>—</td><td>鈴木 次郎</td>
+            </tr>
+            <tr>
+              <td>制御盤 #3</td><td>制御設備</td><td>2018年</td>
+              <td><span class="status-dot green">正常</span></td>
+              <td>—</td><td>佐藤 三郎</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Agentforce Panel -->
+    <div class="phase1-agent-panel">
+      <div class="af-panel-header">
+        <div class="af-panel-title">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" style="width:22px;height:22px;"/>
+          Agentforce — 保全アシスタント
+        </div>
+        <div style="display:flex;gap:0.25rem">
+          <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/refresh.svg" alt=""/></button>
+          <button class="sf-icon-btn"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/close.svg" alt=""/></button>
+        </div>
+      </div>
+      <div class="af-conversation" id="af-conv">
+        <!-- messages injected by JS -->
+      </div>
+      <div class="af-approve-wrap">
+        <button class="af-approve-btn" id="af-approve-btn" onclick="onApprove()">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt=""/>
+          承認して全システムへ指示を実行
+        </button>
+      </div>
+      <div class="af-input-wrap">
+        <div class="af-input-row">
+          <input class="af-input" type="text" placeholder="指示を入力..."/>
+          <button class="af-send-btn">送信</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SCENE 2: PHASE2 — Slack                                          -->
+<!-- ================================================================ -->
+<div class="scene" id="scene-phase2">
+  <div class="slack-header">
+    <span class="slack-logo">⚡</span>
+    <span class="slack-workspace">TEPCO HD — 東京電力ホールディングス</span>
+  </div>
+  <div class="slack-body">
+    <!-- Sidebar -->
+    <div class="slack-sidebar">
+      <div class="slack-sidebar-section">
+        <div class="slack-sidebar-label">チャンネル</div>
+        <div class="slack-channel-item"><span>#</span>一般</div>
+        <div class="slack-channel-item"><span>#</span>設備保全-全般</div>
+        <div class="slack-channel-item"><span>#</span>中央給電指令所</div>
+        <div class="slack-channel-item active"><span>#</span>🚨対策室-新豊洲TR1 <span class="unread-dot"></span></div>
+        <div class="slack-channel-item"><span>#</span>広報-緊急連絡</div>
+        <div class="slack-channel-item"><span>#</span>経企-経営報告</div>
+      </div>
+      <div class="slack-sidebar-section">
+        <div class="slack-sidebar-label">ダイレクトメッセージ</div>
+        <div class="slack-channel-item"><span>👤</span>関 常務</div>
+        <div class="slack-channel-item"><span>🤖</span>Tableau Next Bot</div>
+      </div>
+    </div>
+    <!-- Main chat -->
+    <div class="slack-main">
+      <div class="slack-channel-pane">
+        <div class="slack-channel-header">
+          <div>
+            <div class="slack-channel-name">🚨 #対策室-新豊洲TR1</div>
+            <div class="slack-channel-desc">Agentforce により自動生成 — 2026-06-25 17:05 &nbsp;|&nbsp; メンバー: 現場・中給・経企・経営 14名</div>
+          </div>
+        </div>
+        <div class="slack-messages" id="slack-messages">
+          <!-- injected by JS -->
+        </div>
+        <div class="slack-input-area">
+          <div class="slack-input-box">#対策室-新豊洲TR1 へメッセージを送信...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SCENE 3: PHASE3 — Mobile                                         -->
+<!-- ================================================================ -->
+<div class="scene" id="scene-phase3">
+  <div class="mobile-bg-orb1"></div>
+  <div class="mobile-bg-orb2"></div>
+  <div class="mobile-scene-layout">
+    <!-- Phone -->
+    <div class="phone-frame" id="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-status-bar">
+        <span class="phone-status-bar-left">17:12</span>
+        <span class="phone-status-bar-right">📶 5G 🔋</span>
+      </div>
+      <!-- Slack DM list -->
+      <div class="phone-app-header">
+        <span class="slack-logo" style="font-size:1rem">⚡</span>
+        <span class="phone-app-title">Slack — TEPCO HD</span>
+      </div>
+      <div class="phone-body" id="phone-dm-list">
+        <!-- DMs injected by JS -->
+      </div>
+      <!-- Chat view (Agentforce escalation) -->
+      <div class="phone-chat-view" id="phone-chat-view">
+        <div class="phone-chat-header">
+          <span class="phone-back-btn" onclick="closeChatView()">← 戻る</span>
+          <span class="phone-chat-title">🤖 Agentforce</span>
+        </div>
+        <div class="phone-chat-messages" id="phone-chat-messages">
+          <!-- injected by JS -->
+        </div>
+        <!-- SAP Approval overlay -->
+        <div class="sap-approve-overlay" id="sap-overlay">
+          <div class="sap-approve-title">SAP 緊急予算執行 — 承認依頼</div>
+          <div class="sap-approve-sub">新豊洲1号トランス 予防保全対応</div>
+          <div class="sap-approve-detail">
+            <div class="sap-detail-row"><span class="sap-detail-label">起案番号</span><span class="sap-detail-value">SAP-2026-NT-0892</span></div>
+            <div class="sap-detail-row"><span class="sap-detail-label">執行予算</span><span class="sap-detail-value" style="color:#ef4444">¥520,000,000</span></div>
+            <div class="sap-detail-row"><span class="sap-detail-label">回避損失額</span><span class="sap-detail-value" style="color:#10b981">¥1,500,000,000+</span></div>
+            <div class="sap-detail-row"><span class="sap-detail-label">ROI</span><span class="sap-detail-value" style="color:#10b981">+188%</span></div>
+          </div>
+          <button class="sap-approve-btn" id="sap-approve-btn" onclick="onSapApprove()">✓ 承認して執行</button>
+          <button class="sap-deny-btn">差し戻し（コメント追加）</button>
+        </div>
+      </div>
+      <!-- Tableau view -->
+      <div class="phone-tableau-view" id="phone-tableau-view">
+        <div class="phone-tableau-header">
+          <span style="background:white;color:#1a6ca8;padding:2px 6px;border-radius:3px;font-size:0.7rem;font-weight:900">T</span>
+          <span>Tableau Next — VIPビュー</span>
+          <span style="margin-left:auto;cursor:pointer;font-size:0.8rem" onclick="closeTableauView()">✕</span>
+        </div>
+        <div class="phone-tableau-body">
+          <div style="font-size:0.8rem;font-weight:700;color:#1a1a1a;margin-bottom:0.5rem">緊急対応 コスト比較</div>
+          <svg viewBox="0 0 300 120" width="100%" height="120">
+            <rect width="300" height="120" fill="#fff" rx="6"/>
+            <rect x="30" y="20" width="80" height="80" fill="#fee2e2" rx="4"/>
+            <rect x="30" y="20" width="80" height="80" fill="#ef4444" rx="4" opacity="0.8"/>
+            <text x="70" y="55" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">停電損害</text>
+            <text x="70" y="70" text-anchor="middle" font-size="9" fill="#fff">84〜120億</text>
+            <rect x="190" y="60" width="80" height="40" fill="#d1fae5" rx="4"/>
+            <rect x="190" y="60" width="80" height="40" fill="#10b981" rx="4" opacity="0.8"/>
+            <text x="230" y="83" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">緊急対応</text>
+            <text x="230" y="96" text-anchor="middle" font-size="9" fill="#fff">5.2億</text>
+            <text x="155" y="75" text-anchor="middle" font-size="12" fill="#374151">vs</text>
+          </svg>
+          <div style="font-size:0.8rem;font-weight:700;color:#1a1a1a;margin:0.5rem 0">停電影響ヒートマップ（都心東部）</div>
+          <div class="heatmap-container">
+            <svg viewBox="0 0 340 140" width="100%" height="140">
+              <rect width="340" height="140" fill="#1a2035"/>
+              <!-- Heat zones -->
+              <ellipse cx="170" cy="70" rx="60" ry="40" fill="#ef4444" opacity="0.4">
+                <animate attributeName="opacity" values="0.4;0.7;0.4" dur="2s" repeatCount="indefinite"/>
+              </ellipse>
+              <ellipse cx="170" cy="70" rx="30" ry="20" fill="#ef4444" opacity="0.7">
+                <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+              </ellipse>
+              <circle cx="170" cy="70" r="8" fill="#fbbf24" opacity="0.95"/>
+              <!-- City labels -->
+              <text x="165" y="56" font-size="8" fill="rgba(255,255,255,0.9)" font-weight="bold">新豊洲</text>
+              <text x="100" y="50" font-size="7" fill="rgba(255,255,255,0.6)">豊洲</text>
+              <text x="220" y="90" font-size="7" fill="rgba(255,255,255,0.6)">有明</text>
+              <text x="80" y="90" font-size="7" fill="rgba(255,255,255,0.6)">東雲</text>
+              <text x="240" y="50" font-size="7" fill="rgba(255,255,255,0.5)">辰巳</text>
+              <!-- Scale bar -->
+              <text x="10" y="130" font-size="7" fill="rgba(255,255,255,0.4)">影響 大</text>
+              <rect x="50" y="124" width="60" height="6" fill="url(#heatScale)" rx="3"/>
+              <defs><linearGradient id="heatScale" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#10b981"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#ef4444"/>
+              </linearGradient></defs>
+              <text x="115" y="130" font-size="7" fill="rgba(255,255,255,0.4)">→ 影響 小</text>
+            </svg>
+          </div>
+          <div style="font-size:0.75rem;color:#6b6b6b;margin-top:0.5rem">推定影響: 約18,000戸 / 想定損失: ¥84億〜120億</div>
+          <button style="margin-top:0.75rem;width:100%;padding:0.625rem;background:#1a6ca8;color:#fff;font-size:0.8rem;font-weight:600;border:none;border-radius:0.375rem;cursor:pointer" onclick="openSapOverlay()">SAP 緊急予算承認へ →</button>
+        </div>
+      </div>
+    </div>
+    <!-- Right info panel -->
+    <div class="phase3-info-panel" id="phase3-info-panel">
+      <div class="phase3-step-label">Phase 3 — 経営の決断</div>
+      <h2 class="phase3-title">関 常務の<br>スマートフォンへ。</h2>
+      <p class="phase3-desc">
+        Agentforceがエスカレーション判断し、<br>
+        Slack DM → Tableau VIPビュー → SAP承認を<br>
+        ワンフローで完結。<strong style="color:#00d4ff">承認から60秒で全システムへ展開。</strong>
+      </p>
+      <div class="phase3-effects" id="phase3-effects">
+        <!-- injected by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- SCENE 4: ENDING                                                   -->
+<!-- ================================================================ -->
+<div class="scene" id="scene-ending">
+  <div class="orb orb1" style="opacity:0.15"></div>
+  <div class="orb orb2" style="opacity:0.15"></div>
+  <div class="ending-content" style="animation:openingFadeIn 1s ease forwards">
+    <div class="ending-label" style="font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:#00d4ff;margin-bottom:1rem">Demo Complete — The Future of Infrastructure Management</div>
+    <h2 class="ending-title">
+      <span class="g1">Agentforce</span> が束ねた、<br>
+      <span class="g2">15分間</span>の奇跡。
+    </h2>
+    <p class="ending-sub">
+      IoTアラート検知から経営承認・全システム展開まで、<br>
+      従来6時間かかっていたプロセスをわずか15分に圧縮。<br>
+      既存システムはそのまま、Salesforceが「判断の司令塔」となる。
+    </p>
+    <div class="ending-logo-row">
+      <div class="ending-logo-badge">⚡ Salesforce Agentforce</div>
+      <div class="ending-logo-badge">🔶 SAP S/4HANA</div>
+      <div class="ending-logo-badge">☁️ AWS IoT</div>
+      <div class="ending-logo-badge">🟦 Microsoft 365</div>
+      <div class="ending-logo-badge">💬 Slack</div>
+      <div class="ending-logo-badge">📊 Tableau Next</div>
+    </div>
+    <div class="ending-metrics">
+      <div class="ending-metric">
+        <div class="ending-metric-val c1">15 <span style="font-size:1.25rem">分</span></div>
+        <div class="ending-metric-label">予兆検知〜承認完了</div>
+      </div>
+      <div class="ending-metric">
+        <div class="ending-metric-val c2">¥15億</div>
+        <div class="ending-metric-label">回避された想定損失額</div>
+      </div>
+      <div class="ending-metric">
+        <div class="ending-metric-val c3">6→1</div>
+        <div class="ending-metric-label">横断システム数（統合前→後）</div>
+      </div>
+    </div>
+    <div class="ending-cta">← 左矢印でシナリオを再確認 &nbsp;|&nbsp; ご質問はお気軽にどうぞ</div>
+  </div>
+</div>
+
+<!-- GLOBAL TOAST -->
+<div class="sf-toast" id="global-toast">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt=""/>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+// ================================================================
+// STATE MACHINE
+// ================================================================
+let currentScene = 0;
+const TOTAL_SCENES = 5;
+const sceneIds = ['scene-opening','scene-phase1','scene-phase2','scene-phase3','scene-ending'];
+
+// Phase1 animation state
+let phase1Initialized = false;
+// Phase2 animation state
+let phase2Initialized = false;
+// Phase3 animation state
+let phase3Initialized = false;
+
+function goToScene(idx) {
+  if (idx < 0 || idx >= TOTAL_SCENES) return;
+  document.querySelectorAll('.scene').forEach((s,i) => {
+    s.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('#scene-indicator span').forEach((s,i) => {
+    s.classList.toggle('active', i === idx);
+  });
+  currentScene = idx;
+  // Initialize on first visit
+  if (idx === 1 && !phase1Initialized) { initPhase1(); phase1Initialized = true; }
+  if (idx === 2 && !phase2Initialized) { initPhase2(); phase2Initialized = true; }
+  if (idx === 3 && !phase3Initialized) { initPhase3(); phase3Initialized = true; }
+}
+
+function nextScene() { goToScene(currentScene + 1); }
+function prevScene() { goToScene(currentScene - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextScene();
+  if (e.key === 'ArrowLeft')  prevScene();
+});
+
+// ================================================================
+// PARTICLES (Opening)
+// ================================================================
+(function spawnParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.setProperty('--dx', (Math.random() - 0.5) * 100 + 'px');
+    p.style.animationDelay = Math.random() * 4 + 's';
+    p.style.animationDuration = (3 + Math.random() * 3) + 's';
+    const colors = ['#00d4ff','#7c3aed','#f59e0b','#10b981','#fff'];
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    container.appendChild(p);
+  }
+})();
+
+// ================================================================
+// TOAST
+// ================================================================
+function showToast(msg, color) {
+  const t = document.getElementById('global-toast');
+  const m = document.getElementById('toast-msg');
+  m.textContent = msg;
+  t.style.background = color || '#04844b';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// ================================================================
+// PHASE1 — Agentforce conversation
+// ================================================================
+function initPhase1() {
+  const conv = document.getElementById('af-conv');
+  const msgs = [
+    { role:'bot', text:'新豊洲変電所 1号トランスのIoTアラートを検知しました。<br>油中ガス(H₂)が<strong>847ppm（基準値の5.6倍）</strong>に達しており、72時間以内の故障確率は<strong style="color:#ef4444">85%</strong>です。' },
+    { role:'user', text:'新豊洲1号トランスの予兆対応、必要な手配をすべて実行して' },
+    { role:'bot', text:'承知しました。以下のオーケストレーションを実行します。', steps: true },
+  ];
+  let delay = 300;
+  msgs.forEach((m, i) => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'af-msg';
+      el.innerHTML = `
+        <span class="af-avatar ${m.role}">
+          <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/${m.role==='bot'?'agent_astro':'user'}.svg" alt=""/>
+        </span>
+        <div class="af-bubble"><p>${m.text}</p>${m.steps ? buildOrchSteps() : ''}</div>`;
+      conv.appendChild(el);
+      void el.offsetWidth;
+      el.classList.add('show');
+      conv.scrollTop = conv.scrollHeight;
+      if (m.steps) animateOrchSteps();
+    }, delay);
+    delay += 900;
+  });
+  // Show approve button after steps
+  setTimeout(() => {
+    document.getElementById('af-approve-btn').classList.add('show');
+  }, delay + 3200);
+}
+
+function buildOrchSteps() {
+  const steps = [
+    { tag:'aws',  label:'[AWS IoT] 温度・ガストレンド詳細解析', id:'step-aws' },
+    { tag:'sap',  label:'[SAP] 交換用変圧器コイル 在庫確認・仮引当', id:'step-sap' },
+    { tag:'m365', label:'[M365] SharePoint 作業マニュアルPDF 抽出', id:'step-m365' },
+    { tag:'m365', label:'[M365 Exchange] 保全班スケジュール仮押え', id:'step-exch' },
+    { tag:'teams','label':'[Teams] ABBジャパン メーカー保全員 緊急招集', id:'step-teams' },
+    { tag:'sf',   label:'[Salesforce] Work Order WO-2026-NT-0892 作成', id:'step-sf' },
+  ];
+  return `<div class="orch-steps">${steps.map(s =>
+    `<div class="orch-step" id="${s.id}">
+      <span class="orch-step-icon pending" id="${s.id}-icon">⏸</span>
+      <span class="orch-step-tag tag-${s.tag}">${s.tag.toUpperCase()}</span>
+      <span>${s.label}</span>
+    </div>`).join('')}</div>`;
+}
+
+function animateOrchSteps() {
+  const steps = ['step-aws','step-sap','step-m365','step-exch','step-teams','step-sf'];
+  let d = 600;
+  steps.forEach(id => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      const icon = document.getElementById(id+'-icon');
+      if (!el || !icon) return;
+      el.classList.add('show');
+      icon.className = 'orch-step-icon running spin';
+      icon.textContent = '↻';
+      setTimeout(() => {
+        icon.className = 'orch-step-icon done';
+        icon.textContent = '✓';
+        const conv = document.getElementById('af-conv');
+        if (conv) conv.scrollTop = conv.scrollHeight;
+      }, 700);
+    }, d);
+    d += 600;
+  });
+  // Add result message
+  setTimeout(() => {
+    const conv = document.getElementById('af-conv');
+    const el = document.createElement('div');
+    el.className = 'af-msg';
+    el.innerHTML = `
+      <span class="af-avatar bot">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/>
+      </span>
+      <div class="af-bubble">
+        <p>✅ 全6アクションの立案が完了しました。<br>
+        SAP 伝票番号: <strong>TEP-8832</strong><br>
+        作業マニュアル: <strong>TR保全手順書v4.2.pdf</strong><br>
+        <span style="color:#f59e0b">「承認して実行」で各システムへ一括指示します。</span></p>
+      </div>`;
+    conv.appendChild(el);
+    void el.offsetWidth;
+    el.classList.add('show');
+    conv.scrollTop = conv.scrollHeight;
+  }, d + 400);
+}
+
+let approveClicked = false;
+function onApprove() {
+  if (approveClicked) return;
+  approveClicked = true;
+  const btn = document.getElementById('af-approve-btn');
+  btn.textContent = '⏳ 各システムへ指示送信中...';
+  btn.style.background = '#0070d2';
+  showToast('✅ 全システムへ指示送信完了 — Work Order WO-2026-NT-0892 作成済', '#04844b');
+  setTimeout(() => {
+    const conv = document.getElementById('af-conv');
+    const el = document.createElement('div');
+    el.className = 'af-msg';
+    el.innerHTML = `
+      <span class="af-avatar bot">
+        <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt=""/>
+      </span>
+      <div class="af-bubble">
+        <p>🎯 承認を受け付けました。<br>
+        SAP/AWS/M365/Teams へ指示を送信完了。<br>
+        Slackの<strong>#対策室-新豊洲TR1</strong>に関係者が自動招集されます。<br>
+        <span style="color:#04844b;font-weight:700">→ Slackで部門横断スウォーミングを開始</span></p>
+      </div>`;
+    conv.appendChild(el);
+    void el.offsetWidth;
+    el.classList.add('show');
+    conv.scrollTop = conv.scrollHeight;
+    btn.textContent = '✓ 実行済み — Slackで継続確認';
+    btn.style.background = '#444';
+    btn.disabled = true;
+  }, 1800);
+}
+
+// ================================================================
+// PHASE2 — Slack messages
+// ================================================================
+function initPhase2() {
+  const container = document.getElementById('slack-messages');
+  const msgs = [
+    {
+      avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:05',
+      text:'🚨 <span class="slack-mention">@現場チーム</span> <span class="slack-mention">@中央給電指令所</span> <span class="slack-mention">@経企</span> 新豊洲変電所1号トランスに重大異常を検知。<strong style="color:#fbbf24">本チャンネルは自動生成されました。</strong>',
+      botTag: true
+    },
+    {
+      avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:05',
+      text:'',
+      card: {
+        title:'対応ステータス — 自動実行済みアクション',
+        body:'① SAP 部品仮引当: TEP-8832 ✅<br>② AWS 系統迂回: 辰巳経由ルート確保 ✅<br>③ M365 マニュアル抽出: TR保全手順書v4.2.pdf ✅<br>④ Work Order: WO-2026-NT-0892 作成 ✅<br>⑤ Teams メーカー招集: ABBジャパン ✅'
+      }
+    },
+    {
+      avatar:'TN', avatarBg:'#1a6ca8', name:'Tableau Next Bot', time:'17:06',
+      text:'📊 リクエストに応じROI比較を生成しました。',
+      tableau: true, botTag: true
+    },
+    {
+      avatar:'田', avatarBg:'#7c3aed', name:'田中 保全（現場リーダー）', time:'17:07',
+      text:'現場確認中。トランス室の温度は室温+8℃。外観に異常なし。作業手順書を確認してすぐ動きます。'
+    },
+    {
+      avatar:'中', avatarBg:'#059669', name:'中村 中給（中央給電指令所）', time:'17:07',
+      text:'辰巳経由の迂回準備完了。いつでも系統切替可能。<span class="slack-mention">@田中</span> 現場状況を随時共有してください。'
+    },
+    {
+      avatar:'AF', avatarBg:'#0070d2', name:'Agentforce Bot', time:'17:08',
+      text:'⚠️ 分析の結果、<strong style="color:#fbbf24">経営判断が必要と判断</strong>しました。停電リスク（損失84〜120億円）に対し、緊急予算5.2億円の執行承認が必要です。<br><span class="slack-mention">@関 常務</span> にエスカレーションを送信します。',
+      botTag: true
+    },
+  ];
+
+  let delay = 200;
+  msgs.forEach(m => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'slack-msg';
+      let cardHtml = '';
+      if (m.card) {
+        cardHtml = `<div class="slack-card">
+          <div class="slack-card-title">${m.card.title}</div>
+          <div class="slack-card-body">${m.card.body}</div>
+          <div style="margin-top:0.5rem;display:flex;gap:0.5rem">
+            <button class="slack-card-btn primary">Work Order を開く</button>
+            <button class="slack-card-btn secondary">マニュアルを確認</button>
+          </div></div>`;
+      }
+      if (m.tableau) {
+        cardHtml = `<div class="tableau-card">
+          <div class="tableau-card-header">
+            <span class="tableau-logo">T</span>
+            Tableau Next — ROI比較レポート
+          </div>
+          <div class="roi-compare">
+            <div class="roi-col">
+              <div class="roi-col-label">停電時の想定損失</div>
+              <div class="roi-col-value red">84〜120億</div>
+              <div class="roi-col-sub">社会的影響含む</div>
+            </div>
+            <div class="roi-col better">
+              <div class="roi-col-label">緊急対応コスト</div>
+              <div class="roi-col-value green">5.2億</div>
+              <div class="roi-col-sub">ROI +188%</div>
+            </div>
+          </div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.5)">推奨: 緊急対応を即時実施。意思決定期限まで残り <strong style="color:#fbbf24">4時間</strong></div>
+          <div style="margin-top:0.5rem">
+            <button class="slack-card-btn primary">詳細ダッシュボードを開く</button>
+          </div></div>`;
+      }
+      el.innerHTML = `
+        <div class="slack-msg-avatar" style="background:${m.avatarBg}">${m.avatar}</div>
+        <div class="slack-msg-body">
+          <div class="slack-msg-header">
+            <span class="slack-msg-name">${m.name}</span>
+            ${m.botTag ? '<span class="slack-bot-tag">BOT</span>' : ''}
+            <span class="slack-msg-time">${m.time}</span>
+          </div>
+          <div class="slack-msg-text">${m.text}</div>
+          ${cardHtml}
+        </div>`;
+      container.appendChild(el);
+      void el.offsetWidth;
+      el.classList.add('show');
+      container.scrollTop = container.scrollHeight;
+    }, delay);
+    delay += 700;
+  });
+}
+
+// ================================================================
+// PHASE3 — Mobile
+// ================================================================
+function initPhase3() {
+  // DM list
+  const dmList = document.getElementById('phone-dm-list');
+  const dms = [
+    { avatar:'AF', bg:'#0070d2', name:'Agentforce', preview:'⚠️ 緊急エスカレーション: 新豊洲TR1 経営承認が必要です', time:'17:08', unread:1 },
+    { avatar:'田', bg:'#7c3aed', name:'田中 保全', preview:'現場確認中。外観異常なし。手順書確認します', time:'17:07', unread:0 },
+    { avatar:'TN', bg:'#1a6ca8', name:'Tableau Next', preview:'ROI比較レポートを生成しました', time:'17:06', unread:0 },
+  ];
+  dms.forEach((dm, i) => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'phone-dm-item';
+      el.onclick = () => openChatView();
+      el.innerHTML = `
+        <div class="phone-dm-avatar" style="background:${dm.bg}">${dm.avatar}</div>
+        <div style="flex:1;min-width:0">
+          <div class="phone-dm-name">${dm.name}</div>
+          <div class="phone-dm-preview">${dm.preview}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <span class="phone-dm-time">${dm.time}</span>
+          ${dm.unread ? '<span class="phone-dm-unread">'+dm.unread+'</span>' : ''}
+        </div>`;
+      dmList.appendChild(el);
+      void el.offsetWidth;
+      el.classList.add('show');
+    }, i * 300 + 400);
+  });
+
+  // Effects panel
+  const effects = [
+    { icon:'⚡', bg:'#1e3a5f', title:'Agentforce がエスカレーション判断', sub:'停電リスク vs コスト比較 → 経営承認が必要と自律判断' },
+    { icon:'📊', bg:'#1a3a2a', title:'Tableau Next VIPビュー を提示', sub:'都心3D停電ヒートマップ + ROI比較をワンタップ確認' },
+    { icon:'✅', bg:'#3a2a10', title:'SAP 緊急予算をワンタップ承認', sub:'5.2億円の執行承認 → 60秒で全システムへ展開' },
+  ];
+  const panel = document.getElementById('phase3-effects');
+  effects.forEach((ef, i) => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'phase3-effect-item';
+      el.innerHTML = `
+        <div class="phase3-effect-icon" style="background:${ef.bg}">${ef.icon}</div>
+        <div>
+          <div class="phase3-effect-title">${ef.title}</div>
+          <div class="phase3-effect-sub">${ef.sub}</div>
+        </div>`;
+      panel.appendChild(el);
+      void el.offsetWidth;
+      el.classList.add('show');
+    }, i * 500 + 600);
+  });
+}
+
+function openChatView() {
+  document.getElementById('phone-chat-view').classList.add('open');
+  initPhoneChatMessages();
+}
+function closeChatView() {
+  document.getElementById('phone-chat-view').classList.remove('open');
+}
+
+let phoneMsgsInit = false;
+function initPhoneChatMessages() {
+  if (phoneMsgsInit) return;
+  phoneMsgsInit = true;
+  const container = document.getElementById('phone-chat-messages');
+  const msgs = [
+    { role:'bot', text:'🚨 関常務、緊急エスカレーションです。\n新豊洲変電所1号トランスに重大異常を検知。72時間以内故障確率85%。停電時の損失は84〜120億円と試算されます。' },
+    { role:'bot', text:'緊急対応コストは5.2億円。ROI +188%の判断です。\nTableau VIPビューでコスト比較と影響ヒートマップをご確認ください。' },
+    { role:'user', text:'確認した。Tableauを見る' },
+  ];
+  let delay = 400;
+  msgs.forEach(m => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = `phone-msg-${m.role}`;
+      el.innerHTML = `<div class="phone-msg-bubble">${m.text.replace(/\n/g,'<br>')}</div>`;
+      container.appendChild(el);
+      void el.offsetWidth;
+      el.classList.add('show');
+      container.scrollTop = container.scrollHeight;
+    }, delay);
+    delay += 900;
+  });
+  // Show Tableau link button
+  setTimeout(() => {
+    const btn = document.createElement('div');
+    btn.className = 'phone-msg-bot show';
+    btn.innerHTML = `<div class="phone-msg-bubble" style="background:#e0f0ff">
+      <span style="font-size:0.75rem;color:#1a6ca8;font-weight:700">📊 Tableau Next — VIPビューを開く</span><br>
+      <button style="margin-top:0.375rem;padding:0.375rem 0.75rem;background:#1a6ca8;color:#fff;font-size:0.75rem;font-weight:600;border:none;border-radius:0.375rem;cursor:pointer" onclick="openTableauView()">ダッシュボードを確認する →</button>
+    </div>`;
+    container.appendChild(btn);
+    container.scrollTop = container.scrollHeight;
+  }, delay + 300);
+}
+
+function openTableauView() {
+  document.getElementById('phone-tableau-view').classList.add('open');
+}
+function closeTableauView() {
+  document.getElementById('phone-tableau-view').classList.remove('open');
+}
+function openSapOverlay() {
+  document.getElementById('sap-overlay').classList.add('open');
+}
+
+let sapApproved = false;
+function onSapApprove() {
+  if (sapApproved) return;
+  sapApproved = true;
+  const btn = document.getElementById('sap-approve-btn');
+  btn.textContent = '⏳ SAP へ送信中...';
+  btn.style.background = '#0070d2';
+
+  setTimeout(() => {
+    btn.textContent = '✅ 承認完了 — 全システムへ展開中';
+    btn.style.background = '#04844b';
+
+    // Close overlays
+    setTimeout(() => {
+      document.getElementById('sap-overlay').classList.remove('open');
+      document.getElementById('phone-tableau-view').classList.remove('open');
+
+      // Add final confirmation message in chat
+      const container = document.getElementById('phone-chat-messages');
+      const el = document.createElement('div');
+      el.className = 'phone-msg-bot show';
+      el.innerHTML = `<div class="phone-msg-bubble" style="background:#d1fae5">
+        ✅ <strong>SAP緊急予算 承認完了</strong><br>
+        現場指示・中給待機・広報草案が<br>一斉に展開されました。<br>
+        <span style="color:#059669;font-size:0.75rem">回避損失: ¥15億以上</span>
+      </div>`;
+      container.appendChild(el);
+      container.scrollTop = container.scrollHeight;
+
+      // Global toast
+      showToast('✅ SAP承認完了 — 全6システムへの展開が開始されました', '#04844b');
+    }, 1500);
+  }, 1800);
+}
+</script>
+</body>
+</html>
