@@ -1,0 +1,502 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - generic [ref=e7]:
+        - button "取引先" [ref=e8] [cursor=pointer]:
+          - generic [ref=e9]: 取引先
+        - searchbox "Salesforce を検索..." [ref=e12]
+      - list [ref=e13]:
+        - listitem [ref=e14]:
+          - button "Agentforce" [ref=e15] [cursor=pointer]:
+            - generic [ref=e16]: Agentforce
+        - listitem [ref=e17]:
+          - generic [ref=e18]:
+            - button [pressed] [ref=e19] [cursor=pointer]
+            - button [ref=e20] [cursor=pointer]
+        - listitem [ref=e21]:
+          - button "新規作成" [ref=e22] [cursor=pointer]
+        - listitem [ref=e23]:
+          - button "ヘルプ" [ref=e24] [cursor=pointer]
+        - listitem [ref=e25]:
+          - button "設定" [ref=e26] [cursor=pointer]
+        - listitem [ref=e27]:
+          - button "5" [ref=e28] [cursor=pointer]:
+            - generic: "5"
+        - listitem [ref=e29]:
+          - img "User" [ref=e31]
+  - generic [ref=e32]:
+    - generic [ref=e46]: 自動車部品 Sales
+    - navigation [ref=e47]:
+      - list [ref=e48]:
+        - listitem [ref=e49]:
+          - link "ホーム" [ref=e50] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e51] [cursor=pointer]:
+          - link "取引先" [ref=e52]:
+            - /url: "#"
+        - listitem [ref=e53]:
+          - link "取引先責任者" [ref=e54] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e55]:
+          - link "リード" [ref=e56] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e57]:
+          - link "商談" [ref=e58] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e59]:
+          - link "ケース" [ref=e60] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e61]:
+          - link "部品マスタ" [ref=e62] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e63]:
+          - link "ダッシュボード" [ref=e64] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e65]:
+          - link "レポート" [ref=e66] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e74]:
+          - paragraph [ref=e75]: 取引先 · 顧客 - 直接 (Tier 1 OEM)
+          - heading "トヨタ自動車株式会社" [level=1] [ref=e77]:
+            - generic "トヨタ自動車株式会社" [ref=e78]
+          - paragraph [ref=e79]: Toyota Motor Corporation · 製造業 / 自動車 OEM
+        - list [ref=e83]:
+          - listitem [ref=e84]:
+            - button "アクセス権を共有" [ref=e85] [cursor=pointer]
+          - listitem [ref=e86]:
+            - button "+ フォローする" [ref=e87] [cursor=pointer]
+          - listitem [ref=e88]:
+            - button "編集" [ref=e89] [cursor=pointer]
+          - listitem [ref=e90]:
+            - button "活動の記録" [ref=e91] [cursor=pointer]
+          - listitem [ref=e92]:
+            - button "商談を作成" [ref=e93] [cursor=pointer]
+          - listitem [ref=e94]:
+            - button "その他" [ref=e95] [cursor=pointer]
+      - list [ref=e98]:
+        - listitem [ref=e99]:
+          - generic [ref=e100]: 取引先番号
+          - paragraph [ref=e101]: ACC-T-00001
+        - listitem [ref=e102]:
+          - generic [ref=e103]: 顧客ランク
+          - paragraph [ref=e104]:
+            - generic [ref=e105]: ★ A ランク
+        - listitem [ref=e106]:
+          - generic [ref=e107]: 業種
+          - paragraph [ref=e108]: 自動車製造 (OEM)
+        - listitem [ref=e109]:
+          - generic [ref=e110]: 年商
+          - paragraph [ref=e111]:
+            - strong [ref=e112]: ¥45,095,300,000,000
+        - listitem [ref=e113]:
+          - generic [ref=e114]: 年間取引高 (当社)
+          - paragraph [ref=e115]:
+            - strong [ref=e116]: ¥12,840,000,000
+        - listitem [ref=e117]:
+          - generic [ref=e118]: 所有者
+          - paragraph [ref=e119]:
+            - link "青島 哲也 (営業1部)" [ref=e120] [cursor=pointer]:
+              - /url: "#"
+    - generic [ref=e121]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: 進行中の商談 (件数 / 金額)
+        - generic [ref=e125]: 8 件 / ¥3.2 億 +12%
+      - generic [ref=e127]:
+        - generic [ref=e128]: 納入実績 (前月)
+        - generic [ref=e129]: 128,400 個 +3.5%
+      - generic [ref=e131]:
+        - generic [ref=e132]: 未解決ケース
+        - generic [ref=e133]: 3 件
+      - generic [ref=e135]:
+        - generic [ref=e136]: PPAP 進行中
+        - generic [ref=e137]: 2 件 (Lv3)
+    - generic [ref=e138]:
+      - generic [ref=e139]:
+        - article [ref=e140]:
+          - generic [ref=e141]:
+            - tablist [ref=e142]:
+              - tab "詳細" [ref=e143] [cursor=pointer]
+              - tab "関連" [ref=e144] [cursor=pointer]
+              - tab "納入計画" [ref=e145] [cursor=pointer]
+              - tab "品質" [ref=e146] [cursor=pointer]
+              - tab "ニュース" [ref=e147] [cursor=pointer]
+            - tabpanel [ref=e148]:
+              - heading "取引先情報" [level=3] [ref=e149]:
+                - generic [ref=e150]: 取引先情報
+              - generic [ref=e152]:
+                - generic [ref=e153]:
+                  - term [ref=e154]: 取引先名
+                  - definition [ref=e155]: トヨタ自動車株式会社
+                - generic [ref=e156]:
+                  - term [ref=e157]: 所有者
+                  - definition [ref=e158]:
+                    - link "青島 哲也" [ref=e159] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e160]:
+                  - term [ref=e161]: 英語名
+                  - definition [ref=e162]: Toyota Motor Corporation
+                - generic [ref=e163]:
+                  - term [ref=e164]: 代表電話
+                  - definition [ref=e165]: 0565-28-2121
+                - generic [ref=e166]:
+                  - term [ref=e167]: 業種
+                  - definition [ref=e168]: 自動車製造 (OEM)
+                - generic [ref=e169]:
+                  - term [ref=e170]: Webサイト
+                  - definition [ref=e171]:
+                    - link "www.toyota.co.jp" [ref=e172] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e173]:
+                  - term [ref=e174]: 設立
+                  - definition [ref=e175]: 1937年8月28日
+                - generic [ref=e176]:
+                  - term [ref=e177]: 代表取締役社長
+                  - definition [ref=e178]: 佐藤 恒治
+                - generic [ref=e179]:
+                  - term [ref=e180]: 従業員数 (連結)
+                  - definition [ref=e181]: 380,793 名
+                - generic [ref=e182]:
+                  - term [ref=e183]: 資本金
+                  - definition [ref=e184]: ¥635,401,000,000
+                - generic [ref=e185]:
+                  - term [ref=e186]: サプライヤーコード (TMC)
+                  - definition [ref=e187]: SUP-100358
+                - generic [ref=e188]:
+                  - term [ref=e189]: 取引開始日
+                  - definition [ref=e190]: 1998年4月1日
+                - generic [ref=e191]:
+                  - term [ref=e192]: 説明
+                  - definition [ref=e193]: Tier 1 サプライヤーとして、エンジン部品 (バルブ・ピストンリング)、電装部品 (ECUハーネス・センサー類) を中心に供給。当社売上の 18.4% を占める最重要顧客。EV シフトに伴い、駆動系・電装系の新規開発案件が増加中。
+              - heading "納入先・拠点" [level=3] [ref=e194]:
+                - generic [ref=e195]: 納入先・拠点
+              - generic [ref=e197]:
+                - generic [ref=e198]:
+                  - term [ref=e199]: 本社
+                  - definition [ref=e200]: 〒471-8571 愛知県豊田市トヨタ町1番地
+                - generic [ref=e201]:
+                  - term [ref=e202]: 主要納入先 (国内)
+                  - definition [ref=e203]: 堤工場 / 元町工場 / 田原工場 / 高岡工場
+                - generic [ref=e204]:
+                  - term [ref=e205]: 主要納入先 (海外)
+                  - definition [ref=e206]: TMMK (米国ケンタッキー) / TMMC (カナダ)
+                - generic [ref=e207]:
+                  - term [ref=e208]: 受発注システム
+                  - definition [ref=e209]: JAMA-EDI / 内示 = T-3M, 確定 = T-7D
+        - article [ref=e210]:
+          - generic [ref=e212]:
+            - heading "商談 (8)" [level=2] [ref=e216]:
+              - link "商談 (8)" [ref=e217] [cursor=pointer]:
+                - /url: "#"
+            - button "新規" [ref=e219] [cursor=pointer]
+          - table [ref=e220]:
+            - rowgroup [ref=e221]:
+              - row "商談名 車種 / プラットフォーム ステージ 金額 SOP予定" [ref=e222]:
+                - columnheader "商談名" [ref=e223]
+                - columnheader "車種 / プラットフォーム" [ref=e224]
+                - columnheader "ステージ" [ref=e225]
+                - columnheader "金額" [ref=e226]
+                - columnheader "SOP予定" [ref=e227]
+            - rowgroup [ref=e228]:
+              - row "2027 bZ シリーズ向け 駆動モータコイル一式 e-TNGA / bZ4X 後継 交渉/レビュー ¥185,000,000 2027/04" [ref=e229]:
+                - rowheader "2027 bZ シリーズ向け 駆動モータコイル一式" [ref=e230]:
+                  - link "2027 bZ シリーズ向け 駆動モータコイル一式" [ref=e231] [cursor=pointer]:
+                    - /url: "#"
+                - cell "e-TNGA / bZ4X 後継" [ref=e232]
+                - cell "交渉/レビュー" [ref=e233]:
+                  - generic [ref=e234]: 交渉/レビュー
+                - cell "¥185,000,000" [ref=e235]:
+                  - strong [ref=e236]: ¥185,000,000
+                - cell "2027/04" [ref=e237]
+              - row "新型クラウン HEV用 高耐熱ECUハーネス クラウン (S235) 提案/見積 (P5) ¥62,400,000 2026/11" [ref=e238]:
+                - rowheader "新型クラウン HEV用 高耐熱ECUハーネス" [ref=e239]:
+                  - link "新型クラウン HEV用 高耐熱ECUハーネス" [ref=e240] [cursor=pointer]:
+                    - /url: "#"
+                - cell "クラウン (S235)" [ref=e241]
+                - cell "提案/見積 (P5)" [ref=e242]
+                - cell "¥62,400,000" [ref=e243]:
+                  - strong [ref=e244]: ¥62,400,000
+                - cell "2026/11" [ref=e245]
+              - row "RAV4 マイナーチェンジ向け センサーアッセンブリ RAV4 (XA50) 意思決定者特定 ¥48,200,000 2026/09" [ref=e246]:
+                - rowheader "RAV4 マイナーチェンジ向け センサーアッセンブリ" [ref=e247]:
+                  - link "RAV4 マイナーチェンジ向け センサーアッセンブリ" [ref=e248] [cursor=pointer]:
+                    - /url: "#"
+                - cell "RAV4 (XA50)" [ref=e249]
+                - cell "意思決定者特定" [ref=e250]
+                - cell "¥48,200,000" [ref=e251]:
+                  - strong [ref=e252]: ¥48,200,000
+                - cell "2026/09" [ref=e253]
+              - row "レクサス LF-ZC 向け 高精度ピストンリング LF-ZC コンセプト 受注 (Won) ¥94,500,000 2027/10" [ref=e254]:
+                - rowheader "レクサス LF-ZC 向け 高精度ピストンリング" [ref=e255]:
+                  - link "レクサス LF-ZC 向け 高精度ピストンリング" [ref=e256] [cursor=pointer]:
+                    - /url: "#"
+                - cell "LF-ZC コンセプト" [ref=e257]
+                - cell "受注 (Won)" [ref=e258]:
+                  - generic [ref=e259]: 受注 (Won)
+                - cell "¥94,500,000" [ref=e260]:
+                  - strong [ref=e261]: ¥94,500,000
+                - cell "2027/10" [ref=e262]
+          - link "すべて表示 (8)" [ref=e264] [cursor=pointer]:
+            - /url: "#"
+        - article [ref=e265]:
+          - heading "供給部品 (24)" [level=2] [ref=e271]:
+            - link "供給部品 (24)" [ref=e272] [cursor=pointer]:
+              - /url: "#"
+          - table [ref=e273]:
+            - rowgroup [ref=e274]:
+              - row "品番 部品名 適用車種 月産 PPAP" [ref=e275]:
+                - columnheader "品番" [ref=e276]
+                - columnheader "部品名" [ref=e277]
+                - columnheader "適用車種" [ref=e278]
+                - columnheader "月産" [ref=e279]
+                - columnheader "PPAP" [ref=e280]
+            - rowgroup [ref=e281]:
+              - row "NMP-EH-44210 ECUハーネスASSY クラウン / カローラ 42,000 承認 Lv3" [ref=e282]:
+                - rowheader "NMP-EH-44210" [ref=e283]:
+                  - link "NMP-EH-44210" [ref=e284] [cursor=pointer]:
+                    - /url: "#"
+                - cell "ECUハーネスASSY" [ref=e285]
+                - cell "クラウン / カローラ" [ref=e286]
+                - cell "42,000" [ref=e287]
+                - cell "承認 Lv3" [ref=e288]:
+                  - generic [ref=e289]: 承認 Lv3
+              - row "NMP-PR-31055 ピストンリング (Φ80) カムリ HEV / RAV4 180,000 承認 Lv3" [ref=e290]:
+                - rowheader "NMP-PR-31055" [ref=e291]:
+                  - link "NMP-PR-31055" [ref=e292] [cursor=pointer]:
+                    - /url: "#"
+                - cell "ピストンリング (Φ80)" [ref=e293]
+                - cell "カムリ HEV / RAV4" [ref=e294]
+                - cell "180,000" [ref=e295]
+                - cell "承認 Lv3" [ref=e296]:
+                  - generic [ref=e297]: 承認 Lv3
+              - row "NMP-MC-72018 駆動モータコイル bZ4X 8,500 承認 Lv2 (試作)" [ref=e298]:
+                - rowheader "NMP-MC-72018" [ref=e299]:
+                  - link "NMP-MC-72018" [ref=e300] [cursor=pointer]:
+                    - /url: "#"
+                - cell "駆動モータコイル" [ref=e301]
+                - cell "bZ4X" [ref=e302]
+                - cell "8,500" [ref=e303]
+                - cell "承認 Lv2 (試作)" [ref=e304]:
+                  - generic [ref=e305]: 承認 Lv2 (試作)
+              - row "NMP-SS-90112 O2センサー ハイラックス / プラド 25,000 承認 Lv3" [ref=e306]:
+                - rowheader "NMP-SS-90112" [ref=e307]:
+                  - link "NMP-SS-90112" [ref=e308] [cursor=pointer]:
+                    - /url: "#"
+                - cell "O2センサー" [ref=e309]
+                - cell "ハイラックス / プラド" [ref=e310]
+                - cell "25,000" [ref=e311]
+                - cell "承認 Lv3" [ref=e312]:
+                  - generic [ref=e313]: 承認 Lv3
+        - article [ref=e314]:
+          - heading "取引先責任者 (6)" [level=2] [ref=e320]:
+            - link "取引先責任者 (6)" [ref=e321] [cursor=pointer]:
+              - /url: "#"
+          - table [ref=e322]:
+            - rowgroup [ref=e323]:
+              - row "名前 役職 所属 メール" [ref=e324]:
+                - columnheader "名前" [ref=e325]
+                - columnheader "役職" [ref=e326]
+                - columnheader "所属" [ref=e327]
+                - columnheader "メール" [ref=e328]
+            - rowgroup [ref=e329]:
+              - row "中島 健一 調達本部 部長 パワートレイン購買部 k.nakajima@toyota.co.jp" [ref=e330]:
+                - rowheader "中島 健一" [ref=e331]:
+                  - link "中島 健一" [ref=e332] [cursor=pointer]:
+                    - /url: "#"
+                - cell "調達本部 部長" [ref=e333]
+                - cell "パワートレイン購買部" [ref=e334]
+                - cell "k.nakajima@toyota.co.jp" [ref=e335]:
+                  - link "k.nakajima@toyota.co.jp" [ref=e336] [cursor=pointer]:
+                    - /url: "#"
+              - row "小林 美樹 主幹 電子プラットフォーム開発部 m.kobayashi@toyota.co.jp" [ref=e337]:
+                - rowheader "小林 美樹" [ref=e338]:
+                  - link "小林 美樹" [ref=e339] [cursor=pointer]:
+                    - /url: "#"
+                - cell "主幹" [ref=e340]
+                - cell "電子プラットフォーム開発部" [ref=e341]
+                - cell "m.kobayashi@toyota.co.jp" [ref=e342]:
+                  - link "m.kobayashi@toyota.co.jp" [ref=e343] [cursor=pointer]:
+                    - /url: "#"
+              - row "高橋 隆 課長 品質保証部 (堤工場) t.takahashi@toyota.co.jp" [ref=e344]:
+                - rowheader "高橋 隆" [ref=e345]:
+                  - link "高橋 隆" [ref=e346] [cursor=pointer]:
+                    - /url: "#"
+                - cell "課長" [ref=e347]
+                - cell "品質保証部 (堤工場)" [ref=e348]
+                - cell "t.takahashi@toyota.co.jp" [ref=e349]:
+                  - link "t.takahashi@toyota.co.jp" [ref=e350] [cursor=pointer]:
+                    - /url: "#"
+              - row "石川 沙織 担当 調達企画部 s.ishikawa@toyota.co.jp" [ref=e351]:
+                - rowheader "石川 沙織" [ref=e352]:
+                  - link "石川 沙織" [ref=e353] [cursor=pointer]:
+                    - /url: "#"
+                - cell "担当" [ref=e354]
+                - cell "調達企画部" [ref=e355]
+                - cell "s.ishikawa@toyota.co.jp" [ref=e356]:
+                  - link "s.ishikawa@toyota.co.jp" [ref=e357] [cursor=pointer]:
+                    - /url: "#"
+      - generic [ref=e358]:
+        - article [ref=e359]:
+          - generic [ref=e360]:
+            - tablist [ref=e361]:
+              - tab "活動" [ref=e362] [cursor=pointer]
+              - tab "フィード" [ref=e363] [cursor=pointer]
+              - tab "ニュース" [ref=e364] [cursor=pointer]
+            - tabpanel [ref=e365]:
+              - generic [ref=e366]:
+                - heading "今後 & 期限切れ (3)" [level=3] [ref=e367]
+                - list [ref=e368]:
+                  - listitem [ref=e369]:
+                    - generic [ref=e370]:
+                      - generic [ref=e371]: event
+                      - generic [ref=e372]:
+                        - button "詳細を切り替え" [expanded] [ref=e374] [cursor=pointer]:
+                          - generic [ref=e375]: 詳細を切り替え
+                        - generic [ref=e377]:
+                          - generic [ref=e378]:
+                            - heading "bZ4X 後継 駆動モータ 試作1次評価レビュー" [level=3] [ref=e379]:
+                              - link "bZ4X 後継 駆動モータ 試作1次評価レビュー" [ref=e380] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e381]: bZ4X 後継 駆動モータ 試作1次評価レビュー
+                            - paragraph [ref=e382]: 6月18日 13:00
+                          - paragraph [ref=e383]: "場所: 豊田市本社 5F 大会議室 / 担当: 中島 健一・青島 哲也"
+                          - article [ref=e384]:
+                            - list [ref=e385]:
+                              - listitem [ref=e386]:
+                                - generic [ref=e387]: 参加者
+                                - generic [ref=e388]:
+                                  - link "中島 健一" [ref=e389] [cursor=pointer]:
+                                    - /url: "#"
+                                  - text: / 当社 設計2課 5名
+                              - listitem [ref=e390]:
+                                - generic [ref=e391]: 関連商談
+                                - link "2027bZ 駆動モータコイル" [ref=e393] [cursor=pointer]:
+                                  - /url: "#"
+                            - generic [ref=e394]:
+                              - text: 議題
+                              - paragraph [ref=e395]:
+                                - text: 試作1次の電磁特性レビューと量産価格への織り込み可否。
+                                - strong [ref=e396]: NMP プロセスでのコスト試算と量産歩留まり目標 (≥ 95%)
+                                - text: 、デンソー社価格との差を軽量化価値で相殺する根拠を提示。
+                  - listitem [ref=e397]:
+                    - generic [ref=e398]:
+                      - generic [ref=e399]: call
+                      - generic [ref=e400]:
+                        - button "詳細を切り替え" [expanded] [ref=e402] [cursor=pointer]:
+                          - generic [ref=e403]: 詳細を切り替え
+                        - generic [ref=e405]:
+                          - generic [ref=e406]:
+                            - heading "クラウン HEV ECUハーネス 量産単価交渉" [level=3] [ref=e407]:
+                              - link "クラウン HEV ECUハーネス 量産単価交渉" [ref=e408] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e409]: クラウン HEV ECUハーネス 量産単価交渉
+                            - paragraph [ref=e410]: 6月20日 10:00
+                          - paragraph [ref=e411]: "担当: 小林 美樹"
+                          - article [ref=e412]:
+                            - list [ref=e413]:
+                              - listitem [ref=e414]:
+                                - generic [ref=e415]: 通話相手
+                                - generic [ref=e416]:
+                                  - link "中島 健一" [ref=e417] [cursor=pointer]:
+                                    - /url: "#"
+                                  - text: (購買部 主査)
+                              - listitem [ref=e418]:
+                                - generic [ref=e419]: 関連商談
+                                - link "クラウン HEV ECUハーネス" [ref=e421] [cursor=pointer]:
+                                  - /url: "#"
+                            - generic [ref=e422]:
+                              - text: 論点
+                              - paragraph [ref=e423]:
+                                - text: 提示単価 ¥3,840 に対して -2.5% (¥3,744) の打診見込み。
+                                - strong [ref=e424]: 同案件は 7月内に量産単価確定が必要
+                                - text: のため、原価明細と材料費高騰分の織り込み案を準備して臨む。
+                  - listitem [ref=e425]:
+                    - generic [ref=e426]:
+                      - generic [ref=e427]: email
+                      - generic [ref=e428]:
+                        - button "詳細を切り替え" [expanded] [ref=e430] [cursor=pointer]:
+                          - generic [ref=e431]: 詳細を切り替え
+                        - generic [ref=e433]:
+                          - generic [ref=e434]:
+                            - heading "PPAP Lv3 提出書類のフィードバック返信" [level=3] [ref=e435]:
+                              - link "PPAP Lv3 提出書類のフィードバック返信" [ref=e436] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e437]: PPAP Lv3 提出書類のフィードバック返信
+                            - paragraph [ref=e438]: 期日 6月12日 (期限切れ)
+                          - paragraph [ref=e439]: "差出: 中島 健一 (品質管理部) / 6/9 受信"
+                          - article [ref=e440]:
+                            - list [ref=e441]:
+                              - listitem [ref=e442]:
+                                - generic [ref=e443]: 差出
+                                - generic [ref=e444]: nakajima@toyota.example.co.jp
+                              - listitem [ref=e445]:
+                                - generic [ref=e446]: 関連
+                                - link "2027bZ 駆動モータコイル PPAP" [ref=e448] [cursor=pointer]:
+                                  - /url: "#"
+                            - generic [ref=e449]:
+                              - text: 指摘事項
+                              - paragraph [ref=e450]:
+                                - text: PPAP Lv3 提出書類のうち
+                                - strong [ref=e451]: FMEA (Sec.4) と工程能力 Cpk 評価 (Sec.7)
+                                - text: に修正要望。元データの追加と再計算根拠の明示が必要。
+                                - strong [ref=e452]: 期日超過 — 早急に返信
+                                - text: 。
+        - article [ref=e453]:
+          - heading "Agentforce インサイト" [level=2] [ref=e459]
+          - generic [ref=e460]:
+            - status [ref=e461]:
+              - heading "過去5年の e-TNGA 案件落札率 67%。今期商談の Win 確率予測 +8pt" [level=2] [ref=e463]:
+                - text: 過去5年の e-TNGA 案件落札率
+                - strong [ref=e464]: 67%
+                - text: 。今期商談の Win 確率予測
+                - strong [ref=e465]: +8pt
+            - status [ref=e466]:
+              - heading "堤工場 6/15 の不適合通知 (4D 未提出)。早急な是正報告が必要" [level=2] [ref=e468]
+            - status [ref=e469]:
+              - 'heading "提案優先度 #1: 固体電池モジュール用ハーネス (公開特許 #2025-104832 から推定)" [level=2] [ref=e471]':
+                - text: "提案優先度 #1:"
+                - strong [ref=e472]: 固体電池モジュール用ハーネス
+                - text: "(公開特許 #2025-104832 から推定)"
+        - article [ref=e473]:
+          - heading "ケース (5)" [level=2] [ref=e479]:
+            - link "ケース (5)" [ref=e480] [cursor=pointer]:
+              - /url: "#"
+          - list [ref=e481]:
+            - listitem [ref=e482]:
+              - link "CS-04821" [ref=e483] [cursor=pointer]:
+                - /url: "#"
+                - strong [ref=e484]: CS-04821
+              - generic [ref=e485]: 対応中 (高)
+              - paragraph [ref=e486]: 堤工場 ECUハーネス 加締め不良 12個 / Lot#TM-25-0612
+            - listitem [ref=e487]:
+              - link "CS-04795" [ref=e488] [cursor=pointer]:
+                - /url: "#"
+                - strong [ref=e489]: CS-04795
+              - generic [ref=e490]: 調査中
+              - paragraph [ref=e491]: RAV4 センサーアッセンブリ ばらつき (堤工場 抜取検査)
+            - listitem [ref=e492]:
+              - link "CS-04760" [ref=e493] [cursor=pointer]:
+                - /url: "#"
+                - strong [ref=e494]: CS-04760
+              - generic [ref=e495]: 解決
+              - paragraph [ref=e496]: クラウン用ピストンリング 寸法外れ → 是正済
+        - article [ref=e497]:
+          - heading "ファイル (12)" [level=2] [ref=e503]:
+            - link "ファイル (12)" [ref=e504] [cursor=pointer]:
+              - /url: "#"
+          - list [ref=e505]:
+            - listitem [ref=e506]:
+              - link "PPAP_Lv3_NMP-MC-72018.pdf" [ref=e508] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e509]: 8.4 MB · 6月10日
+            - listitem [ref=e510]:
+              - link "2026下期内示_TMC.xlsx" [ref=e512] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e513]: 1.2 MB · 6月8日
+            - listitem [ref=e514]:
+              - link "bZ4X後継_技術提案v2.3.pptx" [ref=e516] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e517]: 22.8 MB · 6月5日

@@ -1,0 +1,164 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - button [ref=e5] [cursor=pointer]:
+        - img [ref=e6]
+      - button [ref=e8] [cursor=pointer]:
+        - img [ref=e9]
+      - button [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+    - generic [ref=e15]:
+      - img [ref=e16]
+      - generic [ref=e19]: Acme Corp を検索
+    - generic [ref=e20]:
+      - button [ref=e21] [cursor=pointer]:
+        - img [ref=e22]
+      - button "YK" [ref=e25] [cursor=pointer]:
+        - generic [ref=e26]: YK
+  - complementary [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - text: Acme Corp
+        - img [ref=e30]
+      - button [ref=e32] [cursor=pointer]:
+        - img [ref=e33]
+    - list [ref=e36]:
+      - listitem [ref=e37] [cursor=pointer]:
+        - img [ref=e38]
+        - text: スレッド
+      - listitem [ref=e40] [cursor=pointer]:
+        - img [ref=e41]
+        - text: 全アクティビティ
+      - listitem [ref=e44] [cursor=pointer]:
+        - img [ref=e45]
+        - text: あとで
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - img [ref=e49]
+        - generic [ref=e51]: チャンネル
+      - generic [ref=e52] [cursor=pointer]:
+        - img [ref=e53]
+        - text: general
+      - generic [ref=e56] [cursor=pointer]:
+        - img [ref=e57]
+        - text: sales-japan
+      - generic [ref=e60] [cursor=pointer]:
+        - img [ref=e61]
+        - text: release-notes
+      - generic [ref=e64] [cursor=pointer]:
+        - img [ref=e65]
+        - text: finance-private
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - img [ref=e70]
+        - generic [ref=e72]: ダイレクトメッセージ
+      - generic [ref=e73] [cursor=pointer]:
+        - generic [ref=e74]: SK
+        - text: 鈴木 さくら
+      - generic [ref=e75] [cursor=pointer]:
+        - generic [ref=e76]: TT
+        - text: 田中 拓也
+    - generic [ref=e77]:
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - img [ref=e81]
+          - text: sales-japan
+        - generic [ref=e84]: 12:34
+      - generic [ref=e85]:
+        - button "マイク" [ref=e86] [cursor=pointer]:
+          - img [ref=e87]
+        - button "ヘッドフォン" [ref=e90] [cursor=pointer]:
+          - img [ref=e91]
+        - button "画面共有" [ref=e93] [cursor=pointer]:
+          - img [ref=e94]
+        - button "退出する" [ref=e97] [cursor=pointer]:
+          - img [ref=e98]
+  - main [ref=e102]:
+    - generic [ref=e103]:
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - img [ref=e106]
+          - text: sales-japan ハドル
+        - generic [ref=e109]: 録音中
+        - generic [ref=e111]: 4人が参加中
+      - generic [ref=e112]:
+        - button "招待" [ref=e113] [cursor=pointer]:
+          - img [ref=e114]
+          - text: 招待
+        - button "リアクション" [ref=e117] [cursor=pointer]:
+          - img [ref=e118]
+        - button "メモ" [ref=e121] [cursor=pointer]:
+          - img [ref=e122]
+          - text: メモ
+        - button "設定" [ref=e126] [cursor=pointer]:
+          - img [ref=e127]
+    - generic [ref=e130]:
+      - generic [ref=e131]:
+        - generic [ref=e132]:
+          - img [ref=e133]
+          - text: 鈴木 さくら が画面を共有中
+        - generic [ref=e136]:
+          - generic [ref=e141]: acme.lightning.force.com/dashboard/sales-q2-summary
+          - generic [ref=e142]:
+            - heading "Q2 売上ダッシュボード" [level=1] [ref=e143]
+            - generic [ref=e144]: "2026年4月-6月 / 営業企画 / 最終更新: 6月11日 13:00"
+            - generic [ref=e145]:
+              - generic [ref=e146]:
+                - generic [ref=e147]: 受注金額
+                - generic [ref=e148]: ¥182M
+              - generic [ref=e149]:
+                - generic [ref=e150]: パイプライン
+                - generic [ref=e151]: ¥421M
+              - generic [ref=e152]:
+                - generic [ref=e153]: 勝率
+                - generic [ref=e154]: 43.2%
+        - generic [ref=e164]:
+          - generic [ref=e165]: SK
+          - generic [ref=e166]: 鈴木 さくら が話しています
+          - img [ref=e167]
+      - generic [ref=e171]:
+        - generic [ref=e172]:
+          - generic [ref=e173]: SK
+          - generic [ref=e174]: 鈴木 さくら
+          - img [ref=e176]
+        - generic [ref=e179]:
+          - generic [ref=e180]: YK
+          - generic [ref=e181]: 山本 健介 (自分)
+          - img [ref=e183]
+        - generic [ref=e189]:
+          - generic [ref=e190]: TT
+          - generic [ref=e191]: 田中 拓也
+          - img [ref=e193]
+        - generic [ref=e196]:
+          - generic [ref=e197]: AS
+          - generic [ref=e198]: 青山 昇
+          - img [ref=e200]
+    - generic [ref=e206]:
+      - generic [ref=e207]:
+        - button "マイク" [ref=e208] [cursor=pointer]:
+          - img [ref=e209]
+          - generic [ref=e215]: マイク
+        - button "ビデオ" [ref=e216] [cursor=pointer]:
+          - img [ref=e217]
+          - generic [ref=e221]: ビデオ
+        - button "画面共有中" [ref=e222] [cursor=pointer]:
+          - img [ref=e223]
+          - generic [ref=e226]: 画面共有中
+        - button "リアクション" [ref=e227] [cursor=pointer]:
+          - img [ref=e228]
+          - generic [ref=e231]: リアクション
+        - button "挙手" [ref=e232] [cursor=pointer]:
+          - img [ref=e233]
+          - generic [ref=e238]: 挙手
+        - button "エフェクト" [ref=e239] [cursor=pointer]:
+          - img [ref=e240]
+          - generic [ref=e243]: エフェクト
+        - button "メモ" [ref=e244] [cursor=pointer]:
+          - img [ref=e245]
+          - generic [ref=e249]: メモ
+        - button "その他" [ref=e250] [cursor=pointer]:
+          - img [ref=e251]
+          - generic [ref=e255]: その他
+      - button "退出する" [ref=e256] [cursor=pointer]:
+        - img [ref=e257]
+        - text: 退出する

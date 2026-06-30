@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>藤代社長専用 Agentforce | CB SERVICE | Slack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --slack-aubergine: #4A154B;
+  --slack-aubergine-dark: #350D36;
+  --slack-aubergine-text: #FFFFFF;
+  --slack-aubergine-text-dim: rgba(255,255,255,0.7);
+  --slack-yellow: #ECB22E;
+  --slack-blue: #36C5F0;
+  --slack-green: #2EB67D;
+  --slack-red: #E01E5A;
+  --slack-bg: #FFFFFF;
+  --slack-bg-hover: #F8F8F8;
+  --slack-text: #1D1C1D;
+  --slack-text-dim: #616061;
+  --slack-border: #E1E1E1;
+  --slack-link: #1264A3;
+  --slack-mention-bg: #E01E5A;
+  --slack-sidebar-w: 260px;
+  --slack-header-h: 44px;
+}
+body.slack-scope {
+  margin: 0;
+  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px; line-height: 1.46;
+  color: var(--slack-text); background: var(--slack-bg);
+  overflow: hidden;
+}
+.slack-scope * { box-sizing: border-box; }
+.slack-scope a { color: var(--slack-link); text-decoration: none; }
+.slack-scope button { font-family: inherit; }
+
+.slack-app {
+  display: grid;
+  grid-template-columns: var(--slack-sidebar-w) 1fr;
+  grid-template-rows: var(--slack-header-h) 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Topbar */
+.slack-topbar {
+  grid-column: 1 / -1;
+  background: var(--slack-aubergine-dark);
+  color: var(--slack-aubergine-text);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px;
+  height: var(--slack-header-h);
+}
+.slack-topbar-left, .slack-topbar-right {
+  display: flex; align-items: center; gap: 6px; flex: 1;
+}
+.slack-topbar-right { justify-content: flex-end; }
+.slack-topbar-search {
+  flex: 0 1 600px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px; height: 28px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 10px; color: var(--slack-aubergine-text-dim); font-size: 13px;
+}
+.slack-topbar-icon-btn {
+  background: transparent; border: none; color: var(--slack-aubergine-text);
+  width: 28px; height: 28px; border-radius: 4px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.slack-topbar-icon-btn:hover { background: rgba(255,255,255,0.15); }
+.slack-topbar-icon-btn i[data-lucide] { width: 16px; height: 16px; }
+
+/* Sidebar */
+.slack-sidebar {
+  background: var(--slack-aubergine);
+  color: var(--slack-aubergine-text);
+  overflow-y: auto; padding: 8px 0;
+}
+.slack-sidebar-workspace {
+  padding: 4px 16px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.slack-sidebar-workspace .name {
+  font-weight: 900; font-size: 17px;
+  display: flex; align-items: center; gap: 4px;
+}
+.slack-sidebar-workspace .compose-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: white; color: var(--slack-aubergine);
+  border: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.slack-sidebar-quicklinks { list-style: none; margin: 8px 0; padding: 0; }
+.slack-sidebar-quicklinks li {
+  padding: 4px 16px;
+  display: flex; align-items: center; gap: 10px;
+  color: var(--slack-aubergine-text-dim); cursor: pointer; font-size: 14px;
+}
+.slack-sidebar-quicklinks li:hover { background: var(--slack-aubergine-dark); color: white; }
+.slack-sidebar-quicklinks li i[data-lucide] { width: 16px; height: 16px; }
+.slack-sidebar-section { margin-top: 12px; }
+.slack-sidebar-section-header {
+  padding: 4px 16px;
+  color: var(--slack-aubergine-text-dim);
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+}
+.slack-sidebar-section-header i[data-lucide] { width: 12px; height: 12px; }
+.slack-sidebar-section-header .label { flex: 1; }
+.slack-sidebar-item {
+  padding: 4px 16px 4px 22px;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--slack-aubergine-text-dim);
+  font-size: 14px; cursor: pointer; text-decoration: none;
+}
+.slack-sidebar-item:hover { background: var(--slack-aubergine-dark); color: white; }
+.slack-sidebar-item.is-active { background: #1164A3; color: white; font-weight: 700; }
+.slack-sidebar-item.is-unread { color: white; font-weight: 700; }
+.slack-sidebar-item i[data-lucide] { width: 14px; height: 14px; flex-shrink: 0; }
+.slack-sidebar-item .badge {
+  margin-left: auto;
+  background: var(--slack-mention-bg); color: white; font-weight: 700;
+  font-size: 11px; min-width: 18px; height: 18px;
+  border-radius: 9px; padding: 0 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.slack-sidebar-item .avatar-small {
+  width: 18px; height: 18px; border-radius: 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 10px; overflow: hidden;
+}
+.slack-sidebar-item .avatar-small img { width: 100%; height: 100%; object-fit: cover; }
+.slack-sidebar-item .avatar-small.is-bot { background: #0070D2; padding: 3px; }
+.slack-sidebar-item .avatar-small.is-bot img { filter: brightness(0) invert(1); object-fit: contain; }
+
+/* Main */
+.slack-main {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden; background: white;
+}
+
+/* DM Header */
+.slack-channel-header {
+  border-bottom: 1px solid var(--slack-border);
+  padding: 8px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: white; flex-shrink: 0;
+}
+.slack-channel-header-title {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 900; font-size: 17px;
+}
+.slack-channel-header-title .bot-avatar {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: linear-gradient(135deg, #0070D2 0%, #1589EE 100%);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.slack-channel-header-title .bot-avatar svg { width: 18px; height: 18px; fill: white; }
+.slack-channel-header-meta { font-size: 13px; color: var(--slack-text-dim); margin-top: 1px; }
+.slack-channel-header-actions { display: flex; gap: 4px; }
+.slack-channel-header-actions button {
+  background: transparent; border: 1px solid var(--slack-border);
+  padding: 4px 10px; border-radius: 4px; cursor: pointer;
+  color: var(--slack-text); font-size: 13px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.slack-channel-header-actions button:hover { background: #F0F0F0; }
+.slack-channel-header-actions button i[data-lucide] { width: 14px; height: 14px; }
+
+/* Messages area */
+.slack-messages { overflow-y: auto; padding: 12px 0; scroll-behavior: smooth; }
+
+.slack-day-divider {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 20px; position: sticky; top: 0;
+  background: linear-gradient(to bottom, white 60%, transparent); z-index: 1;
+}
+.slack-day-divider .line { flex: 1; height: 1px; background: var(--slack-border); }
+.slack-day-divider .label {
+  font-weight: 700; font-size: 12px; color: var(--slack-text);
+  border: 1px solid var(--slack-border); border-radius: 16px;
+  padding: 3px 12px; background: white;
+}
+
+.slack-message { display: flex; gap: 10px; padding: 6px 20px; position: relative; }
+.slack-message:hover { background: var(--slack-bg-hover); }
+.slack-message-avatar {
+  width: 36px; height: 36px; border-radius: 4px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 14px; overflow: hidden;
+}
+.slack-message-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.slack-message-avatar.is-bot {
+  background: linear-gradient(135deg, #0070D2 0%, #1589EE 100%);
+  padding: 7px;
+}
+.slack-message-avatar.is-bot svg { width: 100%; height: 100%; fill: white; }
+.slack-message-body { flex: 1; min-width: 0; }
+.slack-message-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+.slack-message-head .name { font-weight: 900; font-size: 15px; }
+.slack-message-head .app-badge {
+  background: #E8F4FA; color: #1264A3; font-size: 11px; font-weight: 700;
+  padding: 0 5px; border-radius: 3px; border: 1px solid #B8D4EA;
+}
+.slack-message-head .time { font-size: 12px; color: var(--slack-text-dim); }
+.slack-message-text { color: var(--slack-text); word-break: break-word; line-height: 1.5; }
+
+/* User message bubble */
+.user-msg-bubble {
+  background: #F0F0F0;
+  border-radius: 18px 18px 4px 18px;
+  padding: 10px 16px;
+  display: inline-block;
+  max-width: 80%;
+  font-size: 15px;
+}
+
+/* Bot action buttons */
+.bot-action-btns {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 10px;
+}
+.bot-action-btn {
+  background: white;
+  border: 1.5px solid #1264A3;
+  color: #1264A3;
+  font-weight: 700; font-size: 14px;
+  padding: 8px 16px; border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.bot-action-btn:hover { background: #E8F4FA; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(18,100,163,0.2); }
+.bot-action-btn:active { transform: translateY(0); }
+.bot-action-btn.primary {
+  background: #1264A3; color: white;
+}
+.bot-action-btn.primary:hover { background: #0D4F8B; }
+.bot-action-btn.success {
+  background: #2EB67D; color: white; border-color: #2EB67D;
+}
+.bot-action-btn.success:hover { background: #258F60; }
+.bot-action-btn.clicked {
+  opacity: 0.5; pointer-events: none;
+  background: #F0F0F0; border-color: #ccc; color: #999;
+}
+
+/* Bot message card */
+.bot-card {
+  background: white;
+  border: 1px solid var(--slack-border);
+  border-left: 4px solid #0070D2;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-top: 8px;
+  max-width: 680px;
+}
+.bot-card-title {
+  font-weight: 700; font-size: 14px; color: var(--slack-text-dim);
+  margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}
+.bot-card-title i[data-lucide] { width: 14px; height: 14px; }
+
+/* Progress bar */
+.progress-wrap { margin: 8px 0; }
+.progress-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; margin-bottom: 4px;
+}
+.progress-label .biz { font-weight: 700; }
+.progress-label .val { font-size: 14px; font-weight: 700; }
+.progress-label .val.up { color: #2EB67D; }
+.progress-label .val.down { color: #E01E5A; }
+.progress-bar-track {
+  height: 10px; border-radius: 5px; background: #E1E1E1; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; border-radius: 5px;
+  transition: width 1s ease;
+  position: relative;
+}
+.progress-bar-fill.catering { background: linear-gradient(90deg, #2EB67D, #36C5F0); }
+.progress-bar-fill.junsai { background: linear-gradient(90deg, #ECB22E, #E01E5A); }
+.progress-bar-target {
+  height: 14px; width: 2px; background: #999;
+  position: absolute; right: 0; top: -2px;
+}
+
+/* Stats row */
+.stats-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
+.stat-chip {
+  background: #F8F8F8; border: 1px solid var(--slack-border);
+  border-radius: 8px; padding: 8px 14px; flex: 1; min-width: 120px;
+}
+.stat-chip .label { font-size: 12px; color: var(--slack-text-dim); margin-bottom: 2px; }
+.stat-chip .val { font-size: 20px; font-weight: 900; }
+.stat-chip .val.up { color: #2EB67D; }
+.stat-chip .val.down { color: #E01E5A; }
+.stat-chip .diff { font-size: 12px; margin-top: 2px; }
+.stat-chip .diff.up { color: #2EB67D; }
+.stat-chip .diff.down { color: #E01E5A; }
+
+/* Table */
+.data-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; margin: 8px 0;
+}
+.data-table th {
+  background: #F8F8F8; font-weight: 700; font-size: 12px;
+  color: var(--slack-text-dim); text-align: left;
+  padding: 6px 10px; border-bottom: 2px solid var(--slack-border);
+}
+.data-table td {
+  padding: 7px 10px; border-bottom: 1px solid var(--slack-border);
+  vertical-align: middle;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #F8F8F8; }
+.badge-up { background: #E1F5EC; color: #1A7A4A; font-weight: 700; padding: 2px 7px; border-radius: 12px; font-size: 12px; }
+.badge-down { background: #FDEAF1; color: #C0143C; font-weight: 700; padding: 2px 7px; border-radius: 12px; font-size: 12px; }
+
+/* Bullet list */
+.bot-list { list-style: none; padding: 0; margin: 8px 0; }
+.bot-list li {
+  padding: 6px 0 6px 22px; position: relative;
+  border-bottom: 1px solid #F8F8F8; font-size: 14px; line-height: 1.5;
+}
+.bot-list li:last-child { border-bottom: none; }
+.bot-list li::before {
+  content: attr(data-icon);
+  position: absolute; left: 0; top: 6px; font-size: 14px;
+}
+.bot-list li strong { font-weight: 900; }
+.bot-list li .sub { font-size: 13px; color: var(--slack-text-dim); margin-top: 2px; display: block; }
+.channel-tag {
+  background: #E8F4FA; color: #1264A3; font-weight: 700;
+  padding: 1px 6px; border-radius: 3px; font-size: 13px;
+}
+
+/* Task list */
+.task-list { list-style: none; padding: 0; margin: 8px 0; }
+.task-list li {
+  padding: 8px 0 8px 28px; position: relative;
+  border-bottom: 1px solid #F8F8F8; font-size: 14px; line-height: 1.5;
+}
+.task-list li:last-child { border-bottom: none; }
+.task-list li .priority-badge {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 10px;
+  margin-right: 6px;
+}
+.task-list li .priority-badge.today { background: #FDEAF1; color: #C0143C; }
+.task-list li .priority-badge.week { background: #FFF3CD; color: #856404; }
+.task-list li .priority-badge.next { background: #E1F5EC; color: #1A7A4A; }
+.task-list li::before { content: "☐"; position: absolute; left: 0; top: 8px; font-size: 16px; color: #ccc; }
+.task-list li .assignee { color: var(--slack-link); font-weight: 700; }
+.task-number { position: absolute; left: 0; top: 8px; font-weight: 900; font-size: 14px; color: var(--slack-text-dim); }
+
+/* Calendar item */
+.cal-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: #F8F8F8; border-radius: 8px; padding: 10px 14px; margin: 6px 0;
+}
+.cal-time { font-size: 13px; font-weight: 700; color: var(--slack-text-dim); min-width: 50px; }
+.cal-detail .title { font-weight: 700; font-size: 14px; }
+.cal-detail .meta { font-size: 12px; color: var(--slack-text-dim); margin-top: 2px; }
+
+/* Typing indicator */
+.typing-dots { display: flex; align-items: center; gap: 4px; padding: 4px 0; }
+.typing-dots span {
+  width: 8px; height: 8px; background: #ccc; border-radius: 50%;
+  animation: bounce 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,80%,100%{transform:scale(0.8);opacity:0.5} 40%{transform:scale(1.2);opacity:1} }
+
+/* Animated entrance */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.msg-enter { animation: slideUp 0.3s ease forwards; }
+
+/* Composer */
+.slack-composer { padding: 0 20px 16px; flex-shrink: 0; }
+.slack-composer-box { border: 1px solid #B8B8B8; border-radius: 8px; background: white; }
+.slack-composer-toolbar {
+  display: flex; align-items: center; gap: 2px;
+  padding: 4px 8px; border-bottom: 1px solid var(--slack-border);
+}
+.slack-composer-toolbar button {
+  background: transparent; border: none; padding: 4px 6px;
+  border-radius: 4px; cursor: pointer; color: var(--slack-text-dim);
+  display: inline-flex; align-items: center;
+}
+.slack-composer-toolbar button:hover { background: #F0F0F0; }
+.slack-composer-toolbar button i[data-lucide] { width: 14px; height: 14px; }
+.slack-composer-toolbar .sep { width: 1px; height: 14px; background: var(--slack-border); margin: 0 4px; }
+.slack-composer-input { padding: 10px 12px; min-height: 40px; color: var(--slack-text-dim); font-size: 14px; }
+.slack-composer-actions {
+  display: flex; align-items: center; gap: 4px; padding: 4px 6px 6px;
+}
+.slack-composer-actions .left { display: flex; gap: 2px; flex: 1; }
+.slack-composer-actions button {
+  background: transparent; border: none; padding: 6px; border-radius: 4px;
+  cursor: pointer; color: var(--slack-text-dim);
+  display: inline-flex; align-items: center;
+}
+.slack-composer-actions button:hover { background: #F0F0F0; }
+.slack-composer-actions button i[data-lucide] { width: 16px; height: 16px; }
+.slack-composer-send { background: #2EB67D !important; color: white !important; border-radius: 4px !important; padding: 6px 10px !important; }
+
+/* Scene navigation hint */
+.scene-hint {
+  position: fixed; bottom: 12px; right: 16px;
+  background: rgba(0,0,0,0.6); color: white;
+  font-size: 12px; padding: 6px 12px; border-radius: 20px;
+  display: flex; align-items: center; gap: 8px;
+  z-index: 100; pointer-events: none;
+  transition: opacity 0.5s;
+}
+.scene-dot-wrap { display: flex; gap: 5px; }
+.scene-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+.scene-dot.active { background: white; }
+
+/* Success flash */
+.success-flash {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  background: #2EB67D; color: white; font-weight: 700;
+  padding: 10px 24px; border-radius: 8px; font-size: 14px;
+  z-index: 200; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  animation: flashIn 0.3s ease, flashOut 0.3s ease 2s forwards;
+  pointer-events: none;
+}
+@keyframes flashIn { from{opacity:0;transform:translate(-50%,-10px)} to{opacity:1;transform:translate(-50%,0)} }
+@keyframes flashOut { from{opacity:1} to{opacity:0} }
+
+/* Salesforce icon */
+.sf-icon { display:inline-flex;align-items:center;justify-content:center; }
+</style>
+</head>
+<body class="slack-scope">
+
+<div class="slack-app">
+
+  <!-- Topbar -->
+  <header class="slack-topbar">
+    <div class="slack-topbar-left">
+      <button class="slack-topbar-icon-btn"><i data-lucide="chevron-left"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="chevron-right"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="clock"></i></button>
+    </div>
+    <div class="slack-topbar-search">
+      <i data-lucide="search" style="width:14px;height:14px;"></i>
+      <span>CB SERVICE を検索</span>
+    </div>
+    <div class="slack-topbar-right">
+      <button class="slack-topbar-icon-btn"><i data-lucide="bell"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="help-circle"></i></button>
+      <button class="slack-topbar-icon-btn">
+        <span style="width:24px;height:24px;border-radius:4px;background:#1264A3;color:white;font-size:11px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;">藤</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="slack-sidebar">
+    <div class="slack-sidebar-workspace">
+      <span class="name">CB SERVICE <i data-lucide="chevron-down"></i></span>
+      <button class="compose-btn"><i data-lucide="pen-square"></i></button>
+    </div>
+    <ul class="slack-sidebar-quicklinks">
+      <li><i data-lucide="message-square"></i> スレッド</li>
+      <li><i data-lucide="at-sign"></i> アクティビティ</li>
+      <li><i data-lucide="bookmark"></i> あとで</li>
+    </ul>
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">チャンネル</span><i data-lucide="plus"></i>
+      </div>
+      <a class="slack-sidebar-item is-unread"><i data-lucide="hash"></i>全社アナウンス<span class="badge">2</span></a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>cbケータリング_現場運営</a>
+      <a class="slack-sidebar-item is-unread"><i data-lucide="hash"></i>旬菜亭_受注チーム<span class="badge">5</span></a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>役員会議</a>
+    </div>
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">ダイレクトメッセージ</span><i data-lucide="plus"></i>
+      </div>
+      <a class="slack-sidebar-item is-active">
+        <span class="avatar-small is-bot">
+          <svg viewBox="0 0 24 24" fill="white"><path d="M19.08 4.92A10 10 0 0 0 4.92 19.08 10 10 0 0 0 19.08 4.92zM12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2zm-1 14h2v2h-2zm0-10h2v8h-2z"/></svg>
+        </span>
+        藤代社長専用 Agentforce
+      </a>
+      <a class="slack-sidebar-item">
+        <span class="avatar-small" style="background:#E01E5A;">堀</span>堀 様（営業本部長）
+      </a>
+      <a class="slack-sidebar-item">
+        <span class="avatar-small" style="background:#2EB67D;">長</span>長谷川 様（HR）
+      </a>
+      <a class="slack-sidebar-item">
+        <span class="avatar-small" style="background:#ECB22E;color:#333;">瀧</span>瀧田 様
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="slack-main">
+
+    <div class="slack-channel-header">
+      <div>
+        <div class="slack-channel-header-title">
+          <div class="bot-avatar">
+            <svg viewBox="0 0 24 24"><path d="M19.08 4.92A10 10 0 0 0 4.92 19.08 10 10 0 0 0 19.08 4.92zM12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2zm-1 14h2v2h-2zm0-10h2v8h-2z"/></svg>
+          </div>
+          藤代社長専用 Agentforce
+          <span style="font-size:12px;font-weight:400;color:var(--slack-text-dim);background:#E1F5EC;padding:2px 8px;border-radius:10px;margin-left:4px;">● オンライン</span>
+        </div>
+        <div class="slack-channel-header-meta">Salesforce Agentforce — CB SERVICE 経営データに接続済み</div>
+      </div>
+      <div class="slack-channel-header-actions">
+        <button><i data-lucide="phone"></i></button>
+        <button><i data-lucide="video"></i></button>
+        <button><i data-lucide="info"></i></button>
+      </div>
+    </div>
+
+    <div class="slack-messages" id="msgArea">
+
+      <div class="slack-day-divider">
+        <div class="line"></div>
+        <div class="label">2026年6月30日（月）</div>
+        <div class="line"></div>
+      </div>
+
+      <!-- Initial greeting from bot -->
+      <div class="slack-message msg-enter" id="msg-greeting">
+        <div class="slack-message-avatar is-bot">
+          <svg viewBox="0 0 24 24"><path d="M19.08 4.92A10 10 0 0 0 4.92 19.08 10 10 0 0 0 19.08 4.92zM12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2zm-1 14h2v2h-2zm0-10h2v8h-2z"/></svg>
+        </div>
+        <div class="slack-message-body">
+          <div class="slack-message-head">
+            <span class="name">Agentforce</span>
+            <span class="app-badge">APP</span>
+            <span class="time">9:00</span>
+          </div>
+          <div class="slack-message-text">
+            おはようございます、藤代社長。<br>
+            本日（6月30日）の経営ダッシュボードを準備しました。<br>
+            何から確認しますか？
+          </div>
+          <div class="bot-action-btns" id="init-btns">
+            <button class="bot-action-btn" onclick="doScene1(this)">📊 CBS経営ビジョン進捗を確認</button>
+            <button class="bot-action-btn" onclick="doScene2Direct(this)">📅 今日のスケジュールと会議準備を確認</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /messages -->
+
+    <div class="slack-composer">
+      <div class="slack-composer-box">
+        <div class="slack-composer-toolbar">
+          <button><i data-lucide="bold"></i></button>
+          <button><i data-lucide="italic"></i></button>
+          <span class="sep"></span>
+          <button><i data-lucide="link"></i></button>
+          <button><i data-lucide="list"></i></button>
+          <span class="sep"></span>
+          <button><i data-lucide="code"></i></button>
+        </div>
+        <div class="slack-composer-input">Agentforce にメッセージ</div>
+        <div class="slack-composer-actions">
+          <div class="left">
+            <button><i data-lucide="plus"></i></button>
+            <button><i data-lucide="at-sign"></i></button>
+            <button><i data-lucide="smile"></i></button>
+            <button><i data-lucide="mic"></i></button>
+          </div>
+          <button class="slack-composer-send"><i data-lucide="send"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Scene hint -->
+<div class="scene-hint" id="sceneHint">
+  <span>← → で進む</span>
+  <div class="scene-dot-wrap" id="sceneDots"></div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>
+lucide.createIcons();
+
+/* ==============================
+   SCENE STATE
+============================== */
+const TOTAL_SCENES = 5;
+let currentScene = 0;
+
+// Build dots
+const dotsWrap = document.getElementById('sceneDots');
+for (let i = 0; i < TOTAL_SCENES; i++) {
+  const d = document.createElement('div');
+  d.className = 'scene-dot' + (i === 0 ? ' active' : '');
+  d.id = 'dot-' + i;
+  dotsWrap.appendChild(d);
+}
+
+function updateDots(n) {
+  document.querySelectorAll('.scene-dot').forEach((d,i) => {
+    d.classList.toggle('active', i === n);
+  });
+}
+
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') advanceScene();
+  if (e.key === 'ArrowLeft') retreatScene();
+});
+
+function advanceScene() {
+  if (currentScene < TOTAL_SCENES - 1) {
+    currentScene++;
+    updateDots(currentScene);
+    triggerScene(currentScene);
+  }
+}
+function retreatScene() {
+  // reload to reset
+  if (currentScene > 0) location.reload();
+}
+
+function triggerScene(n) {
+  switch(n) {
+    case 1: showScene1(); break;
+    case 2: showScene2(); break;
+    case 3: showScene3(); break;
+    case 4: showScene4(); break;
+    case 5: showScene5(); break;
+  }
+}
+
+/* ==============================
+   UTILITIES
+============================== */
+function addMessage(html, delay=0) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const area = document.getElementById('msgArea');
+      // typing indicator
+      const typing = document.createElement('div');
+      typing.className = 'slack-message';
+      typing.id = 'typing-tmp';
+      typing.innerHTML = `
+        <div class="slack-message-avatar is-bot"><svg viewBox="0 0 24 24"><path d="M19.08 4.92A10 10 0 0 0 4.92 19.08 10 10 0 0 0 19.08 4.92zM12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2zm-1 14h2v2h-2zm0-10h2v8h-2z"/></svg></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">Agentforce</span><span class="app-badge">APP</span></div>
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>`;
+      area.appendChild(typing);
+      scrollBottom();
+      setTimeout(() => {
+        typing.remove();
+        const div = document.createElement('div');
+        div.className = 'slack-message msg-enter';
+        div.innerHTML = html;
+        area.appendChild(div);
+        lucide.createIcons();
+        scrollBottom();
+        resolve(div);
+      }, 900);
+    }, delay);
+  });
+}
+
+function addUserMessage(text, delay=0) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const area = document.getElementById('msgArea');
+      const div = document.createElement('div');
+      div.className = 'slack-message msg-enter';
+      div.style.justifyContent = 'flex-end';
+      div.innerHTML = `
+        <div class="slack-message-body" style="display:flex;justify-content:flex-end;">
+          <div>
+            <div class="slack-message-head" style="justify-content:flex-end;">
+              <span class="time">${getTime()}</span>
+              <span class="name">藤代社長</span>
+            </div>
+            <div class="user-msg-bubble">${text}</div>
+          </div>
+        </div>
+        <div class="slack-message-avatar" style="background:#1264A3;font-size:12px;font-weight:900;">藤</div>`;
+      area.appendChild(div);
+      scrollBottom();
+      resolve(div);
+    }, delay);
+  });
+}
+
+function scrollBottom() {
+  const area = document.getElementById('msgArea');
+  area.scrollTop = area.scrollHeight;
+}
+
+let h = 9; let m = 0;
+function getTime() {
+  m += 2; if(m>=60){m=0;h++;}
+  return `${h}:${String(m).padStart(2,'0')}`;
+}
+
+function disableButtons(container) {
+  container.querySelectorAll('.bot-action-btn').forEach(b => b.classList.add('clicked'));
+}
+
+function showFlash(msg) {
+  const el = document.createElement('div');
+  el.className = 'success-flash';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2500);
+}
+
+/* ==============================
+   SCENE 1 — 経営ビジョン進捗
+============================== */
+function doScene1(btn) {
+  disableButtons(btn.closest('.bot-action-btns'));
+  addUserMessage('📊 CBS経営ビジョン進捗を確認');
+  currentScene = 1;
+  updateDots(1);
+  showScene1();
+}
+
+function showScene1() {
+  addMessage(`
+    <div class="slack-message-avatar is-bot" style="display:none;"></div>
+    <div class="slack-message-body">
+      <div class="slack-message-head">
+        <span class="name">Agentforce</span><span class="app-badge">APP</span><span class="time">${getTime()}</span>
+      </div>
+      <div class="slack-message-text">
+        中期経営計画（2030年：売上20億目標）と本日時点のデータを照合しました。
+      </div>
+      <div class="bot-card" style="border-left-color:#0070D2;">
+        <div class="bot-card-title"><i data-lucide="trending-up"></i>FY2026 今期着地見込み</div>
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span class="biz">🍱 CBケータリング</span>
+            <span class="val up">856百万円 <span style="font-size:12px;background:#E1F5EC;padding:1px 6px;border-radius:8px;">目標比 +7% ↑</span></span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill catering" id="bar1" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="progress-wrap" style="margin-top:12px;">
+          <div class="progress-label">
+            <span class="biz">🌿 旬菜亭</span>
+            <span class="val down">624百万円 <span style="font-size:12px;background:#FDEAF1;padding:1px 6px;border-radius:8px;">目標比 -4% ↓</span></span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill junsai" id="bar2" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bot-card" style="border-left-color:#2EB67D;margin-top:8px;">
+        <div class="bot-card-title"><i data-lucide="bar-chart-2"></i>今期Q2（4〜6月）進捗</div>
+        <div class="stats-row">
+          <div class="stat-chip">
+            <div class="label">CBケータリング 稼働案件</div>
+            <div class="val up">412<span style="font-size:14px;">件</span></div>
+            <div class="diff up">▲ 前四半期比 +12%</div>
+          </div>
+          <div class="stat-chip">
+            <div class="label">CBケータリング 成約率</div>
+            <div class="val up">68<span style="font-size:14px;">%</span></div>
+            <div class="diff up">▲ 前期比 +3pt</div>
+          </div>
+          <div class="stat-chip">
+            <div class="label">旬菜亭 首都圏大手カバレッジ</div>
+            <div class="val">45<span style="font-size:14px;">%</span></div>
+            <div class="diff" style="color:#ECB22E;">→ 目標 50% に届かず</div>
+          </div>
+        </div>
+      </div>
+      <div class="slack-message-text" style="margin-top:8px;font-size:13px;color:var(--slack-text-dim);">
+        楽楽販売の確定売上＋Salesforceの進行中案件から着地見込みを集計しました。
+      </div>
+      <div class="bot-action-btns" id="scene1-btns">
+        <button class="bot-action-btn" onclick="doScene2(this)">📅 今日のスケジュールと会議準備を確認</button>
+      </div>
+    </div>
+  `).then(() => {
+    setTimeout(() => {
+      const b1 = document.getElementById('bar1');
+      const b2 = document.getElementById('bar2');
+      if(b1) b1.style.width = '86%';
+      if(b2) b2.style.width = '62%';
+    }, 200);
+  });
+}
+
+/* ==============================
+   SCENE 2 — スケジュール確認
+============================== */
+function doScene2(btn) {
+  if(btn) disableButtons(btn.closest('.bot-action-btns'));
+  addUserMessage('📅 今日のスケジュールと会議準備を確認');
+  currentScene = 2;
+  updateDots(2);
+  showScene2();
+}
+function doScene2Direct(btn) { doScene2(btn); }
+
+function showScene2() {
+  addMessage(`
+    <div class="slack-message-body">
+      <div class="slack-message-head">
+        <span class="name">Agentforce</span><span class="app-badge">APP</span><span class="time">${getTime()}</span>
+      </div>
+      <div class="slack-message-text">本日のカレンダーを確認しました。</div>
+      <div class="bot-card" style="border-left-color:#ECB22E;">
+        <div class="bot-card-title"><i data-lucide="calendar"></i>本日のスケジュール</div>
+        <div class="cal-item">
+          <div class="cal-time">9:30</div>
+          <div class="cal-detail">
+            <div class="title">朝礼（役員）</div>
+            <div class="meta">オンライン · 15分</div>
+          </div>
+        </div>
+        <div class="cal-item" style="border:1.5px solid #ECB22E;background:#FFFCEB;">
+          <div class="cal-time" style="color:#856404;">14:00</div>
+          <div class="cal-detail">
+            <div class="title">⭐ 営業会議（全事業メンバー）</div>
+            <div class="meta">会議室A + Zoom · 60分 · 参加者 8名</div>
+          </div>
+        </div>
+        <div class="cal-item">
+          <div class="cal-time">16:30</div>
+          <div class="cal-detail">
+            <div class="title">Aホテル株式会社 — 提案ヒアリング</div>
+            <div class="meta">Zoom · 担当：旬菜亭チーム</div>
+          </div>
+        </div>
+      </div>
+      <div class="bot-card" style="border-left-color:#E01E5A;margin-top:8px;">
+        <div class="bot-card-title"><i data-lucide="alert-circle"></i>14:00 営業会議 — 準備ポイント</div>
+        <ul class="bot-list">
+          <li data-icon="⚠️"><strong>旬菜亭チームの今週受注進捗が目標を下回っています</strong><span class="sub">詳細は次の報告で確認できます</span></li>
+          <li data-icon="🔥"><strong>新規提案中の大口案件（Aホテル株式会社様）に動きがあります</strong><span class="sub">先方から追加要件が届いています</span></li>
+          <li data-icon="📋"><strong>前回会議の宿題事項（6月23日）の完了率：2/4件</strong><span class="sub">未完了：値引き承認ルール整理 / 新規ターゲットリスト</span></li>
+        </ul>
+      </div>
+      <div class="bot-action-btns" id="scene2-btns">
+        <button class="bot-action-btn primary" onclick="doScene3(this)">📋 会議サマリーを自動生成</button>
+      </div>
+    </div>
+  `);
+}
+
+/* ==============================
+   SCENE 3 — 営業メンバー進捗
+============================== */
+function doScene3(btn) {
+  disableButtons(btn.closest('.bot-action-btns'));
+  addUserMessage('📋 会議サマリーを自動生成');
+  currentScene = 3;
+  updateDots(3);
+  showScene3();
+}
+
+function showScene3() {
+  addMessage(`
+    <div class="slack-message-body">
+      <div class="slack-message-head">
+        <span class="name">Agentforce</span><span class="app-badge">APP</span><span class="time">${getTime()}</span>
+      </div>
+      <div class="slack-message-text">
+        SalesforceのCRM活動データと各商談チャンネルへの投稿をもとにした<strong>ファクトベースの客観レポート</strong>です。
+      </div>
+      <div class="bot-card" style="border-left-color:#1264A3;">
+        <div class="bot-card-title"><i data-lucide="users"></i>営業メンバー 今週進捗</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>メンバー</th>
+              <th>今週新規接触</th>
+              <th>提案中案件数</th>
+              <th>今Q成約見込</th>
+              <th>前週比</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>田中</strong><br><span style="font-size:12px;color:var(--slack-text-dim);">CBケータリング</span></td>
+              <td>3件</td>
+              <td>8件</td>
+              <td><strong>1,250万円</strong></td>
+              <td><span class="badge-up">+5% ↑</span></td>
+            </tr>
+            <tr style="background:#FFF8F8;">
+              <td><strong>鈴木</strong><br><span style="font-size:12px;color:var(--slack-text-dim);">旬菜亭</span></td>
+              <td>1件</td>
+              <td>3件</td>
+              <td><strong>480万円</strong></td>
+              <td><span class="badge-down">-18% ↓</span></td>
+            </tr>
+            <tr style="background:#FFF8F8;">
+              <td><strong>佐藤</strong><br><span style="font-size:12px;color:var(--slack-text-dim);">旬菜亭</span></td>
+              <td>2件</td>
+              <td>5件</td>
+              <td><strong>720万円</strong></td>
+              <td><span class="badge-down">-9% ↓</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="font-size:12px;color:#E01E5A;margin-top:8px;font-weight:700;">
+          ⚠️ 旬菜亭チームの進捗が全体的に目標を下回っています。
+        </div>
+      </div>
+      <div class="bot-action-btns" id="scene3-btns">
+        <button class="bot-action-btn" style="border-color:#E01E5A;color:#E01E5A;" onclick="doScene4(this)">🔍 原因を調査する</button>
+      </div>
+    </div>
+  `);
+}
+
+/* ==============================
+   SCENE 4 — 原因調査
+============================== */
+function doScene4(btn) {
+  disableButtons(btn.closest('.bot-action-btns'));
+  addUserMessage('🔍 原因を調査する');
+  currentScene = 4;
+  updateDots(4);
+  showScene4();
+}
+
+function showScene4() {
+  addMessage(`
+    <div class="slack-message-body">
+      <div class="slack-message-head">
+        <span class="name">Agentforce</span><span class="app-badge">APP</span><span class="time">${getTime()}</span>
+      </div>
+      <div class="slack-message-text">
+        SalesforceのCRMデータと <span class="channel-tag">#旬菜亭_受注チーム</span> の会話を横断して分析しました。
+      </div>
+      <div class="bot-card" style="border-left-color:#E01E5A;">
+        <div class="bot-card-title"><i data-lucide="search"></i>検知された3つの原因</div>
+        <ul class="bot-list">
+          <li data-icon="📉">
+            <strong>見積単価の低下</strong>
+            <span class="sub">楽楽販売の過去実績比 <span style="color:#E01E5A;font-weight:700;">-15%</span>。<span class="channel-tag">#旬菜亭_受注チーム</span> で「今期は値引きしないと取れない」という会話が複数回発生しています。</span>
+          </li>
+          <li data-icon="👥">
+            <strong>当日施工人員の不足</strong>
+            <span class="sub"><span class="channel-tag">#旬菜亭_受注チーム</span> で「当日のスタッフが足りないかもしれない」という会話が昨日発生。人員不足への懸念が、積極的な受注を抑制している可能性があります。</span>
+          </li>
+          <li data-icon="🔇">
+            <strong>新規ターゲット開拓の停滞</strong>
+            <span class="sub">今月の新規接触が先月比 <span style="color:#E01E5A;font-weight:700;">-40%</span>。既存顧客対応に追われ、新規取引先へのアウトバウンド営業活動が止まっている兆候があります。</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  `).then(() => {
+    // Scene 5 auto-follows after a short delay
+    setTimeout(() => {
+      currentScene = 5;
+      updateDots(5);
+      showScene5();
+    }, 1200);
+  });
+}
+
+/* ==============================
+   SCENE 5 — 推奨タスク
+============================== */
+function showScene5() {
+  addMessage(`
+    <div class="slack-message-body">
+      <div class="slack-message-head">
+        <span class="name">Agentforce</span><span class="app-badge">APP</span><span class="time">${getTime()}</span>
+      </div>
+      <div class="slack-message-text">
+        以上の分析から、<strong>社長として今日・今週対応すべき推奨タスク</strong>を逆算しました。
+      </div>
+      <div class="bot-card" style="border-left-color:#2EB67D;">
+        <div class="bot-card-title"><i data-lucide="check-square"></i>推奨タスク（優先順）</div>
+        <ul class="task-list">
+          <li>
+            <span class="priority-badge today">今日 14:00まで</span>
+            営業会議で<strong>値引き承認ルールの再設定</strong>を議題に追加
+            <span style="display:block;font-size:13px;color:var(--slack-text-dim);margin-top:2px;">→ <span class="assignee">堀様</span>へ共有・議題追加を依頼</span>
+          </li>
+          <li>
+            <span class="priority-badge week">今週中</span>
+            旬菜亭チームの<strong>採用・外部スタッフ確保の判断</strong>
+            <span style="display:block;font-size:13px;color:var(--slack-text-dim);margin-top:2px;">→ <span class="assignee">長谷川様</span>に確認・判断依頼</span>
+          </li>
+          <li>
+            <span class="priority-badge week">今週中</span>
+            旬菜亭の<strong>新規ターゲットリスト見直し</strong> → Aホテル様VIP案件を最優先に昇格
+            <span style="display:block;font-size:13px;color:var(--slack-text-dim);margin-top:2px;">→ 担当：旬菜亭チーム</span>
+          </li>
+          <li>
+            <span class="priority-badge next">来週まで</span>
+            CBケータリングの<strong>好調要因を旬菜亭へ横展開する施策</strong>を検討
+            <span style="display:block;font-size:13px;color:var(--slack-text-dim);margin-top:2px;">→ <span class="assignee">堀様</span>と<span class="assignee">瀧田様</span>を交えてMTG設定</span>
+          </li>
+        </ul>
+      </div>
+      <div class="slack-message-text" style="margin-top:8px;font-size:14px;color:var(--slack-text-dim);">
+        タスクをSalesforceに登録しますか？ Slackでリマインダーを設定しますか？
+      </div>
+      <div class="bot-action-btns" id="scene5-btns">
+        <button class="bot-action-btn success" onclick="doRegister(this)">
+          <svg style="width:16px;height:16px;fill:white;" viewBox="0 0 24 24"><path d="M19.08 4.92A10 10 0 0 0 4.92 19.08 10 10 0 0 0 19.08 4.92zM12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2zm-1 14h2v2h-2zm0-10h2v8h-2z"/></svg>
+          📌 Salesforceに登録
+        </button>
+        <button class="bot-action-btn" onclick="doReminder(this)">🔔 リマインダーをセット</button>
+      </div>
+    </div>
+  `);
+}
+
+function doRegister(btn) {
+  disableButtons(btn.closest('.bot-action-btns'));
+  addUserMessage('📌 Salesforceに登録');
+  setTimeout(() => {
+    showFlash('✅ 4件のタスクをSalesforceに登録しました');
+    addMessage(`
+      <div class="slack-message-body">
+        <div class="slack-message-head">
+          <span class="name">Agentforce</span><span class="app-badge">APP</span><span class="time">${getTime()}</span>
+        </div>
+        <div class="slack-message-text">
+          4件のタスクをSalesforceに登録しました ✅<br>
+          <span style="font-size:13px;color:var(--slack-text-dim);">堀様・長谷川様・瀧田様には各自のSlackへ自動通知を送りました。今日の営業会議、頑張ってください💪</span>
+        </div>
+      </div>
+    `);
+  }, 300);
+}
+
+function doReminder(btn) {
+  disableButtons(btn.closest('.bot-action-btns'));
+  showFlash('🔔 リマインダーをセットしました');
+}
+
+/* ==============================
+   KEY NAV — arrow keys also work
+   as alternative to buttons
+============================== */
+const sceneOrder = [null, showScene1, showScene2, showScene3, showScene4, showScene5];
+// already handled via triggerScene above
+</script>
+</body>
+</html>

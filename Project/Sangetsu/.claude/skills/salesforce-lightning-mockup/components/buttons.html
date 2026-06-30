@@ -1,0 +1,91 @@
+<!--
+  Buttons - SLDS ボタンのバリエーション集
+  ===========================================
+  使用箇所: ヘッダー操作・モーダルフッター・関連リスト「新規」「編集」など
+
+  SLDS の主要ボタンクラス:
+    slds-button                          … 基本（テキスト青）
+    slds-button_brand                    … 主要 CTA（青ベタ）
+    slds-button_neutral                  … 副 CTA（白ベタ）
+    slds-button_outline-brand            … 青枠ボタン
+    slds-button_destructive              … 削除（赤ベタ）
+    slds-button_text-destructive         … 削除（赤テキスト）
+    slds-button_icon                     … アイコンのみ
+    slds-button_icon-border              … 枠付きアイコン
+    slds-button_icon-border-filled       … 白背景枠付きアイコン
+
+  サイズ修飾子:
+    slds-button_stretch                  … 横幅100%
+-->
+
+<!-- ============ 単一ボタン ============ -->
+
+<!-- Brand: 主要CTA -->
+<button class="slds-button slds-button_brand">保存</button>
+
+<!-- Neutral: 副CTA -->
+<button class="slds-button slds-button_neutral">キャンセル</button>
+
+<!-- Outline -->
+<button class="slds-button slds-button_outline-brand">編集</button>
+
+<!-- Destructive -->
+<button class="slds-button slds-button_destructive">削除</button>
+
+<!-- Text Destructive -->
+<button class="slds-button slds-button_text-destructive">削除</button>
+
+<!-- アイコン付き Brand -->
+<button class="slds-button slds-button_brand">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/check.svg" alt="" class="slds-button__icon slds-button__icon_left" />
+  承認
+</button>
+
+<!-- アイコン付き Neutral -->
+<button class="slds-button slds-button_neutral">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/add.svg" alt="" class="slds-button__icon slds-button__icon_left" />
+  フォローする
+</button>
+
+<!-- 無効化 -->
+<button class="slds-button slds-button_brand" disabled>送信</button>
+
+<!-- ============ アイコンのみボタン ============ -->
+
+<!-- 標準（透明背景） -->
+<button class="slds-button slds-button_icon" title="設定">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/settings.svg" alt="" class="slds-button__icon" />
+</button>
+
+<!-- 枠付き（白背景） -->
+<button class="slds-button slds-button_icon slds-button_icon-border-filled" title="フォロー中">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/user.svg" alt="" class="slds-button__icon" />
+</button>
+
+<!-- 小サイズ（関連リストカード用） -->
+<button class="slds-button slds-button_icon slds-button_icon-x-small slds-button_icon-border-filled" title="展開">
+  <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/chevrondown.svg" alt="" class="slds-button__icon" />
+</button>
+
+<!-- ============ ボタングループ（ハイライトパネル右側） ============ -->
+<div class="slds-button-group" role="group">
+  <button class="slds-button slds-button_neutral">編集</button>
+  <button class="slds-button slds-button_neutral">削除</button>
+  <button class="slds-button slds-button_neutral">複製</button>
+  <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="その他">
+    <img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/down.svg" alt="" class="slds-button__icon" />
+  </button>
+</div>
+
+<!-- ============ モーダルフッター用 ============ -->
+<footer class="slds-modal__footer">
+  <button class="slds-button slds-button_neutral">キャンセル</button>
+  <button class="slds-button slds-button_brand">保存</button>
+</footer>
+
+<!-- ============ ピル型ボタン（活動タイムライン用 SLDS pill） ============ -->
+<span class="slds-pill">
+  <a href="#" class="slds-pill__action">
+    <span class="slds-pill__label">すべての活動を表示</span>
+  </a>
+</span>

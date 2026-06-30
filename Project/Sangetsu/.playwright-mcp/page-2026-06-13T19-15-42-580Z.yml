@@ -1,0 +1,328 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "Salesforce" [ref=e5]
+      - searchbox "検索..." [ref=e9]
+      - list [ref=e10]:
+        - listitem [ref=e11]:
+          - button "Agentforce" [ref=e12] [cursor=pointer]:
+            - generic [ref=e13]: Agentforce
+        - listitem [ref=e14]:
+          - button "お気に入り" [ref=e15] [cursor=pointer]:
+            - generic [ref=e16]: お気に入り
+        - listitem [ref=e17]:
+          - button "新規作成" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]: 新規作成
+        - listitem [ref=e20]:
+          - button "セットアップ" [ref=e21] [cursor=pointer]:
+            - generic [ref=e22]: セットアップ
+        - listitem [ref=e23]:
+          - button "ヘルプ" [ref=e24] [cursor=pointer]:
+            - generic [ref=e25]: ヘルプ
+        - listitem [ref=e26]:
+          - button "設定" [ref=e27] [cursor=pointer]:
+            - generic [ref=e28]: 設定
+        - listitem [ref=e29]:
+          - button "3 通知" [ref=e30] [cursor=pointer]:
+            - generic: "3"
+            - generic [ref=e31]: 通知
+        - listitem [ref=e32]:
+          - img "User" [ref=e34]
+  - generic [ref=e35]:
+    - generic [ref=e36]:
+      - generic "アプリケーションランチャー" [ref=e37] [cursor=pointer]
+      - generic [ref=e49]: Sales
+    - navigation [ref=e50]:
+      - list [ref=e51]:
+        - listitem [ref=e52]:
+          - link "ホーム" [ref=e53] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e54] [cursor=pointer]:
+          - link "取引先" [ref=e55]:
+            - /url: "#"
+          - button "メニューを開く" [ref=e57]:
+            - generic [ref=e58]: メニューを開く
+        - listitem [ref=e59]:
+          - link "取引先責任者" [ref=e60] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e61]:
+          - link "リード" [ref=e62] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e63]:
+          - link "商談" [ref=e64] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e65]:
+          - link "ダッシュボード" [ref=e66] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e67]:
+          - link "レポート" [ref=e68] [cursor=pointer]:
+            - /url: "#"
+  - main [ref=e69]:
+    - generic [ref=e70]:
+      - generic [ref=e71]:
+        - generic [ref=e76]:
+          - heading "株式会社 サンプル" [level=1] [ref=e78]:
+            - generic "株式会社 サンプル" [ref=e79]
+          - paragraph [ref=e80]: 取引先 · 顧客 - 直接
+        - list [ref=e84]:
+          - listitem [ref=e85]:
+            - button "アクセス権を共有" [ref=e86] [cursor=pointer]
+          - listitem [ref=e87]:
+            - button "+ フォローする" [ref=e88] [cursor=pointer]
+          - listitem [ref=e89]:
+            - button "編集" [ref=e90] [cursor=pointer]
+          - listitem [ref=e91]:
+            - button "活動の記録" [ref=e92] [cursor=pointer]
+          - listitem [ref=e93]:
+            - button "新規ToDo" [ref=e94] [cursor=pointer]
+          - listitem [ref=e95]:
+            - button "その他" [ref=e96] [cursor=pointer]
+      - list [ref=e99]:
+        - listitem [ref=e100]:
+          - generic [ref=e101]: 取引先番号
+          - paragraph [ref=e102]: ACC-0001
+        - listitem [ref=e103]:
+          - generic [ref=e104]: 業種
+          - paragraph [ref=e105]: 製造
+        - listitem [ref=e106]:
+          - generic [ref=e107]: 電話
+          - paragraph [ref=e108]: 03-1234-5678
+        - listitem [ref=e109]:
+          - generic [ref=e110]: 年商
+          - paragraph [ref=e111]:
+            - strong [ref=e112]: USD 1,250,000.00
+        - listitem [ref=e113]:
+          - generic [ref=e114]: 従業員数
+          - paragraph [ref=e115]: 1,200
+        - listitem [ref=e116]:
+          - generic [ref=e117]: 所有者
+          - paragraph [ref=e118]:
+            - link "ユーザー名" [ref=e119] [cursor=pointer]:
+              - /url: "#"
+    - generic [ref=e120]:
+      - generic [ref=e121]:
+        - article [ref=e122]:
+          - generic [ref=e123]:
+            - tablist [ref=e124]:
+              - tab "詳細" [ref=e125] [cursor=pointer]
+              - tab "関連" [ref=e126] [cursor=pointer]
+              - tab "ニュース" [ref=e127] [cursor=pointer]
+            - tabpanel [ref=e128]:
+              - heading "取引先情報" [level=3] [ref=e129]:
+                - generic [ref=e130]: 取引先情報
+              - generic [ref=e132]:
+                - generic [ref=e133]:
+                  - term [ref=e134]: 取引先名
+                  - definition [ref=e135]: 株式会社 サンプル
+                - generic [ref=e136]:
+                  - term [ref=e137]: 所有者
+                  - definition [ref=e138]:
+                    - link "ユーザー名" [ref=e139] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e140]:
+                  - term [ref=e141]: 英語名
+                  - definition [ref=e142]: Sample Corporation
+                - generic [ref=e143]:
+                  - term [ref=e144]: 電話
+                  - definition [ref=e145]: 03-1234-5678
+                - generic [ref=e146]:
+                  - term [ref=e147]: 業種
+                  - definition [ref=e148]: 製造
+                - generic [ref=e149]:
+                  - term [ref=e150]: Webサイト
+                  - definition [ref=e151]:
+                    - link "www.omron.co.jp" [ref=e152] [cursor=pointer]:
+                      - /url: "#"
+                - generic [ref=e153]:
+                  - term [ref=e154]: 設立
+                  - definition [ref=e155]: 2010年4月1日
+                - generic [ref=e156]:
+                  - term [ref=e157]: 代表取締役
+                  - definition [ref=e158]: 代表 太郎
+                - generic [ref=e159]:
+                  - term [ref=e160]: 従業員数
+                  - definition [ref=e161]: 1,200
+                - generic [ref=e162]:
+                  - term [ref=e163]: 資本金
+                  - definition [ref=e164]: USD 100,000,000
+                - generic [ref=e165]:
+                  - term [ref=e166]: 説明
+                  - definition [ref=e167]: サンプル取引先のサンプル説明文。
+              - heading "住所" [level=3] [ref=e168]:
+                - generic [ref=e169]: 住所
+              - generic [ref=e171]:
+                - generic [ref=e172]:
+                  - term [ref=e173]: 本社所在地
+                  - definition [ref=e174]: 〒100-0005 東京都千代田区丸の内1-1-1
+                - generic [ref=e175]:
+                  - term [ref=e176]: 東京事業所
+                  - definition [ref=e177]: 〒108-0075 東京都港区港南2-2-2
+        - article [ref=e178]:
+          - generic [ref=e180]:
+            - heading "商談 (3)" [level=2] [ref=e184]:
+              - link "商談 (3)" [ref=e185] [cursor=pointer]:
+                - /url: "#"
+            - button "新規" [ref=e187] [cursor=pointer]
+          - table [ref=e188]:
+            - rowgroup [ref=e189]:
+              - row "商談名 ステージ 金額 完了予定日" [ref=e190]:
+                - columnheader "商談名" [ref=e191]
+                - columnheader "ステージ" [ref=e192]
+                - columnheader "金額" [ref=e193]
+                - columnheader "完了予定日" [ref=e194]
+            - rowgroup [ref=e195]:
+              - row "新規案件A 提案/見積 ¥3,500,000 2026/12/31" [ref=e196]:
+                - rowheader "新規案件A" [ref=e197]:
+                  - link "新規案件A" [ref=e198] [cursor=pointer]:
+                    - /url: "#"
+                - cell "提案/見積" [ref=e199]
+                - cell "¥3,500,000" [ref=e200]:
+                  - strong [ref=e201]: ¥3,500,000
+                - cell "2026/12/31" [ref=e202]
+              - row "更新プロジェクト 交渉/レビュー ¥2,000,000 2026/10/31" [ref=e203]:
+                - rowheader "更新プロジェクト" [ref=e204]:
+                  - link "更新プロジェクト" [ref=e205] [cursor=pointer]:
+                    - /url: "#"
+                - cell "交渉/レビュー" [ref=e206]
+                - cell "¥2,000,000" [ref=e207]:
+                  - strong [ref=e208]: ¥2,000,000
+                - cell "2026/10/31" [ref=e209]
+              - row "アドバイザリ契約 ニーズ分析 ¥1,500,000 2027/03/31" [ref=e210]:
+                - rowheader "アドバイザリ契約" [ref=e211]:
+                  - link "アドバイザリ契約" [ref=e212] [cursor=pointer]:
+                    - /url: "#"
+                - cell "ニーズ分析" [ref=e213]
+                - cell "¥1,500,000" [ref=e214]:
+                  - strong [ref=e215]: ¥1,500,000
+                - cell "2027/03/31" [ref=e216]
+          - link "すべて表示" [ref=e218] [cursor=pointer]:
+            - /url: "#"
+        - article [ref=e219]:
+          - generic [ref=e221]:
+            - heading "取引先責任者 (4)" [level=2] [ref=e225]:
+              - link "取引先責任者 (4)" [ref=e226] [cursor=pointer]:
+                - /url: "#"
+            - button "新規" [ref=e228] [cursor=pointer]
+          - table [ref=e229]:
+            - rowgroup [ref=e230]:
+              - row "名前 役職 部署 メール" [ref=e231]:
+                - columnheader "名前" [ref=e232]
+                - columnheader "役職" [ref=e233]
+                - columnheader "部署" [ref=e234]
+                - columnheader "メール" [ref=e235]
+            - rowgroup [ref=e236]:
+              - row "山田 太郎 部長 営業部 yamada@example.co.jp" [ref=e237]:
+                - rowheader "山田 太郎" [ref=e238]:
+                  - link "山田 太郎" [ref=e239] [cursor=pointer]:
+                    - /url: "#"
+                - cell "部長" [ref=e240]
+                - cell "営業部" [ref=e241]
+                - cell "yamada@example.co.jp" [ref=e242]:
+                  - link "yamada@example.co.jp" [ref=e243] [cursor=pointer]:
+                    - /url: "#"
+              - row "鈴木 花子 課長 マーケティング部 suzuki@example.co.jp" [ref=e244]:
+                - rowheader "鈴木 花子" [ref=e245]:
+                  - link "鈴木 花子" [ref=e246] [cursor=pointer]:
+                    - /url: "#"
+                - cell "課長" [ref=e247]
+                - cell "マーケティング部" [ref=e248]
+                - cell "suzuki@example.co.jp" [ref=e249]:
+                  - link "suzuki@example.co.jp" [ref=e250] [cursor=pointer]:
+                    - /url: "#"
+              - row "佐藤 一郎 主任 開発部 sato@example.co.jp" [ref=e251]:
+                - rowheader "佐藤 一郎" [ref=e252]:
+                  - link "佐藤 一郎" [ref=e253] [cursor=pointer]:
+                    - /url: "#"
+                - cell "主任" [ref=e254]
+                - cell "開発部" [ref=e255]
+                - cell "sato@example.co.jp" [ref=e256]:
+                  - link "sato@example.co.jp" [ref=e257] [cursor=pointer]:
+                    - /url: "#"
+              - row "田中 美咲 担当 総務部 tanaka@example.co.jp" [ref=e258]:
+                - rowheader "田中 美咲" [ref=e259]:
+                  - link "田中 美咲" [ref=e260] [cursor=pointer]:
+                    - /url: "#"
+                - cell "担当" [ref=e261]
+                - cell "総務部" [ref=e262]
+                - cell "tanaka@example.co.jp" [ref=e263]:
+                  - link "tanaka@example.co.jp" [ref=e264] [cursor=pointer]:
+                    - /url: "#"
+      - generic [ref=e265]:
+        - article [ref=e266]:
+          - generic [ref=e267]:
+            - tablist [ref=e268]:
+              - tab "活動" [ref=e269] [cursor=pointer]
+              - tab "フィード" [ref=e270] [cursor=pointer]
+              - tab "ニュース" [ref=e271] [cursor=pointer]
+            - tabpanel [ref=e272]:
+              - generic [ref=e273]:
+                - heading "今後 & 期限切れ (2)" [level=3] [ref=e274]
+                - list [ref=e275]:
+                  - listitem [ref=e276]:
+                    - generic [ref=e277]:
+                      - generic [ref=e278]: call
+                      - generic [ref=e279]:
+                        - generic "call" [ref=e281]
+                        - generic [ref=e282]:
+                          - generic [ref=e283]:
+                            - heading "定例ミーティング" [level=3] [ref=e284]:
+                              - link "定例ミーティング" [ref=e285] [cursor=pointer]:
+                                - /url: "#"
+                                - strong [ref=e286]: 定例ミーティング
+                            - paragraph [ref=e287]: 期日 6月15日 14:00
+                          - paragraph [ref=e288]: "担当: 担当者"
+                  - listitem [ref=e289]:
+                    - generic [ref=e290]:
+                      - generic [ref=e291]: email
+                      - generic [ref=e292]:
+                        - generic "email" [ref=e294]
+                        - generic [ref=e296]:
+                          - heading "提案書を送付" [level=3] [ref=e297]:
+                            - link "提案書を送付" [ref=e298] [cursor=pointer]:
+                              - /url: "#"
+                              - strong [ref=e299]: 提案書を送付
+                          - paragraph [ref=e300]: 期日 6月10日 (期限切れ)
+        - article [ref=e301]:
+          - heading "Agentforce インサイト" [level=2] [ref=e307]
+          - generic [ref=e308]:
+            - status [ref=e309]:
+              - heading "直近30日でWebサイト訪問が +30% 増加" [level=2] [ref=e311]:
+                - text: 直近30日でWebサイト訪問が
+                - strong [ref=e312]: +30%
+                - text: 増加
+            - status [ref=e313]:
+              - heading "フォローアップが必要なリードがあります。" [level=2] [ref=e315]
+        - article [ref=e316]:
+          - heading "ケース (2)" [level=2] [ref=e322]:
+            - link "ケース (2)" [ref=e323] [cursor=pointer]:
+              - /url: "#"
+          - list [ref=e324]:
+            - listitem [ref=e325]:
+              - link "CS-00001" [ref=e326] [cursor=pointer]:
+                - /url: "#"
+                - strong [ref=e327]: CS-00001
+              - generic [ref=e328]: 対応中
+              - paragraph [ref=e329]: サンプルケース1
+            - listitem [ref=e330]:
+              - link "CS-00002" [ref=e331] [cursor=pointer]:
+                - /url: "#"
+                - strong [ref=e332]: CS-00002
+              - generic [ref=e333]: 解決
+              - paragraph [ref=e334]: サンプルケース2
+        - article [ref=e335]:
+          - heading "ファイル (3)" [level=2] [ref=e341]:
+            - link "ファイル (3)" [ref=e342] [cursor=pointer]:
+              - /url: "#"
+          - list [ref=e343]:
+            - listitem [ref=e344]:
+              - link "提案書_v1.pdf" [ref=e346] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e347]: 2.4 MB · 6月7日
+            - listitem [ref=e348]:
+              - link "見積.xlsx" [ref=e350] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e351]: 340 KB · 6月3日
+            - listitem [ref=e352]:
+              - link "資料.pptx" [ref=e354] [cursor=pointer]:
+                - /url: "#"
+              - paragraph [ref=e355]: 1.5 MB · 5月29日

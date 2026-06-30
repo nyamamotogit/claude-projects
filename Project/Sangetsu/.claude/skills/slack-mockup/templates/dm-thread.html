@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鈴木 さくら | Acme Corp | Slack</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --slack-aubergine: #4A154B;
+    --slack-aubergine-dark: #350D36;
+    --slack-aubergine-text: #FFFFFF;
+    --slack-aubergine-text-dim: rgba(255,255,255,0.7);
+    --slack-yellow: #ECB22E;
+    --slack-blue:   #36C5F0;
+    --slack-green:  #2EB67D;
+    --slack-red:    #E01E5A;
+    --slack-bg:        #FFFFFF;
+    --slack-bg-hover:  #F8F8F8;
+    --slack-text:      #1D1C1D;
+    --slack-text-dim:  #616061;
+    --slack-border:    #E1E1E1;
+    --slack-link:      #1264A3;
+    --slack-mention-bg: #E01E5A;
+    --slack-sidebar-w: 260px;
+    --slack-thread-w:  420px;
+    --slack-header-h:  44px;
+  }
+  body.slack-scope {
+    margin: 0;
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px; line-height: 1.46;
+    color: var(--slack-text); background: var(--slack-bg);
+  }
+  .slack-scope * { box-sizing: border-box; }
+  .slack-scope a { color: var(--slack-link); text-decoration: none; }
+  .slack-scope a:hover { text-decoration: underline; }
+  .slack-scope button { font-family: inherit; }
+
+  .slack-app {
+    display: grid;
+    grid-template-columns: var(--slack-sidebar-w) 1fr var(--slack-thread-w);
+    grid-template-rows: var(--slack-header-h) 1fr;
+    height: 100vh;
+  }
+
+  /* Workspace Header */
+  .slack-topbar {
+    grid-column: 1 / -1;
+    background: var(--slack-aubergine-dark);
+    color: var(--slack-aubergine-text);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px;
+    height: var(--slack-header-h);
+  }
+  .slack-topbar-left, .slack-topbar-right {
+    display: flex; align-items: center; gap: 6px; flex: 1;
+  }
+  .slack-topbar-right { justify-content: flex-end; }
+  .slack-topbar-search {
+    flex: 0 1 720px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    height: 28px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 10px;
+    color: var(--slack-aubergine-text-dim);
+    font-size: 13px;
+  }
+  .slack-topbar-icon-btn {
+    background: transparent; border: none; color: var(--slack-aubergine-text);
+    width: 28px; height: 28px; border-radius: 4px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-topbar-icon-btn:hover { background: rgba(255,255,255,0.15); }
+  .slack-topbar-icon-btn i[data-lucide] { width: 16px; height: 16px; }
+
+  /* Sidebar */
+  .slack-sidebar {
+    background: var(--slack-aubergine);
+    color: var(--slack-aubergine-text);
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+  .slack-sidebar-workspace {
+    padding: 4px 16px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .slack-sidebar-workspace .name {
+    font-weight: 900; font-size: 18px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .slack-sidebar-workspace .name i[data-lucide] { width: 14px; height: 14px; }
+  .slack-sidebar-workspace .compose-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: white; color: var(--slack-aubergine);
+    border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-sidebar-workspace .compose-btn i[data-lucide] { width: 14px; height: 14px; }
+  .slack-sidebar-quicklinks { list-style: none; margin: 8px 0; padding: 0; }
+  .slack-sidebar-quicklinks li {
+    padding: 4px 16px;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--slack-aubergine-text-dim); cursor: pointer; font-size: 15px;
+  }
+  .slack-sidebar-quicklinks li:hover { background: var(--slack-aubergine-dark); color: white; }
+  .slack-sidebar-quicklinks li i[data-lucide] { width: 16px; height: 16px; }
+  .slack-sidebar-section { margin-top: 12px; }
+  .slack-sidebar-section-header {
+    padding: 4px 16px;
+    color: var(--slack-aubergine-text-dim);
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .slack-sidebar-section-header i[data-lucide] { width: 12px; height: 12px; }
+  .slack-sidebar-section-header .label { flex: 1; }
+  .slack-sidebar-item {
+    padding: 4px 16px 4px 22px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--slack-aubergine-text-dim);
+    font-size: 15px; cursor: pointer; text-decoration: none;
+  }
+  .slack-sidebar-item:hover { background: var(--slack-aubergine-dark); color: white; }
+  .slack-sidebar-item.is-active {
+    background: #1164A3; color: white; font-weight: 700;
+  }
+  .slack-sidebar-item.is-unread { color: white; font-weight: 700; }
+  .slack-sidebar-item i[data-lucide] { width: 14px; height: 14px; flex-shrink: 0; }
+  .slack-sidebar-item .badge {
+    margin-left: auto;
+    background: var(--slack-mention-bg); color: white; font-weight: 700;
+    font-size: 11px; min-width: 18px; height: 18px;
+    border-radius: 9px; padding: 0 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-sidebar-item .presence {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: transparent; border: 1.5px solid var(--slack-aubergine-text-dim);
+  }
+  .slack-sidebar-item .presence.online { background: var(--slack-green); border-color: var(--slack-green); }
+  .slack-sidebar-item .avatar-small {
+    width: 18px; height: 18px; border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 10px;
+    overflow: hidden;
+  }
+  .slack-sidebar-item .avatar-small img { width: 100%; height: 100%; object-fit: cover; }
+  .slack-sidebar-item .avatar-small.is-bot { background: #1264a3; padding: 3px; }
+  .slack-sidebar-item .avatar-small.is-bot img { filter: brightness(0) invert(1); object-fit: contain; }
+
+  /* Main */
+  .slack-main {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+    background: white;
+    border-right: 1px solid var(--slack-border);
+  }
+
+  /* DM Header */
+  .slack-channel-header {
+    border-bottom: 1px solid var(--slack-border);
+    padding: 8px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: white;
+  }
+  .slack-channel-header-title {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 900; font-size: 18px;
+  }
+  .slack-channel-header-title .avatar {
+    width: 24px; height: 24px; border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 11px; position: relative;
+    overflow: hidden;
+  }
+  .slack-channel-header-title .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .slack-channel-header-title .avatar .presence {
+    position: absolute; bottom: -2px; right: -2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--slack-green); border: 2px solid white;
+  }
+  .slack-channel-header-meta {
+    font-size: 13px; color: var(--slack-text-dim); margin-top: 2px;
+  }
+  .slack-channel-header-actions { display: flex; gap: 4px; }
+  .slack-channel-header-actions button {
+    background: transparent; border: 1px solid var(--slack-border);
+    padding: 4px 10px; border-radius: 4px; cursor: pointer;
+    color: var(--slack-text); font-size: 13px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-channel-header-actions button:hover { background: #F0F0F0; }
+  .slack-channel-header-actions button i[data-lucide] { width: 14px; height: 14px; }
+
+  /* Messages */
+  .slack-messages { overflow-y: auto; padding: 12px 0; }
+  .slack-day-divider {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 20px; position: sticky; top: 0;
+    background: linear-gradient(to bottom, white 60%, transparent); z-index: 1;
+  }
+  .slack-day-divider .line { flex: 1; height: 1px; background: var(--slack-border); }
+  .slack-day-divider .label {
+    font-weight: 700; font-size: 13px; color: var(--slack-text);
+    border: 1px solid var(--slack-border); border-radius: 16px;
+    padding: 4px 14px; background: white;
+  }
+  .slack-message { display: flex; gap: 10px; padding: 8px 20px; position: relative; }
+  .slack-message:hover { background: var(--slack-bg-hover); }
+  .slack-message-avatar {
+    width: 36px; height: 36px; border-radius: 4px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 14px;
+    overflow: hidden;
+  }
+  .slack-message-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .slack-message-avatar.is-bot { background: #1264a3; padding: 6px; }
+  .slack-message-avatar.is-bot img { filter: brightness(0) invert(1); object-fit: contain; }
+  .slack-message-body { flex: 1; min-width: 0; }
+  .slack-message-head { display: flex; align-items: baseline; gap: 8px; }
+  .slack-message-head .name { font-weight: 900; }
+  .slack-message-head .time { font-size: 12px; color: var(--slack-text-dim); }
+  .slack-message-text { color: var(--slack-text); word-break: break-word; }
+  .slack-mention {
+    background: #FDEAF1; color: var(--slack-link);
+    padding: 0 2px; border-radius: 3px; font-weight: 700;
+  }
+  .slack-channel-link { color: var(--slack-link); font-weight: 700; }
+  .slack-reactions { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .slack-reaction {
+    background: #EFF4F8; border: 1px solid #B8C7D6;
+    border-radius: 12px; padding: 2px 8px; font-size: 13px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-reaction.is-mine {
+    background: #E8F4FA; border-color: var(--slack-link);
+    color: var(--slack-link); font-weight: 700;
+  }
+  .slack-reaction-add { background: transparent; color: var(--slack-text-dim); padding: 2px 6px; }
+  .slack-thread-replies {
+    margin-top: 4px;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 8px; border: 1px solid transparent; border-radius: 6px;
+    cursor: pointer; font-size: 13px;
+  }
+  .slack-thread-replies.active {
+    background: white; border-color: var(--slack-border);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+  }
+  .slack-thread-replies:hover {
+    background: white; border-color: var(--slack-border);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+  }
+  .slack-thread-replies .avatars { display: flex; }
+  .slack-thread-replies .avatars > * {
+    width: 20px; height: 20px; border-radius: 3px;
+    margin-right: -4px; border: 1.5px solid white;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 10px;
+  }
+  .slack-thread-replies .count {
+    color: var(--slack-link); font-weight: 700; margin-left: 8px;
+  }
+  .slack-thread-replies .last { color: var(--slack-text-dim); }
+
+  /* Composer */
+  .slack-composer { padding: 0 20px 20px; }
+  .slack-composer-box {
+    border: 1px solid #B8B8B8;
+    border-radius: 8px; background: white;
+  }
+  .slack-composer-toolbar {
+    display: flex; align-items: center; gap: 2px;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--slack-border);
+  }
+  .slack-composer-toolbar button {
+    background: transparent; border: none; padding: 4px 6px;
+    border-radius: 4px; cursor: pointer; color: var(--slack-text-dim);
+    display: inline-flex; align-items: center;
+  }
+  .slack-composer-toolbar button:hover { background: #F0F0F0; }
+  .slack-composer-toolbar button i[data-lucide] { width: 14px; height: 14px; }
+  .slack-composer-toolbar .sep { width: 1px; height: 14px; background: var(--slack-border); margin: 0 4px; }
+  .slack-composer-input {
+    padding: 10px 12px; min-height: 44px;
+    color: var(--slack-text-dim); font-size: 15px;
+  }
+  .slack-composer-actions {
+    display: flex; align-items: center; gap: 4px;
+    padding: 4px 6px 6px;
+  }
+  .slack-composer-actions .left { display: flex; gap: 2px; flex: 1; }
+  .slack-composer-actions button {
+    background: transparent; border: none; padding: 6px;
+    border-radius: 4px; cursor: pointer; color: var(--slack-text-dim);
+    display: inline-flex; align-items: center;
+  }
+  .slack-composer-actions button:hover { background: #F0F0F0; }
+  .slack-composer-actions button i[data-lucide] { width: 16px; height: 16px; }
+  .slack-composer-send { background: var(--slack-green) !important; color: white !important; }
+
+  /* === Thread Panel === */
+  .slack-thread-panel {
+    background: white;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+  }
+  .slack-thread-panel-header {
+    border-bottom: 1px solid var(--slack-border);
+    padding: 12px 16px 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .slack-thread-panel-header .title {
+    font-weight: 900; font-size: 18px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .slack-thread-panel-header .title-sub {
+    color: var(--slack-text-dim); font-weight: 400; font-size: 13px;
+  }
+  .slack-thread-panel-header .close {
+    background: transparent; border: none;
+    color: var(--slack-text-dim); cursor: pointer; padding: 4px;
+    border-radius: 4px;
+  }
+  .slack-thread-panel-header .close:hover { background: #F0F0F0; color: var(--slack-text); }
+  .slack-thread-panel-header .close i[data-lucide] { width: 16px; height: 16px; }
+
+  .slack-thread-content {
+    overflow-y: auto;
+    padding: 0 0 12px;
+  }
+  .slack-thread-parent {
+    border-bottom: 1px solid var(--slack-border);
+    padding: 12px 0;
+  }
+  .slack-thread-divider {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 20px;
+    font-size: 13px; color: var(--slack-text-dim); font-weight: 700;
+  }
+  .slack-thread-divider .line { flex: 1; height: 1px; background: var(--slack-border); }
+
+  .slack-thread-composer {
+    padding: 0 16px 16px;
+  }
+  .slack-thread-composer .also-send {
+    margin-top: 8px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--slack-text-dim);
+  }
+  .slack-thread-composer .also-send input { margin: 0; }
+
+  /* Avatar Colors */
+  .slack-avatar-blue   { background: #1264A3; }
+  .slack-avatar-green  { background: #2EB67D; }
+  .slack-avatar-yellow { background: #ECB22E; color: #1D1C1D !important; }
+  .slack-avatar-red    { background: #E01E5A; }
+  .slack-avatar-purple { background: #7C3085; }
+  .slack-avatar-teal   { background: #0F8E91; }
+</style>
+</head>
+<body class="slack-scope">
+
+<div class="slack-app">
+
+  <!-- Workspace Header -->
+  <header class="slack-topbar">
+    <div class="slack-topbar-left">
+      <button class="slack-topbar-icon-btn"><i data-lucide="chevron-left"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="chevron-right"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="clock"></i></button>
+    </div>
+    <div class="slack-topbar-search">
+      <i data-lucide="search" style="width:14px;height:14px;"></i>
+      <span>Acme Corp を検索</span>
+    </div>
+    <div class="slack-topbar-right">
+      <button class="slack-topbar-icon-btn"><i data-lucide="help-circle"></i></button>
+      <button class="slack-topbar-icon-btn">
+        <span class="slack-message-avatar" style="width:24px;height:24px;border-radius:4px;">
+          <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" />
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="slack-sidebar">
+    <div class="slack-sidebar-workspace">
+      <span class="name">Acme Corp <i data-lucide="chevron-down"></i></span>
+      <button class="compose-btn"><i data-lucide="pen-square"></i></button>
+    </div>
+
+    <ul class="slack-sidebar-quicklinks">
+      <li><i data-lucide="message-square"></i> スレッド</li>
+      <li><i data-lucide="at-sign"></i> 全アクティビティ</li>
+      <li><i data-lucide="bookmark"></i> あとで</li>
+      <li><i data-lucide="send"></i> 下書きと送信済み</li>
+      <li><i data-lucide="more-horizontal"></i> その他</li>
+    </ul>
+
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">チャンネル</span><i data-lucide="plus"></i>
+      </div>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>general</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>announcements</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>random</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>sales-japan</a>
+    </div>
+
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">ダイレクトメッセージ</span><i data-lucide="plus"></i>
+      </div>
+      <a class="slack-sidebar-item is-active">
+        <span class="avatar-small"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /></span>鈴木 さくら
+      </a>
+      <a class="slack-sidebar-item">
+        <span class="avatar-small"><img src="https://randomuser.me/api/portraits/men/90.jpg" alt="" /></span>田中 拓也
+      </a>
+      <a class="slack-sidebar-item">
+        <span class="avatar-small"><img src="https://randomuser.me/api/portraits/women/12.jpg" alt="" /></span>中村 玲奈
+      </a>
+      <a class="slack-sidebar-item">
+        <span class="avatar-small is-bot"><img src="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility/agent_astro.svg" alt="" /></span>Slackbot
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main: DM with Suzuki -->
+  <main class="slack-main">
+
+    <div class="slack-channel-header">
+      <div>
+        <div class="slack-channel-header-title">
+          <span class="avatar"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /><span class="presence"></span></span>
+          鈴木 さくら
+          <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--slack-text-dim);"></i>
+        </div>
+        <div class="slack-channel-header-meta">アクティブ・営業企画チーム</div>
+      </div>
+      <div class="slack-channel-header-actions">
+        <button title="Huddle"><i data-lucide="headphones"></i>Huddle</button>
+        <button><i data-lucide="phone"></i></button>
+        <button><i data-lucide="video"></i></button>
+        <button><i data-lucide="more-vertical" style="width:14px;height:14px;"></i></button>
+      </div>
+    </div>
+
+    <div class="slack-messages">
+
+      <div class="slack-day-divider">
+        <div class="line"></div><div class="label">本日 — 2026年6月11日(木)</div><div class="line"></div>
+      </div>
+
+      <div class="slack-message">
+        <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">鈴木 さくら</span><span class="time">9:48</span></div>
+          <div class="slack-message-text">
+            おはようございます。今日のオムロン定例の議事録、ドラフト作りました。
+            <span class="slack-channel-link">#sales-japan</span> に共有する前に一度見ていただけますか？
+          </div>
+        </div>
+      </div>
+
+      <div class="slack-message">
+        <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" /></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">山本 健介</span><span class="time">9:52</span></div>
+          <div class="slack-message-text">了解です ありがとうございます。10:30までに目を通します。</div>
+          <div class="slack-reactions">
+            <button class="slack-reaction is-mine">🙏 <span>1</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- スレッド対象の親メッセージ -->
+      <div class="slack-message" style="background: #FFFAEB;">
+        <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">鈴木 さくら</span><span class="time">10:05</span></div>
+          <div class="slack-message-text">
+            あと、見積条件の確認なんですが、先方から「分割払いの可否」を聞かれました。
+            <span class="slack-mention">@山本 健介</span> CFOへの確認が必要そうですか？
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction">🤔 <span>1</span></button>
+          </div>
+          <a class="slack-thread-replies active">
+            <div class="avatars">
+              <span class="slack-message-avatar" style="width:20px;height:20px;"><img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" /></span>
+              <span class="slack-message-avatar" style="width:20px;height:20px;"><img src="https://randomuser.me/api/portraits/men/4.jpg" alt="" /></span>
+            </div>
+            <span class="count">3件の返信</span>
+            <span class="last">最終返信 5分前</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="slack-message">
+        <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">鈴木 さくら</span><span class="time">10:30</span></div>
+          <div class="slack-message-text">議事録のたたき貼っておきました 👇</div>
+        </div>
+      </div>
+
+      <div class="slack-message">
+        <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" /></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">山本 健介</span><span class="time">10:34</span></div>
+          <div class="slack-message-text">確認します 👀</div>
+          <div class="slack-reactions">
+            <button class="slack-reaction">👀 <span>1</span></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="slack-composer">
+      <div class="slack-composer-box">
+        <div class="slack-composer-toolbar">
+          <button><i data-lucide="bold"></i></button>
+          <button><i data-lucide="italic"></i></button>
+          <button><i data-lucide="strikethrough"></i></button>
+          <span class="sep"></span>
+          <button><i data-lucide="link"></i></button>
+          <button><i data-lucide="list"></i></button>
+          <span class="sep"></span>
+          <button><i data-lucide="quote"></i></button>
+          <button><i data-lucide="code"></i></button>
+        </div>
+        <div class="slack-composer-input">鈴木 さくら にメッセージ</div>
+        <div class="slack-composer-actions">
+          <div class="left">
+            <button><i data-lucide="plus"></i></button>
+            <button><i data-lucide="at-sign"></i></button>
+            <button><i data-lucide="smile"></i></button>
+            <button><i data-lucide="video"></i></button>
+            <button><i data-lucide="mic"></i></button>
+          </div>
+          <button class="slack-composer-send"><i data-lucide="send"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Thread Panel -->
+  <aside class="slack-thread-panel">
+
+    <div class="slack-thread-panel-header">
+      <div>
+        <div class="title"><i data-lucide="message-square" style="width:18px;height:18px;"></i>スレッド</div>
+        <div class="title-sub">鈴木 さくら との DM</div>
+      </div>
+      <button class="close" title="閉じる"><i data-lucide="x"></i></button>
+    </div>
+
+    <div class="slack-thread-content">
+
+      <!-- 親メッセージ -->
+      <div class="slack-thread-parent">
+        <div class="slack-message">
+          <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /></div>
+          <div class="slack-message-body">
+            <div class="slack-message-head"><span class="name">鈴木 さくら</span><span class="time">10:05</span></div>
+            <div class="slack-message-text">
+              あと、見積条件の確認なんですが、先方から「分割払いの可否」を聞かれました。
+              <span class="slack-mention">@山本 健介</span> CFOへの確認が必要そうですか？
+            </div>
+            <div class="slack-reactions">
+              <button class="slack-reaction">🤔 <span>1</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slack-thread-divider">
+        <div class="line"></div><span>3件の返信</span><div class="line"></div>
+      </div>
+
+      <!-- 返信1 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" /></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">山本 健介</span><span class="time">10:12</span></div>
+          <div class="slack-message-text">
+            分割払いは標準では受けてないですが、額が額なので CFO 判断仰いだほうが良さそうですね。
+            青山さんを巻き込みます。
+          </div>
+        </div>
+      </div>
+
+      <!-- 返信2 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/men/4.jpg" alt="" /></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">青山 昇</span><span class="time">10:24</span></div>
+          <div class="slack-message-text">
+            <span class="slack-mention">@山本 健介</span>
+            金額12.5Mで3回までなら過去事例あり。条件は「初回50% / 残り3ヶ月以内 / 与信OK」。
+            それを超える場合は CFO 直決裁です。
+          </div>
+          <div class="slack-reactions">
+            <button class="slack-reaction is-mine">🙏 <span>2</span></button>
+            <button class="slack-reaction">✅ <span>1</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 返信3 -->
+      <div class="slack-message">
+        <div class="slack-message-avatar"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /></div>
+        <div class="slack-message-body">
+          <div class="slack-message-head"><span class="name">鈴木 さくら</span><span class="time">10:32</span></div>
+          <div class="slack-message-text">
+            助かります！先方には「3回まで・初回50%」の条件で打診してみます 🙏
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Thread Composer -->
+    <div class="slack-thread-composer">
+      <div class="slack-composer-box">
+        <div class="slack-composer-toolbar">
+          <button><i data-lucide="bold"></i></button>
+          <button><i data-lucide="italic"></i></button>
+          <span class="sep"></span>
+          <button><i data-lucide="link"></i></button>
+          <button><i data-lucide="quote"></i></button>
+          <button><i data-lucide="code"></i></button>
+        </div>
+        <div class="slack-composer-input">スレッドに返信</div>
+        <div class="slack-composer-actions">
+          <div class="left">
+            <button><i data-lucide="plus"></i></button>
+            <button><i data-lucide="at-sign"></i></button>
+            <button><i data-lucide="smile"></i></button>
+          </div>
+          <button class="slack-composer-send"><i data-lucide="send"></i></button>
+        </div>
+      </div>
+      <label class="also-send">
+        <input type="checkbox"> 鈴木 さくら にも送信
+      </label>
+    </div>
+
+  </aside>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

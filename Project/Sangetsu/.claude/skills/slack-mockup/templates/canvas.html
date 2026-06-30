@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q2 リリース判定 - Canvas | Slack</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --slack-aubergine: #4A154B;
+    --slack-aubergine-dark: #350D36;
+    --slack-aubergine-text: #FFFFFF;
+    --slack-aubergine-text-dim: rgba(255,255,255,0.7);
+    --slack-yellow: #ECB22E;
+    --slack-blue:   #36C5F0;
+    --slack-green:  #2EB67D;
+    --slack-red:    #E01E5A;
+    --slack-bg:        #FFFFFF;
+    --slack-bg-hover:  #F8F8F8;
+    --slack-text:      #1D1C1D;
+    --slack-text-dim:  #616061;
+    --slack-border:    #E1E1E1;
+    --slack-link:      #1264A3;
+    --slack-mention-bg: #E01E5A;
+    --slack-sidebar-w: 260px;
+    --slack-header-h:  44px;
+  }
+  body.slack-scope {
+    margin: 0;
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px; line-height: 1.46;
+    color: var(--slack-text); background: var(--slack-bg);
+  }
+  .slack-scope * { box-sizing: border-box; }
+  .slack-scope a { color: var(--slack-link); text-decoration: none; }
+  .slack-scope a:hover { text-decoration: underline; }
+  .slack-scope button { font-family: inherit; }
+
+  .slack-app {
+    display: grid;
+    grid-template-columns: var(--slack-sidebar-w) 1fr;
+    grid-template-rows: var(--slack-header-h) 1fr;
+    height: 100vh;
+  }
+
+  /* Workspace Header */
+  .slack-topbar {
+    grid-column: 1 / -1;
+    background: var(--slack-aubergine-dark);
+    color: var(--slack-aubergine-text);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px;
+    height: var(--slack-header-h);
+  }
+  .slack-topbar-left, .slack-topbar-right {
+    display: flex; align-items: center; gap: 6px; flex: 1;
+  }
+  .slack-topbar-right { justify-content: flex-end; }
+  .slack-topbar-search {
+    flex: 0 1 720px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    height: 28px;
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 10px;
+    color: var(--slack-aubergine-text-dim);
+    font-size: 13px;
+  }
+  .slack-topbar-icon-btn {
+    background: transparent; border: none; color: var(--slack-aubergine-text);
+    width: 28px; height: 28px; border-radius: 4px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-topbar-icon-btn:hover { background: rgba(255,255,255,0.15); }
+  .slack-topbar-icon-btn i[data-lucide] { width: 16px; height: 16px; }
+
+  /* Sidebar */
+  .slack-sidebar {
+    background: var(--slack-aubergine);
+    color: var(--slack-aubergine-text);
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+  .slack-sidebar-workspace {
+    padding: 4px 16px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .slack-sidebar-workspace .name {
+    font-weight: 900; font-size: 18px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .slack-sidebar-workspace .name i[data-lucide] { width: 14px; height: 14px; }
+  .slack-sidebar-workspace .compose-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: white; color: var(--slack-aubergine);
+    border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-sidebar-workspace .compose-btn i[data-lucide] { width: 14px; height: 14px; }
+  .slack-sidebar-quicklinks { list-style: none; margin: 8px 0; padding: 0; }
+  .slack-sidebar-quicklinks li {
+    padding: 4px 16px;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--slack-aubergine-text-dim); cursor: pointer; font-size: 15px;
+  }
+  .slack-sidebar-quicklinks li.is-active { background: #1164A3; color: white; font-weight: 700; }
+  .slack-sidebar-quicklinks li i[data-lucide] { width: 16px; height: 16px; }
+  .slack-sidebar-section { margin-top: 12px; }
+  .slack-sidebar-section-header {
+    padding: 4px 16px;
+    color: var(--slack-aubergine-text-dim);
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .slack-sidebar-section-header i[data-lucide] { width: 12px; height: 12px; }
+  .slack-sidebar-section-header .label { flex: 1; }
+  .slack-sidebar-item {
+    padding: 4px 16px 4px 22px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--slack-aubergine-text-dim);
+    font-size: 15px; cursor: pointer;
+  }
+  .slack-sidebar-item i[data-lucide] { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* === Canvas Main === */
+  .slack-canvas-main {
+    background: white;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    overflow: hidden;
+  }
+
+  /* Canvas Header */
+  .slack-canvas-header {
+    border-bottom: 1px solid var(--slack-border);
+    padding: 8px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .slack-canvas-header-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px;
+  }
+  .slack-canvas-header-title .breadcrumb {
+    color: var(--slack-text-dim);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-canvas-header-title .breadcrumb i[data-lucide] { width: 12px; height: 12px; }
+  .slack-canvas-header-title .current {
+    font-weight: 700; color: var(--slack-text);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-canvas-header-title .current i[data-lucide] { width: 14px; height: 14px; color: #2EB67D; }
+  .slack-canvas-header-actions { display: flex; gap: 6px; align-items: center; }
+  .slack-canvas-header-actions .saved {
+    color: var(--slack-text-dim); font-size: 12px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-canvas-header-actions .saved i[data-lucide] { width: 12px; height: 12px; }
+  .slack-canvas-header-actions .collaborators { display: flex; align-items: center; }
+  .slack-canvas-header-actions .collaborators .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid white; margin-left: -6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 11px;
+    overflow: hidden;
+  }
+  .slack-canvas-header-actions .collaborators .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .slack-canvas-header-actions .collaborators .avatar:first-child { margin-left: 0; }
+  .slack-canvas-header-actions button {
+    background: white; border: 1px solid var(--slack-border);
+    padding: 4px 12px; border-radius: 4px; cursor: pointer;
+    color: var(--slack-text); font-size: 13px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-canvas-header-actions button:hover { background: #F0F0F0; }
+  .slack-canvas-header-actions button i[data-lucide] { width: 14px; height: 14px; }
+  .slack-canvas-header-actions .btn-primary {
+    background: #007A5A; color: white; border-color: #007A5A;
+  }
+  .slack-canvas-header-actions .btn-primary:hover { background: #006A50; }
+
+  /* Canvas Toolbar */
+  .slack-canvas-toolbar {
+    padding: 6px 24px;
+    border-bottom: 1px solid var(--slack-border);
+    display: flex; align-items: center; gap: 4px;
+    color: var(--slack-text-dim);
+    background: #FAFAFA;
+  }
+  .slack-canvas-toolbar .group { display: flex; gap: 2px; }
+  .slack-canvas-toolbar .sep {
+    width: 1px; height: 16px; background: var(--slack-border);
+    margin: 0 6px;
+  }
+  .slack-canvas-toolbar button {
+    background: transparent; border: none;
+    width: 28px; height: 28px; border-radius: 4px;
+    cursor: pointer; color: var(--slack-text-dim);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .slack-canvas-toolbar button:hover { background: white; color: var(--slack-text); }
+  .slack-canvas-toolbar button i[data-lucide] { width: 14px; height: 14px; }
+  .slack-canvas-toolbar .style-select {
+    background: white; border: 1px solid var(--slack-border);
+    border-radius: 4px; padding: 4px 8px;
+    font-size: 13px; min-width: 110px;
+    display: inline-flex; align-items: center; justify-content: space-between;
+    cursor: pointer; color: var(--slack-text);
+  }
+  .slack-canvas-toolbar .style-select i[data-lucide] { width: 12px; height: 12px; }
+
+  /* Canvas Body */
+  .slack-canvas-body {
+    overflow-y: auto;
+    padding: 32px 24px 80px;
+  }
+  .slack-canvas-doc {
+    max-width: 720px;
+    margin: 0 auto;
+    color: var(--slack-text);
+  }
+  .slack-canvas-doc h1 {
+    font-size: 32px; font-weight: 900; margin: 16px 0 8px;
+    line-height: 1.2;
+  }
+  .slack-canvas-doc h1 .emoji { margin-right: 6px; }
+  .slack-canvas-doc h2 {
+    font-size: 22px; font-weight: 900; margin: 28px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--slack-border);
+  }
+  .slack-canvas-doc h3 {
+    font-size: 17px; font-weight: 900; margin: 20px 0 6px;
+  }
+  .slack-canvas-doc p {
+    margin: 8px 0; line-height: 1.6;
+  }
+  .slack-canvas-doc ul, .slack-canvas-doc ol {
+    padding-left: 24px; margin: 8px 0;
+  }
+  .slack-canvas-doc li { margin: 4px 0; }
+  .slack-canvas-doc .meta-line {
+    color: var(--slack-text-dim); font-size: 13px;
+    display: flex; gap: 16px; margin: 4px 0 24px;
+  }
+  .slack-canvas-doc .meta-line span {
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .slack-canvas-doc .meta-line i[data-lucide] { width: 12px; height: 12px; }
+
+  /* Callout box */
+  .slack-canvas-callout {
+    background: #FFFCEB;
+    border-left: 4px solid #ECB22E;
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin: 16px 0;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .slack-canvas-callout .icon {
+    flex-shrink: 0; color: #B07A0A;
+    margin-top: 2px;
+  }
+  .slack-canvas-callout .icon i[data-lucide] { width: 18px; height: 18px; }
+
+  /* ToDo list */
+  .slack-canvas-todo {
+    list-style: none; padding-left: 0; margin: 12px 0;
+  }
+  .slack-canvas-todo li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0; border-bottom: 1px solid var(--slack-border);
+  }
+  .slack-canvas-todo li:last-child { border-bottom: none; }
+  .slack-canvas-todo .check {
+    width: 18px; height: 18px;
+    border: 2px solid #B8B8B8; border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .slack-canvas-todo li.done .check {
+    background: #2EB67D; border-color: #2EB67D; color: white;
+  }
+  .slack-canvas-todo .check i[data-lucide] { width: 12px; height: 12px; }
+  .slack-canvas-todo .text { flex: 1; }
+  .slack-canvas-todo li.done .text { text-decoration: line-through; color: var(--slack-text-dim); }
+  .slack-canvas-todo .assignee {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 10px;
+  }
+  .slack-canvas-todo .due {
+    font-size: 12px; color: var(--slack-text-dim);
+    background: #F0F0F0; padding: 2px 8px; border-radius: 10px;
+  }
+  .slack-canvas-todo .due.overdue { color: var(--slack-red); background: #FDE7EE; }
+
+  /* Code block */
+  .slack-canvas-code {
+    background: #F8F8F8;
+    border: 1px solid var(--slack-border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 13px;
+    margin: 12px 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* Table */
+  .slack-canvas-table {
+    width: 100%; border-collapse: collapse;
+    margin: 16px 0;
+    border: 1px solid var(--slack-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .slack-canvas-table th, .slack-canvas-table td {
+    border: 1px solid var(--slack-border);
+    padding: 8px 12px; text-align: left;
+    font-size: 14px;
+  }
+  .slack-canvas-table th {
+    background: #F8F8F8; font-weight: 700;
+  }
+  .slack-canvas-table .status-pill {
+    display: inline-block;
+    padding: 2px 8px; border-radius: 12px;
+    font-size: 12px; font-weight: 700;
+  }
+  .slack-canvas-table .status-pill.green { background: #E5F5ED; color: #007A5A; }
+  .slack-canvas-table .status-pill.yellow { background: #FFF7E0; color: #8A6500; }
+  .slack-canvas-table .status-pill.red { background: #FDE7EE; color: #A30D3F; }
+
+  /* Mentions inside Canvas */
+  .slack-canvas-mention {
+    background: #FDEAF1; color: var(--slack-link);
+    padding: 0 4px; border-radius: 3px; font-weight: 700;
+  }
+  .slack-canvas-channel {
+    color: var(--slack-link); font-weight: 700;
+  }
+
+  /* Avatar Colors */
+  .slack-avatar-blue   { background: #1264A3; }
+  .slack-avatar-green  { background: #2EB67D; }
+  .slack-avatar-yellow { background: #ECB22E; color: #1D1C1D !important; }
+  .slack-avatar-red    { background: #E01E5A; }
+  .slack-avatar-purple { background: #7C3085; }
+  .slack-avatar-teal   { background: #0F8E91; }
+</style>
+</head>
+<body class="slack-scope">
+
+<div class="slack-app">
+
+  <!-- Workspace Header -->
+  <header class="slack-topbar">
+    <div class="slack-topbar-left">
+      <button class="slack-topbar-icon-btn"><i data-lucide="chevron-left"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="chevron-right"></i></button>
+      <button class="slack-topbar-icon-btn"><i data-lucide="clock"></i></button>
+    </div>
+    <div class="slack-topbar-search">
+      <i data-lucide="search" style="width:14px;height:14px;"></i>
+      <span>Acme Corp を検索</span>
+    </div>
+    <div class="slack-topbar-right">
+      <button class="slack-topbar-icon-btn"><i data-lucide="help-circle"></i></button>
+      <button class="slack-topbar-icon-btn">
+        <span style="width:24px;height:24px;font-size:11px;border-radius:4px;background:#1264A3;color:white;font-weight:700;display:inline-flex;align-items:center;justify-content:center;">YK</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="slack-sidebar">
+    <div class="slack-sidebar-workspace">
+      <span class="name">Acme Corp <i data-lucide="chevron-down"></i></span>
+      <button class="compose-btn"><i data-lucide="pen-square"></i></button>
+    </div>
+
+    <ul class="slack-sidebar-quicklinks">
+      <li><i data-lucide="message-square"></i> スレッド</li>
+      <li><i data-lucide="at-sign"></i> 全アクティビティ</li>
+      <li class="is-active"><i data-lucide="file-pen-line"></i> Canvas</li>
+      <li><i data-lucide="bookmark"></i> あとで</li>
+    </ul>
+
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">チャンネル</span>
+      </div>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>general</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>release-notes</a>
+      <a class="slack-sidebar-item"><i data-lucide="hash"></i>sales-japan</a>
+      <a class="slack-sidebar-item"><i data-lucide="lock"></i>finance-private</a>
+    </div>
+
+    <div class="slack-sidebar-section">
+      <div class="slack-sidebar-section-header">
+        <i data-lucide="chevron-down"></i><span class="label">最近のCanvas</span>
+      </div>
+      <a class="slack-sidebar-item"><i data-lucide="file-pen-line"></i>Q2 リリース判定</a>
+      <a class="slack-sidebar-item"><i data-lucide="file-pen-line"></i>営業企画 OKR</a>
+      <a class="slack-sidebar-item"><i data-lucide="file-pen-line"></i>オムロン提案メモ</a>
+    </div>
+  </aside>
+
+  <!-- Canvas Main -->
+  <main class="slack-canvas-main">
+
+    <!-- Canvas Header -->
+    <div class="slack-canvas-header">
+      <div class="slack-canvas-header-title">
+        <span class="breadcrumb"><i data-lucide="hash"></i>release-notes</span>
+        <span class="breadcrumb"><i data-lucide="chevron-right"></i></span>
+        <span class="current"><i data-lucide="file-pen-line"></i>Q2 リリース判定</span>
+      </div>
+      <div class="slack-canvas-header-actions">
+        <span class="saved"><i data-lucide="check-circle"></i>2分前に保存</span>
+        <div class="collaborators">
+          <span class="avatar"><img src="https://randomuser.me/api/portraits/men/67.jpg" alt="" /></span>
+          <span class="avatar"><img src="https://randomuser.me/api/portraits/women/5.jpg" alt="" /></span>
+          <span class="avatar"><img src="https://randomuser.me/api/portraits/men/90.jpg" alt="" /></span>
+          <span class="avatar"><img src="https://randomuser.me/api/portraits/women/12.jpg" alt="" /></span>
+          <span class="avatar" style="background:#F0F0F0;color:#616061;">+3</span>
+        </div>
+        <button title="共有"><i data-lucide="share-2"></i>共有</button>
+        <button class="btn-primary"><i data-lucide="user-plus"></i>招待</button>
+        <button title="その他"><i data-lucide="more-horizontal"></i></button>
+      </div>
+    </div>
+
+    <!-- Canvas Toolbar -->
+    <div class="slack-canvas-toolbar">
+      <div class="style-select">標準テキスト <i data-lucide="chevron-down"></i></div>
+      <span class="sep"></span>
+      <div class="group">
+        <button title="太字"><i data-lucide="bold"></i></button>
+        <button title="斜体"><i data-lucide="italic"></i></button>
+        <button title="取り消し線"><i data-lucide="strikethrough"></i></button>
+        <button title="下線"><i data-lucide="underline"></i></button>
+      </div>
+      <span class="sep"></span>
+      <div class="group">
+        <button title="リンク"><i data-lucide="link"></i></button>
+        <button title="箇条書き"><i data-lucide="list"></i></button>
+        <button title="番号付き"><i data-lucide="list-ordered"></i></button>
+        <button title="チェックリスト"><i data-lucide="square-check"></i></button>
+      </div>
+      <span class="sep"></span>
+      <div class="group">
+        <button title="引用"><i data-lucide="quote"></i></button>
+        <button title="コード"><i data-lucide="code"></i></button>
+        <button title="コードブロック"><i data-lucide="code-2"></i></button>
+        <button title="表"><i data-lucide="table"></i></button>
+        <button title="区切り線"><i data-lucide="minus"></i></button>
+      </div>
+      <span class="sep"></span>
+      <div class="group">
+        <button title="画像"><i data-lucide="image"></i></button>
+        <button title="動画"><i data-lucide="video"></i></button>
+        <button title="ファイル"><i data-lucide="paperclip"></i></button>
+      </div>
+      <span style="margin-left:auto;"></span>
+      <button title="コメント"><i data-lucide="message-square"></i></button>
+      <button title="履歴"><i data-lucide="history"></i></button>
+    </div>
+
+    <!-- Canvas Body -->
+    <div class="slack-canvas-body">
+      <article class="slack-canvas-doc">
+
+        <h1><span class="emoji">🚀</span>Q2 リリース判定 — 2026/06/15 (月)</h1>
+        <div class="meta-line">
+          <span><i data-lucide="user"></i>所有者: 山本 健介</span>
+          <span><i data-lucide="calendar"></i>作成: 2026-06-08</span>
+          <span><i data-lucide="users"></i>編集者 7名</span>
+          <span><i data-lucide="eye"></i>閲覧 32名</span>
+        </div>
+
+        <div class="slack-canvas-callout">
+          <div class="icon"><i data-lucide="info"></i></div>
+          <div>
+            <b>このページの目的</b><br>
+            Q2 (4-6月) のリリース判定MTGで使う唯一の判定資料です。
+            判定者は <span class="slack-canvas-mention">@中村 玲奈</span> /
+            <span class="slack-canvas-mention">@青山 昇</span> /
+            <span class="slack-canvas-mention">@山本 健介</span>。
+            意思決定後、ステータスを更新してください。
+          </div>
+        </div>
+
+        <h2>📋 判定サマリー</h2>
+        <table class="slack-canvas-table">
+          <thead>
+            <tr>
+              <th style="width:30%;">機能</th>
+              <th style="width:20%;">担当</th>
+              <th style="width:25%;">QA / Doc</th>
+              <th style="width:25%;">判定</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>新見積エンジン v2</td>
+              <td>田中 拓也</td>
+              <td>QA OK / Changelog 済</td>
+              <td><span class="status-pill green">✅ Go</span></td>
+            </tr>
+            <tr>
+              <td>Slack 連携 (案件通知)</td>
+              <td>青山 昇</td>
+              <td>QA OK / Doc 進行中</td>
+              <td><span class="status-pill yellow">⚠ 条件付き</span></td>
+            </tr>
+            <tr>
+              <td>分割払い対応</td>
+              <td>山本 健介</td>
+              <td>QA NG (3件) / Doc 未着手</td>
+              <td><span class="status-pill red">⛔ No Go</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>✅ リリースまでのToDo</h2>
+        <ul class="slack-canvas-todo">
+          <li class="done">
+            <span class="check"><i data-lucide="check"></i></span>
+            <span class="text">Changelog のドラフト作成</span>
+            <span class="assignee slack-avatar-blue">YK</span>
+            <span class="due">6/9</span>
+          </li>
+          <li class="done">
+            <span class="check"><i data-lucide="check"></i></span>
+            <span class="text">QA レポート集約 (3チーム分)</span>
+            <span class="assignee slack-avatar-yellow">TT</span>
+            <span class="due">6/10</span>
+          </li>
+          <li>
+            <span class="check"></span>
+            <span class="text">Slack連携機能の Doc 仕上げ — 残課題3件</span>
+            <span class="assignee slack-avatar-red">AS</span>
+            <span class="due overdue">6/11 (期限切れ)</span>
+          </li>
+          <li>
+            <span class="check"></span>
+            <span class="text">分割払い QA NG 3件の根本原因分析と再判定</span>
+            <span class="assignee slack-avatar-blue">YK</span>
+            <span class="due overdue">6/12</span>
+          </li>
+          <li>
+            <span class="check"></span>
+            <span class="text">CFO への分割払い条件最終承認依頼</span>
+            <span class="assignee slack-avatar-purple">MN</span>
+            <span class="due">6/13</span>
+          </li>
+          <li>
+            <span class="check"></span>
+            <span class="text">リリース判定MTG (60分) — Zoom + 録画</span>
+            <span class="assignee slack-avatar-green">SK</span>
+            <span class="due">6/15</span>
+          </li>
+        </ul>
+
+        <h2>🛠 Slack 連携 — 残課題</h2>
+        <p>
+          <span class="slack-canvas-channel">#release-notes</span>
+          に投稿される案件通知メッセージのフォーマット最終調整。Block Kit の構造はおおむねOKで、文言のみ未確定です。
+        </p>
+
+        <h3>テンプレート (Block Kit JSON)</h3>
+        <pre class="slack-canvas-code">{
+  "blocks": [
+    {
+      "type": "header",
+      "text": { "type": "plain_text", "text": "📈 商談ステージ更新" }
+    },
+    {
+      "type": "section",
+      "fields": [
+        { "type": "mrkdwn", "text": "*取引先:*\nオムロン株式会社" },
+        { "type": "mrkdwn", "text": "*金額:*\n¥12,500,000" },
+        { "type": "mrkdwn", "text": "*ステージ:*\n提案/見積 → 交渉" },
+        { "type": "mrkdwn", "text": "*所有者:*\n山本 健介" }
+      ]
+    },
+    {
+      "type": "actions",
+      "elements": [
+        { "type": "button", "text": { "type": "plain_text", "text": "Salesforceで開く" }, "url": "https://acme.lightning.force.com/..." },
+        { "type": "button", "text": { "type": "plain_text", "text": "メンションして相談" }, "style": "primary" }
+      ]
+    }
+  ]
+}</pre>
+
+        <h3>未確定の文言</h3>
+        <ul>
+          <li>「ステージ更新」のとき、ヘッダーの絵文字を 📈 にするか 🎯 にするか</li>
+          <li>クローズ予定日も常時表示するか、Closing 90日以内のみにするか</li>
+          <li>担当者がメンションされるか、リアクションをつけるかの差別化</li>
+        </ul>
+
+        <h2>🎯 判定MTG での意思決定事項</h2>
+        <ol>
+          <li><b>新見積エンジン v2</b> — そのままGoでよいか</li>
+          <li><b>Slack連携</b> — Docを「6/14 18:00 までに完了」を条件にGoしてよいか</li>
+          <li><b>分割払い</b> — Q2スコープから外し、Q3 (7-9月) へ繰越でよいか</li>
+        </ol>
+
+        <div class="slack-canvas-callout" style="background:#E8F4FA; border-left-color:#1264A3;">
+          <div class="icon" style="color:#1264A3;"><i data-lucide="message-square"></i></div>
+          <div>
+            <b>関連スレッド</b><br>
+            分割払いのCFO相談は <span class="slack-canvas-mention">@鈴木 さくら</span> との DM スレッドで進行中。
+            判定前に結論を <span class="slack-canvas-channel">#release-notes</span> に展開してください。
+          </div>
+        </div>
+
+      </article>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>
