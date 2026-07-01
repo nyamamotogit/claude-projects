@@ -1,0 +1,7 @@
+[mcp_servers.google-workspace]
+command = "/Users/nyamamoto/.mcp-adaptor/bin/mcp-adaptor"
+args = [
+    "serve",
+    "--server",
+    "google_workspace",
+]
