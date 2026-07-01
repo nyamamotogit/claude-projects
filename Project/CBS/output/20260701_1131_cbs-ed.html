@@ -152,10 +152,11 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #050508; }
   animation: fadeUp 0.7s cubic-bezier(0.23,1,0.32,1) both;
   border: 1px solid rgba(255,255,255,0.08);
 }
-.s5-task.t1 { background: rgba(239,83,80,0.08); border-color: rgba(239,83,80,0.25); animation-delay: 0.5s; }
-.s5-task.t2 { background: rgba(255,183,77,0.08); border-color: rgba(255,183,77,0.25); animation-delay: 0.65s; }
-.s5-task.t3 { background: rgba(255,183,77,0.08); border-color: rgba(255,183,77,0.25); animation-delay: 0.8s; }
-.s5-task.t4 { background: rgba(129,199,132,0.08); border-color: rgba(129,199,132,0.25); animation-delay: 0.95s; }
+.s5-task { opacity: 0; }
+.s5-task.t1 { background: rgba(239,83,80,0.08); border-color: rgba(239,83,80,0.25); animation-delay: 0.3s; }
+.s5-task.t2 { background: rgba(255,183,77,0.08); border-color: rgba(255,183,77,0.25); animation-delay: 1.0s; }
+.s5-task.t3 { background: rgba(255,183,77,0.08); border-color: rgba(255,183,77,0.25); animation-delay: 1.7s; }
+.s5-task.t4 { background: rgba(129,199,132,0.08); border-color: rgba(129,199,132,0.25); animation-delay: 2.4s; }
 
 .s5-task-badge {
   display: inline-block; font-size: 11px; font-weight: 700;
@@ -205,41 +206,36 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #050508; }
   animation: pulse 4s ease-in-out infinite;
 }
 
-/* ロゴ群 */
+/* ロゴ群 — 四隅に配置してテキストと干渉しない */
 .s6-logos {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  position: absolute; inset: 0; pointer-events: none;
 }
-.s6-logo-ring {
-  position: relative; width: 320px; height: 320px;
-  animation: logoRingIn 1s ease 0.5s both;
-}
-@keyframes logoRingIn { from{opacity:0;transform:scale(0.6)} to{opacity:1;transform:scale(1)} }
 .s6-logo-item {
   position: absolute;
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  animation: floatLogo ease-in-out infinite;
+  animation: floatLogo ease-in-out infinite, logoRingIn 1s ease both;
 }
-@keyframes floatLogo { 0%,100%{transform:var(--t) translateY(0)} 50%{transform:var(--t) translateY(-8px)} }
+@keyframes logoRingIn { from{opacity:0;transform:scale(0.6)} to{opacity:1;transform:scale(1)} }
+@keyframes floatLogo { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 .s6-logo-item .logo-box {
-  width: 52px; height: 52px; border-radius: 14px;
+  width: 60px; height: 60px; border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 24px; backdrop-filter: blur(8px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  font-size: 28px; backdrop-filter: blur(8px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
 }
-.s6-logo-item .logo-name { font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 700; text-align: center; }
-/* Slack */
-.s6-logo-item.li-slack { top: 0; left: 50%; --t: translateX(-50%); animation-duration: 5s; animation-delay: 0s; }
-.s6-logo-item.li-slack .logo-box { background: rgba(74,21,75,0.7); border: 1px solid rgba(74,21,75,1); }
-/* Salesforce */
-.s6-logo-item.li-sf { top: 50%; right: 0; --t: translateY(-50%); animation-duration: 4.5s; animation-delay: -1s; }
-.s6-logo-item.li-sf .logo-box { background: rgba(0,112,210,0.6); border: 1px solid rgba(0,112,210,0.8); }
-/* 楽楽 */
-.s6-logo-item.li-raku { bottom: 0; left: 50%; --t: translateX(-50%); animation-duration: 6s; animation-delay: -2s; }
-.s6-logo-item.li-raku .logo-box { background: rgba(46,182,125,0.6); border: 1px solid rgba(46,182,125,0.8); }
-/* Agentforce */
-.s6-logo-item.li-agent { top: 50%; left: 0; --t: translateY(-50%); animation-duration: 5.5s; animation-delay: -0.5s; }
-.s6-logo-item.li-agent .logo-box { background: rgba(255,183,77,0.3); border: 1px solid rgba(255,183,77,0.6); }
+.s6-logo-item .logo-name { font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 700; text-align: center; }
+/* 左上: Slack */
+.s6-logo-item.li-slack { top: 48px; left: 80px; animation-duration: 5s, 0.8s; animation-delay: 0s, 0.3s; }
+.s6-logo-item.li-slack .logo-box { background: rgba(74,21,75,0.8); border: 1px solid rgba(150,60,152,0.8); }
+/* 右上: Salesforce */
+.s6-logo-item.li-sf { top: 48px; right: 80px; animation-duration: 4.5s, 0.8s; animation-delay: -1s, 0.5s; }
+.s6-logo-item.li-sf .logo-box { background: rgba(0,112,210,0.7); border: 1px solid rgba(79,195,247,0.8); }
+/* 左下: Agentforce */
+.s6-logo-item.li-agent { bottom: 48px; left: 80px; animation-duration: 5.5s, 0.8s; animation-delay: -0.5s, 0.7s; }
+.s6-logo-item.li-agent .logo-box { background: rgba(255,183,77,0.25); border: 1px solid rgba(255,183,77,0.7); }
+/* 右下: 楽楽販売 */
+.s6-logo-item.li-raku { bottom: 48px; right: 80px; animation-duration: 6s, 0.8s; animation-delay: -2s, 0.9s; }
+.s6-logo-item.li-raku .logo-box { background: rgba(46,182,125,0.5); border: 1px solid rgba(46,182,125,0.8); }
 
 /* 中央コンテンツ */
 .s6-center { z-index: 10; text-align: center; }
@@ -402,25 +398,23 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #050508; }
     <div class="s6-rings" id="s6rings"></div>
     <div class="s6-bg-glow"></div>
 
-    <!-- ロゴリング -->
+    <!-- ロゴ四隅配置 -->
     <div class="s6-logos">
-      <div class="s6-logo-ring">
-        <div class="s6-logo-item li-slack">
-          <div class="logo-box">💬</div>
-          <div class="logo-name">Slack</div>
-        </div>
-        <div class="s6-logo-item li-sf">
-          <div class="logo-box">☁️</div>
-          <div class="logo-name">Salesforce</div>
-        </div>
-        <div class="s6-logo-item li-raku">
-          <div class="logo-box">📊</div>
-          <div class="logo-name">楽楽販売</div>
-        </div>
-        <div class="s6-logo-item li-agent">
-          <div class="logo-box">🤖</div>
-          <div class="logo-name">Agentforce</div>
-        </div>
+      <div class="s6-logo-item li-slack">
+        <div class="logo-box">💬</div>
+        <div class="logo-name">Slack</div>
+      </div>
+      <div class="s6-logo-item li-sf">
+        <div class="logo-box">☁️</div>
+        <div class="logo-name">Salesforce</div>
+      </div>
+      <div class="s6-logo-item li-agent">
+        <div class="logo-box">🤖</div>
+        <div class="logo-name">Agentforce</div>
+      </div>
+      <div class="s6-logo-item li-raku">
+        <div class="logo-box">📊</div>
+        <div class="logo-name">楽楽販売</div>
       </div>
     </div>
 

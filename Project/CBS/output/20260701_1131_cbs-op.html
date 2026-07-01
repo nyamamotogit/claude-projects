@@ -195,14 +195,15 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0a0f; }
 
 /* 右フローティングカード群 */
 .s2-right {
-  flex: 1; position: relative; height: 440px; max-width: 500px;
+  flex: 1; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; align-content: start; max-width: 520px;
 }
 .s2-card {
-  position: absolute; background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
   backdrop-filter: blur(10px); border-radius: 12px;
   padding: 16px 20px; color: white;
-  animation: cardFloat ease-in-out infinite, cardIn ease both;
+  opacity: 0;
 }
 .s2-card .card-icon { font-size: 24px; margin-bottom: 8px; }
 .s2-card .card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
@@ -219,10 +220,10 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0a0f; }
 }
 @keyframes cardIn { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
 
-.s2-card.c1 { left: 20px; top: 20px; width: 200px; animation-duration: 5s, 0.8s; animation-delay: 0s, 0.5s; }
-.s2-card.c2 { right: 0; top: 60px; width: 210px; animation-duration: 4.5s, 0.8s; animation-delay: -2s, 0.7s; border-color: rgba(239,83,80,0.3); }
-.s2-card.c3 { left: 60px; top: 220px; width: 190px; animation-duration: 6s, 0.8s; animation-delay: -1s, 0.9s; }
-.s2-card.c4 { right: 20px; bottom: 60px; width: 220px; animation-duration: 4s, 0.8s; animation-delay: -3s, 1.1s; }
+.s2-card.c1 { animation: cardIn 0.7s ease 0.4s both, cardFloat 5s ease-in-out 1.1s infinite; }
+.s2-card.c2 { animation: cardIn 0.7s ease 1.1s both, cardFloat 4.5s ease-in-out 1.8s infinite; border-color: rgba(239,83,80,0.3); }
+.s2-card.c3 { animation: cardIn 0.7s ease 1.8s both, cardFloat 6s ease-in-out 2.5s infinite; }
+.s2-card.c4 { animation: cardIn 0.7s ease 2.5s both, cardFloat 4s ease-in-out 3.2s infinite; }
 
 /* 中央コネクタ線 */
 .s2-divider {
