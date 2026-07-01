@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CB SERVICE — ENDING</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #050508; }
+
+/* ======== SLIDE ENGINE ======== */
+.slide-wrap { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+.slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.8s ease; }
+.slide.active { opacity: 1; pointer-events: auto; }
+
+/* ======== NAV ======== */
+.nav-hint {
+  position: fixed; bottom: 20px; right: 24px;
+  display: flex; align-items: center; gap: 10px;
+  z-index: 999; pointer-events: none;
+}
+.nav-dots { display: flex; gap: 7px; }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s; }
+.nav-dot.on { background: white; transform: scale(1.3); }
+.nav-key { font-family: "Lato", sans-serif; font-size: 12px; color: rgba(255,255,255,0.5); }
+
+/* ======== SHARED ======== */
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+
+/* =====================================
+   SLIDE 4 — 成果サマリー「デモのまとめ」
+===================================== */
+#s4 {
+  background: radial-gradient(ellipse at 60% 40%, #0d2137 0%, #050510 70%);
+  font-family: "Noto Sans JP", sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+/* 背景オーブ */
+.s4-orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
+}
+.s4-orb.o1 { width: 500px; height: 500px; background: rgba(79,195,247,0.08); top: -100px; right: -100px; }
+.s4-orb.o2 { width: 400px; height: 400px; background: rgba(129,199,132,0.06); bottom: -80px; left: -80px; }
+
+.s4-content { z-index: 10; width: 100%; max-width: 1100px; padding: 0 60px; }
+
+.s4-eyebrow {
+  font-size: 12px; letter-spacing: 0.3em; color: #4fc3f7;
+  text-transform: uppercase; font-family: "Lato", sans-serif; margin-bottom: 12px;
+  animation: fadeUp 0.7s ease 0.2s both;
+}
+.s4-title {
+  font-size: clamp(26px, 3.5vw, 48px); font-weight: 900; color: white;
+  line-height: 1.25; margin-bottom: 40px;
+  animation: fadeUp 0.7s ease 0.4s both;
+}
+.s4-title span { color: #4fc3f7; }
+
+/* KPI カード群 */
+.s4-kpis { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 36px; }
+.s4-kpi {
+  flex: 1; min-width: 180px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 22px 24px;
+  position: relative; overflow: hidden;
+  animation: fadeUp 0.7s cubic-bezier(0.23,1,0.32,1) both;
+}
+.s4-kpi::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; border-radius: 0 0 14px 14px;
+}
+.s4-kpi.k1 { animation-delay: 0.5s; } .s4-kpi.k1::after { background: linear-gradient(90deg,#4fc3f7,#81c784); }
+.s4-kpi.k2 { animation-delay: 0.65s; } .s4-kpi.k2::after { background: linear-gradient(90deg,#81c784,#ffb74d); }
+.s4-kpi.k3 { animation-delay: 0.8s; } .s4-kpi.k3::after { background: linear-gradient(90deg,#ffb74d,#ef5350); }
+.s4-kpi.k4 { animation-delay: 0.95s; } .s4-kpi.k4::after { background: linear-gradient(90deg,#ce93d8,#4fc3f7); }
+
+.s4-kpi-icon { font-size: 24px; margin-bottom: 10px; }
+.s4-kpi-num { font-size: 36px; font-weight: 900; color: white; line-height: 1; margin-bottom: 4px; }
+.s4-kpi-num .unit { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.6); }
+.s4-kpi-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.s4-kpi-delta {
+  font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 8px;
+  display: inline-block;
+}
+.delta-up { background: rgba(129,199,132,0.2); color: #81c784; }
+.delta-down { background: rgba(239,83,80,0.2); color: #ef5350; }
+
+/* フロー矢印 */
+.s4-flow {
+  display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+  animation: fadeUp 0.7s ease 1.1s both;
+}
+.s4-flow-item {
+  flex: 1; min-width: 120px;
+  background: rgba(79,195,247,0.06); border: 1px solid rgba(79,195,247,0.2);
+  border-radius: 10px; padding: 12px 16px; text-align: center;
+}
+.s4-flow-item .fi-icon { font-size: 20px; margin-bottom: 4px; }
+.s4-flow-item .fi-label { font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 700; }
+.s4-flow-arrow {
+  color: #4fc3f7; font-size: 22px; padding: 0 8px;
+  flex-shrink: 0; animation: pulse 2s infinite;
+}
+
+/* =====================================
+   SLIDE 5 — 担当者への行動指示
+===================================== */
+#s5 {
+  background: linear-gradient(135deg, #080818 0%, #0d1a0a 100%);
+  font-family: "Noto Sans JP", sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+/* 斜め光帯 */
+.s5-rays { position: absolute; inset: 0; overflow: hidden; }
+.s5-ray {
+  position: absolute; width: 1px; height: 200%;
+  top: -50%; background: linear-gradient(to bottom, transparent, rgba(129,199,132,0.08), transparent);
+  transform-origin: top center;
+  animation: rayPulse ease-in-out infinite;
+}
+@keyframes rayPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+.s5-content { z-index:10; max-width:1100px; width:100%; padding: 0 60px; }
+.s5-eyebrow {
+  font-size: 12px; letter-spacing: 0.3em; color: #81c784;
+  text-transform: uppercase; font-family: "Lato", sans-serif; margin-bottom: 12px;
+  animation: fadeUp 0.7s ease 0.2s both;
+}
+.s5-title {
+  font-size: clamp(26px, 3.5vw, 48px); font-weight: 900; color: white;
+  line-height: 1.25; margin-bottom: 36px;
+  animation: fadeUp 0.7s ease 0.4s both;
+}
+.s5-title span { color: #81c784; }
+
+/* タスクカード */
+.s5-tasks { display: flex; gap: 16px; flex-wrap: wrap; }
+.s5-task {
+  flex: 1; min-width: 220px;
+  border-radius: 14px; padding: 20px 22px;
+  position: relative; overflow: hidden;
+  animation: fadeUp 0.7s cubic-bezier(0.23,1,0.32,1) both;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.s5-task.t1 { background: rgba(239,83,80,0.08); border-color: rgba(239,83,80,0.25); animation-delay: 0.5s; }
+.s5-task.t2 { background: rgba(255,183,77,0.08); border-color: rgba(255,183,77,0.25); animation-delay: 0.65s; }
+.s5-task.t3 { background: rgba(255,183,77,0.08); border-color: rgba(255,183,77,0.25); animation-delay: 0.8s; }
+.s5-task.t4 { background: rgba(129,199,132,0.08); border-color: rgba(129,199,132,0.25); animation-delay: 0.95s; }
+
+.s5-task-badge {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 10px; margin-bottom: 12px;
+}
+.t1 .s5-task-badge { background: rgba(239,83,80,0.2); color: #ef5350; }
+.t2 .s5-task-badge, .t3 .s5-task-badge { background: rgba(255,183,77,0.2); color: #ffb74d; }
+.t4 .s5-task-badge { background: rgba(129,199,132,0.2); color: #81c784; }
+
+.s5-task-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+.s5-task-title { font-size: 15px; font-weight: 900; color: white; margin-bottom: 8px; line-height: 1.4; }
+.s5-task-assignee { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 6px; }
+.s5-task-assignee strong { color: white; }
+.s5-task-sf {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700; color: #4fc3f7;
+  background: rgba(79,195,247,0.1); padding: 3px 8px; border-radius: 6px; margin-top: 4px;
+  border: 1px solid rgba(79,195,247,0.2);
+}
+
+/* =====================================
+   SLIDE 6 — エンディング「ありがとう」
+===================================== */
+#s6 {
+  background: #050508;
+  font-family: "Noto Sans JP", sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+/* 同心円アニメ */
+.s6-rings { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.s6-ring-el {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(79,195,247,0.15);
+  animation: expandRing linear infinite;
+}
+@keyframes expandRing {
+  0%   { transform: scale(0); opacity: 0.8; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* 背景グラデ */
+.s6-bg-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(79,195,247,0.06) 0%, transparent 65%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+/* ロゴ群 */
+.s6-logos {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.s6-logo-ring {
+  position: relative; width: 320px; height: 320px;
+  animation: logoRingIn 1s ease 0.5s both;
+}
+@keyframes logoRingIn { from{opacity:0;transform:scale(0.6)} to{opacity:1;transform:scale(1)} }
+.s6-logo-item {
+  position: absolute;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  animation: floatLogo ease-in-out infinite;
+}
+@keyframes floatLogo { 0%,100%{transform:var(--t) translateY(0)} 50%{transform:var(--t) translateY(-8px)} }
+.s6-logo-item .logo-box {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.s6-logo-item .logo-name { font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 700; text-align: center; }
+/* Slack */
+.s6-logo-item.li-slack { top: 0; left: 50%; --t: translateX(-50%); animation-duration: 5s; animation-delay: 0s; }
+.s6-logo-item.li-slack .logo-box { background: rgba(74,21,75,0.7); border: 1px solid rgba(74,21,75,1); }
+/* Salesforce */
+.s6-logo-item.li-sf { top: 50%; right: 0; --t: translateY(-50%); animation-duration: 4.5s; animation-delay: -1s; }
+.s6-logo-item.li-sf .logo-box { background: rgba(0,112,210,0.6); border: 1px solid rgba(0,112,210,0.8); }
+/* 楽楽 */
+.s6-logo-item.li-raku { bottom: 0; left: 50%; --t: translateX(-50%); animation-duration: 6s; animation-delay: -2s; }
+.s6-logo-item.li-raku .logo-box { background: rgba(46,182,125,0.6); border: 1px solid rgba(46,182,125,0.8); }
+/* Agentforce */
+.s6-logo-item.li-agent { top: 50%; left: 0; --t: translateY(-50%); animation-duration: 5.5s; animation-delay: -0.5s; }
+.s6-logo-item.li-agent .logo-box { background: rgba(255,183,77,0.3); border: 1px solid rgba(255,183,77,0.6); }
+
+/* 中央コンテンツ */
+.s6-center { z-index: 10; text-align: center; }
+.s6-main-title {
+  font-size: clamp(40px, 6vw, 80px); font-weight: 900;
+  background: linear-gradient(135deg, #ffffff 0%, #b2ebf2 40%, #81c784 80%, #ffb74d 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: fadeUp 1s ease 0.3s both;
+  line-height: 1.1; margin-bottom: 16px;
+}
+.s6-sub {
+  font-size: clamp(16px, 2vw, 24px); color: rgba(255,255,255,0.65); font-weight: 400;
+  animation: fadeUp 0.8s ease 0.7s both;
+  margin-bottom: 32px;
+}
+.s6-tagline {
+  font-size: clamp(14px, 1.5vw, 18px); font-weight: 700;
+  color: rgba(255,255,255,0.4); letter-spacing: 0.2em;
+  font-family: "Lato", sans-serif;
+  text-transform: uppercase;
+  animation: fadeUp 0.8s ease 1s both;
+  margin-bottom: 36px;
+}
+.s6-company {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50px; padding: 12px 28px;
+  font-size: 20px; font-weight: 900; color: white;
+  animation: fadeUp 0.8s ease 1.2s both;
+  box-shadow: 0 0 40px rgba(79,195,247,0.1);
+}
+.s6-company .cbs-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, #0070D2, #4fc3f7);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: white;
+}
+
+/* カウンター */
+.s6-counter-wrap {
+  display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
+  animation: fadeUp 0.8s ease 1.4s both;
+  margin-top: 32px;
+}
+.s6-counter {
+  text-align: center; min-width: 120px;
+}
+.s6-counter .c-num { font-size: 32px; font-weight: 900; color: white; font-family: "Lato", sans-serif; }
+.s6-counter .c-unit { color: rgba(255,255,255,0.5); font-size: 14px; }
+.s6-counter .c-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.c-num.blue { color: #4fc3f7; }
+.c-num.green { color: #81c784; }
+.c-num.gold { color: #ffb74d; }
+</style>
+</head>
+<body>
+
+<div class="slide-wrap">
+
+  <!-- NAV -->
+  <div class="nav-hint">
+    <div class="nav-key">← →</div>
+    <div class="nav-dots">
+      <div class="nav-dot on" id="d0"></div>
+      <div class="nav-dot" id="d1"></div>
+      <div class="nav-dot" id="d2"></div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 4 — 成果サマリー ========== -->
+  <div class="slide active" id="s4">
+    <div class="s4-orb o1"></div>
+    <div class="s4-orb o2"></div>
+    <div class="s4-content">
+      <div class="s4-eyebrow">Demo Summary — What Agentforce Revealed Today</div>
+      <div class="s4-title">5つのアクションで<span>経営課題を可視化</span></div>
+
+      <div class="s4-kpis">
+        <div class="s4-kpi k1">
+          <div class="s4-kpi-icon">📊</div>
+          <div class="s4-kpi-num">856<span class="unit">百万円</span></div>
+          <div class="s4-kpi-label">CBケータリング FY2026着地見込</div>
+          <div class="s4-kpi-delta delta-up">目標比 +7% ↑</div>
+        </div>
+        <div class="s4-kpi k2">
+          <div class="s4-kpi-icon">⚠️</div>
+          <div class="s4-kpi-num">624<span class="unit">百万円</span></div>
+          <div class="s4-kpi-label">旬菜亭 FY2026着地見込</div>
+          <div class="s4-kpi-delta delta-down">目標比 -4% ↓</div>
+        </div>
+        <div class="s4-kpi k3">
+          <div class="s4-kpi-icon">📉</div>
+          <div class="s4-kpi-num">-15<span class="unit">%</span></div>
+          <div class="s4-kpi-label">旬菜亭 見積単価 過去比</div>
+          <div class="s4-kpi-delta delta-down">値引き圧力を検知</div>
+        </div>
+        <div class="s4-kpi k4">
+          <div class="s4-kpi-icon">✅</div>
+          <div class="s4-kpi-num">4<span class="unit">件</span></div>
+          <div class="s4-kpi-label">Salesforce登録タスク</div>
+          <div class="s4-kpi-delta delta-up">担当者へ自動通知済</div>
+        </div>
+      </div>
+
+      <div class="s4-flow">
+        <div class="s4-flow-item"><div class="fi-icon">💬</div><div class="fi-label">Slack 会話分析</div></div>
+        <div class="s4-flow-arrow">→</div>
+        <div class="s4-flow-item"><div class="fi-icon">📈</div><div class="fi-label">楽楽販売 実績照合</div></div>
+        <div class="s4-flow-arrow">→</div>
+        <div class="s4-flow-item"><div class="fi-icon">🤖</div><div class="fi-label">Agentforce 横断分析</div></div>
+        <div class="s4-flow-arrow">→</div>
+        <div class="s4-flow-item"><div class="fi-icon">📌</div><div class="fi-label">推奨タスク逆算</div></div>
+        <div class="s4-flow-arrow">→</div>
+        <div class="s4-flow-item"><div class="fi-icon">☁️</div><div class="fi-label">SF自動登録 &amp; 通知</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 5 — 担当者アクション ========== -->
+  <div class="slide" id="s5">
+    <div class="s5-rays" id="s5rays"></div>
+    <div class="s5-content">
+      <div class="s5-eyebrow">Next Actions — Registered to Salesforce</div>
+      <div class="s5-title">今日から動く<span>4つのアクション</span></div>
+      <div class="s5-tasks">
+        <div class="s5-task t1">
+          <span class="s5-task-badge">今日 14:00まで</span>
+          <span class="s5-task-icon">🗣️</span>
+          <div class="s5-task-title">値引き承認ルールの再設定を営業会議に追加</div>
+          <div class="s5-task-assignee">担当：<strong>堀様</strong>（営業本部長）</div>
+          <div class="s5-task-sf">☁️ T-2026-0630-01 · 優先度：高</div>
+        </div>
+        <div class="s5-task t2">
+          <span class="s5-task-badge">今週中</span>
+          <span class="s5-task-icon">👥</span>
+          <div class="s5-task-title">旬菜亭チームの採用・外部スタッフ確保の判断</div>
+          <div class="s5-task-assignee">担当：<strong>長谷川様</strong>（HR）</div>
+          <div class="s5-task-sf">☁️ T-2026-0630-02 · 優先度：中</div>
+        </div>
+        <div class="s5-task t3">
+          <span class="s5-task-badge">今週中</span>
+          <span class="s5-task-icon">🎯</span>
+          <div class="s5-task-title">旬菜亭 新規ターゲット見直し・Aホテル最優先昇格</div>
+          <div class="s5-task-assignee">担当：<strong>旬菜亭チーム</strong></div>
+          <div class="s5-task-sf">☁️ T-2026-0630-03 · 優先度：高</div>
+        </div>
+        <div class="s5-task t4">
+          <span class="s5-task-badge">来週まで</span>
+          <span class="s5-task-icon">🔗</span>
+          <div class="s5-task-title">CBケータリング好調要因の旬菜亭横展開施策MTG</div>
+          <div class="s5-task-assignee">担当：<strong>堀様・瀧田様</strong></div>
+          <div class="s5-task-sf">☁️ T-2026-0630-04 · 優先度：中</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 6 — エンディング ========== -->
+  <div class="slide" id="s6">
+    <div class="s6-rings" id="s6rings"></div>
+    <div class="s6-bg-glow"></div>
+
+    <!-- ロゴリング -->
+    <div class="s6-logos">
+      <div class="s6-logo-ring">
+        <div class="s6-logo-item li-slack">
+          <div class="logo-box">💬</div>
+          <div class="logo-name">Slack</div>
+        </div>
+        <div class="s6-logo-item li-sf">
+          <div class="logo-box">☁️</div>
+          <div class="logo-name">Salesforce</div>
+        </div>
+        <div class="s6-logo-item li-raku">
+          <div class="logo-box">📊</div>
+          <div class="logo-name">楽楽販売</div>
+        </div>
+        <div class="s6-logo-item li-agent">
+          <div class="logo-box">🤖</div>
+          <div class="logo-name">Agentforce</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s6-center">
+      <div class="s6-main-title">「ありがとう」を<br>量産する経営基盤</div>
+      <div class="s6-sub">現場の声 × 数字 × AIが一体となり、<br>社長の判断を最速化する</div>
+      <div class="s6-tagline">CB SERVICE × Salesforce Agentforce</div>
+      <div class="s6-company">
+        <div class="cbs-logo">CBS</div>
+        CB SERVICE 株式会社
+      </div>
+      <div class="s6-counter-wrap">
+        <div class="s6-counter">
+          <div class="c-num blue" id="cnt1">0</div>
+          <div class="c-label">分析データソース数</div>
+        </div>
+        <div class="s6-counter">
+          <div class="c-num green" id="cnt2">0</div>
+          <div class="c-label">自動生成タスク</div>
+        </div>
+        <div class="s6-counter">
+          <div class="c-num gold" id="cnt3">0</div>
+          <div class="c-label">Slack→Salesforce 連携秒数</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /slide-wrap -->
+
+<script>
+/* ===== Rays (S5) ===== */
+(function() {
+  const c = document.getElementById('s5rays');
+  const angles = [-10,-5,0,5,10,15,20,-15,-20];
+  angles.forEach((a, i) => {
+    const r = document.createElement('div');
+    r.className = 's5-ray';
+    r.style.left = (i * 12) + '%';
+    r.style.transform = `rotate(${a}deg)`;
+    r.style.animationDuration = (Math.random() * 3 + 3) + 's';
+    r.style.animationDelay = (Math.random() * 3) + 's';
+    c.appendChild(r);
+  });
+})();
+
+/* ===== Rings (S6) ===== */
+(function() {
+  const c = document.getElementById('s6rings');
+  for (let i = 0; i < 5; i++) {
+    const r = document.createElement('div');
+    r.className = 's6-ring-el';
+    const sz = 150 + i * 80;
+    r.style.width = r.style.height = sz + 'px';
+    r.style.animationDuration = (6 + i * 2) + 's';
+    r.style.animationDelay = (i * 1.5) + 's';
+    c.appendChild(r);
+  }
+})();
+
+/* ===== Counter animation (S6) ===== */
+function animateCounter(el, target, duration, suffix) {
+  let start = null;
+  function step(ts) {
+    if (!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(eased * target) + (suffix||'');
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target + (suffix||'');
+  }
+  requestAnimationFrame(step);
+}
+
+/* ===== Slide Nav ===== */
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.nav-dot');
+let countersStarted = false;
+
+function goTo(n) {
+  slides[current].classList.remove('active');
+  dots[current].classList.remove('on');
+  current = (n + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  dots[current].classList.add('on');
+  if (current === 2 && !countersStarted) {
+    countersStarted = true;
+    setTimeout(() => {
+      animateCounter(document.getElementById('cnt1'), 3, 1200, '');
+      animateCounter(document.getElementById('cnt2'), 4, 1400, '件');
+      animateCounter(document.getElementById('cnt3'), 12, 1600, '秒');
+    }, 600);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') goTo(current + 1);
+  if (e.key === 'ArrowLeft')  goTo(current - 1);
+});
+</script>
+</body>
+</html>
